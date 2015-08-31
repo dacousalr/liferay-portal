@@ -21,7 +21,6 @@ import com.liferay.portal.search.elasticsearch.query.TermQueryTranslator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
-
 import org.osgi.service.component.annotations.Component;
 
 /**

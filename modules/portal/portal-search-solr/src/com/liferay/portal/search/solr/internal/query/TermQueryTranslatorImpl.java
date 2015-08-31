@@ -19,7 +19,7 @@ import com.liferay.portal.kernel.search.TermQuery;
 import com.liferay.portal.search.solr.query.TermQueryTranslator;
 
 import org.apache.lucene.index.Term;
-
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -36,7 +36,7 @@ public class TermQueryTranslatorImpl implements TermQueryTranslator {
 		QueryTerm queryTerm = termQuery.getQueryTerm();
 
 		String field = queryTerm.getField();
-		String value = queryTerm.getValue();
+		String value = ClientUtils.escapeQueryChars(queryTerm.getValue());
 
 		luceneQuery = new org.apache.lucene.search.TermQuery(
 			new Term(field, value));
