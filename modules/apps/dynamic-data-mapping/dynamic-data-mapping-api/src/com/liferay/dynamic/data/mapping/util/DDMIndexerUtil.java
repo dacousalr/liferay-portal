@@ -21,9 +21,13 @@ import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermissio
 
 import java.util.Locale;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Alexander Chow
  */
+@Component(immediate = true)
 public class DDMIndexerUtil {
 
 	public static void addAttributes(
@@ -56,9 +60,8 @@ public class DDMIndexerUtil {
 		return _ddmIndexer;
 	}
 
-	public void setDDMIndexer(DDMIndexer ddmIndexer) {
-		PortalRuntimePermission.checkSetBeanProperty(getClass());
-
+	@Reference(unbind = "-")
+	protected void setDDMIndexer(DDMIndexer ddmIndexer) {
 		_ddmIndexer = ddmIndexer;
 	}
 

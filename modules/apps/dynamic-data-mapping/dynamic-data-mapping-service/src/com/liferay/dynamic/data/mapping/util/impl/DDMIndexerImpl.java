@@ -16,7 +16,7 @@ package com.liferay.dynamic.data.mapping.util.impl;
 
 import com.liferay.dynamic.data.mapping.model.DDMFormFieldType;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
-import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
+import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.storage.Field;
 import com.liferay.dynamic.data.mapping.storage.Fields;
@@ -51,9 +51,13 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Alexander Chow
  */
+@Component(immediate = true, service = DDMIndexer.class)
 public class DDMIndexerImpl implements DDMIndexer {
 
 	@Override
@@ -211,7 +215,7 @@ public class DDMIndexerImpl implements DDMIndexer {
 
 		if (Validator.isNotNull(ddmStructureId)) {
 			DDMStructure ddmStructure =
-				DDMStructureLocalServiceUtil.fetchDDMStructure(ddmStructureId);
+				_ddmStructureLocalService.fetchDDMStructure(ddmStructureId);
 
 			if (Validator.isNotNull(ddmStructure)) {
 				try {
@@ -337,6 +341,13 @@ public class DDMIndexerImpl implements DDMIndexer {
 		return sb.toString();
 	}
 
+	@Reference(unbind = "-")
+	protected void setDDMStructureLocalService(
+		DDMStructureLocalService ddmStructureLocalService) {
+
+		_ddmStructureLocalService = ddmStructureLocalService;
+	}
+
 	protected Fields toFields(
 		DDMStructure ddmStructure, DDMFormValues ddmFormValues) {
 
@@ -352,5 +363,7 @@ public class DDMIndexerImpl implements DDMIndexer {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(DDMIndexerImpl.class);
+
+	private DDMStructureLocalService _ddmStructureLocalService;
 
 }
