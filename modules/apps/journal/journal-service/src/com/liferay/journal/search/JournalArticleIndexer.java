@@ -48,7 +48,6 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.search.SearchEngine;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
@@ -190,24 +189,18 @@ public class JournalArticleIndexer
 					ddmStructureFieldValue, structure.getFieldType(fieldName));
 			}
 
-			String booleanQueryDDMStructureFieldValue =
-				ddmStructureFieldValue.toString();
-
-			SearchEngine searchEngine = SearchEngineUtil.getSearchEngine(
-				SearchEngineUtil.SYSTEM_ENGINE_ID);
-
-			if (!"Elasticsearch".equals(searchEngine.getVendor())) {
-				booleanQueryDDMStructureFieldValue =
-					StringPool.QUOTE +
-					ddmStructureFieldValue +
-					StringPool.QUOTE;
-			}
-
 			if ("keyword".equals(indexType)) {
+				String booleanQueryDDMStructureFieldValue =
+					ddmStructureFieldValue.toString();
+
 				contextBooleanFilter.addRequiredTerm(
 					ddmStructureFieldName, booleanQueryDDMStructureFieldValue);
 			}
 			else {
+				String booleanQueryDDMStructureFieldValue =
+					StringPool.QUOTE + ddmStructureFieldValue.toString() +
+						StringPool.QUOTE;
+
 				BooleanQuery booleanQuery = new BooleanQueryImpl();
 
 				booleanQuery.addRequiredTerm(
