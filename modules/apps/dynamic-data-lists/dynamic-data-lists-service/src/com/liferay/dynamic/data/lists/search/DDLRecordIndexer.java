@@ -127,7 +127,13 @@ public class DDLRecordIndexer extends BaseIndexer<DDLRecord> {
 					ddmStructureFieldName, ddmStructureFieldValue,
 					searchContext.getLocale());
 
-			contextBooleanFilter.add(queryFilter, BooleanClauseOccur.MUST);
+			if (queryFilter != null) {
+				contextBooleanFilter.add(queryFilter, BooleanClauseOccur.MUST);
+			}
+			else {
+				contextBooleanFilter.addRequiredTerm(
+					ddmStructureFieldName, ddmStructureFieldValue.toString());
+			}
 		}
 	}
 
