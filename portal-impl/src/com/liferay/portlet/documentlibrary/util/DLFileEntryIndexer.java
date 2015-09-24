@@ -223,11 +223,14 @@ public class DLFileEntryIndexer
 				ddmStructureFieldName,
 				DDMStructureManager.STRUCTURE_INDEXER_FIELD_SEPARATOR);
 
+			String indexType = GetterUtil.getString(
+				ddmStructureFieldNameParts[1], "keyword");
+
 			DDMStructure ddmStructure = DDMStructureManagerUtil.getStructure(
-				GetterUtil.getLong(ddmStructureFieldNameParts[1]));
+				GetterUtil.getLong(ddmStructureFieldNameParts[2]));
 
 			String fieldName = StringUtil.replaceLast(
-				ddmStructureFieldNameParts[2],
+				ddmStructureFieldNameParts[3],
 				StringPool.UNDERLINE.concat(
 					LocaleUtil.toLanguageId(searchContext.getLocale())),
 				StringPool.BLANK);
@@ -244,14 +247,21 @@ public class DLFileEntryIndexer
 				}
 			}
 
-			BooleanQuery booleanQuery = new BooleanQueryImpl();
-
-			booleanQuery.addRequiredTerm(
-				ddmStructureFieldName,
-				StringPool.QUOTE + ddmStructureFieldValue + StringPool.QUOTE);
-
-			contextBooleanFilter.add(
-				new QueryFilter(booleanQuery), BooleanClauseOccur.MUST);
+			if ("keyword".equals(indexType)) {
+				contextBooleanFilter.addRequiredTerm(
+					ddmStructureFieldName, ddmStructureFieldValue.toString());
+			}
+			else {
+				BooleanQuery booleanQuery = new BooleanQueryImpl();
+	
+				booleanQuery.addRequiredTerm(
+					ddmStructureFieldName,
+					StringPool.QUOTE + ddmStructureFieldValue +
+						StringPool.QUOTE);
+	
+				contextBooleanFilter.add(
+					new QueryFilter(booleanQuery), BooleanClauseOccur.MUST);
+			}
 		}
 
 		String[] mimeTypes = (String[])searchContext.getAttribute("mimeTypes");
