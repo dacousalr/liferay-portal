@@ -20,6 +20,7 @@ import com.liferay.portal.search.solr.query.TermQueryTranslator;
 
 import org.apache.lucene.index.Term;
 import org.apache.solr.client.solrj.util.ClientUtils;
+
 import org.osgi.service.component.annotations.Component;
 
 /**
