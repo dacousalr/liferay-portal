@@ -10,6 +10,20 @@
 				<filter class="solr.TrimFilterFactory" />
 			</analyzer>
 		</fieldType>
+		<fieldType class="solr.TextField" name="assetTagNameField" positionIncrementGap="100">
+			<analyzer type="index">
+				<tokenizer class="solr.KeywordTokenizerFactory" />
+				<filter class="solr.LowerCaseFilterFactory" />
+			</analyzer>
+			<analyzer type="query">
+				<tokenizer class="solr.WhitespaceTokenizerFactory" />
+				<filter class="solr.LowerCaseFilterFactory" />
+				<filter class="solr.RemoveDuplicatesTokenFilterFactory" />
+				<filter class="solr.StopFilterFactory" enablePositionIncrements="true" ignoreCase="true" words="stopwords.txt" />
+				<filter class="solr.SynonymFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt" />
+				<filter catenateAll="0" catenateNumbers="0" catenateWords="0" class="solr.WordDelimiterFilterFactory" generateNumberParts="1" generateWordParts="1" />
+			</analyzer>
+		</fieldType>
 		<fieldType class="solr.BoolField" name="boolean" omitNorms="true" sortMissingLast="true" />
 		<fieldType class="solr.TrieDateField" name="date" omitNorms="true" positionIncrementGap="0" precisionStep="0"  />
 		<fieldType class="solr.TrieDoubleField" name="double" omitNorms="true" positionIncrementGap="0" precisionStep="0" />
@@ -473,7 +487,7 @@
 		<field indexed="true" name="assetCategoryTitle" stored="true" termPositions="true" termVectors="true" type="text" />
 		<field indexed="true" name="assetTagId" stored="true" type="string" />
 		<field indexed="true" multiValued="true" name="assetTagIds" stored="true" type="string" />
-		<field indexed="true" multiValued="true" name="assetTagNames" stored="true" termPositions="true" termVectors="true" type="text" />
+		<field indexed="true" multiValued="true" name="assetTagNames" stored="true" termPositions="true" termVectors="true" type="assetTagNameField" />
 		<field indexed="true" name="assetVocabularyId" stored="true" type="string" />
 		<field indexed="true" multiValued="true" name="assetVocabularyIds" stored="true" type="string" />
 		<field indexed="true" name="classTypeId" stored="true" type="string" />
@@ -554,7 +568,7 @@
 		<dynamicField indexed="true" multiValued="false" name="*_sortable" stored="true" type="string" />
 		<dynamicField indexed="true" multiValued="true" name="assetCategoryTitles*" stored="true" termPositions="true" termVectors="true" type="text" />
 		<dynamicField indexed="true" multiValued="true" name="expando__*" stored="true" type="text" />
-		<dynamicField indexed="true" multiValued="true" name="ddm__*" stored="true" type="string" />
+		<dynamicField indexed="true" multiValued="false" name="ddm__keyword__*" stored="true" type="string" />
 		<dynamicField indexed="true" multiValued="true" name="*_ar" stored="true" termPositions="true" termOffsets="true" termVectors="true" type="text_ar" />
 		<dynamicField indexed="true" multiValued="true" name="*_ar_BH" stored="true" termPositions="true" termOffsets="true" termVectors="true" type="text_ar" />
 		<dynamicField indexed="true" multiValued="true" name="*_ar_DZ" stored="true" termPositions="true" termOffsets="true" termVectors="true" type="text_ar" />
@@ -645,6 +659,7 @@
 		<dynamicField indexed="true" multiValued="true" name="*_zh_HK" stored="true" termPositions="true" termOffsets="true" termVectors="true" type="text_cjk" />
 		<dynamicField indexed="true" multiValued="true" name="*_zh_SG" stored="true" termPositions="true" termOffsets="true" termVectors="true" type="text_cjk" />
 		<dynamicField indexed="true" multiValued="true" name="*_zh_TW" stored="true" termPositions="true" termOffsets="true" termVectors="true" type="text_cjk" />
+		<dynamicField indexed="true" multiValued="true" name="ddm__*" stored="true" type="text" />
 
 		<!--
 		This must be the last entry since the fields element is an ordered set.
