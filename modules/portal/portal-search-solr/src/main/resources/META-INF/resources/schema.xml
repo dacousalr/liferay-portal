@@ -659,7 +659,7 @@
 		<dynamicField indexed="true" multiValued="true" name="*_zh_HK" stored="true" termPositions="true" termOffsets="true" termVectors="true" type="text_cjk" />
 		<dynamicField indexed="true" multiValued="true" name="*_zh_SG" stored="true" termPositions="true" termOffsets="true" termVectors="true" type="text_cjk" />
 		<dynamicField indexed="true" multiValued="true" name="*_zh_TW" stored="true" termPositions="true" termOffsets="true" termVectors="true" type="text_cjk" />
-		<dynamicField indexed="true" multiValued="true" name="ddm__*" stored="true" type="text" />
+		<dynamicField indexed="true" multiValued="true" name="ddm__*" stored="true" termPositions="true" termOffsets="true" termVectors="true" type="text" />
 
 		<!--
 		This must be the last entry since the fields element is an ordered set.
