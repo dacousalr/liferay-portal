@@ -29,8 +29,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchResourceTypePermissionException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.ResourceTypePermission;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
@@ -1620,7 +1618,8 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((ResourceTypePermissionModelImpl)resourceTypePermission);
+		clearUniqueFindersCache((ResourceTypePermissionModelImpl)resourceTypePermission,
+			true);
 	}
 
 	@Override
@@ -1633,45 +1632,12 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 				ResourceTypePermissionImpl.class,
 				resourceTypePermission.getPrimaryKey());
 
-			clearUniqueFindersCache((ResourceTypePermissionModelImpl)resourceTypePermission);
+			clearUniqueFindersCache((ResourceTypePermissionModelImpl)resourceTypePermission,
+				true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		ResourceTypePermissionModelImpl resourceTypePermissionModelImpl,
-		boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					resourceTypePermissionModelImpl.getCompanyId(),
-					resourceTypePermissionModelImpl.getGroupId(),
-					resourceTypePermissionModelImpl.getName(),
-					resourceTypePermissionModelImpl.getRoleId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_G_N_R, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_G_N_R, args,
-				resourceTypePermissionModelImpl);
-		}
-		else {
-			if ((resourceTypePermissionModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_G_N_R.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						resourceTypePermissionModelImpl.getCompanyId(),
-						resourceTypePermissionModelImpl.getGroupId(),
-						resourceTypePermissionModelImpl.getName(),
-						resourceTypePermissionModelImpl.getRoleId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_G_N_R, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_G_N_R, args,
-					resourceTypePermissionModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		ResourceTypePermissionModelImpl resourceTypePermissionModelImpl) {
 		Object[] args = new Object[] {
 				resourceTypePermissionModelImpl.getCompanyId(),
@@ -1680,12 +1646,30 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 				resourceTypePermissionModelImpl.getRoleId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_G_N_R, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_G_N_R, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_G_N_R, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_G_N_R, args,
+			resourceTypePermissionModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		ResourceTypePermissionModelImpl resourceTypePermissionModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					resourceTypePermissionModelImpl.getCompanyId(),
+					resourceTypePermissionModelImpl.getGroupId(),
+					resourceTypePermissionModelImpl.getName(),
+					resourceTypePermissionModelImpl.getRoleId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_G_N_R, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_G_N_R, args);
+		}
 
 		if ((resourceTypePermissionModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_G_N_R.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					resourceTypePermissionModelImpl.getOriginalCompanyId(),
 					resourceTypePermissionModelImpl.getOriginalGroupId(),
 					resourceTypePermissionModelImpl.getOriginalName(),
@@ -1884,8 +1868,8 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 			resourceTypePermission.getPrimaryKey(), resourceTypePermission,
 			false);
 
-		clearUniqueFindersCache(resourceTypePermissionModelImpl);
-		cacheUniqueFindersCache(resourceTypePermissionModelImpl, isNew);
+		clearUniqueFindersCache(resourceTypePermissionModelImpl, false);
+		cacheUniqueFindersCache(resourceTypePermissionModelImpl);
 
 		resourceTypePermission.resetOriginalValues();
 
@@ -1960,12 +1944,14 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 	 */
 	@Override
 	public ResourceTypePermission fetchByPrimaryKey(Serializable primaryKey) {
-		ResourceTypePermission resourceTypePermission = (ResourceTypePermission)entityCache.getResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
 				ResourceTypePermissionImpl.class, primaryKey);
 
-		if (resourceTypePermission == _nullResourceTypePermission) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		ResourceTypePermission resourceTypePermission = (ResourceTypePermission)serializable;
 
 		if (resourceTypePermission == null) {
 			Session session = null;
@@ -1981,8 +1967,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 				}
 				else {
 					entityCache.putResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
-						ResourceTypePermissionImpl.class, primaryKey,
-						_nullResourceTypePermission);
+						ResourceTypePermissionImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -2037,18 +2022,20 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			ResourceTypePermission resourceTypePermission = (ResourceTypePermission)entityCache.getResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
 					ResourceTypePermissionImpl.class, primaryKey);
 
-			if (resourceTypePermission == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, resourceTypePermission);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (ResourceTypePermission)serializable);
+				}
 			}
 		}
 
@@ -2091,8 +2078,7 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(ResourceTypePermissionModelImpl.ENTITY_CACHE_ENABLED,
-					ResourceTypePermissionImpl.class, primaryKey,
-					_nullResourceTypePermission);
+					ResourceTypePermissionImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -2327,35 +2313,4 @@ public class ResourceTypePermissionPersistenceImpl extends BasePersistenceImpl<R
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No ResourceTypePermission exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No ResourceTypePermission exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(ResourceTypePermissionPersistenceImpl.class);
-	private static final ResourceTypePermission _nullResourceTypePermission = new ResourceTypePermissionImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<ResourceTypePermission> toCacheModel() {
-				return _nullResourceTypePermissionCacheModel;
-			}
-		};
-
-	private static final CacheModel<ResourceTypePermission> _nullResourceTypePermissionCacheModel =
-		new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<ResourceTypePermission>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public ResourceTypePermission toEntityModel() {
-			return _nullResourceTypePermission;
-		}
-	}
 }

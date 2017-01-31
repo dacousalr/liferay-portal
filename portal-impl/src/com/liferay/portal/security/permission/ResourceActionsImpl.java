@@ -36,7 +36,9 @@ import com.liferay.portal.kernel.security.permission.ResourceActions;
 import com.liferay.portal.kernel.service.GroupServiceUtil;
 import com.liferay.portal.kernel.service.PortletLocalService;
 import com.liferay.portal.kernel.service.ResourceActionLocalService;
+import com.liferay.portal.kernel.service.ResourceActionLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalService;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -61,7 +63,9 @@ import com.liferay.util.JS;
 import java.io.InputStream;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -104,6 +108,17 @@ public class ResourceActionsImpl implements ResourceActions {
 		}
 		catch (Exception e) {
 			_log.error(e, e);
+		}
+	}
+
+	@Override
+	public void check(String portletName) {
+		ResourceActionLocalServiceUtil.checkResourceActions(
+			portletName, getPortletResourceActions(portletName));
+
+		for (String modelName : getPortletModelResources(portletName)) {
+			ResourceActionLocalServiceUtil.checkResourceActions(
+				modelName, getModelResourceActions(modelName));
 		}
 	}
 
@@ -208,6 +223,26 @@ public class ResourceActionsImpl implements ResourceActions {
 
 			return Collections.emptyList();
 		}
+	}
+
+	@Override
+	public String getCompositeModelName(String... classNames) {
+		if (ArrayUtil.isEmpty(classNames)) {
+			return StringPool.BLANK;
+		}
+
+		Arrays.sort(classNames);
+
+		StringBundler sb = new StringBundler(classNames.length * 2);
+
+		for (String className : classNames) {
+			sb.append(className);
+			sb.append(getCompositeModelNameSeparator());
+		}
+
+		sb.setIndex(sb.index() - 1);
+
+		return sb.toString();
 	}
 
 	@Override
@@ -631,50 +666,18 @@ public class ResourceActionsImpl implements ResourceActions {
 			String servletContextName, ClassLoader classLoader, String source)
 		throws Exception {
 
-		InputStream inputStream = classLoader.getResourceAsStream(source);
+		read(servletContextName, classLoader, source, null);
+	}
 
-		if (inputStream == null) {
-			if (_log.isInfoEnabled() && !source.endsWith("-ext.xml") &&
-				!source.startsWith("META-INF/")) {
+	@Override
+	public void read(
+			String servletContextName, ClassLoader classLoader,
+			String... sources)
+		throws Exception {
 
-				_log.info("Cannot load " + source);
-			}
-
-			return;
+		for (String source : sources) {
+			read(servletContextName, classLoader, source);
 		}
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("Loading " + source);
-		}
-
-		Document document = UnsecureSAXReaderUtil.read(inputStream, true);
-
-		DocumentType documentType = document.getDocumentType();
-
-		String publicId = GetterUtil.getString(documentType.getPublicId());
-
-		if (publicId.equals(
-				"-//Liferay//DTD Resource Action Mapping 6.0.0//EN")) {
-
-			if (_log.isWarnEnabled()) {
-				_log.warn(
-					"Please update " + source + " to use the 6.1.0 format");
-			}
-		}
-
-		Element rootElement = document.getRootElement();
-
-		for (Element resourceElement : rootElement.elements("resource")) {
-			String file = resourceElement.attributeValue("file").trim();
-
-			read(servletContextName, classLoader, file);
-
-			String extFile = StringUtil.replace(file, ".xml", "-ext.xml");
-
-			read(servletContextName, classLoader, extFile);
-		}
-
-		read(servletContextName, document);
 	}
 
 	/**
@@ -687,7 +690,24 @@ public class ResourceActionsImpl implements ResourceActions {
 
 		Document document = UnsecureSAXReaderUtil.read(inputStream, true);
 
-		read(servletContextName, document);
+		read(servletContextName, document, null);
+	}
+
+	@Override
+	public void readAndCheck(
+			String servletContextName, ClassLoader classLoader,
+			String... sources)
+		throws Exception {
+
+		Set<String> portletNames = new HashSet<>();
+
+		for (String source : sources) {
+			read(servletContextName, classLoader, source, portletNames);
+		}
+
+		for (String portletName : portletNames) {
+			check(portletName);
+		}
 	}
 
 	protected void checkGuestUnsupportedActions(
@@ -768,8 +788,26 @@ public class ResourceActionsImpl implements ResourceActions {
 	protected String getCompositeModelName(Element compositeModelNameElement) {
 		StringBundler sb = new StringBundler();
 
-		Iterator<Element> itr = compositeModelNameElement.elementIterator(
-			"model-name");
+		List<Element> elements = new ArrayList<>(
+			compositeModelNameElement.elements("model-name"));
+
+		Collections.sort(
+			elements,
+			new Comparator<Element>() {
+
+				@Override
+				public int compare(Element element1, Element element2) {
+					String textTrim1 = GetterUtil.getString(
+						element1.getTextTrim());
+					String textTrim2 = GetterUtil.getString(
+						element2.getTextTrim());
+
+					return textTrim1.compareTo(textTrim2);
+				}
+
+			});
+
+		Iterator<Element> itr = elements.iterator();
 
 		while (itr.hasNext()) {
 			Element modelNameElement = itr.next();
@@ -794,7 +832,7 @@ public class ResourceActionsImpl implements ResourceActions {
 			return modelResourceActionsBag;
 		}
 
-		synchronized(_modelResourceActionsBags) {
+		synchronized (_modelResourceActionsBags) {
 			modelResourceActionsBag = _modelResourceActionsBags.get(modelName);
 
 			if (modelResourceActionsBag != null) {
@@ -870,7 +908,7 @@ public class ResourceActionsImpl implements ResourceActions {
 			return portletResourceActionsBag;
 		}
 
-		synchronized(_portletResourceActionsBags) {
+		synchronized (_portletResourceActionsBags) {
 			portletResourceActionsBag = _portletResourceActionsBags.get(
 				portletName);
 
@@ -950,7 +988,9 @@ public class ResourceActionsImpl implements ResourceActions {
 					types =
 						RoleConstants.TYPES_ORGANIZATION_AND_REGULAR_AND_SITE;
 				}
-				else if (group.isUser()) {
+				else if (group.isCompany() || group.isUser() ||
+						 group.isUserGroup()) {
+
 					types = RoleConstants.TYPES_REGULAR;
 				}
 			}
@@ -959,7 +999,60 @@ public class ResourceActionsImpl implements ResourceActions {
 		return types;
 	}
 
-	protected void read(String servletContextName, Document document)
+	protected void read(
+			String servletContextName, ClassLoader classLoader, String source,
+			Set<String> portletNames)
+		throws Exception {
+
+		InputStream inputStream = classLoader.getResourceAsStream(source);
+
+		if (inputStream == null) {
+			if (_log.isInfoEnabled() && !source.endsWith("-ext.xml") &&
+				!source.startsWith("META-INF/")) {
+
+				_log.info("Cannot load " + source);
+			}
+
+			return;
+		}
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("Loading " + source);
+		}
+
+		Document document = UnsecureSAXReaderUtil.read(inputStream, true);
+
+		DocumentType documentType = document.getDocumentType();
+
+		String publicId = GetterUtil.getString(documentType.getPublicId());
+
+		if (publicId.equals(
+				"-//Liferay//DTD Resource Action Mapping 6.0.0//EN")) {
+
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Please update " + source + " to use the 6.1.0 format");
+			}
+		}
+
+		Element rootElement = document.getRootElement();
+
+		for (Element resourceElement : rootElement.elements("resource")) {
+			String file = resourceElement.attributeValue("file").trim();
+
+			read(servletContextName, classLoader, file, portletNames);
+
+			String extFile = StringUtil.replace(file, ".xml", "-ext.xml");
+
+			read(servletContextName, classLoader, extFile, portletNames);
+		}
+
+		read(servletContextName, document, portletNames);
+	}
+
+	protected void read(
+			String servletContextName, Document document,
+			Set<String> portletNames)
 		throws Exception {
 
 		Element rootElement = document.getRootElement();
@@ -968,14 +1061,27 @@ public class ResourceActionsImpl implements ResourceActions {
 			for (Element portletResourceElement :
 					rootElement.elements("portlet-resource")) {
 
-				readPortletResource(servletContextName, portletResourceElement);
+				String portletName = readPortletResource(
+					servletContextName, portletResourceElement);
+
+				if (portletNames != null) {
+					portletNames.add(portletName);
+				}
 			}
 		}
 
 		for (Element modelResourceElement :
 				rootElement.elements("model-resource")) {
 
-			readModelResource(servletContextName, modelResourceElement);
+			String modelName = readModelResource(
+				servletContextName, modelResourceElement);
+
+			if (portletNames != null) {
+				ModelResourceActionsBag modelResourceActionsBag =
+					getModelResourceActionsBag(modelName);
+
+				portletNames.addAll(modelResourceActionsBag.getResources());
+			}
 		}
 	}
 
@@ -1052,7 +1158,7 @@ public class ResourceActionsImpl implements ResourceActions {
 		}
 	}
 
-	protected void readModelResource(
+	protected String readModelResource(
 			String servletContextName, Element modelResourceElement)
 		throws Exception {
 
@@ -1168,6 +1274,8 @@ public class ResourceActionsImpl implements ResourceActions {
 
 		readOwnerDefaultActions(
 			modelResourceElement, modelResourceOwnerDefaultActions);
+
+		return name;
 	}
 
 	protected void readOwnerDefaultActions(
@@ -1183,7 +1291,7 @@ public class ResourceActionsImpl implements ResourceActions {
 		ownerDefaultActions.addAll(readActionKeys(ownerDefaultsElement));
 	}
 
-	protected void readPortletResource(
+	protected String readPortletResource(
 			String servletContextName, Element portletResourceElement)
 		throws Exception {
 
@@ -1240,6 +1348,8 @@ public class ResourceActionsImpl implements ResourceActions {
 		readLayoutManagerActions(
 			portletResourceElement, portletResourceLayoutManagerActions,
 			portletResourceActions);
+
+		return name;
 	}
 
 	protected Set<String> readSupportsActions(

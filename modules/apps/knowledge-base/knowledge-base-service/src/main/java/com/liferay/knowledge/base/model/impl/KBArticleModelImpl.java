@@ -71,7 +71,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify or reference this class directly. All methods that expect a k b article model instance should use the {@link KBArticle} interface instead.
+	 * Never modify or reference this class directly. All methods that expect a kb article model instance should use the {@link KBArticle} interface instead.
 	 */
 	public static final String TABLE_NAME = "KBArticle";
 	public static final Object[][] TABLE_COLUMNS = {
@@ -892,6 +892,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 		return _latest;
 	}
 
+	@JSON
 	@Override
 	public boolean isLatest() {
 		return _latest;
@@ -920,6 +921,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 		return _main;
 	}
 
+	@JSON
 	@Override
 	public boolean isMain() {
 		return _main;

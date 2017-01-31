@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -1806,11 +1805,15 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 						finderArgs, list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"AppPersistenceImpl.fetchByRemoteAppId(long, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"AppPersistenceImpl.fetchByRemoteAppId(long, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					App app = list.get(0);
@@ -2518,7 +2521,7 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((AppModelImpl)app);
+		clearUniqueFindersCache((AppModelImpl)app, true);
 	}
 
 	@Override
@@ -2530,42 +2533,31 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 			entityCache.removeResult(AppModelImpl.ENTITY_CACHE_ENABLED,
 				AppImpl.class, app.getPrimaryKey());
 
-			clearUniqueFindersCache((AppModelImpl)app);
+			clearUniqueFindersCache((AppModelImpl)app, true);
 		}
 	}
 
-	protected void cacheUniqueFindersCache(AppModelImpl appModelImpl,
-		boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] { appModelImpl.getRemoteAppId() };
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_REMOTEAPPID, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_REMOTEAPPID, args,
-				appModelImpl);
-		}
-		else {
-			if ((appModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_REMOTEAPPID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] { appModelImpl.getRemoteAppId() };
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_REMOTEAPPID, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_REMOTEAPPID, args,
-					appModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(AppModelImpl appModelImpl) {
+	protected void cacheUniqueFindersCache(AppModelImpl appModelImpl) {
 		Object[] args = new Object[] { appModelImpl.getRemoteAppId() };
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_REMOTEAPPID, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_REMOTEAPPID, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_REMOTEAPPID, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_REMOTEAPPID, args,
+			appModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(AppModelImpl appModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] { appModelImpl.getRemoteAppId() };
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_REMOTEAPPID, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_REMOTEAPPID, args);
+		}
 
 		if ((appModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_REMOTEAPPID.getColumnBitmask()) != 0) {
-			args = new Object[] { appModelImpl.getOriginalRemoteAppId() };
+			Object[] args = new Object[] { appModelImpl.getOriginalRemoteAppId() };
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_REMOTEAPPID, args);
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_REMOTEAPPID, args);
@@ -2808,8 +2800,8 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 		entityCache.putResult(AppModelImpl.ENTITY_CACHE_ENABLED, AppImpl.class,
 			app.getPrimaryKey(), app, false);
 
-		clearUniqueFindersCache(appModelImpl);
-		cacheUniqueFindersCache(appModelImpl, isNew);
+		clearUniqueFindersCache(appModelImpl, false);
+		cacheUniqueFindersCache(appModelImpl);
 
 		app.resetOriginalValues();
 
@@ -2888,12 +2880,14 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 	 */
 	@Override
 	public App fetchByPrimaryKey(Serializable primaryKey) {
-		App app = (App)entityCache.getResult(AppModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(AppModelImpl.ENTITY_CACHE_ENABLED,
 				AppImpl.class, primaryKey);
 
-		if (app == _nullApp) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		App app = (App)serializable;
 
 		if (app == null) {
 			Session session = null;
@@ -2908,7 +2902,7 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 				}
 				else {
 					entityCache.putResult(AppModelImpl.ENTITY_CACHE_ENABLED,
-						AppImpl.class, primaryKey, _nullApp);
+						AppImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -2962,18 +2956,20 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			App app = (App)entityCache.getResult(AppModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(AppModelImpl.ENTITY_CACHE_ENABLED,
 					AppImpl.class, primaryKey);
 
-			if (app == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, app);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (App)serializable);
+				}
 			}
 		}
 
@@ -3015,7 +3011,7 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(AppModelImpl.ENTITY_CACHE_ENABLED,
-					AppImpl.class, primaryKey, _nullApp);
+					AppImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -3257,22 +3253,4 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid"
 			});
-	private static final App _nullApp = new AppImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<App> toCacheModel() {
-				return _nullAppCacheModel;
-			}
-		};
-
-	private static final CacheModel<App> _nullAppCacheModel = new CacheModel<App>() {
-			@Override
-			public App toEntityModel() {
-				return _nullApp;
-			}
-		};
 }

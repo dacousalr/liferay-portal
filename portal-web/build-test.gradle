@@ -2,7 +2,7 @@ import com.liferay.gradle.util.GradleUtil
 
 buildscript {
 	dependencies {
-		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.poshi.runner", version: "1.0.10"
+		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.poshi.runner", version: "1.0.11"
 	}
 
 	repositories {
@@ -17,6 +17,15 @@ buildscript {
 }
 
 apply plugin: "com.liferay.poshi.runner"
+
+poshiRunner {
+	if (project.hasProperty("poshiRunnerExtProperties")) {
+		poshiPropertiesFile = new File(projectDir.parentFile, project.properties["poshiRunnerExtProperties"])
+	}
+
+	openCVVersion = "2.4.10-0.10"
+	version = "1.0.50"
+}
 
 task updateGradleCache
 
@@ -33,14 +42,6 @@ dependencies {
 	sikuliComplete classifier: "macosx-x86_64", group: "org.bytedeco.javacpp-presets", name: "opencv", version: poshiRunner.openCVVersion
 }
 
-poshiRunner {
-	if (project.hasProperty("poshiRunnerExtProperties")) {
-		poshiPropertiesFile = new File(projectDir.parentFile, project.properties["poshiRunnerExtProperties"])
-	}
-
-	version = "1.0.40"
-}
-
 repositories {
 	if (!Boolean.getBoolean("maven.local.ignore")) {
 		mavenLocal()
@@ -51,9 +52,11 @@ repositories {
 	}
 }
 
-updateGradleCache << {
-	configurations.poshiRunner.resolve()
-	configurations.sikuliComplete.resolve()
+updateGradleCache {
+	doLast {
+		configurations.poshiRunner.resolve()
+		configurations.sikuliComplete.resolve()
+	}
 }
 
 if (GradleUtil.getProperty(project, "local", false)) {

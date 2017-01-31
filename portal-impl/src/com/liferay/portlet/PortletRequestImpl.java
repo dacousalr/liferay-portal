@@ -140,6 +140,7 @@ public abstract class PortletRequestImpl implements LiferayPortletRequest {
 			(LiferayPortletConfig)portletConfig;
 
 		setAttribute(WebKeys.PORTLET_ID, liferayPortletConfig.getPortletId());
+
 		setAttribute(JavaConstants.JAVAX_PORTLET_CONFIG, portletConfig);
 		setAttribute(JavaConstants.JAVAX_PORTLET_REQUEST, this);
 		setAttribute(JavaConstants.JAVAX_PORTLET_RESPONSE, portletResponse);
@@ -241,6 +242,7 @@ public abstract class PortletRequestImpl implements LiferayPortletRequest {
 		return _request.getMethod();
 	}
 
+	@Override
 	public HttpServletRequest getOriginalHttpServletRequest() {
 		return _originalRequest;
 	}
@@ -300,6 +302,7 @@ public abstract class PortletRequestImpl implements LiferayPortletRequest {
 		return _portalContext;
 	}
 
+	@Override
 	public Portlet getPortlet() {
 		return _portlet;
 	}
@@ -907,8 +910,12 @@ public abstract class PortletRequestImpl implements LiferayPortletRequest {
 			PublicRenderParameter publicRenderParameter =
 				publicRenderParameters.nextElement();
 
+			String publicRenderParameterName =
+				PortletQNameUtil.getPublicRenderParameterName(
+					publicRenderParameter.getQName());
+
 			String ignoreKey = PublicRenderParameterConfiguration.getIgnoreKey(
-				publicRenderParameter);
+				publicRenderParameterName);
 
 			boolean ignoreValue = GetterUtil.getBoolean(
 				preferences.getValue(ignoreKey, null));
@@ -919,7 +926,7 @@ public abstract class PortletRequestImpl implements LiferayPortletRequest {
 
 			String mappingKey =
 				PublicRenderParameterConfiguration.getMappingKey(
-					publicRenderParameter);
+					publicRenderParameterName);
 
 			String mappingValue = GetterUtil.getString(
 				preferences.getValue(mappingKey, null));

@@ -389,14 +389,23 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link
-	 *             IndexStatusManager#
+	 * @deprecated As of 3.3.0, replaced by {@link IndexStatusManager#
 	 *             isIndexReadOnly}
 	 */
 	@Deprecated
 	@Override
 	public boolean isIndexReadOnly() {
 		return _indexStatusManager.isIndexReadOnly();
+	}
+
+	/**
+	 * @deprecated As of 3.3.0, replaced by {@link IndexStatusManager#
+	 *             isIndexReadOnly(String)}
+	 */
+	@Deprecated
+	@Override
+	public boolean isIndexReadOnly(String className) {
+		return _indexStatusManager.isIndexReadOnly(className);
 	}
 
 	@Override
@@ -522,14 +531,23 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link
-	 *             IndexStatusManager.
+	 * @deprecated As of 3.3.0, replaced by {@link IndexStatusManager.
 	 *             setIndexReadOnly(boolean)}
 	 */
 	@Deprecated
 	@Override
 	public void setIndexReadOnly(boolean indexReadOnly) {
 		_indexStatusManager.setIndexReadOnly(indexReadOnly);
+	}
+
+	/**
+	 * @deprecated As of 3.3.0, replaced by {@link IndexStatusManager.
+	 *             setIndexReadOnly(String, boolean)}
+	 */
+	@Deprecated
+	@Override
+	public void setIndexReadOnly(String className, boolean indexReadOnly) {
+		_indexStatusManager.setIndexReadOnly(className, indexReadOnly);
 	}
 
 	@Override

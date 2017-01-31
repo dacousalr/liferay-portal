@@ -603,7 +603,7 @@ public class Validator {
 	 *         <code>false</code> otherwise
 	 */
 	public static boolean isEmailAddress(String emailAddress) {
-		if (Validator.isNull(emailAddress)) {
+		if (isNull(emailAddress)) {
 			return false;
 		}
 
@@ -665,7 +665,7 @@ public class Validator {
 		return true;
 	}
 
-	public static boolean isFilePath(String path, boolean isParentDirAllowed) {
+	public static boolean isFilePath(String path, boolean parentDirAllowed) {
 		if (isNull(path)) {
 			return false;
 		}
@@ -674,7 +674,7 @@ public class Validator {
 			return false;
 		}
 
-		if (isParentDirAllowed) {
+		if (parentDirAllowed) {
 			return true;
 		}
 
@@ -857,8 +857,9 @@ public class Validator {
 			return false;
 		}
 
-		if (StringUtil.startsWith(ipAddress, CharPool.OPEN_BRACKET) &&
-			StringUtil.endsWith(ipAddress, CharPool.CLOSE_BRACKET)) {
+		if ((ipAddress.charAt(0) == CharPool.OPEN_BRACKET) &&
+			(ipAddress.charAt(ipAddress.length() - 1) ==
+				CharPool.CLOSE_BRACKET)) {
 
 			ipAddress = ipAddress.substring(1, ipAddress.length() - 1);
 		}
@@ -1231,7 +1232,9 @@ public class Validator {
 	 *         <code>false</code> otherwise
 	 */
 	public static boolean isVariableName(String variableName) {
-		if (isNull(variableName)) {
+		if (isNull(variableName) ||
+			ArrayUtil.contains(_JAVA_KEYWORDS, variableName)) {
+
 			return false;
 		}
 
@@ -1324,6 +1327,17 @@ public class Validator {
 		'_', '`', '{', '|', '}', '~'
 	};
 
+	private static final String[] _JAVA_KEYWORDS = new String[] {
+		"abstract", "assert", "boolean", "break", "byte", "case", "catch",
+		"char", "class", "const", "continue", "default", "do", "double", "else",
+		"enum", "extends", "false", "final", "finally", "float", "for", "goto",
+		"if", "implements", "import", "instanceof", "int", "interface", "long",
+		"native", "new", "null", "package", "private", "protected", "public",
+		"return", "short", "static", "strictfp", "super", "switch",
+		"synchronized", "this", "throw", "throws", "transient", "true", "try",
+		"void", "volatile", "while"
+	};
+
 	private static final String _VARIABLE_TERM_BEGIN = "[$";
 
 	private static final String _VARIABLE_TERM_END = "$]";
@@ -1335,39 +1349,55 @@ public class Validator {
 	private static final Pattern _emailAddressPattern = Pattern.compile(
 		"[\\w!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^_`{|}~-]+)*@" +
 			"(?:[a-zA-Z0-9](?:-*[a-zA-Z0-9])?\\.*)+");
-	private static final Pattern _ipv4AddressPattern = Pattern.compile(
-		"^" +
-		"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
-		"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
-		"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
-		"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)" +
-		"$");
-	private static final Pattern _ipv6AddressPattern = Pattern.compile(
-		"^" +
-		"\\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|" +
-		"(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|" +
-		"((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)" +
-		"(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|" +
-		"(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:" +
-		"((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)" +
-		"(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|" +
-		"(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|" +
-		"((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)" +
-		"(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|" +
-		"(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|" +
-		"((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)" +
-		"(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|" +
-		"(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|" +
-		"((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)" +
-		"(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|" +
-		"(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|" +
-		"((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)" +
-		"(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|" +
-		"(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:" +
-		"((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\." +
-		"(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:)))(%.+)?\\s*" +
-		"$");
+	private static final Pattern _ipv4AddressPattern;
+	private static final Pattern _ipv6AddressPattern;
 	private static final Pattern _variableNamePattern = Pattern.compile(
 		"[_a-zA-Z]+[_a-zA-Z0-9]*");
+
+	static {
+		StringBundler sb = new StringBundler(6);
+
+		sb.append("^");
+		sb.append("(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.");
+		sb.append("(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.");
+		sb.append("(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.");
+		sb.append("(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)");
+		sb.append("$");
+
+		_ipv4AddressPattern = Pattern.compile(sb.toString());
+
+		sb = new StringBundler(28);
+
+		sb.append("^");
+		sb.append("\\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|");
+		sb.append("(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|");
+		sb.append("((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)");
+		sb.append("(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|");
+		sb.append("(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:");
+		sb.append("((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)");
+		sb.append("(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|");
+		sb.append("(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|");
+		sb.append("((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]");
+		sb.append("?\\d)");
+		sb.append("(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|");
+		sb.append("(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|");
+		sb.append("((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\\d|1\\d\\d|");
+		sb.append("[1-9]?\\d)");
+		sb.append("(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|");
+		sb.append("(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|");
+		sb.append("((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\\d|1\\d\\d|");
+		sb.append("[1-9]?\\d)");
+		sb.append("(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|");
+		sb.append("(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|");
+		sb.append("((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\\d|1\\d\\d|");
+		sb.append("[1-9]?\\d)");
+		sb.append("(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|");
+		sb.append("(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:");
+		sb.append("((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.");
+		sb.append("(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:)))(%.+)?\\s*");
+		sb.append("$");
+
+		_ipv6AddressPattern = Pattern.compile(sb.toString());
+	}
 
 }

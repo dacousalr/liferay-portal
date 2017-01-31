@@ -26,7 +26,6 @@ import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -60,7 +59,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * The persistence implementation for the s a p entry service.
+ * The persistence implementation for the sap entry service.
  *
  * <p>
  * Caching information and settings can be found in <code>portal.properties</code>
@@ -77,7 +76,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify or reference this class directly. Always use {@link SAPEntryUtil} to access the s a p entry persistence. Modify <code>service.xml</code> and rerun ServiceBuilder to regenerate this class.
+	 * Never modify or reference this class directly. Always use {@link SAPEntryUtil} to access the sap entry persistence. Modify <code>service.xml</code> and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static final String FINDER_CLASS_NAME_ENTITY = SAPEntryImpl.class.getName();
 	public static final String FINDER_CLASS_NAME_LIST_WITH_PAGINATION = FINDER_CLASS_NAME_ENTITY +
@@ -113,10 +112,10 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 			new String[] { String.class.getName() });
 
 	/**
-	 * Returns all the s a p entries where uuid = &#63;.
+	 * Returns all the sap entries where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
-	 * @return the matching s a p entries
+	 * @return the matching sap entries
 	 */
 	@Override
 	public List<SAPEntry> findByUuid(String uuid) {
@@ -124,16 +123,16 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns a range of all the s a p entries where uuid = &#63;.
+	 * Returns a range of all the sap entries where uuid = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param uuid the uuid
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
-	 * @return the range of matching s a p entries
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
+	 * @return the range of matching sap entries
 	 */
 	@Override
 	public List<SAPEntry> findByUuid(String uuid, int start, int end) {
@@ -141,17 +140,17 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns an ordered range of all the s a p entries where uuid = &#63;.
+	 * Returns an ordered range of all the sap entries where uuid = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param uuid the uuid
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching s a p entries
+	 * @return the ordered range of matching sap entries
 	 */
 	@Override
 	public List<SAPEntry> findByUuid(String uuid, int start, int end,
@@ -160,18 +159,18 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns an ordered range of all the s a p entries where uuid = &#63;.
+	 * Returns an ordered range of all the sap entries where uuid = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param uuid the uuid
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of matching s a p entries
+	 * @return the ordered range of matching sap entries
 	 */
 	@Override
 	public List<SAPEntry> findByUuid(String uuid, int start, int end,
@@ -290,12 +289,12 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the first s a p entry in the ordered set where uuid = &#63;.
+	 * Returns the first sap entry in the ordered set where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching s a p entry
-	 * @throws NoSuchEntryException if a matching s a p entry could not be found
+	 * @return the first matching sap entry
+	 * @throws NoSuchEntryException if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry findByUuid_First(String uuid,
@@ -320,11 +319,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the first s a p entry in the ordered set where uuid = &#63;.
+	 * Returns the first sap entry in the ordered set where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching s a p entry, or <code>null</code> if a matching s a p entry could not be found
+	 * @return the first matching sap entry, or <code>null</code> if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry fetchByUuid_First(String uuid,
@@ -339,12 +338,12 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the last s a p entry in the ordered set where uuid = &#63;.
+	 * Returns the last sap entry in the ordered set where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching s a p entry
-	 * @throws NoSuchEntryException if a matching s a p entry could not be found
+	 * @return the last matching sap entry
+	 * @throws NoSuchEntryException if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry findByUuid_Last(String uuid,
@@ -369,11 +368,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the last s a p entry in the ordered set where uuid = &#63;.
+	 * Returns the last sap entry in the ordered set where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching s a p entry, or <code>null</code> if a matching s a p entry could not be found
+	 * @return the last matching sap entry, or <code>null</code> if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry fetchByUuid_Last(String uuid,
@@ -395,13 +394,13 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the s a p entries before and after the current s a p entry in the ordered set where uuid = &#63;.
+	 * Returns the sap entries before and after the current sap entry in the ordered set where uuid = &#63;.
 	 *
-	 * @param sapEntryId the primary key of the current s a p entry
+	 * @param sapEntryId the primary key of the current sap entry
 	 * @param uuid the uuid
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next s a p entry
-	 * @throws NoSuchEntryException if a s a p entry with the primary key could not be found
+	 * @return the previous, current, and next sap entry
+	 * @throws NoSuchEntryException if a sap entry with the primary key could not be found
 	 */
 	@Override
 	public SAPEntry[] findByUuid_PrevAndNext(long sapEntryId, String uuid,
@@ -555,10 +554,10 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns all the s a p entries that the user has permission to view where uuid = &#63;.
+	 * Returns all the sap entries that the user has permission to view where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
-	 * @return the matching s a p entries that the user has permission to view
+	 * @return the matching sap entries that the user has permission to view
 	 */
 	@Override
 	public List<SAPEntry> filterFindByUuid(String uuid) {
@@ -566,16 +565,16 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns a range of all the s a p entries that the user has permission to view where uuid = &#63;.
+	 * Returns a range of all the sap entries that the user has permission to view where uuid = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param uuid the uuid
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
-	 * @return the range of matching s a p entries that the user has permission to view
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
+	 * @return the range of matching sap entries that the user has permission to view
 	 */
 	@Override
 	public List<SAPEntry> filterFindByUuid(String uuid, int start, int end) {
@@ -583,17 +582,17 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns an ordered range of all the s a p entries that the user has permissions to view where uuid = &#63;.
+	 * Returns an ordered range of all the sap entries that the user has permissions to view where uuid = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param uuid the uuid
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching s a p entries that the user has permission to view
+	 * @return the ordered range of matching sap entries that the user has permission to view
 	 */
 	@Override
 	public List<SAPEntry> filterFindByUuid(String uuid, int start, int end,
@@ -690,13 +689,13 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the s a p entries before and after the current s a p entry in the ordered set of s a p entries that the user has permission to view where uuid = &#63;.
+	 * Returns the sap entries before and after the current sap entry in the ordered set of sap entries that the user has permission to view where uuid = &#63;.
 	 *
-	 * @param sapEntryId the primary key of the current s a p entry
+	 * @param sapEntryId the primary key of the current sap entry
 	 * @param uuid the uuid
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next s a p entry
-	 * @throws NoSuchEntryException if a s a p entry with the primary key could not be found
+	 * @return the previous, current, and next sap entry
+	 * @throws NoSuchEntryException if a sap entry with the primary key could not be found
 	 */
 	@Override
 	public SAPEntry[] filterFindByUuid_PrevAndNext(long sapEntryId,
@@ -888,7 +887,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Removes all the s a p entries where uuid = &#63; from the database.
+	 * Removes all the sap entries where uuid = &#63; from the database.
 	 *
 	 * @param uuid the uuid
 	 */
@@ -901,10 +900,10 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the number of s a p entries where uuid = &#63;.
+	 * Returns the number of sap entries where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
-	 * @return the number of matching s a p entries
+	 * @return the number of matching sap entries
 	 */
 	@Override
 	public int countByUuid(String uuid) {
@@ -966,10 +965,10 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the number of s a p entries that the user has permission to view where uuid = &#63;.
+	 * Returns the number of sap entries that the user has permission to view where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
-	 * @return the number of matching s a p entries that the user has permission to view
+	 * @return the number of matching sap entries that the user has permission to view
 	 */
 	@Override
 	public int filterCountByUuid(String uuid) {
@@ -1054,11 +1053,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 			new String[] { String.class.getName(), Long.class.getName() });
 
 	/**
-	 * Returns all the s a p entries where uuid = &#63; and companyId = &#63;.
+	 * Returns all the sap entries where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @return the matching s a p entries
+	 * @return the matching sap entries
 	 */
 	@Override
 	public List<SAPEntry> findByUuid_C(String uuid, long companyId) {
@@ -1067,7 +1066,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns a range of all the s a p entries where uuid = &#63; and companyId = &#63;.
+	 * Returns a range of all the sap entries where uuid = &#63; and companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
@@ -1075,9 +1074,9 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
-	 * @return the range of matching s a p entries
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
+	 * @return the range of matching sap entries
 	 */
 	@Override
 	public List<SAPEntry> findByUuid_C(String uuid, long companyId, int start,
@@ -1086,7 +1085,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns an ordered range of all the s a p entries where uuid = &#63; and companyId = &#63;.
+	 * Returns an ordered range of all the sap entries where uuid = &#63; and companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
@@ -1094,10 +1093,10 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching s a p entries
+	 * @return the ordered range of matching sap entries
 	 */
 	@Override
 	public List<SAPEntry> findByUuid_C(String uuid, long companyId, int start,
@@ -1106,7 +1105,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns an ordered range of all the s a p entries where uuid = &#63; and companyId = &#63;.
+	 * Returns an ordered range of all the sap entries where uuid = &#63; and companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
@@ -1114,11 +1113,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of matching s a p entries
+	 * @return the ordered range of matching sap entries
 	 */
 	@Override
 	public List<SAPEntry> findByUuid_C(String uuid, long companyId, int start,
@@ -1247,13 +1246,13 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the first s a p entry in the ordered set where uuid = &#63; and companyId = &#63;.
+	 * Returns the first sap entry in the ordered set where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching s a p entry
-	 * @throws NoSuchEntryException if a matching s a p entry could not be found
+	 * @return the first matching sap entry
+	 * @throws NoSuchEntryException if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry findByUuid_C_First(String uuid, long companyId,
@@ -1282,12 +1281,12 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the first s a p entry in the ordered set where uuid = &#63; and companyId = &#63;.
+	 * Returns the first sap entry in the ordered set where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching s a p entry, or <code>null</code> if a matching s a p entry could not be found
+	 * @return the first matching sap entry, or <code>null</code> if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry fetchByUuid_C_First(String uuid, long companyId,
@@ -1303,13 +1302,13 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the last s a p entry in the ordered set where uuid = &#63; and companyId = &#63;.
+	 * Returns the last sap entry in the ordered set where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching s a p entry
-	 * @throws NoSuchEntryException if a matching s a p entry could not be found
+	 * @return the last matching sap entry
+	 * @throws NoSuchEntryException if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry findByUuid_C_Last(String uuid, long companyId,
@@ -1338,12 +1337,12 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the last s a p entry in the ordered set where uuid = &#63; and companyId = &#63;.
+	 * Returns the last sap entry in the ordered set where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching s a p entry, or <code>null</code> if a matching s a p entry could not be found
+	 * @return the last matching sap entry, or <code>null</code> if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry fetchByUuid_C_Last(String uuid, long companyId,
@@ -1365,14 +1364,14 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the s a p entries before and after the current s a p entry in the ordered set where uuid = &#63; and companyId = &#63;.
+	 * Returns the sap entries before and after the current sap entry in the ordered set where uuid = &#63; and companyId = &#63;.
 	 *
-	 * @param sapEntryId the primary key of the current s a p entry
+	 * @param sapEntryId the primary key of the current sap entry
 	 * @param uuid the uuid
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next s a p entry
-	 * @throws NoSuchEntryException if a s a p entry with the primary key could not be found
+	 * @return the previous, current, and next sap entry
+	 * @throws NoSuchEntryException if a sap entry with the primary key could not be found
 	 */
 	@Override
 	public SAPEntry[] findByUuid_C_PrevAndNext(long sapEntryId, String uuid,
@@ -1530,11 +1529,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns all the s a p entries that the user has permission to view where uuid = &#63; and companyId = &#63;.
+	 * Returns all the sap entries that the user has permission to view where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @return the matching s a p entries that the user has permission to view
+	 * @return the matching sap entries that the user has permission to view
 	 */
 	@Override
 	public List<SAPEntry> filterFindByUuid_C(String uuid, long companyId) {
@@ -1543,7 +1542,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns a range of all the s a p entries that the user has permission to view where uuid = &#63; and companyId = &#63;.
+	 * Returns a range of all the sap entries that the user has permission to view where uuid = &#63; and companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
@@ -1551,9 +1550,9 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
-	 * @return the range of matching s a p entries that the user has permission to view
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
+	 * @return the range of matching sap entries that the user has permission to view
 	 */
 	@Override
 	public List<SAPEntry> filterFindByUuid_C(String uuid, long companyId,
@@ -1562,7 +1561,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns an ordered range of all the s a p entries that the user has permissions to view where uuid = &#63; and companyId = &#63;.
+	 * Returns an ordered range of all the sap entries that the user has permissions to view where uuid = &#63; and companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
@@ -1570,10 +1569,10 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching s a p entries that the user has permission to view
+	 * @return the ordered range of matching sap entries that the user has permission to view
 	 */
 	@Override
 	public List<SAPEntry> filterFindByUuid_C(String uuid, long companyId,
@@ -1674,14 +1673,14 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the s a p entries before and after the current s a p entry in the ordered set of s a p entries that the user has permission to view where uuid = &#63; and companyId = &#63;.
+	 * Returns the sap entries before and after the current sap entry in the ordered set of sap entries that the user has permission to view where uuid = &#63; and companyId = &#63;.
 	 *
-	 * @param sapEntryId the primary key of the current s a p entry
+	 * @param sapEntryId the primary key of the current sap entry
 	 * @param uuid the uuid
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next s a p entry
-	 * @throws NoSuchEntryException if a s a p entry with the primary key could not be found
+	 * @return the previous, current, and next sap entry
+	 * @throws NoSuchEntryException if a sap entry with the primary key could not be found
 	 */
 	@Override
 	public SAPEntry[] filterFindByUuid_C_PrevAndNext(long sapEntryId,
@@ -1879,7 +1878,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Removes all the s a p entries where uuid = &#63; and companyId = &#63; from the database.
+	 * Removes all the sap entries where uuid = &#63; and companyId = &#63; from the database.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
@@ -1893,11 +1892,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the number of s a p entries where uuid = &#63; and companyId = &#63;.
+	 * Returns the number of sap entries where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @return the number of matching s a p entries
+	 * @return the number of matching sap entries
 	 */
 	@Override
 	public int countByUuid_C(String uuid, long companyId) {
@@ -1963,11 +1962,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the number of s a p entries that the user has permission to view where uuid = &#63; and companyId = &#63;.
+	 * Returns the number of sap entries that the user has permission to view where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @return the number of matching s a p entries that the user has permission to view
+	 * @return the number of matching sap entries that the user has permission to view
 	 */
 	@Override
 	public int filterCountByUuid_C(String uuid, long companyId) {
@@ -2057,10 +2056,10 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 			new String[] { Long.class.getName() });
 
 	/**
-	 * Returns all the s a p entries where companyId = &#63;.
+	 * Returns all the sap entries where companyId = &#63;.
 	 *
 	 * @param companyId the company ID
-	 * @return the matching s a p entries
+	 * @return the matching sap entries
 	 */
 	@Override
 	public List<SAPEntry> findByCompanyId(long companyId) {
@@ -2069,16 +2068,16 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns a range of all the s a p entries where companyId = &#63;.
+	 * Returns a range of all the sap entries where companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
-	 * @return the range of matching s a p entries
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
+	 * @return the range of matching sap entries
 	 */
 	@Override
 	public List<SAPEntry> findByCompanyId(long companyId, int start, int end) {
@@ -2086,17 +2085,17 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns an ordered range of all the s a p entries where companyId = &#63;.
+	 * Returns an ordered range of all the sap entries where companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching s a p entries
+	 * @return the ordered range of matching sap entries
 	 */
 	@Override
 	public List<SAPEntry> findByCompanyId(long companyId, int start, int end,
@@ -2105,18 +2104,18 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns an ordered range of all the s a p entries where companyId = &#63;.
+	 * Returns an ordered range of all the sap entries where companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of matching s a p entries
+	 * @return the ordered range of matching sap entries
 	 */
 	@Override
 	public List<SAPEntry> findByCompanyId(long companyId, int start, int end,
@@ -2221,12 +2220,12 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the first s a p entry in the ordered set where companyId = &#63;.
+	 * Returns the first sap entry in the ordered set where companyId = &#63;.
 	 *
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching s a p entry
-	 * @throws NoSuchEntryException if a matching s a p entry could not be found
+	 * @return the first matching sap entry
+	 * @throws NoSuchEntryException if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry findByCompanyId_First(long companyId,
@@ -2251,11 +2250,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the first s a p entry in the ordered set where companyId = &#63;.
+	 * Returns the first sap entry in the ordered set where companyId = &#63;.
 	 *
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching s a p entry, or <code>null</code> if a matching s a p entry could not be found
+	 * @return the first matching sap entry, or <code>null</code> if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry fetchByCompanyId_First(long companyId,
@@ -2270,12 +2269,12 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the last s a p entry in the ordered set where companyId = &#63;.
+	 * Returns the last sap entry in the ordered set where companyId = &#63;.
 	 *
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching s a p entry
-	 * @throws NoSuchEntryException if a matching s a p entry could not be found
+	 * @return the last matching sap entry
+	 * @throws NoSuchEntryException if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry findByCompanyId_Last(long companyId,
@@ -2300,11 +2299,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the last s a p entry in the ordered set where companyId = &#63;.
+	 * Returns the last sap entry in the ordered set where companyId = &#63;.
 	 *
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching s a p entry, or <code>null</code> if a matching s a p entry could not be found
+	 * @return the last matching sap entry, or <code>null</code> if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry fetchByCompanyId_Last(long companyId,
@@ -2326,13 +2325,13 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the s a p entries before and after the current s a p entry in the ordered set where companyId = &#63;.
+	 * Returns the sap entries before and after the current sap entry in the ordered set where companyId = &#63;.
 	 *
-	 * @param sapEntryId the primary key of the current s a p entry
+	 * @param sapEntryId the primary key of the current sap entry
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next s a p entry
-	 * @throws NoSuchEntryException if a s a p entry with the primary key could not be found
+	 * @return the previous, current, and next sap entry
+	 * @throws NoSuchEntryException if a sap entry with the primary key could not be found
 	 */
 	@Override
 	public SAPEntry[] findByCompanyId_PrevAndNext(long sapEntryId,
@@ -2472,10 +2471,10 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns all the s a p entries that the user has permission to view where companyId = &#63;.
+	 * Returns all the sap entries that the user has permission to view where companyId = &#63;.
 	 *
 	 * @param companyId the company ID
-	 * @return the matching s a p entries that the user has permission to view
+	 * @return the matching sap entries that the user has permission to view
 	 */
 	@Override
 	public List<SAPEntry> filterFindByCompanyId(long companyId) {
@@ -2484,16 +2483,16 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns a range of all the s a p entries that the user has permission to view where companyId = &#63;.
+	 * Returns a range of all the sap entries that the user has permission to view where companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
-	 * @return the range of matching s a p entries that the user has permission to view
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
+	 * @return the range of matching sap entries that the user has permission to view
 	 */
 	@Override
 	public List<SAPEntry> filterFindByCompanyId(long companyId, int start,
@@ -2502,17 +2501,17 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns an ordered range of all the s a p entries that the user has permissions to view where companyId = &#63;.
+	 * Returns an ordered range of all the sap entries that the user has permissions to view where companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching s a p entries that the user has permission to view
+	 * @return the ordered range of matching sap entries that the user has permission to view
 	 */
 	@Override
 	public List<SAPEntry> filterFindByCompanyId(long companyId, int start,
@@ -2595,13 +2594,13 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the s a p entries before and after the current s a p entry in the ordered set of s a p entries that the user has permission to view where companyId = &#63;.
+	 * Returns the sap entries before and after the current sap entry in the ordered set of sap entries that the user has permission to view where companyId = &#63;.
 	 *
-	 * @param sapEntryId the primary key of the current s a p entry
+	 * @param sapEntryId the primary key of the current sap entry
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next s a p entry
-	 * @throws NoSuchEntryException if a s a p entry with the primary key could not be found
+	 * @return the previous, current, and next sap entry
+	 * @throws NoSuchEntryException if a sap entry with the primary key could not be found
 	 */
 	@Override
 	public SAPEntry[] filterFindByCompanyId_PrevAndNext(long sapEntryId,
@@ -2780,7 +2779,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Removes all the s a p entries where companyId = &#63; from the database.
+	 * Removes all the sap entries where companyId = &#63; from the database.
 	 *
 	 * @param companyId the company ID
 	 */
@@ -2793,10 +2792,10 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the number of s a p entries where companyId = &#63;.
+	 * Returns the number of sap entries where companyId = &#63;.
 	 *
 	 * @param companyId the company ID
-	 * @return the number of matching s a p entries
+	 * @return the number of matching sap entries
 	 */
 	@Override
 	public int countByCompanyId(long companyId) {
@@ -2844,10 +2843,10 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the number of s a p entries that the user has permission to view where companyId = &#63;.
+	 * Returns the number of sap entries that the user has permission to view where companyId = &#63;.
 	 *
 	 * @param companyId the company ID
-	 * @return the number of matching s a p entries that the user has permission to view
+	 * @return the number of matching sap entries that the user has permission to view
 	 */
 	@Override
 	public int filterCountByCompanyId(long companyId) {
@@ -2912,11 +2911,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 			new String[] { Long.class.getName(), Boolean.class.getName() });
 
 	/**
-	 * Returns all the s a p entries where companyId = &#63; and defaultSAPEntry = &#63;.
+	 * Returns all the sap entries where companyId = &#63; and defaultSAPEntry = &#63;.
 	 *
 	 * @param companyId the company ID
-	 * @param defaultSAPEntry the default s a p entry
-	 * @return the matching s a p entries
+	 * @param defaultSAPEntry the default sap entry
+	 * @return the matching sap entries
 	 */
 	@Override
 	public List<SAPEntry> findByC_D(long companyId, boolean defaultSAPEntry) {
@@ -2925,17 +2924,17 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns a range of all the s a p entries where companyId = &#63; and defaultSAPEntry = &#63;.
+	 * Returns a range of all the sap entries where companyId = &#63; and defaultSAPEntry = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param companyId the company ID
-	 * @param defaultSAPEntry the default s a p entry
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
-	 * @return the range of matching s a p entries
+	 * @param defaultSAPEntry the default sap entry
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
+	 * @return the range of matching sap entries
 	 */
 	@Override
 	public List<SAPEntry> findByC_D(long companyId, boolean defaultSAPEntry,
@@ -2944,18 +2943,18 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns an ordered range of all the s a p entries where companyId = &#63; and defaultSAPEntry = &#63;.
+	 * Returns an ordered range of all the sap entries where companyId = &#63; and defaultSAPEntry = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param companyId the company ID
-	 * @param defaultSAPEntry the default s a p entry
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
+	 * @param defaultSAPEntry the default sap entry
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching s a p entries
+	 * @return the ordered range of matching sap entries
 	 */
 	@Override
 	public List<SAPEntry> findByC_D(long companyId, boolean defaultSAPEntry,
@@ -2965,19 +2964,19 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns an ordered range of all the s a p entries where companyId = &#63; and defaultSAPEntry = &#63;.
+	 * Returns an ordered range of all the sap entries where companyId = &#63; and defaultSAPEntry = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param companyId the company ID
-	 * @param defaultSAPEntry the default s a p entry
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
+	 * @param defaultSAPEntry the default sap entry
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of matching s a p entries
+	 * @return the ordered range of matching sap entries
 	 */
 	@Override
 	public List<SAPEntry> findByC_D(long companyId, boolean defaultSAPEntry,
@@ -3092,13 +3091,13 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the first s a p entry in the ordered set where companyId = &#63; and defaultSAPEntry = &#63;.
+	 * Returns the first sap entry in the ordered set where companyId = &#63; and defaultSAPEntry = &#63;.
 	 *
 	 * @param companyId the company ID
-	 * @param defaultSAPEntry the default s a p entry
+	 * @param defaultSAPEntry the default sap entry
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching s a p entry
-	 * @throws NoSuchEntryException if a matching s a p entry could not be found
+	 * @return the first matching sap entry
+	 * @throws NoSuchEntryException if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry findByC_D_First(long companyId, boolean defaultSAPEntry,
@@ -3127,12 +3126,12 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the first s a p entry in the ordered set where companyId = &#63; and defaultSAPEntry = &#63;.
+	 * Returns the first sap entry in the ordered set where companyId = &#63; and defaultSAPEntry = &#63;.
 	 *
 	 * @param companyId the company ID
-	 * @param defaultSAPEntry the default s a p entry
+	 * @param defaultSAPEntry the default sap entry
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching s a p entry, or <code>null</code> if a matching s a p entry could not be found
+	 * @return the first matching sap entry, or <code>null</code> if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry fetchByC_D_First(long companyId, boolean defaultSAPEntry,
@@ -3148,13 +3147,13 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the last s a p entry in the ordered set where companyId = &#63; and defaultSAPEntry = &#63;.
+	 * Returns the last sap entry in the ordered set where companyId = &#63; and defaultSAPEntry = &#63;.
 	 *
 	 * @param companyId the company ID
-	 * @param defaultSAPEntry the default s a p entry
+	 * @param defaultSAPEntry the default sap entry
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching s a p entry
-	 * @throws NoSuchEntryException if a matching s a p entry could not be found
+	 * @return the last matching sap entry
+	 * @throws NoSuchEntryException if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry findByC_D_Last(long companyId, boolean defaultSAPEntry,
@@ -3183,12 +3182,12 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the last s a p entry in the ordered set where companyId = &#63; and defaultSAPEntry = &#63;.
+	 * Returns the last sap entry in the ordered set where companyId = &#63; and defaultSAPEntry = &#63;.
 	 *
 	 * @param companyId the company ID
-	 * @param defaultSAPEntry the default s a p entry
+	 * @param defaultSAPEntry the default sap entry
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching s a p entry, or <code>null</code> if a matching s a p entry could not be found
+	 * @return the last matching sap entry, or <code>null</code> if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry fetchByC_D_Last(long companyId, boolean defaultSAPEntry,
@@ -3210,14 +3209,14 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the s a p entries before and after the current s a p entry in the ordered set where companyId = &#63; and defaultSAPEntry = &#63;.
+	 * Returns the sap entries before and after the current sap entry in the ordered set where companyId = &#63; and defaultSAPEntry = &#63;.
 	 *
-	 * @param sapEntryId the primary key of the current s a p entry
+	 * @param sapEntryId the primary key of the current sap entry
 	 * @param companyId the company ID
-	 * @param defaultSAPEntry the default s a p entry
+	 * @param defaultSAPEntry the default sap entry
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next s a p entry
-	 * @throws NoSuchEntryException if a s a p entry with the primary key could not be found
+	 * @return the previous, current, and next sap entry
+	 * @throws NoSuchEntryException if a sap entry with the primary key could not be found
 	 */
 	@Override
 	public SAPEntry[] findByC_D_PrevAndNext(long sapEntryId, long companyId,
@@ -3361,11 +3360,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns all the s a p entries that the user has permission to view where companyId = &#63; and defaultSAPEntry = &#63;.
+	 * Returns all the sap entries that the user has permission to view where companyId = &#63; and defaultSAPEntry = &#63;.
 	 *
 	 * @param companyId the company ID
-	 * @param defaultSAPEntry the default s a p entry
-	 * @return the matching s a p entries that the user has permission to view
+	 * @param defaultSAPEntry the default sap entry
+	 * @return the matching sap entries that the user has permission to view
 	 */
 	@Override
 	public List<SAPEntry> filterFindByC_D(long companyId,
@@ -3375,17 +3374,17 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns a range of all the s a p entries that the user has permission to view where companyId = &#63; and defaultSAPEntry = &#63;.
+	 * Returns a range of all the sap entries that the user has permission to view where companyId = &#63; and defaultSAPEntry = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param companyId the company ID
-	 * @param defaultSAPEntry the default s a p entry
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
-	 * @return the range of matching s a p entries that the user has permission to view
+	 * @param defaultSAPEntry the default sap entry
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
+	 * @return the range of matching sap entries that the user has permission to view
 	 */
 	@Override
 	public List<SAPEntry> filterFindByC_D(long companyId,
@@ -3394,18 +3393,18 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns an ordered range of all the s a p entries that the user has permissions to view where companyId = &#63; and defaultSAPEntry = &#63;.
+	 * Returns an ordered range of all the sap entries that the user has permissions to view where companyId = &#63; and defaultSAPEntry = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param companyId the company ID
-	 * @param defaultSAPEntry the default s a p entry
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
+	 * @param defaultSAPEntry the default sap entry
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching s a p entries that the user has permission to view
+	 * @return the ordered range of matching sap entries that the user has permission to view
 	 */
 	@Override
 	public List<SAPEntry> filterFindByC_D(long companyId,
@@ -3494,14 +3493,14 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the s a p entries before and after the current s a p entry in the ordered set of s a p entries that the user has permission to view where companyId = &#63; and defaultSAPEntry = &#63;.
+	 * Returns the sap entries before and after the current sap entry in the ordered set of sap entries that the user has permission to view where companyId = &#63; and defaultSAPEntry = &#63;.
 	 *
-	 * @param sapEntryId the primary key of the current s a p entry
+	 * @param sapEntryId the primary key of the current sap entry
 	 * @param companyId the company ID
-	 * @param defaultSAPEntry the default s a p entry
+	 * @param defaultSAPEntry the default sap entry
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next s a p entry
-	 * @throws NoSuchEntryException if a s a p entry with the primary key could not be found
+	 * @return the previous, current, and next sap entry
+	 * @throws NoSuchEntryException if a sap entry with the primary key could not be found
 	 */
 	@Override
 	public SAPEntry[] filterFindByC_D_PrevAndNext(long sapEntryId,
@@ -3685,10 +3684,10 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Removes all the s a p entries where companyId = &#63; and defaultSAPEntry = &#63; from the database.
+	 * Removes all the sap entries where companyId = &#63; and defaultSAPEntry = &#63; from the database.
 	 *
 	 * @param companyId the company ID
-	 * @param defaultSAPEntry the default s a p entry
+	 * @param defaultSAPEntry the default sap entry
 	 */
 	@Override
 	public void removeByC_D(long companyId, boolean defaultSAPEntry) {
@@ -3699,11 +3698,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the number of s a p entries where companyId = &#63; and defaultSAPEntry = &#63;.
+	 * Returns the number of sap entries where companyId = &#63; and defaultSAPEntry = &#63;.
 	 *
 	 * @param companyId the company ID
-	 * @param defaultSAPEntry the default s a p entry
-	 * @return the number of matching s a p entries
+	 * @param defaultSAPEntry the default sap entry
+	 * @return the number of matching sap entries
 	 */
 	@Override
 	public int countByC_D(long companyId, boolean defaultSAPEntry) {
@@ -3755,11 +3754,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the number of s a p entries that the user has permission to view where companyId = &#63; and defaultSAPEntry = &#63;.
+	 * Returns the number of sap entries that the user has permission to view where companyId = &#63; and defaultSAPEntry = &#63;.
 	 *
 	 * @param companyId the company ID
-	 * @param defaultSAPEntry the default s a p entry
-	 * @return the number of matching s a p entries that the user has permission to view
+	 * @param defaultSAPEntry the default sap entry
+	 * @return the number of matching sap entries that the user has permission to view
 	 */
 	@Override
 	public int filterCountByC_D(long companyId, boolean defaultSAPEntry) {
@@ -3820,12 +3819,12 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 			new String[] { Long.class.getName(), String.class.getName() });
 
 	/**
-	 * Returns the s a p entry where companyId = &#63; and name = &#63; or throws a {@link NoSuchEntryException} if it could not be found.
+	 * Returns the sap entry where companyId = &#63; and name = &#63; or throws a {@link NoSuchEntryException} if it could not be found.
 	 *
 	 * @param companyId the company ID
 	 * @param name the name
-	 * @return the matching s a p entry
-	 * @throws NoSuchEntryException if a matching s a p entry could not be found
+	 * @return the matching sap entry
+	 * @throws NoSuchEntryException if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry findByC_N(long companyId, String name)
@@ -3856,11 +3855,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the s a p entry where companyId = &#63; and name = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 * Returns the sap entry where companyId = &#63; and name = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
 	 * @param companyId the company ID
 	 * @param name the name
-	 * @return the matching s a p entry, or <code>null</code> if a matching s a p entry could not be found
+	 * @return the matching sap entry, or <code>null</code> if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry fetchByC_N(long companyId, String name) {
@@ -3868,12 +3867,12 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the s a p entry where companyId = &#63; and name = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 * Returns the sap entry where companyId = &#63; and name = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param companyId the company ID
 	 * @param name the name
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the matching s a p entry, or <code>null</code> if a matching s a p entry could not be found
+	 * @return the matching sap entry, or <code>null</code> if a matching sap entry could not be found
 	 */
 	@Override
 	public SAPEntry fetchByC_N(long companyId, String name,
@@ -3941,11 +3940,15 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 						list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"SAPEntryPersistenceImpl.fetchByC_N(long, String, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"SAPEntryPersistenceImpl.fetchByC_N(long, String, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					SAPEntry sapEntry = list.get(0);
@@ -3981,11 +3984,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Removes the s a p entry where companyId = &#63; and name = &#63; from the database.
+	 * Removes the sap entry where companyId = &#63; and name = &#63; from the database.
 	 *
 	 * @param companyId the company ID
 	 * @param name the name
-	 * @return the s a p entry that was removed
+	 * @return the sap entry that was removed
 	 */
 	@Override
 	public SAPEntry removeByC_N(long companyId, String name)
@@ -3996,11 +3999,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the number of s a p entries where companyId = &#63; and name = &#63;.
+	 * Returns the number of sap entries where companyId = &#63; and name = &#63;.
 	 *
 	 * @param companyId the company ID
 	 * @param name the name
-	 * @return the number of matching s a p entries
+	 * @return the number of matching sap entries
 	 */
 	@Override
 	public int countByC_N(long companyId, String name) {
@@ -4075,9 +4078,9 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Caches the s a p entry in the entity cache if it is enabled.
+	 * Caches the sap entry in the entity cache if it is enabled.
 	 *
-	 * @param sapEntry the s a p entry
+	 * @param sapEntry the sap entry
 	 */
 	@Override
 	public void cacheResult(SAPEntry sapEntry) {
@@ -4092,9 +4095,9 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Caches the s a p entries in the entity cache if it is enabled.
+	 * Caches the sap entries in the entity cache if it is enabled.
 	 *
-	 * @param sapEntries the s a p entries
+	 * @param sapEntries the sap entries
 	 */
 	@Override
 	public void cacheResult(List<SAPEntry> sapEntries) {
@@ -4110,7 +4113,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Clears the cache for all s a p entries.
+	 * Clears the cache for all sap entries.
 	 *
 	 * <p>
 	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
@@ -4126,7 +4129,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Clears the cache for the s a p entry.
+	 * Clears the cache for the sap entry.
 	 *
 	 * <p>
 	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
@@ -4140,7 +4143,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((SAPEntryModelImpl)sapEntry);
+		clearUniqueFindersCache((SAPEntryModelImpl)sapEntry, true);
 	}
 
 	@Override
@@ -4152,50 +4155,36 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 			entityCache.removeResult(SAPEntryModelImpl.ENTITY_CACHE_ENABLED,
 				SAPEntryImpl.class, sapEntry.getPrimaryKey());
 
-			clearUniqueFindersCache((SAPEntryModelImpl)sapEntry);
+			clearUniqueFindersCache((SAPEntryModelImpl)sapEntry, true);
 		}
 	}
 
-	protected void cacheUniqueFindersCache(
-		SAPEntryModelImpl sapEntryModelImpl, boolean isNew) {
-		if (isNew) {
+	protected void cacheUniqueFindersCache(SAPEntryModelImpl sapEntryModelImpl) {
+		Object[] args = new Object[] {
+				sapEntryModelImpl.getCompanyId(), sapEntryModelImpl.getName()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_N, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_N, args,
+			sapEntryModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		SAPEntryModelImpl sapEntryModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
 			Object[] args = new Object[] {
 					sapEntryModelImpl.getCompanyId(),
 					sapEntryModelImpl.getName()
 				};
 
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_N, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_N, args,
-				sapEntryModelImpl);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_N, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_N, args);
 		}
-		else {
-			if ((sapEntryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						sapEntryModelImpl.getCompanyId(),
-						sapEntryModelImpl.getName()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_N, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_N, args,
-					sapEntryModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(SAPEntryModelImpl sapEntryModelImpl) {
-		Object[] args = new Object[] {
-				sapEntryModelImpl.getCompanyId(), sapEntryModelImpl.getName()
-			};
-
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_N, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_N, args);
 
 		if ((sapEntryModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_N.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					sapEntryModelImpl.getOriginalCompanyId(),
 					sapEntryModelImpl.getOriginalName()
 				};
@@ -4206,10 +4195,10 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Creates a new s a p entry with the primary key. Does not add the s a p entry to the database.
+	 * Creates a new sap entry with the primary key. Does not add the sap entry to the database.
 	 *
-	 * @param sapEntryId the primary key for the new s a p entry
-	 * @return the new s a p entry
+	 * @param sapEntryId the primary key for the new sap entry
+	 * @return the new sap entry
 	 */
 	@Override
 	public SAPEntry create(long sapEntryId) {
@@ -4228,11 +4217,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Removes the s a p entry with the primary key from the database. Also notifies the appropriate model listeners.
+	 * Removes the sap entry with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param sapEntryId the primary key of the s a p entry
-	 * @return the s a p entry that was removed
-	 * @throws NoSuchEntryException if a s a p entry with the primary key could not be found
+	 * @param sapEntryId the primary key of the sap entry
+	 * @return the sap entry that was removed
+	 * @throws NoSuchEntryException if a sap entry with the primary key could not be found
 	 */
 	@Override
 	public SAPEntry remove(long sapEntryId) throws NoSuchEntryException {
@@ -4240,11 +4229,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Removes the s a p entry with the primary key from the database. Also notifies the appropriate model listeners.
+	 * Removes the sap entry with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param primaryKey the primary key of the s a p entry
-	 * @return the s a p entry that was removed
-	 * @throws NoSuchEntryException if a s a p entry with the primary key could not be found
+	 * @param primaryKey the primary key of the sap entry
+	 * @return the sap entry that was removed
+	 * @throws NoSuchEntryException if a sap entry with the primary key could not be found
 	 */
 	@Override
 	public SAPEntry remove(Serializable primaryKey) throws NoSuchEntryException {
@@ -4452,8 +4441,8 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 		entityCache.putResult(SAPEntryModelImpl.ENTITY_CACHE_ENABLED,
 			SAPEntryImpl.class, sapEntry.getPrimaryKey(), sapEntry, false);
 
-		clearUniqueFindersCache(sapEntryModelImpl);
-		cacheUniqueFindersCache(sapEntryModelImpl, isNew);
+		clearUniqueFindersCache(sapEntryModelImpl, false);
+		cacheUniqueFindersCache(sapEntryModelImpl);
 
 		sapEntry.resetOriginalValues();
 
@@ -4487,11 +4476,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the s a p entry with the primary key or throws a {@link com.liferay.portal.kernel.exception.NoSuchModelException} if it could not be found.
+	 * Returns the sap entry with the primary key or throws a {@link com.liferay.portal.kernel.exception.NoSuchModelException} if it could not be found.
 	 *
-	 * @param primaryKey the primary key of the s a p entry
-	 * @return the s a p entry
-	 * @throws NoSuchEntryException if a s a p entry with the primary key could not be found
+	 * @param primaryKey the primary key of the sap entry
+	 * @return the sap entry
+	 * @throws NoSuchEntryException if a sap entry with the primary key could not be found
 	 */
 	@Override
 	public SAPEntry findByPrimaryKey(Serializable primaryKey)
@@ -4511,11 +4500,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the s a p entry with the primary key or throws a {@link NoSuchEntryException} if it could not be found.
+	 * Returns the sap entry with the primary key or throws a {@link NoSuchEntryException} if it could not be found.
 	 *
-	 * @param sapEntryId the primary key of the s a p entry
-	 * @return the s a p entry
-	 * @throws NoSuchEntryException if a s a p entry with the primary key could not be found
+	 * @param sapEntryId the primary key of the sap entry
+	 * @return the sap entry
+	 * @throws NoSuchEntryException if a sap entry with the primary key could not be found
 	 */
 	@Override
 	public SAPEntry findByPrimaryKey(long sapEntryId)
@@ -4524,19 +4513,21 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the s a p entry with the primary key or returns <code>null</code> if it could not be found.
+	 * Returns the sap entry with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param primaryKey the primary key of the s a p entry
-	 * @return the s a p entry, or <code>null</code> if a s a p entry with the primary key could not be found
+	 * @param primaryKey the primary key of the sap entry
+	 * @return the sap entry, or <code>null</code> if a sap entry with the primary key could not be found
 	 */
 	@Override
 	public SAPEntry fetchByPrimaryKey(Serializable primaryKey) {
-		SAPEntry sapEntry = (SAPEntry)entityCache.getResult(SAPEntryModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(SAPEntryModelImpl.ENTITY_CACHE_ENABLED,
 				SAPEntryImpl.class, primaryKey);
 
-		if (sapEntry == _nullSAPEntry) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		SAPEntry sapEntry = (SAPEntry)serializable;
 
 		if (sapEntry == null) {
 			Session session = null;
@@ -4551,7 +4542,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 				}
 				else {
 					entityCache.putResult(SAPEntryModelImpl.ENTITY_CACHE_ENABLED,
-						SAPEntryImpl.class, primaryKey, _nullSAPEntry);
+						SAPEntryImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -4569,10 +4560,10 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the s a p entry with the primary key or returns <code>null</code> if it could not be found.
+	 * Returns the sap entry with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param sapEntryId the primary key of the s a p entry
-	 * @return the s a p entry, or <code>null</code> if a s a p entry with the primary key could not be found
+	 * @param sapEntryId the primary key of the sap entry
+	 * @return the sap entry, or <code>null</code> if a sap entry with the primary key could not be found
 	 */
 	@Override
 	public SAPEntry fetchByPrimaryKey(long sapEntryId) {
@@ -4605,18 +4596,20 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			SAPEntry sapEntry = (SAPEntry)entityCache.getResult(SAPEntryModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(SAPEntryModelImpl.ENTITY_CACHE_ENABLED,
 					SAPEntryImpl.class, primaryKey);
 
-			if (sapEntry == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, sapEntry);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (SAPEntry)serializable);
+				}
 			}
 		}
 
@@ -4658,7 +4651,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(SAPEntryModelImpl.ENTITY_CACHE_ENABLED,
-					SAPEntryImpl.class, primaryKey, _nullSAPEntry);
+					SAPEntryImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -4672,9 +4665,9 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns all the s a p entries.
+	 * Returns all the sap entries.
 	 *
-	 * @return the s a p entries
+	 * @return the sap entries
 	 */
 	@Override
 	public List<SAPEntry> findAll() {
@@ -4682,15 +4675,15 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns a range of all the s a p entries.
+	 * Returns a range of all the sap entries.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
-	 * @return the range of s a p entries
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
+	 * @return the range of sap entries
 	 */
 	@Override
 	public List<SAPEntry> findAll(int start, int end) {
@@ -4698,16 +4691,16 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns an ordered range of all the s a p entries.
+	 * Returns an ordered range of all the sap entries.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of s a p entries
+	 * @return the ordered range of sap entries
 	 */
 	@Override
 	public List<SAPEntry> findAll(int start, int end,
@@ -4716,17 +4709,17 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns an ordered range of all the s a p entries.
+	 * Returns an ordered range of all the sap entries.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link SAPEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param start the lower bound of the range of s a p entries
-	 * @param end the upper bound of the range of s a p entries (not inclusive)
+	 * @param start the lower bound of the range of sap entries
+	 * @param end the upper bound of the range of sap entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of s a p entries
+	 * @return the ordered range of sap entries
 	 */
 	@Override
 	public List<SAPEntry> findAll(int start, int end,
@@ -4814,7 +4807,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Removes all the s a p entries from the database.
+	 * Removes all the sap entries from the database.
 	 *
 	 */
 	@Override
@@ -4825,9 +4818,9 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Returns the number of s a p entries.
+	 * Returns the number of sap entries.
 	 *
-	 * @return the number of s a p entries
+	 * @return the number of sap entries
 	 */
 	@Override
 	public int countAll() {
@@ -4872,7 +4865,7 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	}
 
 	/**
-	 * Initializes the s a p entry persistence.
+	 * Initializes the sap entry persistence.
 	 */
 	public void afterPropertiesSet() {
 	}
@@ -4912,22 +4905,4 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid"
 			});
-	private static final SAPEntry _nullSAPEntry = new SAPEntryImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<SAPEntry> toCacheModel() {
-				return _nullSAPEntryCacheModel;
-			}
-		};
-
-	private static final CacheModel<SAPEntry> _nullSAPEntryCacheModel = new CacheModel<SAPEntry>() {
-			@Override
-			public SAPEntry toEntityModel() {
-				return _nullSAPEntry;
-			}
-		};
 }

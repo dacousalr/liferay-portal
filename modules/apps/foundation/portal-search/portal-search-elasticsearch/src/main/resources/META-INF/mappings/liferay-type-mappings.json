@@ -47,6 +47,17 @@
 				}
 			},
 			{
+				"template_expando_keyword": {
+					"mapping": {
+						"analyzer" : "keyword_lowercase",
+						"store": "true",
+						"type": "string"
+					},
+					"match": "expando__keyword__*",
+					"match_mapping_type": "string"
+				}
+			},
+			{
 				"template_ar": {
 					"mapping": {
 						"analyzer": "arabic",
@@ -479,7 +490,7 @@
 			{
 				"template_expando": {
 					"mapping": {
-						"index": "not_analyzed",
+						"index": "analyzed",
 						"store": "true",
 						"type": "string"
 					},
@@ -654,6 +665,7 @@
 			},
 			"geoLocation": {
 				"index": "not_analyzed",
+				"lat_lon": true,
 				"store": "yes",
 				"type": "geo_point"
 			},
@@ -805,6 +817,11 @@
 				"type": "string"
 			},
 			"scopeGroupId": {
+				"index": "not_analyzed",
+				"store": "yes",
+				"type": "string"
+			},
+			"screenName": {
 				"index": "not_analyzed",
 				"store": "yes",
 				"type": "string"

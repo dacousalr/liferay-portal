@@ -1,10 +1,10 @@
 <definition>
 	<command name="addOrRemoveViewPermissionFromAllRoles">
-		<for list="${roleList}" param="roleName" >
-			<var name="roleName" value="${roleName}" />
+		<for list="${roleList}" param="roleTitle" >
+			<var name="roleTitle" value="${roleTitle}" />
 
-			<var method="StringUtil#replace('${roleName}', ' ', '-')" name="key_roleName" />
-			<var method="StringUtil#lowerCase('${key_roleName}')" name="key_roleName" />
+			<var method="StringUtil#replace('${roleTitle}', ' ', '-')" name="key_roleTitle" />
+			<var method="StringUtil#lowerCase('${key_roleTitle}')" name="key_roleTitle" />
 
 			<if>
 				<equals arg1="${addOrRemoveViewPermission}" arg2="Add" />
@@ -21,20 +21,21 @@
 		</for>
 
 		<execute macro="Button#clickSave" />
+
 		<execute function="AssertTextEquals#assertPartialText" locator1="Permissions#SUCCESS_MESSAGE" value1="Your request completed successfully." />
 	</command>
 
 	<command name="assertDefaultPG">
-		<for list="${roleList}" param="roleName" >
-			<var name="roleName" value="${roleName}" />
+		<for list="${roleList}" param="roleTitle" >
+			<var name="roleTitle" value="${roleTitle}" />
 
-			<var method="StringUtil#replace('${roleName}', ' ', '-')" name="key_roleName" />
-			<var method="StringUtil#lowerCase('${key_roleName}')" name="key_roleName" />
+			<var method="StringUtil#replace('${roleTitle}', ' ', '-')" name="key_roleTitle" />
+			<var method="StringUtil#lowerCase('${key_roleTitle}')" name="key_roleTitle" />
 
 			<if>
 				<or>
-					<equals arg1="${roleName}" arg2="Guest" />
-					<equals arg1="${roleName}" arg2="Site Member" />
+					<equals arg1="${roleTitle}" arg2="Guest" />
+					<equals arg1="${roleTitle}" arg2="Site Member" />
 				</or>
 				<then>
 					<execute function="AssertNotChecked" locator1="Permissions#CONFIGURATION_PERMISSIONS_ADD_TO_PAGE_CHECKBOX" />
@@ -46,10 +47,10 @@
 
 			<if>
 				<or>
-					<equals arg1="${roleName}" arg2="Guest" />
-					<equals arg1="${roleName}" arg2="Power User" />
-					<equals arg1="${roleName}" arg2="Site Member" />
-					<equals arg1="${roleName}" arg2="User" />
+					<equals arg1="${roleTitle}" arg2="Guest" />
+					<equals arg1="${roleTitle}" arg2="Power User" />
+					<equals arg1="${roleTitle}" arg2="Site Member" />
+					<equals arg1="${roleTitle}" arg2="User" />
 				</or>
 				<then>
 					<execute function="AssertNotChecked" locator1="Permissions#CONFIGURATION_PERMISSIONS_CONFIGURATION_CHECKBOX" />
@@ -63,8 +64,8 @@
 
 			<if>
 				<or>
-					<equals arg1="${roleName}" arg2="Power User" />
-					<equals arg1="${roleName}" arg2="User" />
+					<equals arg1="${roleTitle}" arg2="Power User" />
+					<equals arg1="${roleTitle}" arg2="User" />
 				</or>
 				<then>
 					<execute function="AssertNotChecked" locator1="Permissions#CONFIGURATION_PERMISSIONS_VIEW_CHECKBOX" />
@@ -98,9 +99,17 @@
 
 		<execute function="Click" locator1="Icon#HEADER_VERTICAL_ELLIPSIS" />
 
-		<execute function="AssertClick" locator1="Blogs#PERMISSIONS" value1="Permissions" />
+		<if>
+			<isset var="entriesPermissions" />
+			<then>
+				<execute function="AssertClick" locator1="MenuItem#ENTRIES_PERMISSIONS" value1="Entries Permissions" />
+			</then>
+			<else>
+				<execute function="AssertClick" locator1="MenuItem#PERMISSIONS" value1="Permissions" />
+			</else>
+		</if>
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoBlogsEntriesCP">
@@ -122,7 +131,7 @@
 
 		<execute function="AssertClick" locator1="MenuItem#PERMISSIONS_LEXICON" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoBlogsEntryPG">
@@ -152,16 +161,6 @@
 		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
-	<command name="gotoDMDocumentPG">
-		<var name="key_dmDocumentTitle" value="${dmDocumentTitle}" />
-
-		<execute function="AssertElementPresent" locator1="DocumentsAndMedia#ICON_DOCUMENT" />
-		<execute function="AssertClick" locator1="DocumentsAndMedia#ICON_DOCUMENT_TITLE_LINK" value1="${dmDocumentTitle}" />
-		<execute function="AssertClick#assertTextClick" locator1="Button#PERMISSIONS" value1="Permissions" />
-
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
-	</command>
-
 	<command name="gotoDMFolderPG">
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="${pageName}" />
@@ -170,9 +169,10 @@
 		<var name="key_dmFolderName" value="${dmFolderName}" />
 
 		<execute function="Click" locator1="DocumentsAndMedia#DESCRIPTIVE_LIST_VERTICAL_ELLIPSIS" />
+
 		<execute function="AssertClick" locator1="MenuItem#PERMISSIONS" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoDocumentsAndMediaHomeFolderPG">
@@ -194,7 +194,7 @@
 
 		<execute function="AssertClick" locator1="MenuItem#PERMISSIONS" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoMessageBoardsCategoryPG">
@@ -204,7 +204,7 @@
 
 		<execute function="AssertClick" locator1="Button#PERMISSIONS" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoMessageBoardsPG">
@@ -214,7 +214,7 @@
 
 		<execute function="AssertClick" locator1="Button#PERMISSIONS" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoMessageBoardsThreadReplyPG">
@@ -233,7 +233,7 @@
 
 		<execute function="AssertClick" locator1="MenuItem#PERMISSIONS_LEXICON" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoPagePG">
@@ -257,7 +257,7 @@
 
 		<execute function="Click" locator1="MenuItem#PERMISSIONS_LEXICON" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoPollPermissionsCP">
@@ -267,7 +267,7 @@
 
 		<execute function="AssertClick" locator1="Polls#ACTIONS_DROPDOWN_PERMISSIONS" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoSitepageCP">
@@ -281,7 +281,7 @@
 
 		<execute function="Click" locator1="MenuItem#PERMISSIONS_LEXICON" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoSiteTeamsCP">
@@ -296,9 +296,10 @@
 		<var name="key_rowEntry" value="${teamName}" />
 
 		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
+
 		<execute function="AssertClick" locator1="MenuItem#PERMISSIONS_LEXICON" value1="Permissions" />
 
-		<execute function="SelectFrame" locator1="Permissions#PERMISSIONS_IFRAME" />
+		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 	</command>
 
 	<command name="gotoSiteTemplateCP">
@@ -328,21 +329,22 @@
 		<var name="key_rowEntry" value="${webContentTitle}" />
 
 		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
+
 		<execute function="AssertClick" locator1="MenuItem#PERMISSIONS_LEXICON" value1="Permissions" />
 
 		<execute macro="IFrame#selectPermissionsFrame" />
 	</command>
 
 	<command name="viewPermissionsChecked">
-		<var method="StringUtil#replace('${roleName}', ' ', '-')" name="key_roleName" />
-		<var method="StringUtil#lowerCase('${key_roleName}')" name="key_roleName" />
+		<var method="StringUtil#replace('${roleTitle}', ' ', '-')" name="key_roleTitle" />
+		<var method="StringUtil#lowerCase('${key_roleTitle}')" name="key_roleTitle" />
 
 		<execute function="AssertChecked" locator1="Permissions#${permissionDefinitionKey}" />
 	</command>
 
 	<command name="viewPermissionsRemoved">
-		<var method="StringUtil#replace('${roleName}', ' ', '-')" name="key_roleName" />
-		<var method="StringUtil#lowerCase('${key_roleName}')" name="key_roleName" />
+		<var method="StringUtil#replace('${roleTitle}', ' ', '-')" name="key_roleTitle" />
+		<var method="StringUtil#lowerCase('${key_roleTitle}')" name="key_roleTitle" />
 
 		<execute function="AssertNotChecked" locator1="Permissions#${permissionDefinitionKey}" />
 	</command>

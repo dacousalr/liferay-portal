@@ -3,10 +3,18 @@ import com.liferay.gradle.util.copy.RenameDependencyClosure
 
 import org.dm.gradle.plugins.bundle.JarBuilder
 
+ext {
+	systemPackagesExtraManifestHeaders = [
+		"Bnd-LastModified": "1468904359940",
+		"Created-By": "1.8.0_92 (Oracle Corporation)"
+	]
+}
+
 task buildSystemPackagesExtraManifest
 task copySystemPackagesExtraLibs(type: Copy)
 task copySystemPackagesExtraManifest(type: Copy)
 
+String buildProfile = System.properties["build.profile"]
 File systemPackagesExtraBndFile = file("system.packages.extra.bnd")
 File systemPackagesExtraManifestFile = file("system.packages.extra.mf")
 
@@ -31,9 +39,17 @@ buildSystemPackagesExtraManifest {
 		jarBuilder.withTrace false
 		jarBuilder.withVersion project.version
 
-		systemPackagesExtraManifestFile.withOutputStream {
-			jarBuilder.writeManifestTo it
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()
+
+		jarBuilder.writeManifestTo byteArrayOutputStream
+
+		String systemPackagesExtraManifest = byteArrayOutputStream.toString("UTF-8")
+
+		for (entry in systemPackagesExtraManifestHeaders) {
+			systemPackagesExtraManifest = systemPackagesExtraManifest.replaceFirst "${entry.key}: .+", "${entry.key}: ${entry.value}"
 		}
+
+		systemPackagesExtraManifestFile.setText systemPackagesExtraManifest, "UTF-8"
 	}
 }
 
@@ -44,7 +60,7 @@ copySystemPackagesExtraLibs {
 }
 
 copySystemPackagesExtraManifest {
-	if (!FileUtil.isUpToDate(project, systemPackagesExtraBndFile, systemPackagesExtraManifestFile)) {
+	if ((buildProfile == "slim") || !FileUtil.isUpToDate(project, systemPackagesExtraBndFile, systemPackagesExtraManifestFile)) {
 		dependsOn buildSystemPackagesExtraManifest
 	}
 
@@ -58,6 +74,7 @@ copySystemPackagesExtraManifest {
 
 dependencies {
 	provided group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
+	provided group: "com.liferay", name: "com.liferay.osgi.felix.util", version: "1.0.0"
 	provided group: "com.liferay", name: "com.liferay.osgi.service.tracker.collections", version: "2.0.0"
 	provided group: "com.liferay.portal", name: "com.liferay.portal.impl", version: "default"
 	provided group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "default"
@@ -70,6 +87,13 @@ dependencies {
 	provided project(":core:portal-app-license-api")
 	provided project(":core:registry-api")
 	provided project(":core:registry-impl")
+}
+
+if (buildProfile != "slim") {
+	dependencies {
+		provided project(":core:portal-compat:blogs:portal-impl-blogs-compat")
+		provided project(":core:portal-compat:blogs:portal-kernel-blogs-compat")
+	}
 }
 
 jar {

@@ -29,8 +29,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchRecentLayoutRevisionException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.RecentLayoutRevision;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
@@ -1960,7 +1958,8 @@ public class RecentLayoutRevisionPersistenceImpl extends BasePersistenceImpl<Rec
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((RecentLayoutRevisionModelImpl)recentLayoutRevision);
+		clearUniqueFindersCache((RecentLayoutRevisionModelImpl)recentLayoutRevision,
+			true);
 	}
 
 	@Override
@@ -1973,43 +1972,12 @@ public class RecentLayoutRevisionPersistenceImpl extends BasePersistenceImpl<Rec
 				RecentLayoutRevisionImpl.class,
 				recentLayoutRevision.getPrimaryKey());
 
-			clearUniqueFindersCache((RecentLayoutRevisionModelImpl)recentLayoutRevision);
+			clearUniqueFindersCache((RecentLayoutRevisionModelImpl)recentLayoutRevision,
+				true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		RecentLayoutRevisionModelImpl recentLayoutRevisionModelImpl,
-		boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					recentLayoutRevisionModelImpl.getUserId(),
-					recentLayoutRevisionModelImpl.getLayoutSetBranchId(),
-					recentLayoutRevisionModelImpl.getPlid()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_U_L_P, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_U_L_P, args,
-				recentLayoutRevisionModelImpl);
-		}
-		else {
-			if ((recentLayoutRevisionModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_U_L_P.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						recentLayoutRevisionModelImpl.getUserId(),
-						recentLayoutRevisionModelImpl.getLayoutSetBranchId(),
-						recentLayoutRevisionModelImpl.getPlid()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_U_L_P, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_U_L_P, args,
-					recentLayoutRevisionModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		RecentLayoutRevisionModelImpl recentLayoutRevisionModelImpl) {
 		Object[] args = new Object[] {
 				recentLayoutRevisionModelImpl.getUserId(),
@@ -2017,12 +1985,29 @@ public class RecentLayoutRevisionPersistenceImpl extends BasePersistenceImpl<Rec
 				recentLayoutRevisionModelImpl.getPlid()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_U_L_P, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_U_L_P, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_U_L_P, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_U_L_P, args,
+			recentLayoutRevisionModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		RecentLayoutRevisionModelImpl recentLayoutRevisionModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					recentLayoutRevisionModelImpl.getUserId(),
+					recentLayoutRevisionModelImpl.getLayoutSetBranchId(),
+					recentLayoutRevisionModelImpl.getPlid()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_U_L_P, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_U_L_P, args);
+		}
 
 		if ((recentLayoutRevisionModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_U_L_P.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					recentLayoutRevisionModelImpl.getOriginalUserId(),
 					recentLayoutRevisionModelImpl.getOriginalLayoutSetBranchId(),
 					recentLayoutRevisionModelImpl.getOriginalPlid()
@@ -2234,8 +2219,8 @@ public class RecentLayoutRevisionPersistenceImpl extends BasePersistenceImpl<Rec
 			RecentLayoutRevisionImpl.class,
 			recentLayoutRevision.getPrimaryKey(), recentLayoutRevision, false);
 
-		clearUniqueFindersCache(recentLayoutRevisionModelImpl);
-		cacheUniqueFindersCache(recentLayoutRevisionModelImpl, isNew);
+		clearUniqueFindersCache(recentLayoutRevisionModelImpl, false);
+		cacheUniqueFindersCache(recentLayoutRevisionModelImpl);
 
 		recentLayoutRevision.resetOriginalValues();
 
@@ -2310,12 +2295,14 @@ public class RecentLayoutRevisionPersistenceImpl extends BasePersistenceImpl<Rec
 	 */
 	@Override
 	public RecentLayoutRevision fetchByPrimaryKey(Serializable primaryKey) {
-		RecentLayoutRevision recentLayoutRevision = (RecentLayoutRevision)entityCache.getResult(RecentLayoutRevisionModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(RecentLayoutRevisionModelImpl.ENTITY_CACHE_ENABLED,
 				RecentLayoutRevisionImpl.class, primaryKey);
 
-		if (recentLayoutRevision == _nullRecentLayoutRevision) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		RecentLayoutRevision recentLayoutRevision = (RecentLayoutRevision)serializable;
 
 		if (recentLayoutRevision == null) {
 			Session session = null;
@@ -2331,8 +2318,7 @@ public class RecentLayoutRevisionPersistenceImpl extends BasePersistenceImpl<Rec
 				}
 				else {
 					entityCache.putResult(RecentLayoutRevisionModelImpl.ENTITY_CACHE_ENABLED,
-						RecentLayoutRevisionImpl.class, primaryKey,
-						_nullRecentLayoutRevision);
+						RecentLayoutRevisionImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -2386,18 +2372,20 @@ public class RecentLayoutRevisionPersistenceImpl extends BasePersistenceImpl<Rec
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			RecentLayoutRevision recentLayoutRevision = (RecentLayoutRevision)entityCache.getResult(RecentLayoutRevisionModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(RecentLayoutRevisionModelImpl.ENTITY_CACHE_ENABLED,
 					RecentLayoutRevisionImpl.class, primaryKey);
 
-			if (recentLayoutRevision == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, recentLayoutRevision);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (RecentLayoutRevision)serializable);
+				}
 			}
 		}
 
@@ -2440,8 +2428,7 @@ public class RecentLayoutRevisionPersistenceImpl extends BasePersistenceImpl<Rec
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(RecentLayoutRevisionModelImpl.ENTITY_CACHE_ENABLED,
-					RecentLayoutRevisionImpl.class, primaryKey,
-					_nullRecentLayoutRevision);
+					RecentLayoutRevisionImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -2676,35 +2663,4 @@ public class RecentLayoutRevisionPersistenceImpl extends BasePersistenceImpl<Rec
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No RecentLayoutRevision exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No RecentLayoutRevision exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(RecentLayoutRevisionPersistenceImpl.class);
-	private static final RecentLayoutRevision _nullRecentLayoutRevision = new RecentLayoutRevisionImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<RecentLayoutRevision> toCacheModel() {
-				return _nullRecentLayoutRevisionCacheModel;
-			}
-		};
-
-	private static final CacheModel<RecentLayoutRevision> _nullRecentLayoutRevisionCacheModel =
-		new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<RecentLayoutRevision>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public RecentLayoutRevision toEntityModel() {
-			return _nullRecentLayoutRevision;
-		}
-	}
 }

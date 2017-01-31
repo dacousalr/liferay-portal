@@ -29,8 +29,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchWorkflowInstanceLinkException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.WorkflowInstanceLink;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -130,7 +128,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	 * @param groupId the group ID
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the matching workflow instance links
 	 */
 	@Override
@@ -150,7 +148,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	 * @param groupId the group ID
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of workflow instance links
 	 * @param end the upper bound of the range of workflow instance links (not inclusive)
 	 * @return the range of matching workflow instance links
@@ -172,7 +170,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	 * @param groupId the group ID
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of workflow instance links
 	 * @param end the upper bound of the range of workflow instance links (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -196,7 +194,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	 * @param groupId the group ID
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of workflow instance links
 	 * @param end the upper bound of the range of workflow instance links (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -332,7 +330,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	 * @param groupId the group ID
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching workflow instance link
 	 * @throws NoSuchWorkflowInstanceLinkException if a matching workflow instance link could not be found
@@ -376,7 +374,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	 * @param groupId the group ID
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching workflow instance link, or <code>null</code> if a matching workflow instance link could not be found
 	 */
@@ -400,7 +398,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	 * @param groupId the group ID
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching workflow instance link
 	 * @throws NoSuchWorkflowInstanceLinkException if a matching workflow instance link could not be found
@@ -444,7 +442,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	 * @param groupId the group ID
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching workflow instance link, or <code>null</code> if a matching workflow instance link could not be found
 	 */
@@ -475,7 +473,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	 * @param groupId the group ID
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next workflow instance link
 	 * @throws NoSuchWorkflowInstanceLinkException if a workflow instance link with the primary key could not be found
@@ -641,7 +639,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	 * @param groupId the group ID
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 */
 	@Override
 	public void removeByG_C_C_C(long groupId, long companyId, long classNameId,
@@ -659,7 +657,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	 * @param groupId the group ID
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the number of matching workflow instance links
 	 */
 	@Override
@@ -1080,12 +1078,14 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	 */
 	@Override
 	public WorkflowInstanceLink fetchByPrimaryKey(Serializable primaryKey) {
-		WorkflowInstanceLink workflowInstanceLink = (WorkflowInstanceLink)entityCache.getResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
 				WorkflowInstanceLinkImpl.class, primaryKey);
 
-		if (workflowInstanceLink == _nullWorkflowInstanceLink) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		WorkflowInstanceLink workflowInstanceLink = (WorkflowInstanceLink)serializable;
 
 		if (workflowInstanceLink == null) {
 			Session session = null;
@@ -1101,8 +1101,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 				}
 				else {
 					entityCache.putResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
-						WorkflowInstanceLinkImpl.class, primaryKey,
-						_nullWorkflowInstanceLink);
+						WorkflowInstanceLinkImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -1156,18 +1155,20 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			WorkflowInstanceLink workflowInstanceLink = (WorkflowInstanceLink)entityCache.getResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
 					WorkflowInstanceLinkImpl.class, primaryKey);
 
-			if (workflowInstanceLink == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, workflowInstanceLink);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (WorkflowInstanceLink)serializable);
+				}
 			}
 		}
 
@@ -1210,8 +1211,7 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(WorkflowInstanceLinkModelImpl.ENTITY_CACHE_ENABLED,
-					WorkflowInstanceLinkImpl.class, primaryKey,
-					_nullWorkflowInstanceLink);
+					WorkflowInstanceLinkImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -1446,35 +1446,4 @@ public class WorkflowInstanceLinkPersistenceImpl extends BasePersistenceImpl<Wor
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No WorkflowInstanceLink exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No WorkflowInstanceLink exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(WorkflowInstanceLinkPersistenceImpl.class);
-	private static final WorkflowInstanceLink _nullWorkflowInstanceLink = new WorkflowInstanceLinkImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<WorkflowInstanceLink> toCacheModel() {
-				return _nullWorkflowInstanceLinkCacheModel;
-			}
-		};
-
-	private static final CacheModel<WorkflowInstanceLink> _nullWorkflowInstanceLinkCacheModel =
-		new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<WorkflowInstanceLink>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public WorkflowInstanceLink toEntityModel() {
-			return _nullWorkflowInstanceLink;
-		}
-	}
 }

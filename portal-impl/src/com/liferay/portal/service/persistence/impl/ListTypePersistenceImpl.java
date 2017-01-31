@@ -28,9 +28,7 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchListTypeException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.ListType;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.service.persistence.ListTypePersistence;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -776,11 +774,15 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 						list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"ListTypePersistenceImpl.fetchByN_T(String, String, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"ListTypePersistenceImpl.fetchByN_T(String, String, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					ListType listType = list.get(0);
@@ -991,7 +993,7 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((ListTypeModelImpl)listType);
+		clearUniqueFindersCache((ListTypeModelImpl)listType, true);
 	}
 
 	@Override
@@ -1003,48 +1005,35 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 			entityCache.removeResult(ListTypeModelImpl.ENTITY_CACHE_ENABLED,
 				ListTypeImpl.class, listType.getPrimaryKey());
 
-			clearUniqueFindersCache((ListTypeModelImpl)listType);
+			clearUniqueFindersCache((ListTypeModelImpl)listType, true);
 		}
 	}
 
-	protected void cacheUniqueFindersCache(
-		ListTypeModelImpl listTypeModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					listTypeModelImpl.getName(), listTypeModelImpl.getType()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_N_T, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_N_T, args,
-				listTypeModelImpl);
-		}
-		else {
-			if ((listTypeModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_N_T.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						listTypeModelImpl.getName(), listTypeModelImpl.getType()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_N_T, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_N_T, args,
-					listTypeModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(ListTypeModelImpl listTypeModelImpl) {
+	protected void cacheUniqueFindersCache(ListTypeModelImpl listTypeModelImpl) {
 		Object[] args = new Object[] {
 				listTypeModelImpl.getName(), listTypeModelImpl.getType()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_N_T, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_N_T, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_N_T, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_N_T, args,
+			listTypeModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		ListTypeModelImpl listTypeModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					listTypeModelImpl.getName(), listTypeModelImpl.getType()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_N_T, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_N_T, args);
+		}
 
 		if ((listTypeModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_N_T.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					listTypeModelImpl.getOriginalName(),
 					listTypeModelImpl.getOriginalType()
 				};
@@ -1209,8 +1198,8 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 		entityCache.putResult(ListTypeModelImpl.ENTITY_CACHE_ENABLED,
 			ListTypeImpl.class, listType.getPrimaryKey(), listType, false);
 
-		clearUniqueFindersCache(listTypeModelImpl);
-		cacheUniqueFindersCache(listTypeModelImpl, isNew);
+		clearUniqueFindersCache(listTypeModelImpl, false);
+		cacheUniqueFindersCache(listTypeModelImpl);
 
 		listType.resetOriginalValues();
 
@@ -1280,12 +1269,14 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 	 */
 	@Override
 	public ListType fetchByPrimaryKey(Serializable primaryKey) {
-		ListType listType = (ListType)entityCache.getResult(ListTypeModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(ListTypeModelImpl.ENTITY_CACHE_ENABLED,
 				ListTypeImpl.class, primaryKey);
 
-		if (listType == _nullListType) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		ListType listType = (ListType)serializable;
 
 		if (listType == null) {
 			Session session = null;
@@ -1300,7 +1291,7 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 				}
 				else {
 					entityCache.putResult(ListTypeModelImpl.ENTITY_CACHE_ENABLED,
-						ListTypeImpl.class, primaryKey, _nullListType);
+						ListTypeImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -1354,18 +1345,20 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			ListType listType = (ListType)entityCache.getResult(ListTypeModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(ListTypeModelImpl.ENTITY_CACHE_ENABLED,
 					ListTypeImpl.class, primaryKey);
 
-			if (listType == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, listType);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (ListType)serializable);
+				}
 			}
 		}
 
@@ -1407,7 +1400,7 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(ListTypeModelImpl.ENTITY_CACHE_ENABLED,
-					ListTypeImpl.class, primaryKey, _nullListType);
+					ListTypeImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -1647,34 +1640,4 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"type"
 			});
-	private static final ListType _nullListType = new ListTypeImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<ListType> toCacheModel() {
-				return _nullListTypeCacheModel;
-			}
-		};
-
-	private static final CacheModel<ListType> _nullListTypeCacheModel = new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<ListType>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public ListType toEntityModel() {
-			return _nullListType;
-		}
-	}
 }

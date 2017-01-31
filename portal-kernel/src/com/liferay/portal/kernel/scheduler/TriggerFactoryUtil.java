@@ -14,7 +14,7 @@
 
 package com.liferay.portal.kernel.scheduler;
 
-import com.liferay.portal.kernel.util.ProxyFactory;
+import com.liferay.portal.kernel.util.ServiceProxyFactory;
 
 import java.util.Date;
 
@@ -69,7 +69,9 @@ public class TriggerFactoryUtil {
 			jobName, groupName, null, null, cronExpression);
 	}
 
-	private static final TriggerFactory _triggerFactory =
-		ProxyFactory.newServiceTrackedInstance(TriggerFactory.class);
+	private static volatile TriggerFactory _triggerFactory =
+		ServiceProxyFactory.newServiceTrackedInstance(
+			TriggerFactory.class, TriggerFactoryUtil.class, "_triggerFactory",
+			false);
 
 }

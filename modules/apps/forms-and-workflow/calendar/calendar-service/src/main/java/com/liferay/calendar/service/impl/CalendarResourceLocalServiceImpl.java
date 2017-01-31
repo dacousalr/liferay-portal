@@ -61,7 +61,7 @@ public class CalendarResourceLocalServiceImpl
 
 		// Calendar resource
 
-		User user = userPersistence.findByPrimaryKey(userId);
+		User user = userLocalService.getUser(userId);
 
 		long calendarResourceId = counterLocalService.increment();
 
@@ -78,8 +78,7 @@ public class CalendarResourceLocalServiceImpl
 			code = String.valueOf(calendarResourceId);
 		}
 		else {
-			code = code.trim();
-			code = StringUtil.toUpperCase(code);
+			code = StringUtil.toUpperCase(StringUtil.trim(code));
 		}
 
 		Date now = new Date();
@@ -114,14 +113,16 @@ public class CalendarResourceLocalServiceImpl
 		// Calendar
 
 		if (!ExportImportThreadLocal.isImportInProcess()) {
-			serviceContext.setAddGroupPermissions(true);
-			serviceContext.setAddGuestPermissions(true);
+			ServiceContext calendarServiceContext = new ServiceContext();
+
+			calendarServiceContext.setAddGroupPermissions(true);
+			calendarServiceContext.setAddGuestPermissions(true);
 
 			calendarLocalService.addCalendar(
 				userId, calendarResource.getGroupId(), calendarResourceId,
 				nameMap, descriptionMap, calendarResource.getTimeZoneId(),
 				CalendarServiceConfigurationValues.CALENDAR_COLOR_DEFAULT, true,
-				false, false, serviceContext);
+				false, false, calendarServiceContext);
 		}
 
 		// Asset

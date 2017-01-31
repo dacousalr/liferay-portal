@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
@@ -3569,7 +3568,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * Returns all the social requests where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the matching social requests
 	 */
 	@Override
@@ -3586,7 +3585,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * </p>
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of social requests
 	 * @param end the upper bound of the range of social requests (not inclusive)
 	 * @return the range of matching social requests
@@ -3605,7 +3604,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * </p>
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of social requests
 	 * @param end the upper bound of the range of social requests (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -3626,7 +3625,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * </p>
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of social requests
 	 * @param end the upper bound of the range of social requests (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -3749,7 +3748,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * Returns the first social request in the ordered set where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching social request
 	 * @throws NoSuchRequestException if a matching social request could not be found
@@ -3784,7 +3783,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * Returns the first social request in the ordered set where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching social request, or <code>null</code> if a matching social request could not be found
 	 */
@@ -3805,7 +3804,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * Returns the last social request in the ordered set where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching social request
 	 * @throws NoSuchRequestException if a matching social request could not be found
@@ -3840,7 +3839,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * Returns the last social request in the ordered set where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching social request, or <code>null</code> if a matching social request could not be found
 	 */
@@ -3868,7 +3867,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param requestId the primary key of the current social request
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next social request
 	 * @throws NoSuchRequestException if a social request with the primary key could not be found
@@ -4019,7 +4018,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * Removes all the social requests where classNameId = &#63; and classPK = &#63; from the database.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 */
 	@Override
 	public void removeByC_C(long classNameId, long classPK) {
@@ -4033,7 +4032,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * Returns the number of social requests where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the number of matching social requests
 	 */
 	@Override
@@ -4657,7 +4656,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param receiverUserId the receiver user ID
 	 * @return the matching social request
@@ -4707,7 +4706,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param receiverUserId the receiver user ID
 	 * @return the matching social request, or <code>null</code> if a matching social request could not be found
@@ -4724,7 +4723,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param receiverUserId the receiver user ID
 	 * @param retrieveFromCache whether to retrieve from the finder cache
@@ -4839,7 +4838,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param receiverUserId the receiver user ID
 	 * @return the social request that was removed
@@ -4859,7 +4858,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param receiverUserId the receiver user ID
 	 * @return the number of matching social requests
@@ -4972,7 +4971,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param status the status
 	 * @return the matching social requests
@@ -4993,7 +4992,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param status the status
 	 * @param start the lower bound of the range of social requests
@@ -5016,7 +5015,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param status the status
 	 * @param start the lower bound of the range of social requests
@@ -5041,7 +5040,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param status the status
 	 * @param start the lower bound of the range of social requests
@@ -5183,7 +5182,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param status the status
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -5231,7 +5230,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param status the status
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -5256,7 +5255,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param status the status
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -5304,7 +5303,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param status the status
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -5336,7 +5335,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * @param requestId the primary key of the current social request
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param status the status
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -5505,7 +5504,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param status the status
 	 */
@@ -5524,7 +5523,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param status the status
 	 * @return the number of matching social requests
@@ -5639,7 +5638,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * Returns all the social requests where classNameId = &#63; and classPK = &#63; and type = &#63; and receiverUserId = &#63; and status = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param receiverUserId the receiver user ID
 	 * @param status the status
@@ -5660,7 +5659,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * </p>
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param receiverUserId the receiver user ID
 	 * @param status the status
@@ -5683,7 +5682,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * </p>
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param receiverUserId the receiver user ID
 	 * @param status the status
@@ -5708,7 +5707,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * </p>
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param receiverUserId the receiver user ID
 	 * @param status the status
@@ -5852,7 +5851,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * Returns the first social request in the ordered set where classNameId = &#63; and classPK = &#63; and type = &#63; and receiverUserId = &#63; and status = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param receiverUserId the receiver user ID
 	 * @param status the status
@@ -5900,7 +5899,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * Returns the first social request in the ordered set where classNameId = &#63; and classPK = &#63; and type = &#63; and receiverUserId = &#63; and status = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param receiverUserId the receiver user ID
 	 * @param status the status
@@ -5925,7 +5924,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * Returns the last social request in the ordered set where classNameId = &#63; and classPK = &#63; and type = &#63; and receiverUserId = &#63; and status = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param receiverUserId the receiver user ID
 	 * @param status the status
@@ -5973,7 +5972,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * Returns the last social request in the ordered set where classNameId = &#63; and classPK = &#63; and type = &#63; and receiverUserId = &#63; and status = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param receiverUserId the receiver user ID
 	 * @param status the status
@@ -6006,7 +6005,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 *
 	 * @param requestId the primary key of the current social request
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param receiverUserId the receiver user ID
 	 * @param status the status
@@ -6175,7 +6174,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * Removes all the social requests where classNameId = &#63; and classPK = &#63; and type = &#63; and receiverUserId = &#63; and status = &#63; from the database.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param receiverUserId the receiver user ID
 	 * @param status the status
@@ -6194,7 +6193,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 * Returns the number of social requests where classNameId = &#63; and classPK = &#63; and type = &#63; and receiverUserId = &#63; and status = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param receiverUserId the receiver user ID
 	 * @param status the status
@@ -6349,7 +6348,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((SocialRequestModelImpl)socialRequest);
+		clearUniqueFindersCache((SocialRequestModelImpl)socialRequest, true);
 	}
 
 	@Override
@@ -6361,88 +6360,21 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			entityCache.removeResult(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
 				SocialRequestImpl.class, socialRequest.getPrimaryKey());
 
-			clearUniqueFindersCache((SocialRequestModelImpl)socialRequest);
+			clearUniqueFindersCache((SocialRequestModelImpl)socialRequest, true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		SocialRequestModelImpl socialRequestModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					socialRequestModelImpl.getUuid(),
-					socialRequestModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				socialRequestModelImpl);
-
-			args = new Object[] {
-					socialRequestModelImpl.getUserId(),
-					socialRequestModelImpl.getClassNameId(),
-					socialRequestModelImpl.getClassPK(),
-					socialRequestModelImpl.getType(),
-					socialRequestModelImpl.getReceiverUserId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_U_C_C_T_R, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_U_C_C_T_R, args,
-				socialRequestModelImpl);
-		}
-		else {
-			if ((socialRequestModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						socialRequestModelImpl.getUuid(),
-						socialRequestModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					socialRequestModelImpl);
-			}
-
-			if ((socialRequestModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_U_C_C_T_R.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						socialRequestModelImpl.getUserId(),
-						socialRequestModelImpl.getClassNameId(),
-						socialRequestModelImpl.getClassPK(),
-						socialRequestModelImpl.getType(),
-						socialRequestModelImpl.getReceiverUserId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_U_C_C_T_R, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_U_C_C_T_R, args,
-					socialRequestModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		SocialRequestModelImpl socialRequestModelImpl) {
 		Object[] args = new Object[] {
 				socialRequestModelImpl.getUuid(),
 				socialRequestModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
-
-		if ((socialRequestModelImpl.getColumnBitmask() &
-				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
-					socialRequestModelImpl.getOriginalUuid(),
-					socialRequestModelImpl.getOriginalGroupId()
-				};
-
-			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
-		}
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			socialRequestModelImpl, false);
 
 		args = new Object[] {
 				socialRequestModelImpl.getUserId(),
@@ -6452,12 +6384,51 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 				socialRequestModelImpl.getReceiverUserId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_U_C_C_T_R, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_U_C_C_T_R, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_U_C_C_T_R, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_U_C_C_T_R, args,
+			socialRequestModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		SocialRequestModelImpl socialRequestModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					socialRequestModelImpl.getUuid(),
+					socialRequestModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
+
+		if ((socialRequestModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+			Object[] args = new Object[] {
+					socialRequestModelImpl.getOriginalUuid(),
+					socialRequestModelImpl.getOriginalGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
+
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					socialRequestModelImpl.getUserId(),
+					socialRequestModelImpl.getClassNameId(),
+					socialRequestModelImpl.getClassPK(),
+					socialRequestModelImpl.getType(),
+					socialRequestModelImpl.getReceiverUserId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_U_C_C_T_R, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_U_C_C_T_R, args);
+		}
 
 		if ((socialRequestModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_U_C_C_T_R.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					socialRequestModelImpl.getOriginalUserId(),
 					socialRequestModelImpl.getOriginalClassNameId(),
 					socialRequestModelImpl.getOriginalClassPK(),
@@ -6831,8 +6802,8 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 			SocialRequestImpl.class, socialRequest.getPrimaryKey(),
 			socialRequest, false);
 
-		clearUniqueFindersCache(socialRequestModelImpl);
-		cacheUniqueFindersCache(socialRequestModelImpl, isNew);
+		clearUniqueFindersCache(socialRequestModelImpl, false);
+		cacheUniqueFindersCache(socialRequestModelImpl);
 
 		socialRequest.resetOriginalValues();
 
@@ -6911,12 +6882,14 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	 */
 	@Override
 	public SocialRequest fetchByPrimaryKey(Serializable primaryKey) {
-		SocialRequest socialRequest = (SocialRequest)entityCache.getResult(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
 				SocialRequestImpl.class, primaryKey);
 
-		if (socialRequest == _nullSocialRequest) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		SocialRequest socialRequest = (SocialRequest)serializable;
 
 		if (socialRequest == null) {
 			Session session = null;
@@ -6932,7 +6905,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 				}
 				else {
 					entityCache.putResult(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
-						SocialRequestImpl.class, primaryKey, _nullSocialRequest);
+						SocialRequestImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -6986,18 +6959,20 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			SocialRequest socialRequest = (SocialRequest)entityCache.getResult(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
 					SocialRequestImpl.class, primaryKey);
 
-			if (socialRequest == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, socialRequest);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (SocialRequest)serializable);
+				}
 			}
 		}
 
@@ -7039,7 +7014,7 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(SocialRequestModelImpl.ENTITY_CACHE_ENABLED,
-					SocialRequestImpl.class, primaryKey, _nullSocialRequest);
+					SocialRequestImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -7282,22 +7257,4 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid", "type"
 			});
-	private static final SocialRequest _nullSocialRequest = new SocialRequestImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<SocialRequest> toCacheModel() {
-				return _nullSocialRequestCacheModel;
-			}
-		};
-
-	private static final CacheModel<SocialRequest> _nullSocialRequestCacheModel = new CacheModel<SocialRequest>() {
-			@Override
-			public SocialRequest toEntityModel() {
-				return _nullSocialRequest;
-			}
-		};
 }

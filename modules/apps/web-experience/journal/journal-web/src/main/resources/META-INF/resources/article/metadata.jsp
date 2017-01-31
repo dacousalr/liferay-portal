@@ -59,9 +59,9 @@ if (article != null) {
 }
 %>
 
-<aui:input classPK="<%= classPK %>" classTypePK="<%= ddmStructure.getStructureId() %>" ignoreRequestValue="<%= changeStructure %>" name="categories" type="assetCategories" />
+<liferay-asset:asset-categories-selector className="<%= JournalArticle.class.getName() %>" classPK="<%= classPK %>" classTypePK="<%= ddmStructure.getStructureId() %>" ignoreRequestValue="<%= changeStructure %>" />
 
-<aui:input classPK="<%= classPK %>" ignoreRequestValue="<%= changeStructure %>" name="tags" type="assetTags" />
+<liferay-asset:asset-tags-selector className="<%= JournalArticle.class.getName() %>" classPK="<%= classPK %>" ignoreRequestValue="<%= changeStructure %>" />
 
 <aui:input label="priority" name="assetPriority" type="text" value="<%= priority %>">
 	<aui:validator name="number" />
@@ -70,7 +70,7 @@ if (article != null) {
 </aui:input>
 
 <c:if test="<%= CustomAttributesUtil.hasCustomAttributes(company.getCompanyId(), JournalArticle.class.getName(), classPK, null) %>">
-	<liferay-ui:custom-attribute-list
+	<liferay-expando:custom-attribute-list
 		className="<%= JournalArticle.class.getName() %>"
 		classPK="<%= (article != null) ? article.getPrimaryKey() : 0 %>"
 		editable="<%= true %>"

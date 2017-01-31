@@ -25,6 +25,7 @@ import com.liferay.dynamic.data.mapping.validator.DDMFormValidationException.Mus
 import com.liferay.dynamic.data.mapping.validator.DDMFormValidationException.MustSetAvailableLocales;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValidationException.MustSetDefaultLocale;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValidationException.MustSetDefaultLocaleAsAvailableLocale;
+import com.liferay.dynamic.data.mapping.validator.DDMFormValidationException.MustSetFieldsForForm;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValidationException.MustSetOptionsForField;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValidationException.MustSetValidAvailableLocalesForProperty;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValidationException.MustSetValidCharactersForFieldName;
@@ -190,6 +191,14 @@ public class DDMFormValidatorTest {
 		_ddmFormValidatorImpl.validate(ddmForm);
 	}
 
+	@Test(expected = MustSetFieldsForForm.class)
+	public void testNoFieldsSetForForm() throws Exception {
+		DDMForm ddmForm = DDMFormTestUtil.createDDMForm(
+			createAvailableLocales(LocaleUtil.US), LocaleUtil.US);
+
+		_ddmFormValidatorImpl.validate(ddmForm);
+	}
+
 	@Test(expected = MustSetOptionsForField.class)
 	public void testNoOptionsSetForFieldOptions() throws Exception {
 		DDMForm ddmForm = DDMFormTestUtil.createDDMForm(
@@ -197,6 +206,21 @@ public class DDMFormValidatorTest {
 
 		DDMFormField ddmFormField = new DDMFormField(
 			"Select", DDMFormFieldType.SELECT);
+
+		ddmFormField.setProperty("dataSourceType", "manual");
+
+		ddmForm.addDDMFormField(ddmFormField);
+
+		_ddmFormValidatorImpl.validate(ddmForm);
+	}
+
+	@Test(expected = MustSetOptionsForField.class)
+	public void testNoOptionsSetForMultipleCheckbox() throws Exception {
+		DDMForm ddmForm = DDMFormTestUtil.createDDMForm(
+			createAvailableLocales(LocaleUtil.US), LocaleUtil.US);
+
+		DDMFormField ddmFormField = new DDMFormField(
+			"MultipleCheckbox", DDMFormFieldType.CHECKBOX_MULTIPLE);
 
 		ddmFormField.setProperty("dataSourceType", "manual");
 
@@ -220,6 +244,27 @@ public class DDMFormValidatorTest {
 		DDMForm ddmForm = new DDMForm();
 
 		ddmForm.setDefaultLocale(null);
+
+		_ddmFormValidatorImpl.validate(ddmForm);
+	}
+
+	@Test
+	public void testOptionsSetForMultipleCheckbox() throws Exception {
+		DDMForm ddmForm = DDMFormTestUtil.createDDMForm(
+			createAvailableLocales(LocaleUtil.US), LocaleUtil.US);
+
+		DDMFormField ddmFormField = new DDMFormField(
+			"MultipleCheckbox", DDMFormFieldType.CHECKBOX_MULTIPLE);
+
+		ddmFormField.setProperty("dataSourceType", "manual");
+
+		DDMFormFieldOptions ddmFormFieldOptions =
+			ddmFormField.getDDMFormFieldOptions();
+
+		ddmFormFieldOptions.addOptionLabel("1", LocaleUtil.US, "Option 1");
+		ddmFormFieldOptions.addOptionLabel("2", LocaleUtil.US, "Option 2");
+
+		ddmForm.addDDMFormField(ddmFormField);
 
 		_ddmFormValidatorImpl.validate(ddmForm);
 	}

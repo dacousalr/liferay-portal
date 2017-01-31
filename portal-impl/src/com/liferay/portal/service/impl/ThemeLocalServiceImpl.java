@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.model.Theme;
 import com.liferay.portal.kernel.plugin.PluginPackage;
 import com.liferay.portal.kernel.plugin.Version;
 import com.liferay.portal.kernel.servlet.ServletContextUtil;
+import com.liferay.portal.kernel.spring.aop.Skip;
 import com.liferay.portal.kernel.theme.PortletDecoratorFactoryUtil;
 import com.liferay.portal.kernel.theme.ThemeCompanyId;
 import com.liferay.portal.kernel.theme.ThemeCompanyLimit;
@@ -67,6 +68,7 @@ import javax.servlet.ServletContext;
  * @author Jorge Ferrer
  * @author Raymond Augé
  */
+@Skip
 public class ThemeLocalServiceImpl extends ThemeLocalServiceBaseImpl {
 
 	@Override
@@ -132,7 +134,7 @@ public class ThemeLocalServiceImpl extends ThemeLocalServiceBaseImpl {
 		List<ColorScheme> colorSchemes = theme.getColorSchemes();
 
 		if (!colorSchemes.isEmpty()) {
-			for (int i = (colorSchemes.size() - 1); i >= 0; i--) {
+			for (int i = colorSchemes.size() - 1; i >= 0; i--) {
 				colorScheme = colorSchemes.get(i);
 
 				if (colorScheme.isDefaultCs()) {
@@ -209,7 +211,7 @@ public class ThemeLocalServiceImpl extends ThemeLocalServiceBaseImpl {
 		List<PortletDecorator> portletDecorators = theme.getPortletDecorators();
 
 		if (!portletDecorators.isEmpty()) {
-			for (int i = (portletDecorators.size() - 1); i >= 0; i--) {
+			for (int i = portletDecorators.size() - 1; i >= 0; i--) {
 				portletDecorator = portletDecorators.get(i);
 
 				if (portletDecorator.isDefaultPortletDecorator()) {

@@ -34,6 +34,8 @@ import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.RoleConstants;
 import com.liferay.portal.kernel.model.Team;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.UserGroupRole;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
@@ -120,11 +122,8 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 	 * @throws Exception if an exception occurred
 	 */
 	public long[] getGuestUserRoleIds() throws Exception {
-		Group guestGroup = GroupLocalServiceUtil.getGroup(
-			getCompanyId(), GroupConstants.GUEST);
-
 		long[] roleIds = PermissionCacheUtil.getUserGroupRoleIds(
-			defaultUserId, guestGroup.getGroupId());
+			defaultUserId, _guestGroupId);
 
 		if (roleIds != null) {
 			return roleIds;
@@ -132,7 +131,7 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 
 		try {
 			List<Role> roles = RoleLocalServiceUtil.getUserRelatedRoles(
-				defaultUserId, Collections.singletonList(guestGroup));
+				defaultUserId, _guestGroupId);
 
 			// Only use the guest group for deriving the roles for
 			// unauthenticated users. Do not add the group to the permission bag
@@ -144,11 +143,11 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 			Arrays.sort(roleIds);
 
 			PermissionCacheUtil.putUserGroupRoleIds(
-				defaultUserId, guestGroup.getGroupId(), roleIds);
+				defaultUserId, _guestGroupId, roleIds);
 		}
 		catch (Exception e) {
 			PermissionCacheUtil.removeUserGroupRoleIds(
-				defaultUserId, guestGroup.getGroupId());
+				defaultUserId, _guestGroupId);
 
 			throw e;
 		}
@@ -371,7 +370,6 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 
 		stopWatch.start();
 
-		boolean checkOwnerPermission = false;
 		Group group = null;
 
 		try {
@@ -399,8 +397,6 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 				// Site" group.
 
 				if (group.isUser() && (group.getClassPK() == getUserId())) {
-					checkOwnerPermission = true;
-
 					group = GroupLocalServiceUtil.getGroup(
 						getCompanyId(), GroupConstants.USER_PERSONAL_SITE);
 
@@ -422,15 +418,8 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 		}
 
 		try {
-			if (checkOwnerPermission) {
-				value = hasOwnerPermission(
-					getCompanyId(), name, primKey, getUserId(), actionId);
-			}
-
-			if ((value == null) || !value) {
-				value = hasPermissionImpl(
-					groupId, name, primKey, roleIds, actionId);
-			}
+			value = hasPermissionImpl(
+				groupId, name, primKey, roleIds, actionId);
 
 			if (_log.isDebugEnabled()) {
 				_log.debug(
@@ -450,6 +439,21 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 		}
 
 		return value;
+	}
+
+	@Override
+	public void init(User user) {
+		super.init(user);
+
+		try {
+			Group guestGroup = GroupLocalServiceUtil.getGroup(
+				user.getCompanyId(), GroupConstants.GUEST);
+
+			_guestGroupId = guestGroup.getGroupId();
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+		}
 	}
 
 	@Override
@@ -652,18 +656,20 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 
 			Set<Long> roleIdsSet = SetUtil.fromArray(userBag.getRoleIds());
 
-			List<Role> userGroupRoles = RoleLocalServiceUtil.getUserGroupRoles(
-				userId, groupId);
+			List<UserGroupRole> userGroupRoles =
+				UserGroupRoleLocalServiceUtil.getUserGroupRoles(
+					userId, groupId);
 
-			for (Role userGroupRole : userGroupRoles) {
+			for (UserGroupRole userGroupRole : userGroupRoles) {
 				roleIdsSet.add(userGroupRole.getRoleId());
 			}
 
 			if (parentGroupId > 0) {
-				userGroupRoles = RoleLocalServiceUtil.getUserGroupRoles(
-					userId, parentGroupId);
+				userGroupRoles =
+					UserGroupRoleLocalServiceUtil.getUserGroupRoles(
+						userId, parentGroupId);
 
-				for (Role userGroupRole : userGroupRoles) {
+				for (UserGroupRole userGroupRole : userGroupRoles) {
 					roleIdsSet.add(userGroupRole.getRoleId());
 				}
 			}
@@ -757,8 +763,8 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 
 			if (_log.isDebugEnabled()) {
 				String message =
-					"Using defaults because custom permissions for " +
-						"portlet resource " + name + " are not defined";
+					"Using defaults because custom permissions for portlet " +
+						"resource " + name + " are not defined";
 
 				_log.debug(message, new IllegalArgumentException(message));
 			}
@@ -774,16 +780,16 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 
 			if (_log.isDebugEnabled()) {
 				String message =
-					"Using defaults because custom permissions for " +
-						"root model resource " + name + " are not defined";
+					"Using defaults because custom permissions for root " +
+						"model resource " + name + " are not defined";
 
 				_log.debug(message, new IllegalArgumentException(message));
 			}
 		}
 
 		else if (primKey.equals("0") ||
-				 primKey.equals(String.valueOf(ResourceConstants.PRIMKEY_DNE))
-					 ||
+				 primKey.equals(
+					 String.valueOf(ResourceConstants.PRIMKEY_DNE)) ||
 				 (primKey.equals(String.valueOf(companyId)) &&
 				  !name.equals(Company.class.getName()))) {
 
@@ -1634,5 +1640,7 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		AdvancedPermissionChecker.class);
+
+	private long _guestGroupId;
 
 }

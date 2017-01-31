@@ -27,9 +27,12 @@ import com.liferay.portal.kernel.search.facet.collector.FacetCollector;
 import com.liferay.portal.kernel.search.facet.collector.TermCollector;
 import com.liferay.portal.kernel.search.facet.config.FacetConfiguration;
 import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcher;
-import com.liferay.portal.kernel.test.IdempotentRetryAssert;
+import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.rule.Sync;
+import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.SearchContextTestUtil;
+import com.liferay.portal.search.test.util.AssertUtils;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
 import java.util.ArrayList;
@@ -38,8 +41,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
 import org.junit.ClassRule;
@@ -51,12 +52,15 @@ import org.junit.runner.RunWith;
  * @author André de Oliveira
  */
 @RunWith(Arquillian.class)
+@Sync
 public class ModifiedFacetTest extends BaseFacetedSearcherTestCase {
 
 	@ClassRule
 	@Rule
-	public static final LiferayIntegrationTestRule liferayIntegrationTestRule =
-		new LiferayIntegrationTestRule();
+	public static final AggregateTestRule aggregateTestRule =
+		new AggregateTestRule(
+			new LiferayIntegrationTestRule(),
+			SynchronousDestinationTestRule.INSTANCE);
 
 	@Test
 	public void testRanges() throws Exception {
@@ -70,39 +74,26 @@ public class ModifiedFacetTest extends BaseFacetedSearcherTestCase {
 		final String configRange2 = "[19990202020202 TO 22220202020202]";
 		final String customRange = "[11110101010101 TO 22220202020202]";
 
-		final Collection<String> frequencies = toEntryStrings(
+		final HashMap<String, Integer> frequencies =
 			new HashMap<String, Integer>() {
 				{
 					put(configRange1, 0);
 					put(configRange2, 1);
 					put(customRange, 1);
 				}
-			});
+			};
 
-		IdempotentRetryAssert.retryAssert(
-			10, TimeUnit.SECONDS,
-			new Callable<Void>() {
+		SearchContext searchContext = getSearchContext(keyword);
 
-				@Override
-				public Void call() throws Exception {
-					SearchContext searchContext = getSearchContext(keyword);
+		ModifiedFacet modifiedFacet = new ModifiedFacet(searchContext);
 
-					ModifiedFacet modifiedFacet = new ModifiedFacet(
-						searchContext);
+		setConfigurationRanges(modifiedFacet, configRange1, configRange2);
 
-					setConfigurationRanges(
-						modifiedFacet, configRange1, configRange2);
+		setCustomRange(modifiedFacet, searchContext, customRange);
 
-					setCustomRange(modifiedFacet, searchContext, customRange);
+		searchContext.addFacet(modifiedFacet);
 
-					searchContext.addFacet(modifiedFacet);
-
-					assertRanges(frequencies, modifiedFacet, searchContext);
-
-					return null;
-				}
-
-			});
+		assertRanges(frequencies, modifiedFacet, searchContext);
 	}
 
 	protected static void assertEquals(
@@ -166,16 +157,6 @@ public class ModifiedFacetTest extends BaseFacetedSearcherTestCase {
 		return list.toString();
 	}
 
-	protected static List<String> toEntryStrings(Map<?, ?> map) {
-		List<String> strings = new ArrayList<>(map.size());
-
-		for (Map.Entry<?, ?> entry : map.entrySet()) {
-			strings.add(entry.toString());
-		}
-
-		return strings;
-	}
-
 	protected static Map<String, Integer> toMap(
 		List<TermCollector> termCollectors) {
 
@@ -189,7 +170,7 @@ public class ModifiedFacetTest extends BaseFacetedSearcherTestCase {
 	}
 
 	protected void assertRanges(
-			Collection<String> expected, ModifiedFacet modifiedFacet,
+			Map<String, Integer> expected, ModifiedFacet modifiedFacet,
 			SearchContext searchContext)
 		throws SearchException {
 
@@ -203,9 +184,9 @@ public class ModifiedFacetTest extends BaseFacetedSearcherTestCase {
 
 		FacetCollector facetCollector = facet.getFacetCollector();
 
-		assertEquals(
-			expected,
-			toEntryStrings(toMap(facetCollector.getTermCollectors())));
+		AssertUtils.assertEquals(
+			searchContext.getKeywords(), expected,
+			toMap(facetCollector.getTermCollectors()));
 	}
 
 }

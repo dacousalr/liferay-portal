@@ -22,7 +22,6 @@
 
 <%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %><%@
 taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %><%@
-taglib uri="http://liferay.com/tld/security" prefix="liferay-security" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
 taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
@@ -44,7 +43,6 @@ page import="com.liferay.asset.kernel.service.AssetVocabularyLocalServiceUtil" %
 page import="com.liferay.asset.kernel.service.AssetVocabularyServiceUtil" %><%@
 page import="com.liferay.document.library.kernel.model.DLFileEntry" %><%@
 page import="com.liferay.document.library.kernel.util.DLUtil" %><%@
-page import="com.liferay.expando.kernel.model.ExpandoBridge" %><%@
 page import="com.liferay.exportimport.kernel.staging.LayoutStagingUtil" %><%@
 page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
 page import="com.liferay.portal.kernel.bean.BeanPropertiesUtil" %><%@
@@ -164,7 +162,6 @@ page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %><%@
 page import="com.liferay.portal.kernel.util.comparator.PortletCategoryComparator" %><%@
 page import="com.liferay.portal.kernel.util.comparator.PortletTitleComparator" %><%@
-page import="com.liferay.portal.kernel.webserver.WebServerServletTokenUtil" %><%@
 page import="com.liferay.portal.kernel.workflow.WorkflowConstants" %><%@
 page import="com.liferay.portal.model.impl.*" %><%@
 page import="com.liferay.portal.plugin.PluginUtil" %><%@
@@ -189,8 +186,6 @@ page import="com.liferay.portlet.RenderResponseImpl" %><%@
 page import="com.liferay.portlet.asset.util.AssetUtil" %><%@
 page import="com.liferay.portlet.configuration.kernel.util.PortletConfigurationUtil" %><%@
 page import="com.liferay.portlet.usergroupsadmin.search.UserGroupDisplayTerms" %><%@
-page import="com.liferay.portlet.usersadmin.search.GroupSearch" %><%@
-page import="com.liferay.portlet.usersadmin.search.GroupSearchTerms" %><%@
 page import="com.liferay.portlet.usersadmin.search.OrganizationDisplayTerms" %><%@
 page import="com.liferay.portlet.usersadmin.search.OrganizationSearch" %><%@
 page import="com.liferay.portlet.usersadmin.search.OrganizationSearchTerms" %><%@
@@ -253,3 +248,5 @@ page import="javax.portlet.WindowState" %>
 <liferay-theme:defineObjects />
 
 <%@ include file="/html/common/init-ext.jsp" %>
+
+<%@ include file="/html/common/init-compat.jsp" %>

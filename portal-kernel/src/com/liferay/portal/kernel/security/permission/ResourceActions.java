@@ -35,6 +35,8 @@ import javax.servlet.http.HttpServletRequest;
 @ProviderType
 public interface ResourceActions {
 
+	public void check(String portletName);
+
 	public void checkAction(String name, String actionId)
 		throws NoSuchResourceActionException;
 
@@ -57,6 +59,8 @@ public interface ResourceActions {
 	@Deprecated
 	public List<String> getActionsNames(
 		HttpServletRequest request, String name, long actionIds);
+
+	public String getCompositeModelName(String... classNames);
 
 	public String getCompositeModelNameSeparator();
 
@@ -133,11 +137,21 @@ public interface ResourceActions {
 			String servletContextName, ClassLoader classLoader, String source)
 		throws Exception;
 
+	public void read(
+			String servletContextName, ClassLoader classLoader,
+			String... sources)
+		throws Exception;
+
 	/**
 	 * @deprecated As of 7.0.0
 	 */
 	@Deprecated
 	public void read(String servletContextName, InputStream inputStream)
+		throws Exception;
+
+	public void readAndCheck(
+			String servletContextName, ClassLoader classLoader,
+			String... sources)
 		throws Exception;
 
 }

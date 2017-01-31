@@ -34,6 +34,8 @@ import com.liferay.portal.test.rule.AdviseWith;
 import com.liferay.portal.test.rule.AspectJNewEnvTestRule;
 import com.liferay.portal.util.PropsImpl;
 import com.liferay.portlet.EventImpl;
+import com.liferay.registry.BasicRegistryImpl;
+import com.liferay.registry.RegistryUtil;
 
 import java.io.IOException;
 
@@ -69,6 +71,8 @@ public class PortalResiliencyActionTest {
 
 	@Before
 	public void setUp() throws IOException {
+		RegistryUtil.setRegistry(new BasicRegistryImpl());
+
 		PropsUtil.setProps(new PropsImpl());
 
 		PortletContainerUtil portletContainerUtil = new PortletContainerUtil();
@@ -108,6 +112,7 @@ public class PortalResiliencyActionTest {
 		_mockHttpServletRequest.setAttribute(
 			WebKeys.SPI_AGENT_REQUEST,
 			new SPIAgentRequest(originalMockHttpServletRequest));
+
 		_mockHttpServletRequest.setAttribute(
 			WebKeys.SPI_AGENT_RESPONSE,
 			new SPIAgentResponse(_SERVLET_CONTEXT_NAME));

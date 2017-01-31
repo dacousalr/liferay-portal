@@ -40,6 +40,7 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 <aui:input name="deleteGroupIds" type="hidden" />
 
 <liferay-ui:search-container
+	cssClass="lfr-search-container-sites"
 	curParam="sitesCur"
 	headerNames="name,roles,null"
 	iteratorURL="<%= currentURLObj %>"
@@ -57,22 +58,29 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 		rowIdProperty="friendlyURL"
 	>
 		<liferay-ui:search-container-column-text
+			cssClass="table-cell-content"
 			name="name"
 			value="<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>"
 		/>
 
 		<%
-		List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRoles(selUser.getUserId(), group.getGroupId(), 0, PropsValues.USERS_ADMIN_ROLE_COLUMN_LIMIT);
-		int userGroupRolesCount = UserGroupRoleLocalServiceUtil.getUserGroupRolesCount(selUser.getUserId(), group.getGroupId());
+		List<UserGroupRole> userGroupRoles = new ArrayList<UserGroupRole>();
+		int userGroupRolesCount = 0;
+
+		if (selUser != null) {
+			userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRoles(selUser.getUserId(), group.getGroupId(), 0, PropsValues.USERS_ADMIN_ROLE_COLUMN_LIMIT);
+			userGroupRolesCount = UserGroupRoleLocalServiceUtil.getUserGroupRolesCount(selUser.getUserId(), group.getGroupId());
+		}
 		%>
 
 		<liferay-ui:search-container-column-text
+			cssClass="table-cell-content"
 			name="roles"
 			value="<%= HtmlUtil.escape(UsersAdminUtil.getUserColumnText(locale, userGroupRoles, UsersAdmin.USER_GROUP_ROLE_TITLE_ACCESSOR, userGroupRolesCount)) %>"
 		/>
 
-		<c:if test="<%= !portletName.equals(myAccountPortletId) && !SiteMembershipPolicyUtil.isMembershipRequired(selUser.getUserId(), group.getGroupId()) && !SiteMembershipPolicyUtil.isMembershipProtected(permissionChecker, selUser.getUserId(), group.getGroupId()) %>">
-			<liferay-ui:search-container-column-text cssClass="list-group-item-field">
+		<c:if test="<%= !portletName.equals(myAccountPortletId) && (selUser != null) && !SiteMembershipPolicyUtil.isMembershipRequired(selUser.getUserId(), group.getGroupId()) && !SiteMembershipPolicyUtil.isMembershipProtected(permissionChecker, selUser.getUserId(), group.getGroupId()) %>">
+			<liferay-ui:search-container-column-text>
 				<c:if test="<%= group.isManualMembership() %>">
 					<a class="modify-link" data-rowId="<%= group.getGroupId() %>" href="javascript:;"><%= removeGroupIcon %></a>
 				</c:if>
@@ -107,6 +115,15 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 		var handleOnSelect = A.one('#<portlet:namespace />selectSiteLink').on(
 			'click',
 			function(event) {
+				var searchContainerData = searchContainer.getData();
+
+				if (!searchContainerData.length) {
+					searchContainerData = [];
+				}
+				else {
+					searchContainerData = searchContainerData.split(',');
+				}
+
 				Util.selectEntity(
 					{
 						dialog: {
@@ -119,13 +136,13 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 						%>
 
 						id: '<%= eventName %>',
-
+						selectedData: searchContainerData,
 						title: '<liferay-ui:message arguments="site" key="select-x" />',
 
 						<%
 						PortletURL groupSelectorURL = PortletProviderUtil.getPortletURL(request, Group.class.getName(), PortletProvider.Action.BROWSE);
 
-						groupSelectorURL.setParameter("p_u_i_d", String.valueOf(selUser.getUserId()));
+						groupSelectorURL.setParameter("p_u_i_d", (selUser == null) ? "0" : String.valueOf(selUser.getUserId()));
 						groupSelectorURL.setParameter("includeCurrentGroup", Boolean.FALSE.toString());
 						groupSelectorURL.setParameter("manualMembership", Boolean.TRUE.toString());
 						groupSelectorURL.setParameter("eventName", eventName);
@@ -135,19 +152,21 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 						uri: '<%= groupSelectorURL.toString() %>'
 					},
 					function(event) {
+						var entityId = event.entityid;
+
 						var rowColumns = [];
 
-						rowColumns.push(event.groupdescriptivename);
+						rowColumns.push(event.entityname);
 						rowColumns.push('');
-						rowColumns.push('<a class="modify-link" data-rowId="' + event.groupid + '" href="javascript:;"><%= UnicodeFormatter.toString(removeGroupIcon) %></a>');
+						rowColumns.push('<a class="modify-link" data-rowId="' + entityId + '" href="javascript:;"><%= UnicodeFormatter.toString(removeGroupIcon) %></a>');
 
-						searchContainer.addRow(rowColumns, event.groupid);
+						searchContainer.addRow(rowColumns, entityId);
 
 						searchContainer.updateDataStore();
 
-						addGroupIds.push(event.groupid);
+						addGroupIds.push(entityId);
 
-						AArray.removeItem(deleteGroupIds, event.groupid);
+						AArray.removeItem(deleteGroupIds, entityId);
 
 						document.<portlet:namespace />fm.<portlet:namespace />addGroupIds.value = addGroupIds.join(',');
 						document.<portlet:namespace />fm.<portlet:namespace />deleteGroupIds.value = deleteGroupIds.join(',');
@@ -167,7 +186,7 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 				var selectGroup = Util.getWindow('<portlet:namespace />selectGroup');
 
 				if (selectGroup) {
-					var selectButton = selectGroup.iframe.node.get('contentWindow.document').one('.selector-button[data-groupid="' + rowId + '"]');
+					var selectButton = selectGroup.iframe.node.get('contentWindow.document').one('.selector-button[data-entityid="' + rowId + '"]');
 
 					Util.toggleDisabled(selectButton, false);
 				}
@@ -189,7 +208,7 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 			function(event) {
 				event.selectors.each(
 					function(item, index, collection) {
-						var groupId = item.attr('data-groupid');
+						var groupId = item.attr('data-entityid');
 
 						if (deleteGroupIds.indexOf(groupId) != -1) {
 							Util.toggleDisabled(item, false);
@@ -220,6 +239,7 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 </c:if>
 
 <liferay-ui:search-container
+	cssClass="lfr-search-container-inherited-sites"
 	curParam="inheritedSitesCur"
 	headerNames="name,roles"
 	iteratorURL="<%= currentURLObj %>"
@@ -237,16 +257,23 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 		rowIdProperty="friendlyURL"
 	>
 		<liferay-ui:search-container-column-text
+			cssClass="table-cell-content"
 			name="name"
 			value="<%= HtmlUtil.escape(inheritedSite.getDescriptiveName(locale)) %>"
 		/>
 
 		<%
-		List<Role> inheritedRoles = RoleLocalServiceUtil.getUserGroupGroupRoles(selUser.getUserId(), inheritedSite.getGroupId(), 0, 50);
-		int inheritedRolesCount = RoleLocalServiceUtil.getUserGroupGroupRolesCount(selUser.getUserId(), inheritedSite.getGroupId());
+		List<Role> inheritedRoles = new ArrayList<Role>();
+		int inheritedRolesCount = 0;
+
+		if (selUser != null) {
+			inheritedRoles = RoleLocalServiceUtil.getUserGroupGroupRoles(selUser.getUserId(), inheritedSite.getGroupId(), 0, 50);
+			inheritedRolesCount = RoleLocalServiceUtil.getUserGroupGroupRolesCount(selUser.getUserId(), inheritedSite.getGroupId());
+		}
 		%>
 
 		<liferay-ui:search-container-column-text
+			cssClass="table-cell-content"
 			name="roles"
 			value="<%= HtmlUtil.escape(UsersAdminUtil.getUserColumnText(locale, inheritedRoles, Role.TITLE_ACCESSOR, inheritedRolesCount)) %>"
 		/>

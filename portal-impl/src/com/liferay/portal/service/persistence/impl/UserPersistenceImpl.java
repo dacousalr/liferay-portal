@@ -29,8 +29,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchUserException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -45,6 +43,8 @@ import com.liferay.portal.kernel.service.persistence.UserPersistence;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.service.persistence.impl.TableMapper;
 import com.liferay.portal.kernel.service.persistence.impl.TableMapperFactory;
+import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -2574,11 +2574,15 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 						finderArgs, list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"UserPersistenceImpl.fetchByPortraitId(long, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"UserPersistenceImpl.fetchByPortraitId(long, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					User user = list.get(0);
@@ -4161,11 +4165,15 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 						finderArgs, list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"UserPersistenceImpl.fetchByC_DU(long, boolean, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"UserPersistenceImpl.fetchByC_DU(long, boolean, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					User user = list.get(0);
@@ -4899,11 +4907,15 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 						finderArgs, list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"UserPersistenceImpl.fetchByC_FID(long, long, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"UserPersistenceImpl.fetchByC_FID(long, long, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					User user = list.get(0);
@@ -5143,11 +5155,15 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 						finderArgs, list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"UserPersistenceImpl.fetchByC_GUID(long, String, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"UserPersistenceImpl.fetchByC_GUID(long, String, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					User user = list.get(0);
@@ -5404,11 +5420,15 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 						list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"UserPersistenceImpl.fetchByC_O(long, String, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"UserPersistenceImpl.fetchByC_O(long, String, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					User user = list.get(0);
@@ -7392,7 +7412,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((UserModelImpl)user);
+		clearUniqueFindersCache((UserModelImpl)user, true);
 	}
 
 	@Override
@@ -7404,236 +7424,133 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			entityCache.removeResult(UserModelImpl.ENTITY_CACHE_ENABLED,
 				UserImpl.class, user.getPrimaryKey());
 
-			clearUniqueFindersCache((UserModelImpl)user);
+			clearUniqueFindersCache((UserModelImpl)user, true);
 		}
 	}
 
-	protected void cacheUniqueFindersCache(UserModelImpl userModelImpl,
-		boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] { userModelImpl.getContactId() };
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_CONTACTID, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_CONTACTID, args,
-				userModelImpl);
-
-			args = new Object[] { userModelImpl.getPortraitId() };
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_PORTRAITID, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_PORTRAITID, args,
-				userModelImpl);
-
-			args = new Object[] {
-					userModelImpl.getCompanyId(), userModelImpl.getUserId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_U, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_U, args, userModelImpl);
-
-			args = new Object[] {
-					userModelImpl.getCompanyId(), userModelImpl.getDefaultUser()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_DU, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_DU, args, userModelImpl);
-
-			args = new Object[] {
-					userModelImpl.getCompanyId(), userModelImpl.getScreenName()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_SN, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_SN, args, userModelImpl);
-
-			args = new Object[] {
-					userModelImpl.getCompanyId(),
-					userModelImpl.getEmailAddress()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_EA, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_EA, args, userModelImpl);
-
-			args = new Object[] {
-					userModelImpl.getCompanyId(), userModelImpl.getFacebookId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_FID, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_FID, args,
-				userModelImpl);
-
-			args = new Object[] {
-					userModelImpl.getCompanyId(),
-					userModelImpl.getGoogleUserId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_GUID, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_GUID, args,
-				userModelImpl);
-
-			args = new Object[] {
-					userModelImpl.getCompanyId(), userModelImpl.getOpenId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_O, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_O, args, userModelImpl);
-		}
-		else {
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_CONTACTID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] { userModelImpl.getContactId() };
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_CONTACTID, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_CONTACTID, args,
-					userModelImpl);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_PORTRAITID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] { userModelImpl.getPortraitId() };
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_PORTRAITID, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_PORTRAITID, args,
-					userModelImpl);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_U.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						userModelImpl.getCompanyId(), userModelImpl.getUserId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_U, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_U, args,
-					userModelImpl);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_DU.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						userModelImpl.getCompanyId(),
-						userModelImpl.getDefaultUser()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_DU, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_DU, args,
-					userModelImpl);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_SN.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						userModelImpl.getCompanyId(),
-						userModelImpl.getScreenName()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_SN, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_SN, args,
-					userModelImpl);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_EA.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						userModelImpl.getCompanyId(),
-						userModelImpl.getEmailAddress()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_EA, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_EA, args,
-					userModelImpl);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_FID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						userModelImpl.getCompanyId(),
-						userModelImpl.getFacebookId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_FID, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_FID, args,
-					userModelImpl);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_GUID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						userModelImpl.getCompanyId(),
-						userModelImpl.getGoogleUserId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_GUID, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_GUID, args,
-					userModelImpl);
-			}
-
-			if ((userModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_O.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						userModelImpl.getCompanyId(), userModelImpl.getOpenId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_O, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_O, args,
-					userModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(UserModelImpl userModelImpl) {
+	protected void cacheUniqueFindersCache(UserModelImpl userModelImpl) {
 		Object[] args = new Object[] { userModelImpl.getContactId() };
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_CONTACTID, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_CONTACTID, args);
-
-		if ((userModelImpl.getColumnBitmask() &
-				FINDER_PATH_FETCH_BY_CONTACTID.getColumnBitmask()) != 0) {
-			args = new Object[] { userModelImpl.getOriginalContactId() };
-
-			finderCache.removeResult(FINDER_PATH_COUNT_BY_CONTACTID, args);
-			finderCache.removeResult(FINDER_PATH_FETCH_BY_CONTACTID, args);
-		}
+		finderCache.putResult(FINDER_PATH_COUNT_BY_CONTACTID, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_CONTACTID, args,
+			userModelImpl, false);
 
 		args = new Object[] { userModelImpl.getPortraitId() };
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_PORTRAITID, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_PORTRAITID, args);
-
-		if ((userModelImpl.getColumnBitmask() &
-				FINDER_PATH_FETCH_BY_PORTRAITID.getColumnBitmask()) != 0) {
-			args = new Object[] { userModelImpl.getOriginalPortraitId() };
-
-			finderCache.removeResult(FINDER_PATH_COUNT_BY_PORTRAITID, args);
-			finderCache.removeResult(FINDER_PATH_FETCH_BY_PORTRAITID, args);
-		}
+		finderCache.putResult(FINDER_PATH_COUNT_BY_PORTRAITID, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_PORTRAITID, args,
+			userModelImpl, false);
 
 		args = new Object[] {
 				userModelImpl.getCompanyId(), userModelImpl.getUserId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_U, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_U, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_U, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_U, args, userModelImpl,
+			false);
+
+		args = new Object[] {
+				userModelImpl.getCompanyId(), userModelImpl.getDefaultUser()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_DU, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_DU, args, userModelImpl,
+			false);
+
+		args = new Object[] {
+				userModelImpl.getCompanyId(), userModelImpl.getScreenName()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_SN, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_SN, args, userModelImpl,
+			false);
+
+		args = new Object[] {
+				userModelImpl.getCompanyId(), userModelImpl.getEmailAddress()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_EA, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_EA, args, userModelImpl,
+			false);
+
+		args = new Object[] {
+				userModelImpl.getCompanyId(), userModelImpl.getFacebookId()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_FID, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_FID, args, userModelImpl,
+			false);
+
+		args = new Object[] {
+				userModelImpl.getCompanyId(), userModelImpl.getGoogleUserId()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_GUID, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_GUID, args, userModelImpl,
+			false);
+
+		args = new Object[] {
+				userModelImpl.getCompanyId(), userModelImpl.getOpenId()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_O, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_O, args, userModelImpl,
+			false);
+	}
+
+	protected void clearUniqueFindersCache(UserModelImpl userModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] { userModelImpl.getContactId() };
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_CONTACTID, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_CONTACTID, args);
+		}
+
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_CONTACTID.getColumnBitmask()) != 0) {
+			Object[] args = new Object[] { userModelImpl.getOriginalContactId() };
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_CONTACTID, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_CONTACTID, args);
+		}
+
+		if (clearCurrent) {
+			Object[] args = new Object[] { userModelImpl.getPortraitId() };
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_PORTRAITID, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_PORTRAITID, args);
+		}
+
+		if ((userModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_PORTRAITID.getColumnBitmask()) != 0) {
+			Object[] args = new Object[] { userModelImpl.getOriginalPortraitId() };
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_PORTRAITID, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_PORTRAITID, args);
+		}
+
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					userModelImpl.getCompanyId(), userModelImpl.getUserId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_U, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_U, args);
+		}
 
 		if ((userModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_U.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					userModelImpl.getOriginalCompanyId(),
 					userModelImpl.getOriginalUserId()
 				};
@@ -7642,16 +7559,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_U, args);
 		}
 
-		args = new Object[] {
-				userModelImpl.getCompanyId(), userModelImpl.getDefaultUser()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					userModelImpl.getCompanyId(), userModelImpl.getDefaultUser()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_DU, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_DU, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_DU, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_DU, args);
+		}
 
 		if ((userModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_DU.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					userModelImpl.getOriginalCompanyId(),
 					userModelImpl.getOriginalDefaultUser()
 				};
@@ -7660,16 +7579,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_DU, args);
 		}
 
-		args = new Object[] {
-				userModelImpl.getCompanyId(), userModelImpl.getScreenName()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					userModelImpl.getCompanyId(), userModelImpl.getScreenName()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_SN, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_SN, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_SN, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_SN, args);
+		}
 
 		if ((userModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_SN.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					userModelImpl.getOriginalCompanyId(),
 					userModelImpl.getOriginalScreenName()
 				};
@@ -7678,16 +7599,19 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_SN, args);
 		}
 
-		args = new Object[] {
-				userModelImpl.getCompanyId(), userModelImpl.getEmailAddress()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					userModelImpl.getCompanyId(),
+					userModelImpl.getEmailAddress()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_EA, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_EA, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_EA, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_EA, args);
+		}
 
 		if ((userModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_EA.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					userModelImpl.getOriginalCompanyId(),
 					userModelImpl.getOriginalEmailAddress()
 				};
@@ -7696,16 +7620,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_EA, args);
 		}
 
-		args = new Object[] {
-				userModelImpl.getCompanyId(), userModelImpl.getFacebookId()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					userModelImpl.getCompanyId(), userModelImpl.getFacebookId()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_FID, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_FID, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_FID, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_FID, args);
+		}
 
 		if ((userModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_FID.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					userModelImpl.getOriginalCompanyId(),
 					userModelImpl.getOriginalFacebookId()
 				};
@@ -7714,16 +7640,19 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_FID, args);
 		}
 
-		args = new Object[] {
-				userModelImpl.getCompanyId(), userModelImpl.getGoogleUserId()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					userModelImpl.getCompanyId(),
+					userModelImpl.getGoogleUserId()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_GUID, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_GUID, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_GUID, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_GUID, args);
+		}
 
 		if ((userModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_GUID.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					userModelImpl.getOriginalCompanyId(),
 					userModelImpl.getOriginalGoogleUserId()
 				};
@@ -7732,16 +7661,18 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_GUID, args);
 		}
 
-		args = new Object[] {
-				userModelImpl.getCompanyId(), userModelImpl.getOpenId()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					userModelImpl.getCompanyId(), userModelImpl.getOpenId()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_O, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_O, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_O, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_O, args);
+		}
 
 		if ((userModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_O.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					userModelImpl.getOriginalCompanyId(),
 					userModelImpl.getOriginalOpenId()
 				};
@@ -8109,8 +8040,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		entityCache.putResult(UserModelImpl.ENTITY_CACHE_ENABLED,
 			UserImpl.class, user.getPrimaryKey(), user, false);
 
-		clearUniqueFindersCache(userModelImpl);
-		cacheUniqueFindersCache(userModelImpl, isNew);
+		clearUniqueFindersCache(userModelImpl, false);
+		cacheUniqueFindersCache(userModelImpl);
 
 		user.resetOriginalValues();
 
@@ -8217,12 +8148,14 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	 */
 	@Override
 	public User fetchByPrimaryKey(Serializable primaryKey) {
-		User user = (User)entityCache.getResult(UserModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(UserModelImpl.ENTITY_CACHE_ENABLED,
 				UserImpl.class, primaryKey);
 
-		if (user == _nullUser) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		User user = (User)serializable;
 
 		if (user == null) {
 			Session session = null;
@@ -8237,7 +8170,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				}
 				else {
 					entityCache.putResult(UserModelImpl.ENTITY_CACHE_ENABLED,
-						UserImpl.class, primaryKey, _nullUser);
+						UserImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -8291,18 +8224,20 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			User user = (User)entityCache.getResult(UserModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(UserModelImpl.ENTITY_CACHE_ENABLED,
 					UserImpl.class, primaryKey);
 
-			if (user == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, user);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (User)serializable);
+				}
 			}
 		}
 
@@ -8344,7 +8279,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(UserModelImpl.ENTITY_CACHE_ENABLED,
-					UserImpl.class, primaryKey, _nullUser);
+					UserImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -8710,9 +8645,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			companyId = user.getCompanyId();
 		}
 
-		for (long groupPK : groupPKs) {
-			userToGroupTableMapper.addTableMapping(companyId, pk, groupPK);
-		}
+		userToGroupTableMapper.addTableMappings(companyId, pk, groupPKs);
 	}
 
 	/**
@@ -8724,21 +8657,9 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	@Override
 	public void addGroups(long pk,
 		List<com.liferay.portal.kernel.model.Group> groups) {
-		long companyId = 0;
-
-		User user = fetchByPrimaryKey(pk);
-
-		if (user == null) {
-			companyId = companyProvider.getCompanyId();
-		}
-		else {
-			companyId = user.getCompanyId();
-		}
-
-		for (com.liferay.portal.kernel.model.Group group : groups) {
-			userToGroupTableMapper.addTableMapping(companyId, pk,
-				group.getPrimaryKey());
-		}
+		addGroups(pk,
+			ListUtil.toLongArray(groups,
+				com.liferay.portal.kernel.model.Group.GROUP_ID_ACCESSOR));
 	}
 
 	/**
@@ -8781,9 +8702,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	 */
 	@Override
 	public void removeGroups(long pk, long[] groupPKs) {
-		for (long groupPK : groupPKs) {
-			userToGroupTableMapper.deleteTableMapping(pk, groupPK);
-		}
+		userToGroupTableMapper.deleteTableMappings(pk, groupPKs);
 	}
 
 	/**
@@ -8795,9 +8714,9 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	@Override
 	public void removeGroups(long pk,
 		List<com.liferay.portal.kernel.model.Group> groups) {
-		for (com.liferay.portal.kernel.model.Group group : groups) {
-			userToGroupTableMapper.deleteTableMapping(pk, group.getPrimaryKey());
-		}
+		removeGroups(pk,
+			ListUtil.toLongArray(groups,
+				com.liferay.portal.kernel.model.Group.GROUP_ID_ACCESSOR));
 	}
 
 	/**
@@ -8816,9 +8735,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		removeGroupPKsSet.removeAll(newGroupPKsSet);
 
-		for (long removeGroupPK : removeGroupPKsSet) {
-			userToGroupTableMapper.deleteTableMapping(pk, removeGroupPK);
-		}
+		userToGroupTableMapper.deleteTableMappings(pk,
+			ArrayUtil.toLongArray(removeGroupPKsSet));
 
 		newGroupPKsSet.removeAll(oldGroupPKsSet);
 
@@ -8833,9 +8751,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			companyId = user.getCompanyId();
 		}
 
-		for (long newGroupPK : newGroupPKsSet) {
-			userToGroupTableMapper.addTableMapping(companyId, pk, newGroupPK);
-		}
+		userToGroupTableMapper.addTableMappings(companyId, pk,
+			ArrayUtil.toLongArray(newGroupPKsSet));
 	}
 
 	/**
@@ -9029,10 +8946,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			companyId = user.getCompanyId();
 		}
 
-		for (long organizationPK : organizationPKs) {
-			userToOrganizationTableMapper.addTableMapping(companyId, pk,
-				organizationPK);
-		}
+		userToOrganizationTableMapper.addTableMappings(companyId, pk,
+			organizationPKs);
 	}
 
 	/**
@@ -9044,21 +8959,9 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	@Override
 	public void addOrganizations(long pk,
 		List<com.liferay.portal.kernel.model.Organization> organizations) {
-		long companyId = 0;
-
-		User user = fetchByPrimaryKey(pk);
-
-		if (user == null) {
-			companyId = companyProvider.getCompanyId();
-		}
-		else {
-			companyId = user.getCompanyId();
-		}
-
-		for (com.liferay.portal.kernel.model.Organization organization : organizations) {
-			userToOrganizationTableMapper.addTableMapping(companyId, pk,
-				organization.getPrimaryKey());
-		}
+		addOrganizations(pk,
+			ListUtil.toLongArray(organizations,
+				com.liferay.portal.kernel.model.Organization.ORGANIZATION_ID_ACCESSOR));
 	}
 
 	/**
@@ -9103,9 +9006,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	 */
 	@Override
 	public void removeOrganizations(long pk, long[] organizationPKs) {
-		for (long organizationPK : organizationPKs) {
-			userToOrganizationTableMapper.deleteTableMapping(pk, organizationPK);
-		}
+		userToOrganizationTableMapper.deleteTableMappings(pk, organizationPKs);
 	}
 
 	/**
@@ -9117,10 +9018,9 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	@Override
 	public void removeOrganizations(long pk,
 		List<com.liferay.portal.kernel.model.Organization> organizations) {
-		for (com.liferay.portal.kernel.model.Organization organization : organizations) {
-			userToOrganizationTableMapper.deleteTableMapping(pk,
-				organization.getPrimaryKey());
-		}
+		removeOrganizations(pk,
+			ListUtil.toLongArray(organizations,
+				com.liferay.portal.kernel.model.Organization.ORGANIZATION_ID_ACCESSOR));
 	}
 
 	/**
@@ -9139,10 +9039,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		removeOrganizationPKsSet.removeAll(newOrganizationPKsSet);
 
-		for (long removeOrganizationPK : removeOrganizationPKsSet) {
-			userToOrganizationTableMapper.deleteTableMapping(pk,
-				removeOrganizationPK);
-		}
+		userToOrganizationTableMapper.deleteTableMappings(pk,
+			ArrayUtil.toLongArray(removeOrganizationPKsSet));
 
 		newOrganizationPKsSet.removeAll(oldOrganizationPKsSet);
 
@@ -9157,10 +9055,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			companyId = user.getCompanyId();
 		}
 
-		for (long newOrganizationPK : newOrganizationPKsSet) {
-			userToOrganizationTableMapper.addTableMapping(companyId, pk,
-				newOrganizationPK);
-		}
+		userToOrganizationTableMapper.addTableMappings(companyId, pk,
+			ArrayUtil.toLongArray(newOrganizationPKsSet));
 	}
 
 	/**
@@ -9351,9 +9247,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			companyId = user.getCompanyId();
 		}
 
-		for (long rolePK : rolePKs) {
-			userToRoleTableMapper.addTableMapping(companyId, pk, rolePK);
-		}
+		userToRoleTableMapper.addTableMappings(companyId, pk, rolePKs);
 	}
 
 	/**
@@ -9365,21 +9259,9 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	@Override
 	public void addRoles(long pk,
 		List<com.liferay.portal.kernel.model.Role> roles) {
-		long companyId = 0;
-
-		User user = fetchByPrimaryKey(pk);
-
-		if (user == null) {
-			companyId = companyProvider.getCompanyId();
-		}
-		else {
-			companyId = user.getCompanyId();
-		}
-
-		for (com.liferay.portal.kernel.model.Role role : roles) {
-			userToRoleTableMapper.addTableMapping(companyId, pk,
-				role.getPrimaryKey());
-		}
+		addRoles(pk,
+			ListUtil.toLongArray(roles,
+				com.liferay.portal.kernel.model.Role.ROLE_ID_ACCESSOR));
 	}
 
 	/**
@@ -9422,9 +9304,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	 */
 	@Override
 	public void removeRoles(long pk, long[] rolePKs) {
-		for (long rolePK : rolePKs) {
-			userToRoleTableMapper.deleteTableMapping(pk, rolePK);
-		}
+		userToRoleTableMapper.deleteTableMappings(pk, rolePKs);
 	}
 
 	/**
@@ -9436,9 +9316,9 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	@Override
 	public void removeRoles(long pk,
 		List<com.liferay.portal.kernel.model.Role> roles) {
-		for (com.liferay.portal.kernel.model.Role role : roles) {
-			userToRoleTableMapper.deleteTableMapping(pk, role.getPrimaryKey());
-		}
+		removeRoles(pk,
+			ListUtil.toLongArray(roles,
+				com.liferay.portal.kernel.model.Role.ROLE_ID_ACCESSOR));
 	}
 
 	/**
@@ -9457,9 +9337,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		removeRolePKsSet.removeAll(newRolePKsSet);
 
-		for (long removeRolePK : removeRolePKsSet) {
-			userToRoleTableMapper.deleteTableMapping(pk, removeRolePK);
-		}
+		userToRoleTableMapper.deleteTableMappings(pk,
+			ArrayUtil.toLongArray(removeRolePKsSet));
 
 		newRolePKsSet.removeAll(oldRolePKsSet);
 
@@ -9474,9 +9353,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			companyId = user.getCompanyId();
 		}
 
-		for (long newRolePK : newRolePKsSet) {
-			userToRoleTableMapper.addTableMapping(companyId, pk, newRolePK);
-		}
+		userToRoleTableMapper.addTableMappings(companyId, pk,
+			ArrayUtil.toLongArray(newRolePKsSet));
 	}
 
 	/**
@@ -9667,9 +9545,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			companyId = user.getCompanyId();
 		}
 
-		for (long teamPK : teamPKs) {
-			userToTeamTableMapper.addTableMapping(companyId, pk, teamPK);
-		}
+		userToTeamTableMapper.addTableMappings(companyId, pk, teamPKs);
 	}
 
 	/**
@@ -9681,21 +9557,9 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	@Override
 	public void addTeams(long pk,
 		List<com.liferay.portal.kernel.model.Team> teams) {
-		long companyId = 0;
-
-		User user = fetchByPrimaryKey(pk);
-
-		if (user == null) {
-			companyId = companyProvider.getCompanyId();
-		}
-		else {
-			companyId = user.getCompanyId();
-		}
-
-		for (com.liferay.portal.kernel.model.Team team : teams) {
-			userToTeamTableMapper.addTableMapping(companyId, pk,
-				team.getPrimaryKey());
-		}
+		addTeams(pk,
+			ListUtil.toLongArray(teams,
+				com.liferay.portal.kernel.model.Team.TEAM_ID_ACCESSOR));
 	}
 
 	/**
@@ -9738,9 +9602,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	 */
 	@Override
 	public void removeTeams(long pk, long[] teamPKs) {
-		for (long teamPK : teamPKs) {
-			userToTeamTableMapper.deleteTableMapping(pk, teamPK);
-		}
+		userToTeamTableMapper.deleteTableMappings(pk, teamPKs);
 	}
 
 	/**
@@ -9752,9 +9614,9 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	@Override
 	public void removeTeams(long pk,
 		List<com.liferay.portal.kernel.model.Team> teams) {
-		for (com.liferay.portal.kernel.model.Team team : teams) {
-			userToTeamTableMapper.deleteTableMapping(pk, team.getPrimaryKey());
-		}
+		removeTeams(pk,
+			ListUtil.toLongArray(teams,
+				com.liferay.portal.kernel.model.Team.TEAM_ID_ACCESSOR));
 	}
 
 	/**
@@ -9773,9 +9635,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		removeTeamPKsSet.removeAll(newTeamPKsSet);
 
-		for (long removeTeamPK : removeTeamPKsSet) {
-			userToTeamTableMapper.deleteTableMapping(pk, removeTeamPK);
-		}
+		userToTeamTableMapper.deleteTableMappings(pk,
+			ArrayUtil.toLongArray(removeTeamPKsSet));
 
 		newTeamPKsSet.removeAll(oldTeamPKsSet);
 
@@ -9790,9 +9651,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			companyId = user.getCompanyId();
 		}
 
-		for (long newTeamPK : newTeamPKsSet) {
-			userToTeamTableMapper.addTableMapping(companyId, pk, newTeamPK);
-		}
+		userToTeamTableMapper.addTableMappings(companyId, pk,
+			ArrayUtil.toLongArray(newTeamPKsSet));
 	}
 
 	/**
@@ -9985,10 +9845,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			companyId = user.getCompanyId();
 		}
 
-		for (long userGroupPK : userGroupPKs) {
-			userToUserGroupTableMapper.addTableMapping(companyId, pk,
-				userGroupPK);
-		}
+		userToUserGroupTableMapper.addTableMappings(companyId, pk, userGroupPKs);
 	}
 
 	/**
@@ -10000,21 +9857,9 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	@Override
 	public void addUserGroups(long pk,
 		List<com.liferay.portal.kernel.model.UserGroup> userGroups) {
-		long companyId = 0;
-
-		User user = fetchByPrimaryKey(pk);
-
-		if (user == null) {
-			companyId = companyProvider.getCompanyId();
-		}
-		else {
-			companyId = user.getCompanyId();
-		}
-
-		for (com.liferay.portal.kernel.model.UserGroup userGroup : userGroups) {
-			userToUserGroupTableMapper.addTableMapping(companyId, pk,
-				userGroup.getPrimaryKey());
-		}
+		addUserGroups(pk,
+			ListUtil.toLongArray(userGroups,
+				com.liferay.portal.kernel.model.UserGroup.USER_GROUP_ID_ACCESSOR));
 	}
 
 	/**
@@ -10059,9 +9904,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	 */
 	@Override
 	public void removeUserGroups(long pk, long[] userGroupPKs) {
-		for (long userGroupPK : userGroupPKs) {
-			userToUserGroupTableMapper.deleteTableMapping(pk, userGroupPK);
-		}
+		userToUserGroupTableMapper.deleteTableMappings(pk, userGroupPKs);
 	}
 
 	/**
@@ -10073,10 +9916,9 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	@Override
 	public void removeUserGroups(long pk,
 		List<com.liferay.portal.kernel.model.UserGroup> userGroups) {
-		for (com.liferay.portal.kernel.model.UserGroup userGroup : userGroups) {
-			userToUserGroupTableMapper.deleteTableMapping(pk,
-				userGroup.getPrimaryKey());
-		}
+		removeUserGroups(pk,
+			ListUtil.toLongArray(userGroups,
+				com.liferay.portal.kernel.model.UserGroup.USER_GROUP_ID_ACCESSOR));
 	}
 
 	/**
@@ -10095,9 +9937,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		removeUserGroupPKsSet.removeAll(newUserGroupPKsSet);
 
-		for (long removeUserGroupPK : removeUserGroupPKsSet) {
-			userToUserGroupTableMapper.deleteTableMapping(pk, removeUserGroupPK);
-		}
+		userToUserGroupTableMapper.deleteTableMappings(pk,
+			ArrayUtil.toLongArray(removeUserGroupPKsSet));
 
 		newUserGroupPKsSet.removeAll(oldUserGroupPKsSet);
 
@@ -10112,10 +9953,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 			companyId = user.getCompanyId();
 		}
 
-		for (long newUserGroupPK : newUserGroupPKsSet) {
-			userToUserGroupTableMapper.addTableMapping(companyId, pk,
-				newUserGroupPK);
-		}
+		userToUserGroupTableMapper.addTableMappings(companyId, pk,
+			ArrayUtil.toLongArray(newUserGroupPKsSet));
 	}
 
 	/**
@@ -10218,33 +10057,4 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid", "password"
 			});
-	private static final User _nullUser = new UserImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<User> toCacheModel() {
-				return _nullUserCacheModel;
-			}
-		};
-
-	private static final CacheModel<User> _nullUserCacheModel = new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<User>, MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public User toEntityModel() {
-			return _nullUser;
-		}
-	}
 }

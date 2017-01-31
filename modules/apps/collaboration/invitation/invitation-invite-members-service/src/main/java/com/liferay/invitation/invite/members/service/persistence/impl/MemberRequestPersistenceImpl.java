@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -212,11 +211,15 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 						list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"MemberRequestPersistenceImpl.fetchByKey(String, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"MemberRequestPersistenceImpl.fetchByKey(String, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					MemberRequest memberRequest = list.get(0);
@@ -1530,11 +1533,15 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 						finderArgs, list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"MemberRequestPersistenceImpl.fetchByG_R_S(long, long, int, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"MemberRequestPersistenceImpl.fetchByG_R_S(long, long, int, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					MemberRequest memberRequest = list.get(0);
@@ -1728,7 +1735,7 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((MemberRequestModelImpl)memberRequest);
+		clearUniqueFindersCache((MemberRequestModelImpl)memberRequest, true);
 	}
 
 	@Override
@@ -1740,72 +1747,18 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 			entityCache.removeResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,
 				MemberRequestImpl.class, memberRequest.getPrimaryKey());
 
-			clearUniqueFindersCache((MemberRequestModelImpl)memberRequest);
+			clearUniqueFindersCache((MemberRequestModelImpl)memberRequest, true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		MemberRequestModelImpl memberRequestModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] { memberRequestModelImpl.getKey() };
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_KEY, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_KEY, args,
-				memberRequestModelImpl);
-
-			args = new Object[] {
-					memberRequestModelImpl.getGroupId(),
-					memberRequestModelImpl.getReceiverUserId(),
-					memberRequestModelImpl.getStatus()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_G_R_S, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_G_R_S, args,
-				memberRequestModelImpl);
-		}
-		else {
-			if ((memberRequestModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_KEY.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] { memberRequestModelImpl.getKey() };
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_KEY, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_KEY, args,
-					memberRequestModelImpl);
-			}
-
-			if ((memberRequestModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_R_S.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						memberRequestModelImpl.getGroupId(),
-						memberRequestModelImpl.getReceiverUserId(),
-						memberRequestModelImpl.getStatus()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_G_R_S, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_G_R_S, args,
-					memberRequestModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		MemberRequestModelImpl memberRequestModelImpl) {
 		Object[] args = new Object[] { memberRequestModelImpl.getKey() };
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_KEY, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_KEY, args);
-
-		if ((memberRequestModelImpl.getColumnBitmask() &
-				FINDER_PATH_FETCH_BY_KEY.getColumnBitmask()) != 0) {
-			args = new Object[] { memberRequestModelImpl.getOriginalKey() };
-
-			finderCache.removeResult(FINDER_PATH_COUNT_BY_KEY, args);
-			finderCache.removeResult(FINDER_PATH_FETCH_BY_KEY, args);
-		}
+		finderCache.putResult(FINDER_PATH_COUNT_BY_KEY, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_KEY, args,
+			memberRequestModelImpl, false);
 
 		args = new Object[] {
 				memberRequestModelImpl.getGroupId(),
@@ -1813,12 +1766,43 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 				memberRequestModelImpl.getStatus()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_G_R_S, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_G_R_S, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_G_R_S, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_G_R_S, args,
+			memberRequestModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		MemberRequestModelImpl memberRequestModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] { memberRequestModelImpl.getKey() };
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_KEY, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_KEY, args);
+		}
+
+		if ((memberRequestModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_KEY.getColumnBitmask()) != 0) {
+			Object[] args = new Object[] { memberRequestModelImpl.getOriginalKey() };
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_KEY, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_KEY, args);
+		}
+
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					memberRequestModelImpl.getGroupId(),
+					memberRequestModelImpl.getReceiverUserId(),
+					memberRequestModelImpl.getStatus()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_G_R_S, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_G_R_S, args);
+		}
 
 		if ((memberRequestModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_R_S.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					memberRequestModelImpl.getOriginalGroupId(),
 					memberRequestModelImpl.getOriginalReceiverUserId(),
 					memberRequestModelImpl.getOriginalStatus()
@@ -2036,8 +2020,8 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 			MemberRequestImpl.class, memberRequest.getPrimaryKey(),
 			memberRequest, false);
 
-		clearUniqueFindersCache(memberRequestModelImpl);
-		cacheUniqueFindersCache(memberRequestModelImpl, isNew);
+		clearUniqueFindersCache(memberRequestModelImpl, false);
+		cacheUniqueFindersCache(memberRequestModelImpl);
 
 		memberRequest.resetOriginalValues();
 
@@ -2115,12 +2099,14 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 	 */
 	@Override
 	public MemberRequest fetchByPrimaryKey(Serializable primaryKey) {
-		MemberRequest memberRequest = (MemberRequest)entityCache.getResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,
 				MemberRequestImpl.class, primaryKey);
 
-		if (memberRequest == _nullMemberRequest) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		MemberRequest memberRequest = (MemberRequest)serializable;
 
 		if (memberRequest == null) {
 			Session session = null;
@@ -2136,7 +2122,7 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 				}
 				else {
 					entityCache.putResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,
-						MemberRequestImpl.class, primaryKey, _nullMemberRequest);
+						MemberRequestImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -2190,18 +2176,20 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			MemberRequest memberRequest = (MemberRequest)entityCache.getResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,
 					MemberRequestImpl.class, primaryKey);
 
-			if (memberRequest == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, memberRequest);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (MemberRequest)serializable);
+				}
 			}
 		}
 
@@ -2243,7 +2231,7 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,
-					MemberRequestImpl.class, primaryKey, _nullMemberRequest);
+					MemberRequestImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -2488,22 +2476,4 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"key"
 			});
-	private static final MemberRequest _nullMemberRequest = new MemberRequestImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<MemberRequest> toCacheModel() {
-				return _nullMemberRequestCacheModel;
-			}
-		};
-
-	private static final CacheModel<MemberRequest> _nullMemberRequestCacheModel = new CacheModel<MemberRequest>() {
-			@Override
-			public MemberRequest toEntityModel() {
-				return _nullMemberRequest;
-			}
-		};
 }

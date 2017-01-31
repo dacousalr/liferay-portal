@@ -71,7 +71,6 @@ import javax.servlet.http.HttpSession;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -90,13 +89,10 @@ public class SPIAgentRequestTest {
 		new AggregateTestRule(
 			CodeCoverageAssertor.INSTANCE, NewEnvTestRule.INSTANCE);
 
-	@BeforeClass
-	public static void setUpClass() throws Exception {
-		ToolDependencies.wireCaches();
-	}
-
 	@Before
 	public void setUp() throws Exception {
+		ToolDependencies.wireCaches();
+
 		FileUtil fileUtil = new FileUtil();
 
 		fileUtil.setFile(
@@ -546,6 +542,7 @@ public class SPIAgentRequestTest {
 		String[] parameter3 = parameterMap.get(_PARAMETER_NAME_3);
 
 		Assert.assertEquals(0, parameter3.length);
+
 		Assert.assertEquals(
 			_PARAMETER_VALUE_1,
 			populatedHttpServletRequest.getParameter(_PARAMETER_NAME_1));

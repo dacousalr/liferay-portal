@@ -406,8 +406,6 @@ $section-header-bg: #CCE6F7;
 	.user-information-title {
 		color: #666;
 		font-size: 1.5em;
-		text-align: right;
-		width: 110px;
 	}
 
 	.lfr-user-info-container {
@@ -692,16 +690,6 @@ $section-header-bg: #CCE6F7;
 
 	.profile-actions {
 		border-radius: 4px;
-	}
-}
-
-.private-messaging-portlet {
-	.message-to input, .message-subject input {
-		width: 300px;
-	}
-
-	.message-body {
-		width: 90%;
 	}
 }
 

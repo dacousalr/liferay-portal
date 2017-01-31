@@ -14,15 +14,21 @@
 
 package com.liferay.portal.kernel.templateparser;
 
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
+import com.liferay.document.library.kernel.util.DLUtil;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -119,7 +125,33 @@ public class TemplateNode extends LinkedHashMap<String, Object> {
 	public String getData() {
 		String type = getType();
 
-		if (type.equals("link_to_layout")) {
+		if (type.equals("document_library") || type.equals("image")) {
+			String data = (String)get("data");
+
+			try {
+				JSONObject jsonObject = JSONFactoryUtil.createJSONObject(data);
+
+				String uuid = jsonObject.getString("uuid");
+				long groupId = jsonObject.getLong("groupId");
+
+				if (Validator.isNull(uuid) && (groupId == 0)) {
+					return StringPool.BLANK;
+				}
+
+				FileEntry fileEntry =
+					DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(
+						uuid, groupId);
+
+				return DLUtil.getPreviewURL(
+					fileEntry, fileEntry.getFileVersion(), null,
+					StringPool.BLANK, false, true);
+			}
+			catch (Exception e) {
+			}
+
+			return StringPool.BLANK;
+		}
+		else if (type.equals("link_to_layout")) {
 			String data = (String)get("data");
 
 			int pos = data.indexOf(CharPool.AT);
@@ -164,7 +196,10 @@ public class TemplateNode extends LinkedHashMap<String, Object> {
 			Layout layout = LayoutLocalServiceUtil.getLayout(
 				groupId, privateLayout, getLayoutId());
 
-			return PortalUtil.getLayoutFriendlyURL(layout, _themeDisplay);
+			String layoutFriendlyURL = PortalUtil.getLayoutFriendlyURL(
+				layout, _themeDisplay);
+
+			return HttpUtil.removeDomain(layoutFriendlyURL);
 		}
 		catch (Exception e) {
 			if (_log.isDebugEnabled()) {

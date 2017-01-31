@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -2230,7 +2229,7 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 	 * Returns all the kaleo instances where className = &#63; and classPK = &#63;.
 	 *
 	 * @param className the class name
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the matching kaleo instances
 	 */
 	@Override
@@ -2247,7 +2246,7 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 	 * </p>
 	 *
 	 * @param className the class name
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of kaleo instances
 	 * @param end the upper bound of the range of kaleo instances (not inclusive)
 	 * @return the range of matching kaleo instances
@@ -2266,7 +2265,7 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 	 * </p>
 	 *
 	 * @param className the class name
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of kaleo instances
 	 * @param end the upper bound of the range of kaleo instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -2287,7 +2286,7 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 	 * </p>
 	 *
 	 * @param className the class name
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of kaleo instances
 	 * @param end the upper bound of the range of kaleo instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -2424,7 +2423,7 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 	 * Returns the first kaleo instance in the ordered set where className = &#63; and classPK = &#63;.
 	 *
 	 * @param className the class name
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching kaleo instance
 	 * @throws NoSuchInstanceException if a matching kaleo instance could not be found
@@ -2459,7 +2458,7 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 	 * Returns the first kaleo instance in the ordered set where className = &#63; and classPK = &#63;.
 	 *
 	 * @param className the class name
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching kaleo instance, or <code>null</code> if a matching kaleo instance could not be found
 	 */
@@ -2480,7 +2479,7 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 	 * Returns the last kaleo instance in the ordered set where className = &#63; and classPK = &#63;.
 	 *
 	 * @param className the class name
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching kaleo instance
 	 * @throws NoSuchInstanceException if a matching kaleo instance could not be found
@@ -2515,7 +2514,7 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 	 * Returns the last kaleo instance in the ordered set where className = &#63; and classPK = &#63;.
 	 *
 	 * @param className the class name
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching kaleo instance, or <code>null</code> if a matching kaleo instance could not be found
 	 */
@@ -2543,7 +2542,7 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 	 *
 	 * @param kaleoInstanceId the primary key of the current kaleo instance
 	 * @param className the class name
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next kaleo instance
 	 * @throws NoSuchInstanceException if a kaleo instance with the primary key could not be found
@@ -2708,7 +2707,7 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 	 * Removes all the kaleo instances where className = &#63; and classPK = &#63; from the database.
 	 *
 	 * @param className the class name
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 */
 	@Override
 	public void removeByCN_CPK(String className, long classPK) {
@@ -2722,7 +2721,7 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 	 * Returns the number of kaleo instances where className = &#63; and classPK = &#63;.
 	 *
 	 * @param className the class name
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the number of matching kaleo instances
 	 */
 	@Override
@@ -3982,12 +3981,14 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 	 */
 	@Override
 	public KaleoInstance fetchByPrimaryKey(Serializable primaryKey) {
-		KaleoInstance kaleoInstance = (KaleoInstance)entityCache.getResult(KaleoInstanceModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(KaleoInstanceModelImpl.ENTITY_CACHE_ENABLED,
 				KaleoInstanceImpl.class, primaryKey);
 
-		if (kaleoInstance == _nullKaleoInstance) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		KaleoInstance kaleoInstance = (KaleoInstance)serializable;
 
 		if (kaleoInstance == null) {
 			Session session = null;
@@ -4003,7 +4004,7 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 				}
 				else {
 					entityCache.putResult(KaleoInstanceModelImpl.ENTITY_CACHE_ENABLED,
-						KaleoInstanceImpl.class, primaryKey, _nullKaleoInstance);
+						KaleoInstanceImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -4057,18 +4058,20 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			KaleoInstance kaleoInstance = (KaleoInstance)entityCache.getResult(KaleoInstanceModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(KaleoInstanceModelImpl.ENTITY_CACHE_ENABLED,
 					KaleoInstanceImpl.class, primaryKey);
 
-			if (kaleoInstance == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, kaleoInstance);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (KaleoInstance)serializable);
+				}
 			}
 		}
 
@@ -4110,7 +4113,7 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(KaleoInstanceModelImpl.ENTITY_CACHE_ENABLED,
-					KaleoInstanceImpl.class, primaryKey, _nullKaleoInstance);
+					KaleoInstanceImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -4347,22 +4350,4 @@ public class KaleoInstancePersistenceImpl extends BasePersistenceImpl<KaleoInsta
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No KaleoInstance exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No KaleoInstance exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(KaleoInstancePersistenceImpl.class);
-	private static final KaleoInstance _nullKaleoInstance = new KaleoInstanceImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<KaleoInstance> toCacheModel() {
-				return _nullKaleoInstanceCacheModel;
-			}
-		};
-
-	private static final CacheModel<KaleoInstance> _nullKaleoInstanceCacheModel = new CacheModel<KaleoInstance>() {
-			@Override
-			public KaleoInstance toEntityModel() {
-				return _nullKaleoInstance;
-			}
-		};
 }

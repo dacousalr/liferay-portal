@@ -29,9 +29,7 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchEmailAddressException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.EmailAddress;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -2806,7 +2804,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the matching email addresses
 	 */
 	@Override
@@ -2825,7 +2823,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of email addresses
 	 * @param end the upper bound of the range of email addresses (not inclusive)
 	 * @return the range of matching email addresses
@@ -2845,7 +2843,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of email addresses
 	 * @param end the upper bound of the range of email addresses (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -2868,7 +2866,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of email addresses
 	 * @param end the upper bound of the range of email addresses (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -2998,7 +2996,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching email address
 	 * @throws NoSuchEmailAddressException if a matching email address could not be found
@@ -3037,7 +3035,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching email address, or <code>null</code> if a matching email address could not be found
 	 */
@@ -3059,7 +3057,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching email address
 	 * @throws NoSuchEmailAddressException if a matching email address could not be found
@@ -3098,7 +3096,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching email address, or <code>null</code> if a matching email address could not be found
 	 */
@@ -3127,7 +3125,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 * @param emailAddressId the primary key of the current email address
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next email address
 	 * @throws NoSuchEmailAddressException if a email address with the primary key could not be found
@@ -3284,7 +3282,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 */
 	@Override
 	public void removeByC_C_C(long companyId, long classNameId, long classPK) {
@@ -3299,7 +3297,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the number of matching email addresses
 	 */
 	@Override
@@ -3394,7 +3392,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @return the matching email addresses
 	 */
@@ -3414,7 +3412,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param start the lower bound of the range of email addresses
 	 * @param end the upper bound of the range of email addresses (not inclusive)
@@ -3436,7 +3434,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param start the lower bound of the range of email addresses
 	 * @param end the upper bound of the range of email addresses (not inclusive)
@@ -3460,7 +3458,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param start the lower bound of the range of email addresses
 	 * @param end the upper bound of the range of email addresses (not inclusive)
@@ -3596,7 +3594,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching email address
@@ -3640,7 +3638,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching email address, or <code>null</code> if a matching email address could not be found
@@ -3664,7 +3662,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching email address
@@ -3708,7 +3706,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching email address, or <code>null</code> if a matching email address could not be found
@@ -3739,7 +3737,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 * @param emailAddressId the primary key of the current email address
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next email address
@@ -3903,7 +3901,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 */
 	@Override
@@ -3920,7 +3918,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @return the number of matching email addresses
 	 */
@@ -4462,12 +4460,14 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	 */
 	@Override
 	public EmailAddress fetchByPrimaryKey(Serializable primaryKey) {
-		EmailAddress emailAddress = (EmailAddress)entityCache.getResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
 				EmailAddressImpl.class, primaryKey);
 
-		if (emailAddress == _nullEmailAddress) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		EmailAddress emailAddress = (EmailAddress)serializable;
 
 		if (emailAddress == null) {
 			Session session = null;
@@ -4483,7 +4483,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 				}
 				else {
 					entityCache.putResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
-						EmailAddressImpl.class, primaryKey, _nullEmailAddress);
+						EmailAddressImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -4537,18 +4537,20 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			EmailAddress emailAddress = (EmailAddress)entityCache.getResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
 					EmailAddressImpl.class, primaryKey);
 
-			if (emailAddress == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, emailAddress);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (EmailAddress)serializable);
+				}
 			}
 		}
 
@@ -4590,7 +4592,7 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(EmailAddressModelImpl.ENTITY_CACHE_ENABLED,
-					EmailAddressImpl.class, primaryKey, _nullEmailAddress);
+					EmailAddressImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -4833,34 +4835,4 @@ public class EmailAddressPersistenceImpl extends BasePersistenceImpl<EmailAddres
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid", "primary"
 			});
-	private static final EmailAddress _nullEmailAddress = new EmailAddressImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<EmailAddress> toCacheModel() {
-				return _nullEmailAddressCacheModel;
-			}
-		};
-
-	private static final CacheModel<EmailAddress> _nullEmailAddressCacheModel = new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<EmailAddress>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public EmailAddress toEntityModel() {
-			return _nullEmailAddress;
-		}
-	}
 }

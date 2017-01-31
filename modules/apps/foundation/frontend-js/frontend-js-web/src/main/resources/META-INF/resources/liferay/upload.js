@@ -202,18 +202,28 @@ AUI.add(
 						value: true
 					},
 
-					render: {
-						value: true
-					},
-
 					removeOnComplete: {
 						validator: Lang.isBoolean,
 						value: false
 					},
 
+					render: {
+						value: true
+					},
+
 					restoreState: {
 						validator: Lang.isBoolean,
 						value: true
+					},
+
+					rootElement: {
+						setter: A.one,
+						value: null
+					},
+
+					simultaneousUploads: {
+						validator: Lang.isNumber,
+						value: 2
 					},
 
 					strings: {
@@ -340,7 +350,9 @@ AUI.add(
 						uploader.on('uploadcomplete', instance._onUploadComplete, instance);
 						uploader.on('uploadprogress', instance._onUploadProgress, instance);
 
-						var docElement = A.getDoc().get('documentElement');
+						var rootElement = instance.get('rootElement');
+
+						var docElement = rootElement ? rootElement : A.getDoc().get('documentElement');
 
 						docElement.on('drop', instance._handleDrop, instance);
 
@@ -401,8 +413,6 @@ AUI.add(
 						var uploader = instance._uploader;
 
 						var queue = uploader.queue;
-
-						var fileList = queue.get('fileList');
 
 						queue.pauseUpload();
 
@@ -1083,7 +1093,7 @@ AUI.add(
 									}
 								},
 								selectFilesButton: instance._selectFilesButton,
-								simLimit: 2,
+								simLimit: instance.get('simultaneousUploads'),
 								swfURL: Liferay.Util.addParams(timestampParam, URL_SWF_UPLOADER),
 								uploadURL: Liferay.Util.addParams(timestampParam, instance.get('uploadFile'))
 							}

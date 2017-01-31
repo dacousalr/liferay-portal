@@ -33,7 +33,7 @@ public class ProxyFactory {
 
 	public static <T> T newDummyInstance(Class<T> interfaceClass) {
 		return (T)ProxyUtil.newProxyInstance(
-			interfaceClass.getClassLoader(), new Class[] {interfaceClass},
+			interfaceClass.getClassLoader(), new Class<?>[] {interfaceClass},
 			new DummyInvocationHandler<T>());
 	}
 
@@ -43,7 +43,7 @@ public class ProxyFactory {
 		throws Exception {
 
 		return newInstance(
-			classLoader, new Class[] {interfaceClass}, implClassName);
+			classLoader, new Class<?>[] {interfaceClass}, implClassName);
 	}
 
 	public static Object newInstance(
@@ -59,19 +59,83 @@ public class ProxyFactory {
 			new ClassLoaderBeanHandler(instance, classLoader));
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             #newServiceTrackedInstance(Class, Class, String)}
+	 */
+	@Deprecated
 	public static <T> T newServiceTrackedInstance(Class<T> interfaceClass) {
 		return (T)ProxyUtil.newProxyInstance(
-			interfaceClass.getClassLoader(), new Class[] {interfaceClass},
+			interfaceClass.getClassLoader(), new Class<?>[] {interfaceClass},
 			new ServiceTrackedInvocationHandler<>(interfaceClass));
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             ServiceProxyFactory#newServiceTrackedInstance(Class, Class,
+	 *             String, boolean)}
+	 */
+	@Deprecated
+	public static <T> T newServiceTrackedInstance(
+		Class<T> serviceClass, Class<?> declaringClass, String fieldName) {
+
+		return ServiceProxyFactory.newServiceTrackedInstance(
+			serviceClass, declaringClass, fieldName, false);
+	}
+
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             ServiceProxyFactory#newServiceTrackedInstance(Class, Class,
+	 *             String, String, boolean)}
+	 */
+	@Deprecated
+	public static <T> T newServiceTrackedInstance(
+		Class<T> serviceClass, Class<?> declaringClass, String fieldName,
+		String filterString) {
+
+		return ServiceProxyFactory.newServiceTrackedInstance(
+			serviceClass, declaringClass, fieldName, filterString, false);
+	}
+
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             #newServiceTrackedInstance(Class, Class, String, String)}
+	 */
+	@Deprecated
 	public static <T> T newServiceTrackedInstance(
 		Class<T> interfaceClass, String filterString) {
 
 		return (T)ProxyUtil.newProxyInstance(
-			interfaceClass.getClassLoader(), new Class[] {interfaceClass},
+			interfaceClass.getClassLoader(), new Class<?>[] {interfaceClass},
 			new ServiceTrackedInvocationHandler<>(
 				interfaceClass, filterString));
+	}
+
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             ServiceProxyFactory#newServiceTrackedInstance(Class, Class,
+	 *             String, boolean)}
+	 */
+	@Deprecated
+	public static <T> T newServiceTrackedInstanceWithoutDummyService(
+		Class<T> serviceClass, Class<?> declaringClass, String fieldName) {
+
+		return ServiceProxyFactory.newServiceTrackedInstance(
+			serviceClass, declaringClass, fieldName, true);
+	}
+
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             ServiceProxyFactory#newServiceTrackedInstance(Class, Class,
+	 *             String, String, boolean)}
+	 */
+	@Deprecated
+	public static <T> T newServiceTrackedInstanceWithoutDummyService(
+		Class<T> serviceClass, Class<?> declaringClass, String fieldName,
+		String filterString) {
+
+		return ServiceProxyFactory.newServiceTrackedInstance(
+			serviceClass, declaringClass, fieldName, filterString, true);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(ProxyFactory.class);

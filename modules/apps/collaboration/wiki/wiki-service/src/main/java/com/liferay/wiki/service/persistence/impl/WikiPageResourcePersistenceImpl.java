@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
@@ -1816,7 +1815,8 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((WikiPageResourceModelImpl)wikiPageResource);
+		clearUniqueFindersCache((WikiPageResourceModelImpl)wikiPageResource,
+			true);
 	}
 
 	@Override
@@ -1828,75 +1828,50 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 			entityCache.removeResult(WikiPageResourceModelImpl.ENTITY_CACHE_ENABLED,
 				WikiPageResourceImpl.class, wikiPageResource.getPrimaryKey());
 
-			clearUniqueFindersCache((WikiPageResourceModelImpl)wikiPageResource);
+			clearUniqueFindersCache((WikiPageResourceModelImpl)wikiPageResource,
+				true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		WikiPageResourceModelImpl wikiPageResourceModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					wikiPageResourceModelImpl.getUuid(),
-					wikiPageResourceModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				wikiPageResourceModelImpl);
-
-			args = new Object[] {
-					wikiPageResourceModelImpl.getNodeId(),
-					wikiPageResourceModelImpl.getTitle()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_N_T, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_N_T, args,
-				wikiPageResourceModelImpl);
-		}
-		else {
-			if ((wikiPageResourceModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						wikiPageResourceModelImpl.getUuid(),
-						wikiPageResourceModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					wikiPageResourceModelImpl);
-			}
-
-			if ((wikiPageResourceModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_N_T.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						wikiPageResourceModelImpl.getNodeId(),
-						wikiPageResourceModelImpl.getTitle()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_N_T, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_N_T, args,
-					wikiPageResourceModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		WikiPageResourceModelImpl wikiPageResourceModelImpl) {
 		Object[] args = new Object[] {
 				wikiPageResourceModelImpl.getUuid(),
 				wikiPageResourceModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			wikiPageResourceModelImpl, false);
+
+		args = new Object[] {
+				wikiPageResourceModelImpl.getNodeId(),
+				wikiPageResourceModelImpl.getTitle()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_N_T, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_N_T, args,
+			wikiPageResourceModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		WikiPageResourceModelImpl wikiPageResourceModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					wikiPageResourceModelImpl.getUuid(),
+					wikiPageResourceModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((wikiPageResourceModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					wikiPageResourceModelImpl.getOriginalUuid(),
 					wikiPageResourceModelImpl.getOriginalGroupId()
 				};
@@ -1905,17 +1880,19 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
 		}
 
-		args = new Object[] {
-				wikiPageResourceModelImpl.getNodeId(),
-				wikiPageResourceModelImpl.getTitle()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					wikiPageResourceModelImpl.getNodeId(),
+					wikiPageResourceModelImpl.getTitle()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_N_T, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_N_T, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_N_T, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_N_T, args);
+		}
 
 		if ((wikiPageResourceModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_N_T.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					wikiPageResourceModelImpl.getOriginalNodeId(),
 					wikiPageResourceModelImpl.getOriginalTitle()
 				};
@@ -2117,8 +2094,8 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 			WikiPageResourceImpl.class, wikiPageResource.getPrimaryKey(),
 			wikiPageResource, false);
 
-		clearUniqueFindersCache(wikiPageResourceModelImpl);
-		cacheUniqueFindersCache(wikiPageResourceModelImpl, isNew);
+		clearUniqueFindersCache(wikiPageResourceModelImpl, false);
+		cacheUniqueFindersCache(wikiPageResourceModelImpl);
 
 		wikiPageResource.resetOriginalValues();
 
@@ -2191,12 +2168,14 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 	 */
 	@Override
 	public WikiPageResource fetchByPrimaryKey(Serializable primaryKey) {
-		WikiPageResource wikiPageResource = (WikiPageResource)entityCache.getResult(WikiPageResourceModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(WikiPageResourceModelImpl.ENTITY_CACHE_ENABLED,
 				WikiPageResourceImpl.class, primaryKey);
 
-		if (wikiPageResource == _nullWikiPageResource) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		WikiPageResource wikiPageResource = (WikiPageResource)serializable;
 
 		if (wikiPageResource == null) {
 			Session session = null;
@@ -2212,8 +2191,7 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 				}
 				else {
 					entityCache.putResult(WikiPageResourceModelImpl.ENTITY_CACHE_ENABLED,
-						WikiPageResourceImpl.class, primaryKey,
-						_nullWikiPageResource);
+						WikiPageResourceImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -2267,18 +2245,20 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			WikiPageResource wikiPageResource = (WikiPageResource)entityCache.getResult(WikiPageResourceModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(WikiPageResourceModelImpl.ENTITY_CACHE_ENABLED,
 					WikiPageResourceImpl.class, primaryKey);
 
-			if (wikiPageResource == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, wikiPageResource);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (WikiPageResource)serializable);
+				}
 			}
 		}
 
@@ -2320,8 +2300,7 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(WikiPageResourceModelImpl.ENTITY_CACHE_ENABLED,
-					WikiPageResourceImpl.class, primaryKey,
-					_nullWikiPageResource);
+					WikiPageResourceImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -2566,23 +2545,4 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid"
 			});
-	private static final WikiPageResource _nullWikiPageResource = new WikiPageResourceImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<WikiPageResource> toCacheModel() {
-				return _nullWikiPageResourceCacheModel;
-			}
-		};
-
-	private static final CacheModel<WikiPageResource> _nullWikiPageResourceCacheModel =
-		new CacheModel<WikiPageResource>() {
-			@Override
-			public WikiPageResource toEntityModel() {
-				return _nullWikiPageResource;
-			}
-		};
 }

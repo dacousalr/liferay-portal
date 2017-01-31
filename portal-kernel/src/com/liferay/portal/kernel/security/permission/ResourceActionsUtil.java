@@ -33,6 +33,10 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class ResourceActionsUtil {
 
+	public static void check(String portletName) {
+		getResourceActions().check(portletName);
+	}
+
 	public static void checkAction(String name, String actionId)
 		throws NoSuchResourceActionException {
 
@@ -69,6 +73,10 @@ public class ResourceActionsUtil {
 		HttpServletRequest request, String name, long actionIds) {
 
 		return getResourceActions().getActionsNames(request, name, actionIds);
+	}
+
+	public static String getCompositeModelName(String... classNames) {
+		return getResourceActions().getCompositeModelName(classNames);
 	}
 
 	public static String getCompositeModelNameSeparator() {
@@ -250,6 +258,14 @@ public class ResourceActionsUtil {
 		getResourceActions().read(servletContextName, classLoader, source);
 	}
 
+	public static void read(
+			String servletContextName, ClassLoader classLoader,
+			String... sources)
+		throws Exception {
+
+		getResourceActions().read(servletContextName, classLoader, sources);
+	}
+
 	/**
 	 * @deprecated As of 7.0.0
 	 */
@@ -258,6 +274,15 @@ public class ResourceActionsUtil {
 		throws Exception {
 
 		getResourceActions().read(servletContextName, inputStream);
+	}
+
+	public static void readAndCheck(
+			String servletContextName, ClassLoader classLoader,
+			String... sources)
+		throws Exception {
+
+		getResourceActions().readAndCheck(
+			servletContextName, classLoader, sources);
 	}
 
 	public void setResourceActions(ResourceActions resourceActions) {

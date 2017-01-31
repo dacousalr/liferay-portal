@@ -222,7 +222,7 @@ AUI.add(
 					_getLengthInMillis: function(value) {
 						var instance = this;
 
-						return value * 60000;
+						return value * 1000;
 					},
 
 					_getTimestamp: function(value) {
@@ -322,53 +322,47 @@ AUI.add(
 
 								var elapsed = sessionLength;
 
-								var value = parseInt(timestamp, 10);
-
-								if (!isNaN(value)) {
+								if (Lang.toInt(timestamp)) {
 									timeOffset = Math.floor((Date.now() - timestamp) / 1000) * 1000;
 
 									elapsed = timeOffset;
 								}
 
-								var extend = false;
+								var extend = instance.get('autoExtend');
 
-								var expirationMoment = elapsed == sessionLength;
-								var warningMoment = elapsed == warningTime;
+								var expirationMoment = false;
+								var warningMoment = false;
 
 								var hasExpired = elapsed >= sessionLength;
 								var hasWarned = elapsed >= warningTime;
 
-								var updateSessionState = true;
-
 								if (hasWarned) {
-									if (warningMoment || expirationMoment) {
-										if (timestamp == 'expired') {
-											expirationMoment = true;
-											hasExpired = true;
-										}
-										else if (instance.get('autoExtend')) {
+									if (timestamp == 'expired') {
+										expirationMoment = true;
+										hasExpired = true;
+									}
+
+									var sessionState = instance.get('sessionState');
+
+									if (hasExpired && sessionState != 'expired') {
+										if (extend) {
 											expirationMoment = false;
-											extend = true;
 											hasExpired = false;
 											hasWarned = false;
 											warningMoment = false;
-										}
-										else if (timeOffset < warningTime) {
-											hasWarned = false;
-											updateSessionState = false;
-										}
-									}
 
-									if (updateSessionState) {
-										if (expirationMoment) {
-											instance.expire();
-										}
-										else if (warningMoment) {
-											instance.warn();
-										}
-										else if (extend) {
 											instance.extend();
 										}
+										else {
+											instance.expire();
+
+											expirationMoment = true;
+										}
+									}
+									else if (hasWarned && !hasExpired && !extend && sessionState != 'warned') {
+										instance.warn();
+
+										warningMoment = true;
 									}
 								}
 
@@ -466,9 +460,21 @@ AUI.add(
 
 						var host = instance._host;
 
+						var sessionLength = host.get('sessionLength');
+						var timestamp = host.get('timestamp');
 						var warningLength = host.get('warningLength');
 
-						var remainingTime = warningLength;
+						var elapsed = sessionLength;
+
+						if (Lang.toInt(timestamp)) {
+							elapsed = Math.floor((Date.now() - timestamp) / 1000) * 1000;
+						}
+
+						var remainingTime = sessionLength - elapsed;
+
+						if (remainingTime > warningLength) {
+							remainingTime = warningLength;
+						}
 
 						var banner = instance._getBanner();
 
@@ -491,6 +497,10 @@ AUI.add(
 
 										banner.show();
 									}
+
+									elapsed = Math.floor((Date.now() - timestamp) / 1000) * 1000;
+
+									remainingTime = sessionLength - elapsed;
 
 									instance._uiSetRemainingTime(remainingTime, counterTextNode);
 
@@ -611,17 +621,19 @@ AUI.add(
 
 						var banner = instance._getBanner();
 
+						remainingTime = instance._formatTime(remainingTime);
+
 						banner.set(
 							'message',
 							Lang.sub(
 								instance._warningText,
 								[
-									instance._formatTime(remainingTime)
+									remainingTime
 								]
 							)
 						);
 
-						DOC.title = banner.get('contentBox').text();
+						DOC.title = Lang.sub(Liferay.Language.get('session-expires-in-x'), [remainingTime]) + ' | ' + instance.get('pageTitle');
 					}
 				}
 			}

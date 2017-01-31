@@ -9,16 +9,6 @@
 </thead>
 <tbody>
 <tr>
-	<td>EXTEND_ACTION_PATH</td>
-	<td>BasePortlet</td>
-	<td></td>
-</tr>
-<tr>
-	<td></td>
-	<td></td>
-	<td></td>
-</tr>
-<tr>
 	<td>HEADER_TITLE</td>
 	<td>//h3[@class='header-title']</td>
 	<td></td>
@@ -46,6 +36,11 @@
 <tr>
 	<td>DETAILS</td>
 	<td>//div[@id='structureDetailsSectionPanel']/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>DETAILS_TOGGLE</td>
+	<td>//div[@id='structureDetailsSectionPanel']//a/span</td>
 	<td></td>
 </tr>
 <tr>
@@ -304,7 +299,7 @@
 </tr>
 <tr>
 	<td>FORM_FIELD_DELETE_ICON</td>
-	<td>xpath=(//div[contains(@class,'component') and contains(@class,'form-builder-field')]/div/label[contains(.,'${key_fieldFieldLabel}')]/../../div/div/button/span[contains(@class,'glyphicon-trash')])[1]</td>
+	<td>xpath=(//div[contains(@class,'component') and contains(@class,'form-builder-field')]/div/label[contains(.,'${key_fieldFieldLabel}')]/../../div/div/button/span[contains(@class,'glyphicon-trash')]/..)[1]</td>
 	<td></td>
 </tr>
 <tr>
@@ -531,6 +526,17 @@
 <tr>
 	<td>SETTINGS_CELL_EDITOR_WIDTH</td>
 	<td>//label/input[@value='${key_widthSize}']</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<!--SOURCE_EDITOR-->
+<tr>
+	<td>SOURCE_EDITOR_CONTENT</td>
+	<td>//div[contains(@id,'formBuilderEditor')]/textarea</td>
 	<td></td>
 </tr>
 <tr>

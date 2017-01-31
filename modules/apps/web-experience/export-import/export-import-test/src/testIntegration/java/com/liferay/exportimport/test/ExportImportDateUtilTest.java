@@ -27,7 +27,6 @@ import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
-import com.liferay.portal.kernel.test.rule.TransactionalTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.util.DateRange;
 import com.liferay.portal.kernel.util.PortletKeys;
@@ -61,8 +60,7 @@ public class ExportImportDateUtilTest {
 	public static final AggregateTestRule aggregateTestRule =
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
-			SynchronousDestinationTestRule.INSTANCE,
-			TransactionalTestRule.INSTANCE);
+			SynchronousDestinationTestRule.INSTANCE);
 
 	@Before
 	public void setUp() throws Exception {
@@ -355,6 +353,38 @@ public class ExportImportDateUtilTest {
 			_portletPreferences);
 
 		Assert.assertEquals(now.getTime(), lastPublishDate.getTime());
+	}
+
+	@Test
+	public void testUpdateLastPublishDateWithoutExistingLastPublishDate()
+		throws Exception {
+
+		Date lastPublishDate = ExportImportDateUtil.getLastPublishDate(
+			_portletPreferences);
+
+		Assert.assertNull(lastPublishDate);
+
+		Date now = new Date();
+
+		DateRange dateRange = new DateRange(now, null);
+
+		ExportImportDateUtil.updateLastPublishDate(
+			PortletKeys.EXPORT_IMPORT, _portletPreferences, dateRange, now);
+
+		lastPublishDate = ExportImportDateUtil.getLastPublishDate(
+			_portletPreferences);
+
+		Assert.assertNull(lastPublishDate);
+
+		dateRange = new DateRange(null, now);
+
+		ExportImportDateUtil.updateLastPublishDate(
+			PortletKeys.EXPORT_IMPORT, _portletPreferences, dateRange, now);
+
+		lastPublishDate = ExportImportDateUtil.getLastPublishDate(
+			_portletPreferences);
+
+		Assert.assertEquals(now, lastPublishDate);
 	}
 
 	@Test

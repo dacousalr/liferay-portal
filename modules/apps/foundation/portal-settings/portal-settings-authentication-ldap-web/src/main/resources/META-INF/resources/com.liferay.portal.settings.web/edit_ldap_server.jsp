@@ -137,16 +137,16 @@ for (int i = 0; i < groupMappingArray.length; i++) {
 		groupMappingUser = mapping[1];
 	}
 }
-%>
 
-<liferay-ui:header
-	backURL="<%= backURL %>"
-	title='<%= (ldapServerId == 0) ? "add-ldap-server" : "edit-ldap-server" %>'
-/>
+portletDisplay.setShowBackIcon(true);
+portletDisplay.setURLBack(backURL);
+
+renderResponse.setTitle((ldapServerId == 0) ? LanguageUtil.get(resourceBundle, "add-ldap-server") : LanguageUtil.get(resourceBundle, "edit-ldap-server"));
+%>
 
 <portlet:actionURL name="/portal_settings/edit_ldap_server" var="editLDAPServerURL" />
 
-<aui:form action="<%= editLDAPServerURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveEntry(false);" %>'>
+<aui:form action="<%= editLDAPServerURL %>" cssClass="container-fluid-1280" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveEntry(false);" %>'>
 	<liferay-ui:error exception="<%= DuplicateLDAPServerNameException.class %>" message="please-enter-a-unique-ldap-server-name" />
 	<liferay-ui:error exception="<%= LDAPFilterException.class %>" message="please-enter-a-valid-ldap-search-filter" />
 	<liferay-ui:error exception="<%= LDAPServerNameException.class %>" message="please-enter-a-valid-ldap-server-name" />
@@ -157,129 +157,129 @@ for (int i = 0; i < groupMappingArray.length; i++) {
 
 	<liferay-ui:error key="ldapAuthentication" message="failed-to-bind-to-the-ldap-server-with-given-values" />
 
-	<aui:fieldset>
-		<aui:input cssClass="lfr-input-text-container" label="server-name" name='<%= "ldap--" + LDAPConstants.SERVER_NAME + "--" %>' type="text" value="<%= ldapServerName %>" />
-	</aui:fieldset>
+	<aui:fieldset-group markupView="lexicon">
+		<aui:fieldset>
+			<aui:input cssClass="lfr-input-text-container" label="server-name" name='<%= "ldap--" + LDAPConstants.SERVER_NAME + "--" %>' type="text" value="<%= ldapServerName %>">
+				<aui:validator name="required" />
+			</aui:input>
+		</aui:fieldset>
 
-	<h3><liferay-ui:message key="default-values" /></h3>
+		<aui:fieldset>
+			<h3><liferay-ui:message key="default-values" /></h3>
 
-	<aui:fieldset>
-		<aui:field-wrapper>
-			<aui:input label="Apache Directory Server" name="defaultLdap" type="radio" value="apache" />
-			<aui:input label="Fedora Directory Server" name="defaultLdap" type="radio" value="fedora" />
-			<aui:input label="Microsoft Active Directory Server" name="defaultLdap" type="radio" value="microsoft" />
-			<aui:input label="Novell eDirectory" name="defaultLdap" type="radio" value="novell" />
-			<aui:input label="OpenLDAP" name="defaultLdap" type="radio" value="open" />
-			<aui:input label="other-directory-server" name="defaultLdap" type="radio" value="other" />
-		</aui:field-wrapper>
+			<aui:field-wrapper label="load-default-server-configuration-for">
+				<aui:input label="Apache Directory Server" name="defaultLdap" onClick='<%= renderResponse.getNamespace() + "updateDefaultLdap('apache');" %>' type="radio" value="apache" />
+				<aui:input label="Fedora Directory Server" name="defaultLdap" onClick='<%= renderResponse.getNamespace() + "updateDefaultLdap('fedora');" %>' type="radio" value="fedora" />
+				<aui:input label="Microsoft Active Directory Server" name="defaultLdap" onClick='<%= renderResponse.getNamespace() + "updateDefaultLdap('microsoft');" %>' type="radio" value="microsoft" />
+				<aui:input label="Novell eDirectory" name="defaultLdap" onClick='<%= renderResponse.getNamespace() + "updateDefaultLdap('novell');" %>' type="radio" value="novell" />
+				<aui:input label="OpenLDAP" name="defaultLdap" onClick='<%= renderResponse.getNamespace() + "updateDefaultLdap('open');" %>' type="radio" value="open" />
+				<aui:input label="other-directory-server" name="defaultLdap" onClick='<%= renderResponse.getNamespace() + "updateDefaultLdap('other');" %>' type="radio" value="other" />
+			</aui:field-wrapper>
+		</aui:fieldset>
 
-		<aui:button-row>
-			<aui:button cssClass="btn-lg" onClick='<%= renderResponse.getNamespace() + "updateDefaultLdap();" %>' value="reset-values" />
-		</aui:button-row>
-	</aui:fieldset>
+		<aui:fieldset>
+			<h3><liferay-ui:message key="connection" /></h3>
 
-	<h3><liferay-ui:message key="connection" /></h3>
+			<aui:input cssClass="lfr-input-text-container" helpMessage="the-ldap-url-format-is" label="base-provider-url" name='<%= "ldap--" + LDAPConstants.BASE_PROVIDER_URL + "--" %>' type="text" value="<%= ldapBaseProviderUrl %>" />
 
-	<aui:fieldset>
-		<aui:input cssClass="lfr-input-text-container" helpMessage="the-ldap-url-format-is" label="base-provider-url" name='<%= "ldap--" + LDAPConstants.BASE_PROVIDER_URL + "--" %>' type="text" value="<%= ldapBaseProviderUrl %>" />
+			<aui:input cssClass="lfr-input-text-container" helpMessage="the-ldap-url-format-is" label="base-dn" name='<%= "ldap--" + LDAPConstants.BASE_DN + "--" %>' type="text" value="<%= ldapBaseDN %>" />
 
-		<aui:input cssClass="lfr-input-text-container" helpMessage="the-ldap-url-format-is" label="base-dn" name='<%= "ldap--" + LDAPConstants.BASE_DN + "--" %>' type="text" value="<%= ldapBaseDN %>" />
+			<aui:input cssClass="lfr-input-text-container" label="principal" name='<%= "ldap--" + LDAPConstants.SECURITY_PRINCIPAL + "--" %>' type="text" value="<%= ldapSecurityPrincipal %>" />
 
-		<aui:input cssClass="lfr-input-text-container" label="principal" name='<%= "ldap--" + LDAPConstants.SECURITY_PRINCIPAL + "--" %>' type="text" value="<%= ldapSecurityPrincipal %>" />
+			<aui:input cssClass="lfr-input-text-container" label="credentials" name='<%= "ldap--" + LDAPConstants.SECURITY_CREDENTIAL + "--" %>' type="password" value="<%= ldapSecurityCredentials %>" />
 
-		<aui:input cssClass="lfr-input-text-container" label="credentials" name='<%= "ldap--" + LDAPConstants.SECURITY_CREDENTIAL + "--" %>' type="password" value="<%= ldapSecurityCredentials %>" />
+			<aui:button-row>
 
-		<aui:button-row>
+				<%
+				String taglibOnClick = renderResponse.getNamespace() + "testSettings('ldapConnection');";
+				%>
 
-			<%
-			String taglibOnClick = renderResponse.getNamespace() + "testSettings('ldapConnection');";
-			%>
+				<aui:button cssClass="btn-lg" onClick="<%= taglibOnClick %>" value="test-ldap-connection" />
+			</aui:button-row>
+		</aui:fieldset>
 
-			<aui:button cssClass="btn-lg" onClick="<%= taglibOnClick %>" value="test-ldap-connection" />
-		</aui:button-row>
-	</aui:fieldset>
+		<aui:fieldset>
+			<h3><liferay-ui:message key="users" /></h3>
 
-	<h3><liferay-ui:message key="users" /></h3>
+			<aui:input cssClass="lfr-input-text-container" helpMessage="enter-the-search-filter-that-is-used-to-test-the-validity-of-a-user" label="authentication-search-filter" name='<%= "ldap--" + LDAPConstants.AUTH_SEARCH_FILTER + "--" %>' type="text" value="<%= ldapAuthSearchFilter %>" />
 
-	<aui:fieldset>
-		<aui:input cssClass="lfr-input-text-container" helpMessage="enter-the-search-filter-that-is-used-to-test-the-validity-of-a-user" label="authentication-search-filter" name='<%= "ldap--" + LDAPConstants.AUTH_SEARCH_FILTER + "--" %>' type="text" value="<%= ldapAuthSearchFilter %>" />
+			<aui:input cssClass="lfr-input-text-container" label="import-search-filter" name='<%= "ldap--" + LDAPConstants.USER_SEARCH_FILTER + "--" %>' type="text" value="<%= ldapUserSearchFilter %>" />
 
-		<aui:input cssClass="lfr-input-text-container" label="import-search-filter" name='<%= "ldap--" + LDAPConstants.USER_SEARCH_FILTER + "--" %>' type="text" value="<%= ldapUserSearchFilter %>" />
+			<h4><liferay-ui:message key="user-mapping" /></h4>
 
-		<h4><liferay-ui:message key="user-mapping" /></h4>
+			<aui:input cssClass="lfr-input-text-container" label="uuid" name="userMappingUuid" type="text" value="<%= userMappingUuid %>" />
 
-		<aui:input cssClass="lfr-input-text-container" label="uuid" name="userMappingUuid" type="text" value="<%= userMappingUuid %>" />
+			<aui:input cssClass="lfr-input-text-container" label="screen-name" name="userMappingScreenName" type="text" value="<%= userMappingScreenName %>" />
 
-		<aui:input cssClass="lfr-input-text-container" label="screen-name" name="userMappingScreenName" type="text" value="<%= userMappingScreenName %>" />
+			<aui:input cssClass="lfr-input-text-container" label="email-address" name="userMappingEmailAddress" type="text" value="<%= userMappingEmailAddress %>" />
 
-		<aui:input cssClass="lfr-input-text-container" label="email-address" name="userMappingEmailAddress" type="text" value="<%= userMappingEmailAddress %>" />
+			<aui:input cssClass="lfr-input-text-container" label="password" name="userMappingPassword" type="text" value="<%= userMappingPassword %>" />
 
-		<aui:input cssClass="lfr-input-text-container" label="password" name="userMappingPassword" type="text" value="<%= userMappingPassword %>" />
+			<%@ include file="/com.liferay.portal.settings.web/edit_ldap_server_user_name.jspf" %>
 
-		<%@ include file="/com.liferay.portal.settings.web/edit_ldap_server_user_name.jspf" %>
+			<aui:input cssClass="lfr-input-text-container" label="job-title" name="userMappingJobTitle" type="text" value="<%= userMappingJobTitle %>" />
 
-		<aui:input cssClass="lfr-input-text-container" label="job-title" name="userMappingJobTitle" type="text" value="<%= userMappingJobTitle %>" />
+			<aui:input cssClass="lfr-input-text-container" label="status" name="userMappingStatus" type="text" value="<%= userMappingStatus %>" />
 
-		<aui:input cssClass="lfr-input-text-container" label="status" name="userMappingStatus" type="text" value="<%= userMappingStatus %>" />
+			<aui:input cssClass="lfr-input-text-container" label="group" name="userMappingGroup" type="text" value="<%= userMappingGroup %>" />
 
-		<aui:input cssClass="lfr-input-text-container" label="group" name="userMappingGroup" type="text" value="<%= userMappingGroup %>" />
+			<aui:input cssClass="lfr-input-text-container" label="portrait" name="userMappingPortrait" type="text" value="<%= userMappingPortrait %>" />
 
-		<aui:input cssClass="lfr-input-text-container" label="portrait" name="userMappingPortrait" type="text" value="<%= userMappingPortrait %>" />
+			<aui:input cssClass="lfr-textarea" label="custom-user-mapping" name='<%= "ldap--" + LDAPConstants.USER_CUSTOM_MAPPINGS + "--" %>' type="textarea" value="<%= StringUtil.merge(ldapServerConfiguration.userCustomMappings(), StringPool.COMMA) %>" />
 
-		<aui:input cssClass="lfr-textarea" label="custom-user-mapping" name='<%= "ldap--" + LDAPConstants.USER_CUSTOM_MAPPINGS + "--" %>' type="textarea" value="<%= StringUtil.merge(ldapServerConfiguration.userCustomMappings(), StringPool.COMMA) %>" />
+			<aui:input cssClass="lfr-textarea" label="custom-contact-mapping" name='<%= "ldap--" + LDAPConstants.CONTACT_CUSTOM_MAPPINGS + "--" %>' type="textarea" value="<%= StringUtil.merge(ldapServerConfiguration.contactCustomMappings(), StringPool.COMMA) %>" />
 
-		<aui:input cssClass="lfr-textarea" label="custom-contact-mapping" name='<%= "ldap--" + LDAPConstants.CONTACT_CUSTOM_MAPPINGS + "--" %>' type="textarea" value="<%= StringUtil.merge(ldapServerConfiguration.contactCustomMappings(), StringPool.COMMA) %>" />
+			<aui:input name='<%= "ldap--" + LDAPConstants.USER_MAPPINGS + "--" %>' type="hidden" />
 
-		<aui:input name='<%= "ldap--" + LDAPConstants.USER_MAPPINGS + "--" %>' type="hidden" />
+			<aui:input name='<%= "ldap--" + LDAPConstants.CONTACT_MAPPINGS + "--" %>' type="hidden" value="<%= StringUtil.merge(ldapServerConfiguration.contactMappings(), StringPool.COMMA) %>" />
 
-		<aui:input name='<%= "ldap--" + LDAPConstants.CONTACT_MAPPINGS + "--" %>' type="hidden" value="<%= StringUtil.merge(ldapServerConfiguration.contactMappings(), StringPool.COMMA) %>" />
+			<aui:button-row>
 
-		<aui:button-row>
+				<%
+				String taglibOnClick = renderResponse.getNamespace() + "testSettings('ldapUsers');";
+				%>
 
-			<%
-			String taglibOnClick = renderResponse.getNamespace() + "testSettings('ldapUsers');";
-			%>
+				<aui:button cssClass="btn-lg" onClick="<%= taglibOnClick %>" value="test-ldap-users" />
+			</aui:button-row>
+		</aui:fieldset>
 
-			<aui:button cssClass="btn-lg" onClick="<%= taglibOnClick %>" value="test-ldap-users" />
-		</aui:button-row>
-	</aui:fieldset>
+		<aui:fieldset>
+			<h3><liferay-ui:message key="groups" /></h3>
 
-	<h3><liferay-ui:message key="groups" /></h3>
+			<aui:input cssClass="lfr-input-text-container" label="import-search-filter" name='<%= "ldap--" + LDAPConstants.GROUP_SEARCH_FILTER + "--" %>' type="text" value="<%= ldapGroupSearchFilter %>" />
 
-	<aui:fieldset>
-		<aui:input cssClass="lfr-input-text-container" label="import-search-filter" name='<%= "ldap--" + LDAPConstants.GROUP_SEARCH_FILTER + "--" %>' type="text" value="<%= ldapGroupSearchFilter %>" />
+			<h4><liferay-ui:message key="group-mapping" /></h4>
 
-		<h4><liferay-ui:message key="group-mapping" /></h4>
+			<aui:input cssClass="lfr-input-text-container" label="group-name" name="groupMappingGroupName" type="text" value="<%= groupMappingGroupName %>" />
 
-		<aui:input cssClass="lfr-input-text-container" label="group-name" name="groupMappingGroupName" type="text" value="<%= groupMappingGroupName %>" />
+			<aui:input cssClass="lfr-input-text-container" label="description" name="groupMappingDescription" type="text" value="<%= groupMappingDescription %>" />
 
-		<aui:input cssClass="lfr-input-text-container" label="description" name="groupMappingDescription" type="text" value="<%= groupMappingDescription %>" />
+			<aui:input cssClass="lfr-input-text-container" label="user" name="groupMappingUser" type="text" value="<%= groupMappingUser %>" />
 
-		<aui:input cssClass="lfr-input-text-container" label="user" name="groupMappingUser" type="text" value="<%= groupMappingUser %>" />
+			<aui:input name='<%= "ldap--" + LDAPConstants.GROUP_MAPPINGS + "--" %>' type="hidden" />
 
-		<aui:input name='<%= "ldap--" + LDAPConstants.GROUP_MAPPINGS + "--" %>' type="hidden" />
+			<aui:button-row>
 
-		<aui:button-row>
+				<%
+				String taglibOnClick = renderResponse.getNamespace() + "testSettings('ldapGroups');";
+				%>
 
-			<%
-			String taglibOnClick = renderResponse.getNamespace() + "testSettings('ldapGroups');";
-			%>
+				<aui:button cssClass="btn-lg" onClick="<%= taglibOnClick %>" value="test-ldap-groups" />
+			</aui:button-row>
+		</aui:fieldset>
 
-			<aui:button cssClass="btn-lg" onClick="<%= taglibOnClick %>" value="test-ldap-groups" />
-		</aui:button-row>
-	</aui:fieldset>
+		<aui:fieldset>
+			<h3><liferay-ui:message key="export" /></h3>
 
-	<h3><liferay-ui:message key="export" /></h3>
+			<aui:input cssClass="lfr-input-text-container" label="users-dn" name='<%= "ldap--" + LDAPConstants.USERS_DN + "--" %>' type="text" value="<%= ldapUsersDN %>" />
 
-	<aui:fieldset>
-		<aui:input cssClass="lfr-input-text-container" label="users-dn" name='<%= "ldap--" + LDAPConstants.USERS_DN + "--" %>' type="text" value="<%= ldapUsersDN %>" />
+			<aui:input cssClass="lfr-input-text-container" label="user-default-object-classes" name='<%= "ldap--" + LDAPConstants.USER_DEFAULT_OBJECT_CLASSES + "--" %>' type="text" value="<%= StringUtil.merge(ldapUserDefaultObjectClasses, StringPool.COMMA) %>" />
 
-		<aui:input cssClass="lfr-input-text-container" label="user-default-object-classes" name='<%= "ldap--" + LDAPConstants.USER_DEFAULT_OBJECT_CLASSES + "--" %>' type="text" value="<%= StringUtil.merge(ldapUserDefaultObjectClasses, StringPool.COMMA) %>" />
+			<aui:input cssClass="lfr-input-text-container" label="groups-dn" name='<%= "ldap--" + LDAPConstants.GROUPS_DN + "--" %>' type="text" value="<%= ldapGroupsDN %>" />
 
-		<aui:input cssClass="lfr-input-text-container" label="groups-dn" name='<%= "ldap--" + LDAPConstants.GROUPS_DN + "--" %>' type="text" value="<%= ldapGroupsDN %>" />
-
-		<aui:input cssClass="lfr-input-text-container" label="group-default-object-classes" name='<%= "ldap--" + LDAPConstants.GROUP_DEFAULT_OBJECT_CLASSES + "--" %>' type="text" value="<%= StringUtil.merge(ldapGroupDefaultObjectClasses, StringPool.COMMA) %>" />
-	</aui:fieldset>
+			<aui:input cssClass="lfr-input-text-container" label="group-default-object-classes" name='<%= "ldap--" + LDAPConstants.GROUP_DEFAULT_OBJECT_CLASSES + "--" %>' type="text" value="<%= StringUtil.merge(ldapGroupDefaultObjectClasses, StringPool.COMMA) %>" />
+		</aui:fieldset>
+	</aui:fieldset-group>
 
 	<aui:button-row>
 		<aui:button cssClass="btn-lg" name="saveButton" onClick='<%= renderResponse.getNamespace() + "saveLdap();" %>' value="save" />
@@ -329,13 +329,19 @@ for (int i = 0; i < groupMappingArray.length; i++) {
 		submitForm(form);
 	}
 
-	function <portlet:namespace />updateDefaultLdap() {
-		var baseProviderURL = '';
+	function <portlet:namespace />updateDefaultLdap(ldapType) {
 		var baseDN = '';
-		var principal = '';
+		var baseProviderURL = '';
 		var credentials = '';
-		var searchFilter = '';
+		var exportMappingGroupDefaultObjectClass = '';
+		var exportMappingUserDefaultObjectClass = '';
+		var groupMappingDescription = '';
+		var groupMappingGroupName = '';
+		var groupMappingUser = '';
+		var importGroupSearchFilter = '';
 		var importUserSearchFilter = '';
+		var principal = '';
+		var searchFilter = '';
 		var userMappingEmailAddress = '';
 		var userMappingFirstName = '';
 		var userMappingFullName = '';
@@ -348,146 +354,92 @@ for (int i = 0; i < groupMappingArray.length; i++) {
 		var userMappingScreenName = '';
 		var userMappingStatus = '';
 		var userMappingUuid = '';
-		var importGroupSearchFilter = '';
-		var groupMappingDescription = '';
-		var groupMappingGroupName = '';
-		var groupMappingUser = '';
-		var exportMappingUserDefaultObjectClass = '';
-		var exportMappingGroupDefaultObjectClass = '';
 
 		var form = AUI.$(document.<portlet:namespace />fm);
 
-		var ldapType = form.fm('defaultLdap').filter(':checked').val();
-
 		if (ldapType == 'apache') {
-			baseProviderURL = 'ldap://localhost:10389';
 			baseDN = 'dc=example,dc=com';
-			principal = 'uid=admin,ou=system';
+			baseProviderURL = 'ldap://localhost:10389';
 			credentials = 'secret';
-			searchFilter = '(mail=@email_address@)';
-			importUserSearchFilter = '(objectClass=person)';
-			userMappingEmailAddress = 'mail';
-			userMappingFirstName = 'givenName';
-			userMappingFullName = '';
-			userMappingGroup = '';
-			userMappingJobTitle = 'title';
-			userMappingLastName = 'sn';
-			userMappingMiddleName = '';
-			userMappingPassword = 'userPassword';
-			userMappingPortrait = '';
-			userMappingScreenName = 'cn';
-			userMappingStatus = '';
-			userMappingUuid = '';
-			importGroupSearchFilter = '(objectClass=groupOfUniqueNames)';
+			exportMappingGroupDefaultObjectClass = 'top,groupOfUniqueNames';
+			exportMappingUserDefaultObjectClass = 'top,person,inetOrgPerson,organizationalPerson';
 			groupMappingDescription = 'description';
 			groupMappingGroupName = 'cn';
 			groupMappingUser = 'uniqueMember';
-			exportMappingUserDefaultObjectClass = 'top,person,inetOrgPerson,organizationalPerson';
-			exportMappingGroupDefaultObjectClass = 'top,groupOfUniqueNames';
+			importGroupSearchFilter = '(objectClass=groupOfUniqueNames)';
+			importUserSearchFilter = '(objectClass=person)';
+			principal = 'uid=admin,ou=system';
+			searchFilter = '(mail=@email_address@)';
+			userMappingEmailAddress = 'mail';
+			userMappingFirstName = 'givenName';
+			userMappingJobTitle = 'title';
+			userMappingLastName = 'sn';
+			userMappingPassword = 'userPassword';
+			userMappingScreenName = 'cn';
 		}
 		else if (ldapType == 'fedora') {
-			baseProviderURL = 'ldap://localhost:19389';
 			baseDN = 'dc=localdomain';
-			principal = 'cn=Directory Manager';
-			credentials = '';
-			searchFilter = '(mail=@email_address@)';
+			baseProviderURL = 'ldap://localhost:19389';
 			importUserSearchFilter = '(objectClass=inetOrgPerson)';
+			principal = 'cn=Directory Manager';
+			searchFilter = '(mail=@email_address@)';
 			userMappingEmailAddress = 'mail';
 			userMappingFirstName = 'givenName';
 			userMappingFullName = 'cn';
-			userMappingGroup = '';
 			userMappingJobTitle = 'title';
 			userMappingLastName = 'sn';
-			userMappingMiddleName = '';
 			userMappingPassword = 'userPassword';
-			userMappingPortrait = '';
 			userMappingScreenName = 'uid';
-			userMappingStatus = '';
-			userMappingUuid = '';
-			importGroupSearchFilter = '';
-			groupMappingDescription = '';
-			groupMappingGroupName = '';
-			groupMappingUser = '';
-			exportMappingUserDefaultObjectClass = '';
-			exportMappingGroupDefaultObjectClass = '';
 		}
 		else if (ldapType == 'microsoft') {
-			baseProviderURL = 'ldap://localhost:389';
 			baseDN = 'dc=example,dc=com';
-			principal = 'admin';
+			baseProviderURL = 'ldap://localhost:389';
 			credentials = 'secret';
-			searchFilter = '(&(objectCategory=person)(sAMAccountName=@user_id@))';
+			groupMappingDescription = 'sAMAccountName';
+			groupMappingGroupName = 'cn';
+			groupMappingUser = 'member';
+			importGroupSearchFilter = '(objectClass=group)';
 			importUserSearchFilter = '(objectClass=person)';
+			principal = 'admin';
+			searchFilter = '(&(objectCategory=person)(sAMAccountName=@user_id@))';
 			userMappingEmailAddress = 'userprincipalname';
 			userMappingFirstName = 'givenName';
 			userMappingFullName = 'cn';
 			userMappingGroup = 'memberOf';
-			userMappingJobTitle = '';
 			userMappingLastName = 'sn';
 			userMappingMiddleName = 'middleName';
 			userMappingPassword = 'unicodePwd';
-			userMappingPortrait = '';
 			userMappingScreenName = 'sAMAccountName';
-			userMappingStatus = '';
-			userMappingUuid = '';
-			importGroupSearchFilter = '(objectClass=group)';
-			groupMappingDescription = 'sAMAccountName';
-			groupMappingGroupName = 'cn';
-			groupMappingUser = 'member';
-			exportMappingUserDefaultObjectClass = '';
-			exportMappingGroupDefaultObjectClass = '';
 		}
 		else if (ldapType == 'novell') {
 			baseProviderURL = 'ldap://localhost:389';
-			baseDN = '';
-			principal = 'cn=admin,ou=test';
 			credentials = 'secret';
+			principal = 'cn=admin,ou=test';
 			searchFilter = '(mail=@email_address@)';
-			importUserSearchFilter = '';
 			userMappingEmailAddress = 'mail';
 			userMappingFirstName = 'givenName';
-			userMappingFullName = '';
-			userMappingGroup = '';
 			userMappingJobTitle = 'title';
 			userMappingLastName = 'sn';
-			userMappingMiddleName = '';
 			userMappingPassword = 'userPassword';
-			userMappingPortrait = '';
 			userMappingScreenName = 'cn';
-			userMappingStatus = '';
-			userMappingUuid = '';
-			importGroupSearchFilter = '';
-			groupMappingDescription = '';
-			groupMappingGroupName = '';
-			groupMappingUser = '';
-			exportMappingUserDefaultObjectClass = '';
-			exportMappingGroupDefaultObjectClass = '';
 		}
 		else if (ldapType == 'open') {
-			baseProviderURL = 'ldap://localhost:389';
 			baseDN = 'dc=example,dc=com';
-			principal = 'cn=admin,ou=test';
+			baseProviderURL = 'ldap://localhost:389';
 			credentials = 'secret';
-			searchFilter = '(mail=@email_address@)';
+			groupMappingDescription = 'description';
+			groupMappingGroupName = 'cn';
+			groupMappingUser = 'uniqueMember';
+			importGroupSearchFilter = '(objectClass=groupOfUniqueNames)';
 			importUserSearchFilter = '(objectClass=inetOrgPerson)';
+			principal = 'cn=admin,ou=test';
+			searchFilter = '(mail=@email_address@)';
 			userMappingEmailAddress = 'mail';
 			userMappingFirstName = 'givenName';
-			userMappingFullName = '';
-			userMappingGroup = '';
 			userMappingJobTitle = 'title';
 			userMappingLastName = 'sn';
-			userMappingMiddleName = '';
 			userMappingPassword = 'userPassword';
-			userMappingPortrait = '';
 			userMappingScreenName = 'cn';
-			userMappingStatus = '';
-			userMappingUuid = '';
-			importGroupSearchFilter = '(objectClass=groupOfUniqueNames)';
-			groupMappingGroupName = 'cn';
-			groupMappingDescription = 'description';
-			groupMappingUser = 'uniqueMember';
-			exportMappingUserDefaultObjectClass = '';
-			exportMappingGroupDefaultObjectClass = '';
 		}
 
 		form.fm('ldap--<%= LDAPConstants.BASE_PROVIDER_URL %>--').val(baseProviderURL);

@@ -1,7 +1,7 @@
 <definition component-name="portal-collaboration">
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="custom.properties" value="default.layout.template.id=1_column" />
-	<property name="portlet.plugins.includes" value="notifications-portlet" />
 	<property name="testray.main.component.name" value="Notifications" />
 
 	<var name="pageName" value="Documents and Media Page" />
@@ -13,21 +13,21 @@
 		<execute macro="User#firstLoginPG" />
 
 		<execute macro="Page#add">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Documents and Media Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Documents and Media Page" />
 		</execute>
 
 		<execute macro="Portlet#addPG">
-			<var name="portletName" value="${portletName}" />
+			<var name="portletName" value="Documents and Media" />
 		</execute>
 
 		<execute macro="DMDocument#enableActionsMenuOnPortlet" />
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Documents and Media Page" />
 		</execute>
 
 		<execute function="Click" locator1="Icon#DISPLAY_STYLE_DESCRIPTIVE" />
@@ -58,7 +58,7 @@
 		</execute>
 
 		<execute macro="User#assignRegularRoleCP">
-			<var name="roleName" value="Administrator" />
+			<var name="roleTitle" value="Administrator" />
 			<var name="userScreenName" value="usersn" />
 		</execute>
 	</set-up>
@@ -85,7 +85,7 @@
 
 	<command name="ViewNoWebsiteNotificationForNewDocumentInFolder" priority="4">
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Documents and Media Page" />
 		</execute>
 
 		<execute macro="NotificationsPortlet#gotoNotificationDelivery">
@@ -101,13 +101,15 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Documents and Media Page" />
 		</execute>
 
 		<execute macro="DMFolder#addPG">
 			<var name="dmFolderDescription" value="DM Folder Description" />
 			<var name="dmFolderName" value="DM Folder Name" />
 		</execute>
+
+		<execute macro="DMPortlet#setDescriptiveView" />
 
 		<execute macro="DMNavigator#gotoFolder">
 			<var name="dmFolderName" value="DM Folder Name" />
@@ -127,8 +129,10 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Documents and Media Page" />
 		</execute>
+
+		<execute macro="DMPortlet#setDescriptiveView" />
 
 		<execute macro="DMNavigator#gotoFolder">
 			<var name="dmFolderName" value="DM Folder Name" />
@@ -158,7 +162,7 @@
 
 	<command name="ViewNoWebsiteNotificationForUpdatedDocumentInFolder" priority="4">
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Documents and Media Page" />
 		</execute>
 
 		<execute macro="NotificationsPortlet#gotoNotificationDelivery">
@@ -174,13 +178,15 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Documents and Media Page" />
 		</execute>
 
 		<execute macro="DMFolder#addPG">
 			<var name="dmFolderDescription" value="DM Folder Description" />
 			<var name="dmFolderName" value="DM Folder Name" />
 		</execute>
+
+		<execute macro="DMPortlet#setDescriptiveView" />
 
 		<execute macro="DMNavigator#gotoFolder">
 			<var name="dmFolderName" value="DM Folder Name" />
@@ -206,8 +212,10 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Documents and Media Page" />
 		</execute>
+
+		<execute macro="DMPortlet#setDescriptiveView" />
 
 		<execute macro="DMNavigator#gotoFolder">
 			<var name="dmFolderName" value="DM Folder Name" />
@@ -236,13 +244,15 @@
 
 	<command name="ViewWebsiteNotificationForNewDocumentInFolder" priority="4">
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Documents and Media Page" />
 		</execute>
 
 		<execute macro="DMFolder#addPG">
 			<var name="dmFolderDescription" value="DM Folder Description" />
 			<var name="dmFolderName" value="DM Folder Name" />
 		</execute>
+
+		<execute macro="DMPortlet#setDescriptiveView" />
 
 		<execute macro="DMNavigator#gotoFolder">
 			<var name="dmFolderName" value="DM Folder Name" />
@@ -262,8 +272,10 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Documents and Media Page" />
 		</execute>
+
+		<execute macro="DMPortlet#setDescriptiveView" />
 
 		<execute macro="DMNavigator#gotoFolder">
 			<var name="dmFolderName" value="DM Folder Name" />
@@ -313,13 +325,15 @@
 
 	<command name="ViewWebsiteNotificationForUpdatedDocumentInFolder" priority="4">
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Documents and Media Page" />
 		</execute>
 
 		<execute macro="DMFolder#addPG">
 			<var name="dmFolderDescription" value="DM Folder Description" />
 			<var name="dmFolderName" value="DM Folder Name" />
 		</execute>
+
+		<execute macro="DMPortlet#setDescriptiveView" />
 
 		<execute macro="DMNavigator#gotoFolder">
 			<var name="dmFolderName" value="DM Folder Name" />
@@ -345,8 +359,10 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Documents and Media Page" />
 		</execute>
+
+		<execute macro="DMPortlet#setDescriptiveView" />
 
 		<execute macro="DMNavigator#gotoFolder">
 			<var name="dmFolderName" value="DM Folder Name" />

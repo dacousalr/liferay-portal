@@ -25,12 +25,6 @@ SearchContainer entriesSearchContainer = (SearchContainer)request.getAttribute("
 
 long groupThreadsUserId = ParamUtil.getLong(request, "groupThreadsUserId");
 
-Calendar calendar = Calendar.getInstance();
-
-int offset = GetterUtil.getInteger(recentPostsDateOffset);
-
-calendar.add(Calendar.DATE, -offset);
-
 boolean showBreadcrumb = ParamUtil.getBoolean(request, "showBreadcrumb", true);
 
 PortletURL portletURL = (PortletURL)request.getAttribute("view.jsp-portletURL");
@@ -38,6 +32,8 @@ PortletURL portletURL = (PortletURL)request.getAttribute("view.jsp-portletURL");
 if (groupThreadsUserId > 0) {
 	portletURL.setParameter("groupThreadsUserId", String.valueOf(groupThreadsUserId));
 }
+
+boolean portletTitleBasedNavigation = GetterUtil.getBoolean(portletConfig.getInitParameter("portlet-title-based-navigation"));
 %>
 
 <div class="container-fluid-1280 view-entries-container">
@@ -68,10 +64,12 @@ if (groupThreadsUserId > 0) {
 		</portlet:renderURL>
 
 		<%
-		portletDisplay.setShowBackIcon(true);
-		portletDisplay.setURLBack(backURL.toString());
+		if (portletTitleBasedNavigation) {
+			portletDisplay.setShowBackIcon(true);
+			portletDisplay.setURLBack(backURL.toString());
 
-		renderResponse.setTitle(category.getName());
+			renderResponse.setTitle(category.getName());
+		}
 		%>
 
 	</c:if>
@@ -133,15 +131,14 @@ if (groupThreadsUserId > 0) {
 							</h5>
 
 							<%
-							int subcategoriesCount = MBCategoryServiceUtil.getCategoriesCount(scopeGroupId, curCategory.getCategoryId());
+							int subcategoriesCount = MBCategoryServiceUtil.getCategoriesCount(scopeGroupId, curCategory.getCategoryId(), WorkflowConstants.STATUS_APPROVED);
 							int threadsCount = MBThreadServiceUtil.getThreadsCount(scopeGroupId, curCategory.getCategoryId(), WorkflowConstants.STATUS_APPROVED);
 							%>
 
-							<span class="h6">
+							<span class="h6 text-default">
 								<liferay-ui:message arguments="<%= subcategoriesCount %>" key='<%= subcategoriesCount == 1 ? "x-subcategory" : "x-subcategories" %>' />
 							</span>
-
-							<span class="h6">
+							<span class="h6 text-default">
 								<liferay-ui:message arguments="<%= threadsCount %>" key='<%= threadsCount == 1 ? "x-thread" : "x-threads" %>' />
 							</span>
 						</liferay-ui:search-container-column-text>
@@ -208,7 +205,7 @@ if (groupThreadsUserId > 0) {
 									String messageUserName = "anonymous";
 
 									if (thread.getLastPostByUserId() != 0) {
-										messageUserName = PortalUtil.getUserName(thread.getLastPostByUserId(), StringPool.BLANK);
+										messageUserName = HtmlUtil.escape(PortalUtil.getUserName(thread.getLastPostByUserId(), StringPool.BLANK));
 									}
 
 									Date lastPostDate = thread.getLastPostDate();
@@ -240,10 +237,6 @@ if (groupThreadsUserId > 0) {
 								</c:if>
 							</h4>
 
-							<%
-							boolean portletTitleBasedNavigation = GetterUtil.getBoolean(portletConfig.getInitParameter("portlet-title-based-navigation"));
-							%>
-
 							<c:if test="<%= portletTitleBasedNavigation || !message.isApproved() %>">
 								<span class="h6">
 									<aui:workflow-status bean="<%= message %>" markupView="lexicon" model="<%= MBMessage.class %>" showIcon="<%= false %>" showLabel="<%= false %>" status="<%= message.getStatus() %>" />
@@ -255,11 +248,10 @@ if (groupThreadsUserId > 0) {
 							int viewCount = thread.getViewCount();
 							%>
 
-							<span class="h6">
+							<span class="h6 text-default">
 								<liferay-ui:message arguments="<%= messageCount %>" key='<%= messageCount == 1 ? "x-post" : "x-posts" %>' />
 							</span>
-
-							<span class="h6">
+							<span class="h6 text-default">
 								<liferay-ui:message arguments="<%= viewCount %>" key='<%= viewCount == 1 ? "x-view" : "x-views" %>' />
 							</span>
 

@@ -44,8 +44,7 @@ public class JSPSourceTabCalculator {
 		String originalContent = content;
 
 		while (true) {
-			String newContent = _calculateTabs(
-				fileName, content, originalContent);
+			String newContent = _calculateTabs(content, originalContent);
 
 			if (newContent.equals(content) ||
 				newContent.equals(originalContent)) {
@@ -73,13 +72,6 @@ public class JSPSourceTabCalculator {
 			return -1;
 		}
 
-		if ((!text.startsWith("<") && !text.startsWith(">") &&
-			 !text.startsWith("/>")) ||
-			text.matches("(<%@ )?(page|taglib).*")) {
-
-			return 0;
-		}
-
 		text = _stripJavaSource(text);
 
 		text = _jspSourceProcessor.stripQuotes(text);
@@ -104,13 +96,18 @@ public class JSPSourceTabCalculator {
 			else if ((c == '>') && (i > 0) && (text.charAt(i - 1) == '/')) {
 				level -= 1;
 			}
+			else if (c == '{') {
+				level += 1;
+			}
+			else if (c == '}') {
+				level -= 1;
+			}
 		}
 
 		return level;
 	}
 
-	private String _calculateTabs(
-			String fileName, String content, String originalContent)
+	private String _calculateTabs(String content, String originalContent)
 		throws Exception {
 
 		List<JSPLine> jspLines = _getJSPLines(content);
@@ -133,9 +130,15 @@ public class JSPSourceTabCalculator {
 			String line = jspLine.getLine();
 
 			if (!jspLine.isOpenTag()) {
-				if (!jspLine.isJavaSource() && line.matches("\t*<.*")) {
+				if (!jspLine.isJavaSource()) {
 					int actualTabCount = jspLine.getLeadingTabCount();
 					int expectedTabCount = jspLine.getTabLevel();
+
+					String trimmedLine = StringUtil.trim(line);
+
+					if (trimmedLine.equals(StringPool.GREATER_THAN)) {
+						expectedTabCount -= 1;
+					}
 
 					if (expectedTabCount != actualTabCount) {
 						return _fixTabs(
@@ -186,60 +189,10 @@ public class JSPSourceTabCalculator {
 					actualCloseTagTabCount - expectedTabCount);
 			}
 
-			if (line.matches("\t*<%!?")) {
-				content = _checkTabsJavaSourceBlock(
-					fileName, content, expectedTabCount,
-					jspLine.getLineCount() + 1,
-					closeTagJSPLine.getLineCount() - 1, jspLine.getTabLevel());
-			}
-
 			closeTagJSPLine.setClosed(true);
 		}
 
-		return content;
-	}
-
-	private String _checkTabsJavaSourceBlock(
-			String fileName, String content, int tabCount, int startLine,
-			int endLine, int tabLevel)
-		throws Exception {
-
-		int minLeadingTabCount = -1;
-
-		for (int i = startLine; i <= endLine; i++) {
-			String line = _jspSourceProcessor.getLine(content, i);
-
-			if (Validator.isNull(line)) {
-				continue;
-			}
-
-			int leadingTabCount = _jspSourceProcessor.getLeadingTabCount(line);
-
-			if (minLeadingTabCount == -1) {
-				minLeadingTabCount = leadingTabCount;
-			}
-			else {
-				minLeadingTabCount = Math.min(
-					minLeadingTabCount, leadingTabCount);
-			}
-		}
-
-		if (tabCount != minLeadingTabCount) {
-			return _fixTabs(
-				content, startLine, endLine, minLeadingTabCount - tabCount);
-		}
-
-		int startPos = _jspSourceProcessor.getLineStartPos(content, startLine);
-		int endPos = _jspSourceProcessor.getLineStartPos(content, endLine + 1);
-
-		JavaSourceTabCalculator javaSourceTabCalculator =
-			new JavaSourceTabCalculator();
-
-		javaSourceTabCalculator.calculateTabs(
-			fileName, content.substring(startPos, endPos), startLine - 1,
-			tabLevel, _jspSourceProcessor);
-
-		return content;
+		return _fixTabsInJavaSource(content);
 	}
 
 	private String _fixTabs(String content, int lineCount, int diff) {
@@ -249,7 +202,7 @@ public class JSPSourceTabCalculator {
 	private String _fixTabs(
 		String content, int startLine, int endLine, int diff) {
 
-		boolean insidePreTag = false;
+		boolean insideUnformattedTextTag = false;
 
 		for (int i = startLine; i <= endLine; i++) {
 			String line = _jspSourceProcessor.getLine(content, i);
@@ -260,9 +213,13 @@ public class JSPSourceTabCalculator {
 
 			String trimmedLine = StringUtil.trimLeading(line);
 
-			if (insidePreTag) {
-				if (trimmedLine.equals("</pre>")) {
-					insidePreTag = false;
+			if (insideUnformattedTextTag) {
+				if (trimmedLine.matches(".*</(pre|textarea)>")) {
+					insideUnformattedTextTag = false;
+
+					if (trimmedLine.matches(".+</(pre|textarea)>")) {
+						continue;
+					}
 				}
 				else {
 					continue;
@@ -282,8 +239,32 @@ public class JSPSourceTabCalculator {
 						content.substring(lineStartPos + 1);
 			}
 
-			if (!insidePreTag && trimmedLine.equals("<pre>")) {
-				insidePreTag = true;
+			if (!insideUnformattedTextTag &&
+				trimmedLine.matches("<(pre|textarea).*")) {
+
+				insideUnformattedTextTag = true;
+			}
+		}
+
+		return content;
+	}
+
+	private String _fixTabsInJavaSource(String content) {
+		Matcher matcher = _javaSourcePattern.matcher(content);
+
+		while (matcher.find()) {
+			String tabs = matcher.group(1);
+
+			int minimumTabCount = _getMinimumTabCount(matcher.group(2));
+
+			if (tabs.length() != minimumTabCount) {
+				int diff = minimumTabCount - tabs.length();
+				int end = _jspSourceProcessor.getLineCount(
+					content, matcher.end(2));
+				int start = _jspSourceProcessor.getLineCount(
+					content, matcher.start(3));
+
+				return _fixTabs(content, start, end, diff);
 			}
 		}
 
@@ -354,7 +335,7 @@ public class JSPSourceTabCalculator {
 	}
 
 	private List<JSPLine> _getJSPLines(String content) throws Exception {
-		List<JSPLine> jspLines = new ArrayList();
+		List<JSPLine> jspLines = new ArrayList<>();
 
 		try (UnsyncBufferedReader unsyncBufferedReader =
 				new UnsyncBufferedReader(new UnsyncStringReader(content))) {
@@ -368,7 +349,7 @@ public class JSPSourceTabCalculator {
 			boolean javaSource = false;
 			boolean scriptSource = false;
 			boolean multiLineComment = false;
-			boolean insidePreTag = false;
+			boolean insideUnformattedTextTag = false;
 
 			while ((line = unsyncBufferedReader.readLine()) != null) {
 				lineCount++;
@@ -379,22 +360,12 @@ public class JSPSourceTabCalculator {
 
 				String trimmedLine = StringUtil.trimLeading(line);
 
-				if (insidePreTag) {
-					if (trimmedLine.equals("</pre>")) {
-						insidePreTag = false;
-					}
-					else {
-						continue;
-					}
-				}
-
 				if (javaSource) {
 					if (trimmedLine.equals("%>")) {
 						javaSource = false;
 					}
-
-					if (trimmedLine.startsWith("/*") &&
-						!trimmedLine.startsWith("/**")) {
+					else if (trimmedLine.startsWith("/*") &&
+							 !trimmedLine.startsWith("/**")) {
 
 						multiLineComment = true;
 
@@ -414,22 +385,40 @@ public class JSPSourceTabCalculator {
 						continue;
 					}
 				}
-				else if (!scriptSource && line.endsWith("--%>")) {
+
+				int lineTabLevel = _calculateTabLevel(trimmedLine, javaSource);
+
+				if (!javaSource && !scriptSource && line.endsWith("--%>")) {
 					multiLineComment = false;
 				}
 
-				if (scriptSource && trimmedLine.matches("</(aui:)?script>")) {
-					scriptSource = false;
+				if (insideUnformattedTextTag) {
+					if (trimmedLine.matches(".*</(pre|textarea)>")) {
+						insideUnformattedTextTag = false;
+
+						if (trimmedLine.matches(".+</(pre|textarea)>")) {
+							continue;
+						}
+					}
+					else {
+						continue;
+					}
+				}
+
+				if (scriptSource) {
+					if (trimmedLine.matches("</(aui:)?script>")) {
+						scriptSource = false;
+					}
+					else {
+						continue;
+					}
 				}
 
 				if (trimmedLine.equals("AUI.add(")) {
 					return jspLines;
 				}
 
-				if (!scriptSource && !multiLineComment) {
-					int lineTabLevel = _calculateTabLevel(
-						trimmedLine, javaSource);
-
+				if (!multiLineComment) {
 					if (!javaSource && (Math.abs(lineTabLevel) > 1)) {
 						return null;
 					}
@@ -438,33 +427,58 @@ public class JSPSourceTabCalculator {
 						line, lineCount, tabLevel, lineTabLevel, javaSource);
 
 					jspLines.add(jspLine);
-
-					tabLevel += lineTabLevel;
 				}
 
 				if (!javaSource && trimmedLine.matches("<%!?")) {
 					javaSource = true;
 				}
-				else if (!scriptSource) {
-					if (trimmedLine.matches("<(aui:)?script.*")) {
-						int lineTabLevel = _calculateTabLevel(
-							trimmedLine, javaSource);
+				else if (!multiLineComment) {
+					if (trimmedLine.matches("<(aui:)?script.*") &&
+						(lineTabLevel > 0)) {
 
-						if (lineTabLevel > 0) {
-							scriptSource = true;
-						}
+						scriptSource = true;
 					}
-					else if (trimmedLine.startsWith("<%--")) {
+					else if (trimmedLine.startsWith("<%--") &&
+							 !line.endsWith("--%>")) {
+
 						multiLineComment = true;
 					}
-					else if (trimmedLine.equals("<pre>")) {
-						insidePreTag = true;
+					else if (trimmedLine.matches("<(pre|textarea).*") &&
+							 !trimmedLine.matches(".*</(pre|textarea)>")) {
+
+						insideUnformattedTextTag = true;
+
+						continue;
 					}
 				}
+
+				tabLevel += lineTabLevel;
 			}
 		}
 
 		return jspLines;
+	}
+
+	private int _getMinimumTabCount(String s) {
+		int minimumTabCount = -1;
+
+		String[] lines = StringUtil.splitLines(s);
+
+		for (int i = 1; i < lines.length; i++) {
+			String line = lines[i];
+
+			if (Validator.isNull(line)) {
+				continue;
+			}
+
+			int tabCount = _jspSourceProcessor.getLeadingTabCount(line);
+
+			if ((minimumTabCount == -1) || (tabCount < minimumTabCount)) {
+				minimumTabCount = tabCount;
+			}
+		}
+
+		return minimumTabCount;
 	}
 
 	private String _stripJavaSource(String text) {
@@ -485,6 +499,8 @@ public class JSPSourceTabCalculator {
 		}
 	}
 
+	private final Pattern _javaSourcePattern = Pattern.compile(
+		"\n(\t*)(<%\n(.*?))\n\t*%>\n", Pattern.DOTALL);
 	private JSPSourceProcessor _jspSourceProcessor;
 
 	private class JSPLine {

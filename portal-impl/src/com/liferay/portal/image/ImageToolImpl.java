@@ -25,10 +25,13 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Image;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.impl.ImageImpl;
+import com.liferay.portal.module.framework.ModuleFrameworkUtilAdapter;
 import com.liferay.portal.util.FileImpl;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
@@ -37,7 +40,9 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.color.ColorSpace;
+import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.DataBuffer;
@@ -51,6 +56,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import java.net.URL;
 
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -89,14 +96,14 @@ public class ImageToolImpl implements ImageTool {
 		ClassLoader classLoader = clazz.getClassLoader();
 
 		try {
-			InputStream is = classLoader.getResourceAsStream(
+			InputStream inputStream = classLoader.getResourceAsStream(
 				PropsUtil.get(PropsKeys.IMAGE_DEFAULT_SPACER));
 
-			if (is == null) {
+			if (inputStream == null) {
 				_log.error("Default spacer is not available");
 			}
 
-			_defaultSpacer = getImage(is);
+			_defaultSpacer = getImage(inputStream);
 		}
 		catch (Exception e) {
 			_log.error(
@@ -104,14 +111,47 @@ public class ImageToolImpl implements ImageTool {
 		}
 
 		try {
-			InputStream is = classLoader.getResourceAsStream(
-				PropsUtil.get(PropsKeys.IMAGE_DEFAULT_COMPANY_LOGO));
+			InputStream inputStream = null;
 
-			if (is == null) {
+			String imageDefaultCompanyLogo = PropsUtil.get(
+				PropsKeys.IMAGE_DEFAULT_COMPANY_LOGO);
+
+			int index = imageDefaultCompanyLogo.indexOf(CharPool.SEMICOLON);
+
+			if (index == -1) {
+				inputStream = classLoader.getResourceAsStream(
+					PropsUtil.get(PropsKeys.IMAGE_DEFAULT_COMPANY_LOGO));
+			}
+			else {
+				String bundleIdString = imageDefaultCompanyLogo.substring(
+					0, index);
+
+				int bundleId = GetterUtil.getInteger(bundleIdString, -1);
+
+				String name = imageDefaultCompanyLogo.substring(index + 1);
+
+				if (bundleId < 0) {
+					if (_log.isWarnEnabled()) {
+						_log.warn(
+							"Fallback to portal class loader because of " +
+								"invalid bundle ID " + bundleIdString);
+					}
+
+					inputStream = classLoader.getResourceAsStream(name);
+				}
+				else {
+					URL url = ModuleFrameworkUtilAdapter.getBundleResource(
+						bundleId, name);
+
+					inputStream = url.openStream();
+				}
+			}
+
+			if (inputStream == null) {
 				_log.error("Default company logo is not available");
 			}
 
-			_defaultCompanyLogo = getImage(is);
+			_defaultCompanyLogo = getImage(inputStream);
 		}
 		catch (Exception e) {
 			_log.error(
@@ -334,6 +374,36 @@ public class ImageToolImpl implements ImageTool {
 	}
 
 	@Override
+	public RenderedImage flipHorizontal(RenderedImage renderedImage) {
+		BufferedImage bufferedImage = getBufferedImage(renderedImage);
+
+		AffineTransform affineTransform = AffineTransform.getScaleInstance(
+			-1.0, 1.0);
+
+		affineTransform.translate(-bufferedImage.getWidth(), 0);
+
+		AffineTransformOp affineTransformOp = new AffineTransformOp(
+			affineTransform, null);
+
+		return affineTransformOp.filter(bufferedImage, null);
+	}
+
+	@Override
+	public RenderedImage flipVertical(RenderedImage renderedImage) {
+		BufferedImage bufferedImage = getBufferedImage(renderedImage);
+
+		AffineTransform affineTransform = AffineTransform.getScaleInstance(
+			1.0, -1.0);
+
+		affineTransform.translate(0, -bufferedImage.getHeight());
+
+		AffineTransformOp affineTransformOp = new AffineTransformOp(
+			affineTransform, null);
+
+		return affineTransformOp.filter(bufferedImage, null);
+	}
+
+	@Override
 	public BufferedImage getBufferedImage(RenderedImage renderedImage) {
 		if (renderedImage instanceof BufferedImage) {
 			return (BufferedImage)renderedImage;
@@ -499,8 +569,10 @@ public class ImageToolImpl implements ImageTool {
 					int height = imageReader.getHeight(0);
 					int width = imageReader.getWidth(0);
 
-					if ((height > PropsValues.IMAGE_TOOL_IMAGE_MAX_HEIGHT) ||
-						(width > PropsValues.IMAGE_TOOL_IMAGE_MAX_WIDTH)) {
+					if (((PropsValues.IMAGE_TOOL_IMAGE_MAX_HEIGHT > 0) &&
+						 (height > PropsValues.IMAGE_TOOL_IMAGE_MAX_HEIGHT)) ||
+						((PropsValues.IMAGE_TOOL_IMAGE_MAX_WIDTH > 0) &&
+						 (width > PropsValues.IMAGE_TOOL_IMAGE_MAX_WIDTH))) {
 
 						StringBundler sb = new StringBundler(9);
 
@@ -584,6 +656,42 @@ public class ImageToolImpl implements ImageTool {
 	}
 
 	@Override
+	public RenderedImage rotate(RenderedImage renderedImage, int degrees) {
+		BufferedImage bufferedImage = getBufferedImage(renderedImage);
+
+		int imageWidth = bufferedImage.getWidth();
+		int imageHeight = bufferedImage.getHeight();
+
+		double radians = Math.toRadians(degrees);
+
+		double absoluteSin = Math.abs(Math.sin(radians));
+		double absoluteCos = Math.abs(Math.cos(radians));
+
+		int rotatedImageWidth = (int)Math.floor(
+			(imageWidth * absoluteCos) + (imageHeight * absoluteSin));
+		int rotatedImageHeight = (int)Math.floor(
+			(imageHeight * absoluteCos) + (imageWidth * absoluteSin));
+
+		BufferedImage rotatedBufferedImage = new BufferedImage(
+			rotatedImageWidth, rotatedImageHeight, bufferedImage.getType());
+
+		AffineTransform affineTransform = new AffineTransform();
+
+		affineTransform.translate(
+			rotatedImageWidth / 2, rotatedImageHeight / 2);
+		affineTransform.rotate(radians);
+		affineTransform.translate(imageWidth / (-2), imageHeight / (-2));
+
+		Graphics2D graphics = rotatedBufferedImage.createGraphics();
+
+		graphics.drawImage(bufferedImage, affineTransform, null);
+
+		graphics.dispose();
+
+		return rotatedBufferedImage;
+	}
+
+	@Override
 	public RenderedImage scale(RenderedImage renderedImage, int width) {
 		if (width <= 0) {
 			return renderedImage;
@@ -595,6 +703,7 @@ public class ImageToolImpl implements ImageTool {
 		double factor = (double)width / imageWidth;
 
 		int scaledHeight = (int)Math.round(factor * imageHeight);
+
 		int scaledWidth = width;
 
 		return doScale(renderedImage, scaledHeight, scaledWidth);
@@ -661,21 +770,83 @@ public class ImageToolImpl implements ImageTool {
 
 		BufferedImage originalBufferedImage = getBufferedImage(renderedImage);
 
+		BufferedImage scaledBufferedImage = new BufferedImage(
+			scaledWidth, scaledHeight, originalBufferedImage.getType());
+
+		int originalHeight = originalBufferedImage.getHeight();
+		int originalWidth = originalBufferedImage.getWidth();
+
+		if (((scaledHeight * 2) >= originalHeight) &&
+			((scaledWidth * 2) >= originalWidth)) {
+
+			Graphics2D scaledGraphics2D = scaledBufferedImage.createGraphics();
+
+			scaledGraphics2D.drawImage(
+				originalBufferedImage, 0, 0, scaledWidth, scaledHeight, null);
+
+			scaledGraphics2D.dispose();
+
+			return scaledBufferedImage;
+		}
+
+		BufferedImage tempBufferedImage = new BufferedImage(
+			originalWidth, originalHeight, scaledBufferedImage.getType());
+
+		Graphics2D tempGraphics2D = tempBufferedImage.createGraphics();
+
+		RenderingHints renderingHints = new RenderingHints(
+			RenderingHints.KEY_INTERPOLATION,
+			RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+		tempGraphics2D.setRenderingHints(renderingHints);
+
 		ColorModel originalColorModel = originalBufferedImage.getColorModel();
 
-		ColorSpace colorSpace = originalColorModel.getColorSpace();
+		if (originalColorModel.hasAlpha()) {
+			tempGraphics2D.setComposite(AlphaComposite.Src);
+		}
 
-		BufferedImage scaledBufferedImage = new BufferedImage(
-			scaledWidth, scaledHeight, colorSpace.getType());
+		int startHeight = scaledHeight;
+		int startWidth = scaledWidth;
+
+		while ((startHeight < originalHeight) && (startWidth < originalWidth)) {
+			startHeight *= 2;
+			startWidth *= 2;
+		}
+
+		originalHeight = startHeight / 2;
+		originalWidth = startWidth / 2;
+
+		tempGraphics2D.drawImage(
+			originalBufferedImage, 0, 0, originalWidth, originalHeight, null);
+
+		while ((originalHeight >= (scaledHeight * 2)) &&
+			   (originalWidth >= (scaledWidth * 2))) {
+
+			originalHeight /= 2;
+
+			if (originalHeight < scaledHeight) {
+				originalHeight = scaledHeight;
+			}
+
+			originalWidth /= 2;
+
+			if (originalWidth < scaledWidth) {
+				originalWidth = scaledWidth;
+			}
+
+			tempGraphics2D.drawImage(
+				tempBufferedImage, 0, 0, originalWidth, originalHeight, 0, 0,
+				originalWidth * 2, originalHeight * 2, null);
+		}
+
+		tempGraphics2D.dispose();
 
 		Graphics2D scaledGraphics2D = scaledBufferedImage.createGraphics();
 
-		if (originalColorModel.hasAlpha()) {
-			scaledGraphics2D.setComposite(AlphaComposite.Src);
-		}
-
 		scaledGraphics2D.drawImage(
-			originalBufferedImage, 0, 0, scaledWidth, scaledHeight, null);
+			tempBufferedImage, 0, 0, scaledWidth, scaledHeight, 0, 0,
+			originalWidth, originalHeight, null);
 
 		scaledGraphics2D.dispose();
 
@@ -735,6 +906,7 @@ public class ImageToolImpl implements ImageTool {
 		}
 
 		int numBitsLeft = numBits;
+
 		byte[] multiBytes = new byte[(numBitsLeft + 6) / 7];
 
 		int maxIndex = multiBytes.length - 1;

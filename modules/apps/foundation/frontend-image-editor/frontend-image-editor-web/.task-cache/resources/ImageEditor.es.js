@@ -1,4 +1,4 @@
-define("frontend-image-editor-web@1.0.0/ImageEditor.es", ['exports', 'metal-component/src/Component', 'metal-soy/src/Soy', 'metal/src/async/async', 'metal/src/core', 'metal-dom/src/dom', 'metal-promise/src/promise/Promise', 'metal-dropdown/src/Dropdown', './ImageEditorHistoryEntry.es', './ImageEditorLoading.es', './ImageEditor.soy'], function (exports, _Component2, _Soy, _async, _core, _dom, _Promise, _Dropdown, _ImageEditorHistoryEntry, _ImageEditorLoading, _ImageEditor) {
+define("frontend-image-editor-web@1.0.7/ImageEditor.es", ['exports', 'metal-component/src/Component', 'metal-soy/src/Soy', 'metal/src/async/async', 'metal/src/core', 'metal-dom/src/dom', 'metal-promise/src/promise/Promise', 'metal-dropdown/src/Dropdown', './ImageEditorHistoryEntry.es', './ImageEditorLoading.es', './ImageEditor.soy'], function (exports, _Component2, _Soy, _async, _core, _dom, _Promise, _Dropdown, _ImageEditorHistoryEntry, _ImageEditorLoading, _ImageEditor) {
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
@@ -161,26 +161,36 @@ define("frontend-image-editor-web@1.0.0/ImageEditor.es", ['exports', 'metal-comp
 			var _this3 = this;
 
 			return new _Promise.CancellablePromise(function (resolve, reject) {
-				var canvas = _this3.getImageEditorCanvas();
+				_this3.getImageEditorImageData().then(function (imageData) {
+					var canvas = document.createElement('canvas');
+					canvas.width = imageData.width;
+					canvas.height = imageData.height;
 
-				if (canvas.toBlob) {
-					canvas.toBlob(resolve);
-				} else {
-					var data = atob(canvas.toDataURL().split(',')[1]);
-					var length = data.length;
-					var bytes = new Uint8Array(length);
+					canvas.getContext('2d').putImageData(imageData, 0, 0);
 
-					for (var i = 0; i < length; i++) {
-						bytes[i] = data.charCodeAt(i);
+					if (canvas.toBlob) {
+						canvas.toBlob(resolve, _this3.saveMimeType);
+					} else {
+						var data = atob(canvas.toDataURL(_this3.saveMimeType).split(',')[1]);
+						var length = data.length;
+						var bytes = new Uint8Array(length);
+
+						for (var i = 0; i < length; i++) {
+							bytes[i] = data.charCodeAt(i);
+						}
+
+						resolve(new Blob([bytes], { type: _this3.saveMimeType }));
 					}
-
-					resolve(new Blob([bytes], { type: 'image/png' }));
-				}
+				});
 			});
 		};
 
 		ImageEditor.prototype.getImageEditorImageData = function getImageEditorImageData() {
 			return this.history_[this.historyIndex_].getImageData();
+		};
+
+		ImageEditor.prototype.normalizeCanvasMimeType_ = function normalizeCanvasMimeType_(mimeType) {
+			return mimeType.replace('jpg', 'jpeg');
 		};
 
 		ImageEditor.prototype.notifySaveResult_ = function notifySaveResult_(result) {
@@ -255,6 +265,17 @@ define("frontend-image-editor-web@1.0.0/ImageEditor.es", ['exports', 'metal-comp
 			}
 		};
 
+		ImageEditor.prototype.setterSaveMimeTypeFn_ = function setterSaveMimeTypeFn_(saveMimeType) {
+			if (!saveMimeType) {
+				var imageExtensionRegex = /(?:.*:\/\/)?(?:[^\/])*[^.]*.([^?\/$]*)/;
+				var imageExtension = this.image.match(imageExtensionRegex)[1];
+
+				saveMimeType = this.normalizeCanvasMimeType_('image/' + imageExtension);
+			}
+
+			return saveMimeType;
+		};
+
 		ImageEditor.prototype.showError_ = function showError_(message) {
 			var _this7 = this;
 
@@ -268,7 +289,7 @@ define("frontend-image-editor-web@1.0.0/ImageEditor.es", ['exports', 'metal-comp
 					},
 					duration: 3000,
 					icon: 'exclamation-circle',
-					message: message,
+					message: message.message,
 					type: 'danger'
 				}).render(_this7.element);
 			});
@@ -288,12 +309,13 @@ define("frontend-image-editor-web@1.0.0/ImageEditor.es", ['exports', 'metal-comp
 				var requestConfig = {
 					contentType: false,
 					data: formData,
+					dataType: "json",
 					processData: false,
 					type: 'POST',
 					url: _this8.saveURL
 				};
 
-				$.ajax(requestConfig).done(resolve).fail(function (jqXHR, status, error) {
+				AUI.$.ajax(requestConfig).done(resolve).fail(function (jqXHR, status, error) {
 					return reject(error);
 				});
 			});
@@ -339,7 +361,15 @@ define("frontend-image-editor-web@1.0.0/ImageEditor.es", ['exports', 'metal-comp
 
 			var boundingBox = _dom2.default.closest(this.element, '.portlet-layout');
 			var availableWidth = boundingBox.offsetWidth;
-			var availableHeight = boundingBox.offsetHeight - 142 - 40;
+
+			var dialogFooterHeight = 0;
+			var dialogFooter = this.element.querySelector('.dialog-footer');
+
+			if (dialogFooter) {
+				dialogFooterHeight = dialogFooter.offsetHeight;
+			}
+
+			var availableHeight = boundingBox.offsetHeight - 142 - 40 - dialogFooterHeight;
 			var availableAspectRatio = availableWidth / availableHeight;
 
 			if (availableAspectRatio > 1) {
@@ -397,6 +427,16 @@ define("frontend-image-editor-web@1.0.0/ImageEditor.es", ['exports', 'metal-comp
    * @type {String}
    */
 		saveFileName: {
+			validator: _core2.default.isString
+		},
+
+		/**
+   * Mime type of the saved image. If not explicitly set,
+   * the image mime type will be infered from the image url.
+   * @type {String}
+   */
+		saveMimeType: {
+			setter: 'setterSaveMimeTypeFn_',
 			validator: _core2.default.isString
 		},
 

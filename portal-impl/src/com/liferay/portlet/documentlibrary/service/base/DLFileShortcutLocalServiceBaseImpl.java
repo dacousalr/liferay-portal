@@ -41,6 +41,7 @@ import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdate;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Conjunction;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DefaultActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Disjunction;
@@ -330,6 +331,27 @@ public abstract class DLFileShortcutLocalServiceBaseImpl
 				public void addCriteria(DynamicQuery dynamicQuery) {
 					Criterion modifiedDateCriterion = portletDataContext.getDateRangeCriteria(
 							"modifiedDate");
+
+					if (modifiedDateCriterion != null) {
+						Conjunction conjunction = RestrictionsFactoryUtil.conjunction();
+
+						conjunction.add(modifiedDateCriterion);
+
+						Disjunction disjunction = RestrictionsFactoryUtil.disjunction();
+
+						disjunction.add(RestrictionsFactoryUtil.gtProperty(
+								"modifiedDate", "lastPublishDate"));
+
+						Property lastPublishDateProperty = PropertyFactoryUtil.forName(
+								"lastPublishDate");
+
+						disjunction.add(lastPublishDateProperty.isNull());
+
+						conjunction.add(disjunction);
+
+						modifiedDateCriterion = conjunction;
+					}
+
 					Criterion statusDateCriterion = portletDataContext.getDateRangeCriteria(
 							"statusDate");
 
@@ -718,18 +740,18 @@ public abstract class DLFileShortcutLocalServiceBaseImpl
 	}
 
 	/**
-	 * Returns the d l app local service.
+	 * Returns the dl app local service.
 	 *
-	 * @return the d l app local service
+	 * @return the dl app local service
 	 */
 	public com.liferay.document.library.kernel.service.DLAppLocalService getDLAppLocalService() {
 		return dlAppLocalService;
 	}
 
 	/**
-	 * Sets the d l app local service.
+	 * Sets the dl app local service.
 	 *
-	 * @param dlAppLocalService the d l app local service
+	 * @param dlAppLocalService the dl app local service
 	 */
 	public void setDLAppLocalService(
 		com.liferay.document.library.kernel.service.DLAppLocalService dlAppLocalService) {

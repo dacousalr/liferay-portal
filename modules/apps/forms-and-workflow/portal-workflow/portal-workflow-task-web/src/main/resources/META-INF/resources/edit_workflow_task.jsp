@@ -33,7 +33,7 @@ AssetRenderer<?> assetRenderer = workflowHandler.getAssetRenderer(classPK);
 
 AssetRendererFactory<?> assetRendererFactory = assetRenderer.getAssetRendererFactory();
 
-AssetEntry assetEntry = assetRendererFactory.getAssetEntry(assetRendererFactory.getClassName(), assetRenderer.getClassPK());
+AssetEntry assetEntry = assetRendererFactory.getAssetEntry(workflowHandler.getClassName(), assetRenderer.getClassPK());
 
 String headerTitle = workflowTaskDisplayContext.getHeaderTitle(workflowTask);
 
@@ -67,6 +67,7 @@ renderResponse.setTitle(headerTitle);
 												<liferay-ui:user-portrait userId="<%= workflowTask.getAssigneeUserId() %>" />
 											</div>
 										</div>
+
 										<div class="card-col-content card-col-gutters">
 											<div class="lfr-asset-assigned">
 												<%= workflowTaskDisplayContext.getWorkflowTaskAssigneeUserName(workflowTask) %>
@@ -134,6 +135,7 @@ renderResponse.setTitle(headerTitle);
 
 										<portlet:param name="type" value="<%= assetRendererFactory.getType() %>" />
 										<portlet:param name="showEditURL" value="<%= String.valueOf(workflowTaskDisplayContext.isShowEditURL(workflowTask)) %>" />
+										<portlet:param name="workflowTaskId" value="<%= String.valueOf(workflowTask.getWorkflowTaskId()) %>" />
 									</portlet:renderURL>
 
 									<liferay-frontend:management-bar-button
@@ -183,7 +185,7 @@ renderResponse.setTitle(headerTitle);
 						/>
 					</liferay-ui:panel>
 
-					<liferay-ui:panel markupView="lexicon" title="comments">
+					<liferay-ui:panel extended="<%= true %>" markupView="lexicon" title="comments">
 						<liferay-ui:discussion
 							assetEntryVisible="<%= false %>"
 							className="<%= assetRenderer.getClassName() %>"

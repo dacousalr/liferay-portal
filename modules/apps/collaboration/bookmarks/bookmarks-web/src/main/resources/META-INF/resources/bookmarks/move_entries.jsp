@@ -145,7 +145,6 @@ if (portletTitleBasedNavigation) {
 									<span class="folder-title">
 										<%= HtmlUtil.escape(folder.getName()) %>
 									</span>
-
 									<span class="error-message">
 										<liferay-ui:message key="you-do-not-have-the-required-permissions" />
 									</span>
@@ -213,7 +212,6 @@ if (portletTitleBasedNavigation) {
 									<span class="file-title" title="<%= HtmlUtil.escapeAttribute(invalidMoveEntry.getName()) %>">
 										<%= HtmlUtil.escape(invalidMoveEntry.getName()) %>
 									</span>
-
 									<span class="error-message">
 										<liferay-ui:message key="you-do-not-have-the-required-permissions" />
 									</span>
@@ -264,6 +262,8 @@ if (portletTitleBasedNavigation) {
 	AUI.$('#<portlet:namespace />selectFolderButton').on(
 		'click',
 		function(event) {
+			var folderName = AUI.$('#<portlet:namespace />folderName').val();
+
 			Liferay.Util.selectEntity(
 				{
 					dialog: {
@@ -273,6 +273,7 @@ if (portletTitleBasedNavigation) {
 						width: 680
 					},
 					id: '<portlet:namespace />selectFolder',
+					selectedData: [folderName],
 					title: '<liferay-ui:message arguments="folder" key="select-x" />',
 
 					<portlet:renderURL var="selectFolderURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
@@ -285,9 +286,9 @@ if (portletTitleBasedNavigation) {
 				function(event) {
 					var folderData = {
 						idString: 'newFolderId',
-						idValue: event.folderid,
+						idValue: event.entityid,
 						nameString: 'folderName',
-						nameValue: event.name
+						nameValue: event.entityname
 					};
 
 					Liferay.Util.selectFolder(folderData, '<portlet:namespace />');

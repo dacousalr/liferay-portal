@@ -1,5 +1,6 @@
 <definition component-name="portal-wcm">
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="Related Assets" />
 
 	<set-up>
@@ -185,6 +186,7 @@
 
 		<execute macro="RelatedAssets#configureFilterByCategories">
 			<var name="categoryName" value="Category Name" />
+			<var name="vocabularyName" value="Vocabulary Name" />
 		</execute>
 
 		<execute macro="Navigator#gotoPrivateStagedSitePage">
@@ -259,6 +261,10 @@
 		<execute macro="WebContent#addPGViaWCD">
 			<var name="webContentContent" value="Web Content Content" />
 			<var name="webContentTitle" value="Web Content Title" />
+		</execute>
+
+		<execute macro="WebContent#viewPGViaWCD">
+			<var name="webContentContent" value="Web Content Content" />
 		</execute>
 
 		<execute macro="Navigator#gotoSitePage">

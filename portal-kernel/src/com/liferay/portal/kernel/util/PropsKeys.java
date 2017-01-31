@@ -633,6 +633,8 @@ public interface PropsKeys {
 
 	public static final String DL_FILE_ENTRY_PREVIEW_FORK_PROCESS_ENABLED = "dl.file.entry.preview.fork.process.enabled";
 
+	public static final String DL_FILE_ENTRY_PREVIEW_GENERATION_DECRYPT_PASSWORDS_PDFBOX = "dl.file.entry.preview.generation.decrypt.passwords.pdfbox";
+
 	public static final String DL_FILE_ENTRY_PREVIEW_GENERATION_TIMEOUT_GHOSTSCRIPT = "dl.file.entry.preview.generation.timeout.ghostscript";
 
 	public static final String DL_FILE_ENTRY_PREVIEW_GENERATION_TIMEOUT_PDFBOX = "dl.file.entry.preview.generation.timeout.pdfbox";
@@ -693,6 +695,8 @@ public interface PropsKeys {
 
 	public static final String DL_FILE_INDEXING_IGNORE_EXTENSIONS = "dl.file.indexing.ignore.extensions";
 
+	public static final String DL_FILE_INDEXING_INTERVAL = "dl.file.indexing.interval";
+
 	public static final String DL_FILE_INDEXING_MAX_SIZE = "dl.file.indexing.max.size";
 
 	public static final String DL_FILE_MAX_SIZE = "dl.file.max.size";
@@ -726,6 +730,14 @@ public interface PropsKeys {
 	public static final String DL_STORE_ANTIVIRUS_ENABLED = "dl.store.antivirus.enabled";
 
 	public static final String DL_STORE_ANTIVIRUS_IMPL = "dl.store.antivirus.impl";
+
+	public static final String DL_STORE_FILE_IMPL_SAFE_FILE_NAME_2_AMPERSAND = "dl.store.file.impl.safe.file.name.2.ampersand";
+
+	public static final String DL_STORE_FILE_IMPL_SAFE_FILE_NAME_2_CLOSE_PARENTHESIS = "dl.store.file.impl.safe.file.name.2.close.parenthesis";
+
+	public static final String DL_STORE_FILE_IMPL_SAFE_FILE_NAME_2_OPEN_PARENTHESIS = "dl.store.file.impl.safe.file.name.2.open.parenthesis";
+
+	public static final String DL_STORE_FILE_IMPL_SAFE_FILE_NAME_2_SEMICOLON = "dl.store.file.impl.safe.file.name.2.semicolon";
 
 	public static final String DL_STORE_IMPL = "dl.store.impl";
 
@@ -979,8 +991,16 @@ public interface PropsKeys {
 
 	public static final String JNDI_ENVIRONMENT = "jndi.environment.";
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static final String JOURNAL_IMAGE_EXTENSIONS = "journal.image.extensions";
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static final String JOURNAL_IMAGE_SMALL_MAX_SIZE = "journal.image.small.max.size";
 
 	public static final String JSON_SERVICE_AUTH_TOKEN_ENABLED = "json.service.auth.token.enabled";
@@ -1305,8 +1325,16 @@ public interface PropsKeys {
 
 	public static final String MESSAGE_BOARDS_USER_RANKS = "message.boards.user.ranks";
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static final String MICROSOFT_TRANSLATOR_CLIENT_ID = "microsoft.translator.client.id";
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static final String MICROSOFT_TRANSLATOR_CLIENT_SECRET = "microsoft.translator.client.secret";
 
 	public static final String MIME_TYPES_CONTENT_DISPOSITION_INLINE = "mime.types.content.disposition.inline";
@@ -1341,9 +1369,19 @@ public interface PropsKeys {
 
 	public static final String MODULE_FRAMEWORK_BEGINNING_START_LEVEL = "module.framework.beginning.start.level";
 
+	public static final String MODULE_FRAMEWORK_CONFIGS_DIR = "module.framework.configs.dir";
+
 	public static final String MODULE_FRAMEWORK_DYNAMIC_INSTALL_START_LEVEL = "module.framework.dynamic.install.start.level";
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static final String MODULE_FRAMEWORK_INITIAL_BUNDLES = "module.framework.initial.bundles";
+
+	public static final String MODULE_FRAMEWORK_MARKETPLACE_DIR = "module.framework.marketplace.dir";
+
+	public static final String MODULE_FRAMEWORK_MODULES_DIR = "module.framework.modules.dir";
 
 	public static final String MODULE_FRAMEWORK_PORTAL_DIR = "module.framework.portal.dir";
 
@@ -1360,6 +1398,8 @@ public interface PropsKeys {
 	public static final String MODULE_FRAMEWORK_STOP_WAIT_TIMEOUT = "module.framework.stop.wait.timeout";
 
 	public static final String MODULE_FRAMEWORK_SYSTEM_PACKAGES_EXTRA = "module.framework.system.packages.extra";
+
+	public static final String MODULE_FRAMEWORK_WAR_DIR = "module.framework.war.dir";
 
 	public static final String MODULE_FRAMEWORK_WEB_GENERATOR_DEFAULT_SERVLET_PACKAGES = "module.framework.web.generator.default.servlet.packages";
 
@@ -1773,6 +1813,8 @@ public interface PropsKeys {
 
 	public static final String REQUEST_SHARED_ATTRIBUTES = "request.shared.attributes";
 
+	public static final String REQUEST_UNWRAP_PACKAGES = "request.unwrap.packages";
+
 	public static final String RESOURCE_ACTIONS_CONFIGS = "resource.actions.configs";
 
 	public static final String RESOURCE_ACTIONS_READ_PORTLET_RESOURCES = "resource.actions.read.portlet.resources";
@@ -1883,6 +1925,8 @@ public interface PropsKeys {
 
 	public static final String SESSION_TIMEOUT_AUTO_EXTEND = "session.timeout.auto.extend";
 
+	public static final String SESSION_TIMEOUT_AUTO_EXTEND_OFFSET = "session.timeout.auto.extend.offset";
+
 	public static final String SESSION_TIMEOUT_REDIRECT_ON_EXPIRE = "session.timeout.redirect.on.expire";
 
 	public static final String SESSION_TIMEOUT_WARNING = "session.timeout.warning";
@@ -1945,12 +1989,28 @@ public interface PropsKeys {
 
 	public static final String SHOPPING_EMAIL_ORDER_SHIPPING_SUBJECT = "shopping.email.order.shipping.subject";
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static final String SHOPPING_IMAGE_EXTENSIONS = "shopping.image.extensions";
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static final String SHOPPING_IMAGE_LARGE_MAX_SIZE = "shopping.image.large.max.size";
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static final String SHOPPING_IMAGE_MEDIUM_MAX_SIZE = "shopping.image.medium.max.size";
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static final String SHOPPING_IMAGE_SMALL_MAX_SIZE = "shopping.image.small.max.size";
 
 	public static final String SHOPPING_INSURANCE = "shopping.insurance";
@@ -2063,6 +2123,8 @@ public interface PropsKeys {
 
 	public static final String SPRING_HIBERNATE_SESSION_FACTORY_PRELOAD_CLASSLOADER_CLASSES = "spring.hibernate.session.factory.preload.classloader.classes";
 
+	public static final String SPRING_HIBERNATE_SESSION_FACTORY_VERIFY = "spring.hibernate.session.factory.verify";
+
 	public static final String SPRING_INFRASTRUCTURE_CONFIGS = "spring.infrastructure.configs";
 
 	public static final String SPRING_PORTLET_CONFIGS = "spring.portlet.configs";
@@ -2122,7 +2184,8 @@ public interface PropsKeys {
 	public static final String SYSTEM_SITE_ROLES = "system.site.roles";
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #TABLE_MAPPER_CACHELESS_MAPPING_TABLE_NAMES}
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             #TABLE_MAPPER_CACHELESS_MAPPING_TABLE_NAMES}
 	 */
 	@Deprecated
 	public static final String TABLE_MAPPER_CACHE_MAPPING_TABLE_NAMES = "table.mapper.cache.mapping.table.names";

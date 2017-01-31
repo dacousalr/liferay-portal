@@ -54,7 +54,7 @@ import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -79,6 +79,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
+		"javax.portlet.name=" + UsersAdminPortletKeys.MY_ORGANIZATIONS,
 		"javax.portlet.name=" + UsersAdminPortletKeys.USERS_ADMIN,
 		"mvc.command.name=/users_admin/edit_organization"
 	},
@@ -162,7 +163,7 @@ public class EditOrganizationMVCActionCommand extends BaseMVCActionCommand {
 				}
 
 				if (e instanceof RequiredOrganizationException) {
-					String redirect = PortalUtil.escapeRedirect(
+					String redirect = _portal.escapeRedirect(
 						ParamUtil.getString(actionRequest, "redirect"));
 
 					long organizationId = ParamUtil.getLong(
@@ -273,10 +274,10 @@ public class EditOrganizationMVCActionCommand extends BaseMVCActionCommand {
 			actionRequest, "privateLayoutSetPrototypeId");
 		boolean publicLayoutSetPrototypeLinkEnabled = ParamUtil.getBoolean(
 			actionRequest, "publicLayoutSetPrototypeLinkEnabled",
-			(publicLayoutSetPrototypeId > 0));
+			publicLayoutSetPrototypeId > 0);
 		boolean privateLayoutSetPrototypeLinkEnabled = ParamUtil.getBoolean(
 			actionRequest, "privateLayoutSetPrototypeLinkEnabled",
-			(privateLayoutSetPrototypeId > 0));
+			privateLayoutSetPrototypeId > 0);
 
 		Group organizationGroup = organization.getGroup();
 
@@ -309,5 +310,8 @@ public class EditOrganizationMVCActionCommand extends BaseMVCActionCommand {
 
 	private DLAppLocalService _dlAppLocalService;
 	private OrganizationService _organizationService;
+
+	@Reference
+	private Portal _portal;
 
 }

@@ -92,12 +92,6 @@
 	<listener>
 		<listener-class>com.liferay.portal.spring.context.PortalContextLoaderListener</listener-class>
 	</listener>
-	<listener>
-		<listener-class>com.liferay.portal.servlet.PortalSessionListener</listener-class>
-	</listener>
-	<listener>
-		<listener-class>com.liferay.portal.kernel.servlet.PortletSessionListenerManager</listener-class>
-	</listener>
 	<servlet>
 		<servlet-name>Main Servlet</servlet-name>
 		<servlet-class>com.liferay.portal.servlet.MainServlet</servlet-class>
@@ -138,11 +132,6 @@
 	<servlet>
 		<servlet-name>Dynamic Resource Servlet</servlet-name>
 		<servlet-class>com.liferay.portal.webserver.DynamicResourceServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Facebook Servlet</servlet-name>
-		<servlet-class>com.liferay.portal.facebook.FacebookServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
@@ -308,10 +297,6 @@
 	<servlet-mapping>
 		<servlet-name>Dynamic Resource Servlet</servlet-name>
 		<url-pattern>/sprite/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Facebook Servlet</servlet-name>
-		<url-pattern>/facebook/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Friendly URL Servlet - Private Group</servlet-name>
@@ -639,6 +624,14 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>I18n Servlet</servlet-name>
+		<url-pattern>/th/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>I18n Servlet</servlet-name>
+		<url-pattern>/th_TH/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>I18n Servlet</servlet-name>
 		<url-pattern>/tr/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
@@ -958,6 +951,8 @@
 			<url-pattern>/sr_RS_latin/c/portal/protected</url-pattern>
 			<url-pattern>/sv/c/portal/protected</url-pattern>
 			<url-pattern>/sv_SE/c/portal/protected</url-pattern>
+			<url-pattern>/th/c/portal/protected</url-pattern>
+			<url-pattern>/th_TH/c/portal/protected</url-pattern>
 			<url-pattern>/tr/c/portal/protected</url-pattern>
 			<url-pattern>/tr_TR/c/portal/protected</url-pattern>
 			<url-pattern>/uk/c/portal/protected</url-pattern>

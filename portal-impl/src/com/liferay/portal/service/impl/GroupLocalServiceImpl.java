@@ -104,7 +104,6 @@ import com.liferay.portal.kernel.util.comparator.GroupNameComparator;
 import com.liferay.portal.kernel.workflow.WorkflowHandler;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.liferay.portal.model.impl.LayoutImpl;
-import com.liferay.portal.security.permission.PermissionCacheUtil;
 import com.liferay.portal.service.base.GroupLocalServiceBaseImpl;
 import com.liferay.portal.theme.ThemeLoader;
 import com.liferay.portal.theme.ThemeLoaderFactory;
@@ -138,18 +137,18 @@ import java.util.Set;
  * Groups are also the entity to which LayoutSets are generally associated.
  * Since LayoutSets are the parent entities of Layouts (i.e. pages), no entity
  * can have associated pages without also having an associated Group. This
- * relationship can be depicted as ... Layout -> LayoutSet -> Group[type] [->
- * Entity]. Note, the Entity part is optional.
+ * relationship can be depicted as ... Layout -> LayoutSet -> Group[type] ->
+ * [Entity]. Note, the Entity part is optional.
  * </p>
  *
  * <p>
  * Group has a "type" definition that is typically identified by two fields of
- * the entity - <code>String className</code>, and <code>int type </code>.
+ * the entity - <code>String className</code>, and <code>int type</code>.
  * </p>
  *
  * <p>
  * The <code>className</code> field helps create the group's association with
- * other entities (e.g. Organization, User, Company, UserGroup, ... etc.). The
+ * other entities (e.g. Organization, User, Company, UserGroup, etc.). The
  * value of <code>className</code> is the full name of the entity's class and
  * the primary key of the associated entity instance. A site has
  * <code>className="Group"</code> and has no associated entity.
@@ -162,7 +161,7 @@ import java.util.Set;
  * </p>
  *
  * <p>
- * Here is a listing of how Group is related to some portal entities ...
+ * Here is a listing of how Group is related to some portal entities:
  * </p>
  *
  * <ul>
@@ -170,28 +169,28 @@ import java.util.Set;
  * Site is a Group with <code>className="Group"</code>
  * </li>
  * <li>
- * Company has 1 Group (this is the global scope, but never has pages)
+ * Company has one Group (this is the global scope, but never has pages)
  * </li>
  * <li>
- * User has 1 Group (pages are optional based on the behavior configuration for
+ * User has one Group (pages are optional based on the behavior configuration for
  * personal pages)
  * </li>
  * <li>
- * Layout Template (<code>LayoutPrototype</code>) has 1 Group which uses only 1
- * of it's 2 LayoutSets to store a single page which can later be used to
+ * Layout Template (<code>LayoutPrototype</code>) has 1 Group which uses only one
+ * of its two LayoutSets to store a single page which can later be used to
  * derive a single page in any Site
  * </li>
  * <li>
  * Site Template (<code>LayoutSetPrototype</code>) has 1 Group which uses only
- * 1 of it's 2 LayoutSets to store many pages which can later be used to derive
+ * one of its two LayoutSets to store many pages which can later be used to derive
  * entire Sites or pulled into an existing Site
  * </li>
  * <li>
- * Organization has 1 Group, but can also be associated to a Site at any point
- * in it's life cycle in order to support having pages
+ * Organization has one Group, but can also be associated to a Site at any point
+ * in its life cycle in order to support having pages
  * </li>
  * <li>
- * UserGroup has 1 Group that can have pages in both of the group's LayoutSets
+ * UserGroup has one Group that can have pages in both of the group's LayoutSets
  * which are later inherited by users assigned to the UserGroup
  * </li>
  * </ul>
@@ -228,7 +227,9 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		// Group
 
 		User user = userPersistence.findByPrimaryKey(userId);
+
 		className = GetterUtil.getString(className);
+
 		long classNameId = classNameLocalService.getClassNameId(className);
 
 		String groupKey = StringPool.BLANK;
@@ -472,32 +473,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Adds the groups to the role.
-	 *
-	 * @param roleId the primary key of the role
-	 * @param groupIds the primary keys of the groups
-	 */
-	@Override
-	public void addRoleGroups(long roleId, long[] groupIds) {
-		rolePersistence.addGroups(roleId, groupIds);
-
-		PermissionCacheUtil.clearCache();
-	}
-
-	/**
-	 * Adds the user to the groups.
-	 *
-	 * @param userId the primary key of the user
-	 * @param groupIds the primary keys of the groups
-	 */
-	@Override
-	public void addUserGroups(long userId, long[] groupIds) {
-		userPersistence.addGroups(userId, groupIds);
-
-		PermissionCacheUtil.clearCache(userId);
-	}
-
-	/**
 	 * Adds a company group if it does not exist. This method is typically used
 	 * when a virtual host is added.
 	 *
@@ -709,6 +684,12 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 					group.getGroupId(), true, serviceContext);
 			}
 			catch (NoSuchLayoutSetException nslse) {
+
+				// LPS-52675
+
+				if (_log.isDebugEnabled()) {
+					_log.debug(nslse, nslse);
+				}
 			}
 
 			try {
@@ -716,6 +697,12 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 					group.getGroupId(), false, serviceContext);
 			}
 			catch (NoSuchLayoutSetException nslse) {
+
+				// LPS-52675
+
+				if (_log.isDebugEnabled()) {
+					_log.debug(nslse, nslse);
+				}
 			}
 
 			// Membership requests
@@ -894,10 +881,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 				groupPersistence.remove(group);
 			}
 
-			// Permission cache
-
-			PermissionCacheUtil.clearCache();
-
 			return group;
 		}
 		finally {
@@ -1006,6 +989,12 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		friendlyURL = getFriendlyURL(friendlyURL);
 
 		return groupPersistence.fetchByC_F(companyId, friendlyURL);
+	}
+
+	@Override
+	@ThreadLocalCachable
+	public Group fetchGroup(long groupId) {
+		return groupPersistence.fetchByPrimaryKey(groupId);
 	}
 
 	/**
@@ -1914,6 +1903,25 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		else {
 			return false;
 		}
+	}
+
+	@Override
+	public boolean isLiveGroupActive(Group group) {
+		if (group == null) {
+			return false;
+		}
+
+		if (!group.isStagingGroup()) {
+			return group.isActive();
+		}
+
+		Group liveGroup = group.getLiveGroup();
+
+		if (liveGroup == null) {
+			return false;
+		}
+
+		return liveGroup.isActive();
 	}
 
 	/**
@@ -3018,20 +3026,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	}
 
 	/**
-	 * Sets the groups associated with the role, removing and adding
-	 * associations as necessary.
-	 *
-	 * @param roleId the primary key of the role
-	 * @param groupIds the primary keys of the groups
-	 */
-	@Override
-	public void setRoleGroups(long roleId, long[] groupIds) {
-		rolePersistence.setGroups(roleId, groupIds);
-
-		PermissionCacheUtil.clearCache();
-	}
-
-	/**
 	 * Removes the groups from the role.
 	 *
 	 * @param roleId the primary key of the role
@@ -3040,8 +3034,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	@Override
 	public void unsetRoleGroups(long roleId, long[] groupIds) {
 		rolePersistence.removeGroups(roleId, groupIds);
-
-		PermissionCacheUtil.clearCache();
 	}
 
 	/**
@@ -3055,8 +3047,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		userGroupRoleLocalService.deleteUserGroupRoles(userId, groupIds);
 
 		userPersistence.removeGroups(userId, groupIds);
-
-		PermissionCacheUtil.clearCache(userId);
 	}
 
 	/**
@@ -3628,7 +3618,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			// Filter by active
 
 			if (active != null) {
-				if (active != group.isActive()) {
+				if (active != isLiveGroupActive(group)) {
 					iterator.remove();
 
 					continue;
@@ -3768,8 +3758,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 						if ((resourcePermission.getRoleId() ==
 								rolePermissions.getRoleId()) &&
-							resourcePermission.hasAction(
-								resourceAction)) {
+							resourcePermission.hasAction(resourceAction)) {
 
 							Group group = groupPersistence.fetchByPrimaryKey(
 								GetterUtil.getLong(
@@ -4321,6 +4310,12 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			}
 		}
 		catch (NoSuchGroupException nsge) {
+
+			// LPS-52675
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(nsge, nsge);
+			}
 		}
 
 		if (site) {

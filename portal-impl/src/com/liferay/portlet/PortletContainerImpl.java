@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.portlet.PortletModeFactory;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletQName;
 import com.liferay.portal.kernel.portlet.PortletQNameUtil;
+import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.WindowStateFactory;
 import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIconMenu;
 import com.liferay.portal.kernel.portlet.toolbar.PortletToolbar;
@@ -99,7 +100,7 @@ public class PortletContainerImpl implements PortletContainer {
 		throws PortletContainerException {
 
 		try {
-			_doPreparePortlet(request, portlet);
+			_preparePortlet(request, portlet);
 		}
 		catch (Exception e) {
 			throw new PortletContainerException(e);
@@ -113,7 +114,7 @@ public class PortletContainerImpl implements PortletContainer {
 		throws PortletContainerException {
 
 		try {
-			return _doProcessAction(request, response, portlet);
+			return _processAction(request, response, portlet);
 		}
 		catch (Exception e) {
 			throw new PortletContainerException(e);
@@ -127,7 +128,7 @@ public class PortletContainerImpl implements PortletContainer {
 		throws PortletContainerException {
 
 		try {
-			return _doProcessEvent(request, response, portlet, layout, event);
+			return _processEvent(request, response, portlet, layout, event);
 		}
 		catch (Exception e) {
 			throw new PortletContainerException(e);
@@ -141,7 +142,7 @@ public class PortletContainerImpl implements PortletContainer {
 		throws PortletContainerException {
 
 		try {
-			_doRender(request, response, portlet);
+			_render(request, response, portlet);
 		}
 		catch (Exception e) {
 			throw new PortletContainerException(e);
@@ -155,7 +156,7 @@ public class PortletContainerImpl implements PortletContainer {
 		throws PortletContainerException {
 
 		try {
-			_doServeResource(request, response, portlet);
+			_serveResource(request, response, portlet);
 		}
 		catch (Exception e) {
 			throw new PortletContainerException(e);
@@ -199,21 +200,17 @@ public class PortletContainerImpl implements PortletContainer {
 	protected void processPublicRenderParameters(
 		HttpServletRequest request, Layout layout, Portlet portlet) {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		PortletApp portletApp = portlet.getPortletApp();
-
-		Map<String, String[]> publicRenderParameters =
-			PublicRenderParametersPool.get(
-				request, layout.getPlid(), portletApp.isWARFile());
+		PortletQName portletQName = PortletQNameUtil.getPortletQName();
+		Map<String, String[]> publicRenderParameters = null;
+		ThemeDisplay themeDisplay = null;
 
 		Map<String, String[]> parameters = request.getParameterMap();
 
 		for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
 			String name = entry.getKey();
 
-			QName qName = PortletQNameUtil.getQName(name);
+			QName qName = portletQName.getQName(name);
 
 			if (qName == null) {
 				continue;
@@ -227,11 +224,21 @@ public class PortletContainerImpl implements PortletContainer {
 				continue;
 			}
 
+			if (publicRenderParameters == null) {
+				publicRenderParameters = PublicRenderParametersPool.get(
+					request, layout.getPlid(), portletApp.isWARFile());
+			}
+
 			String publicRenderParameterName =
-				PortletQNameUtil.getPublicRenderParameterName(qName);
+				portletQName.getPublicRenderParameterName(qName);
 
 			if (name.startsWith(
 					PortletQName.PUBLIC_RENDER_PARAMETER_NAMESPACE)) {
+
+				if (themeDisplay == null) {
+					themeDisplay = (ThemeDisplay)request.getAttribute(
+						WebKeys.THEME_DISPLAY);
+				}
 
 				String[] values = entry.getValue();
 
@@ -285,7 +292,7 @@ public class PortletContainerImpl implements PortletContainer {
 		return new EventImpl(event.getName(), event.getQName(), value);
 	}
 
-	private void _doPreparePortlet(HttpServletRequest request, Portlet portlet)
+	private void _preparePortlet(HttpServletRequest request, Portlet portlet)
 		throws Exception {
 
 		User user = PortalUtil.getUser(request);
@@ -345,10 +352,17 @@ public class PortletContainerImpl implements PortletContainer {
 		}
 	}
 
-	private ActionResult _doProcessAction(
+	private ActionResult _processAction(
 			HttpServletRequest request, HttpServletResponse response,
 			Portlet portlet)
 		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		portletDisplay.setId(portlet.getPortletId());
 
 		Layout layout = (Layout)request.getAttribute(WebKeys.LAYOUT);
 
@@ -399,8 +413,7 @@ public class PortletContainerImpl implements PortletContainer {
 
 			ActionResponseImpl actionResponseImpl =
 				ActionResponseFactory.create(
-					actionRequestImpl, response, portlet.getPortletId(), user,
-					layout, windowState, portletMode);
+					actionRequestImpl, response, user, layout);
 
 			actionRequestImpl.defineObjects(portletConfig, actionResponseImpl);
 
@@ -424,9 +437,9 @@ public class PortletContainerImpl implements PortletContainer {
 			if (Validator.isNull(redirectLocation) &&
 				portlet.isActionURLRedirect()) {
 
-				PortletURL portletURL = new PortletURLImpl(
+				PortletURL portletURL = PortletURLFactoryUtil.create(
 					actionRequestImpl, actionRequestImpl.getPortletName(),
-					layout.getPlid(), PortletRequest.RENDER_PHASE);
+					layout, PortletRequest.RENDER_PHASE);
 
 				Map<String, String[]> renderParameters =
 					actionResponseImpl.getRenderParameterMap();
@@ -450,7 +463,7 @@ public class PortletContainerImpl implements PortletContainer {
 		}
 	}
 
-	private List<Event> _doProcessEvent(
+	private List<Event> _processEvent(
 			HttpServletRequest request, HttpServletResponse response,
 			Portlet portlet, Layout layout, Event event)
 		throws Exception {
@@ -545,8 +558,7 @@ public class PortletContainerImpl implements PortletContainer {
 		Layout requestLayout = (Layout)request.getAttribute(WebKeys.LAYOUT);
 
 		EventResponseImpl eventResponseImpl = EventResponseFactory.create(
-			eventRequestImpl, response, portlet.getPortletId(), user,
-			requestLayout);
+			eventRequestImpl, response, user, requestLayout);
 
 		eventRequestImpl.defineObjects(portletConfig, eventResponseImpl);
 
@@ -572,7 +584,7 @@ public class PortletContainerImpl implements PortletContainer {
 		}
 	}
 
-	private void _doRender(
+	private void _render(
 			HttpServletRequest request, HttpServletResponse response,
 			Portlet portlet)
 		throws Exception {
@@ -727,7 +739,7 @@ public class PortletContainerImpl implements PortletContainer {
 		}
 	}
 
-	private void _doServeResource(
+	private void _serveResource(
 			HttpServletRequest request, HttpServletResponse response,
 			Portlet portlet)
 		throws Exception {
@@ -788,12 +800,8 @@ public class PortletContainerImpl implements PortletContainer {
 			request, portlet, invokerPortlet, portletContext, windowState,
 			portletMode, portletPreferences, layout.getPlid());
 
-		long companyId = PortalUtil.getCompanyId(request);
-
 		ResourceResponseImpl resourceResponseImpl =
-			ResourceResponseFactory.create(
-				resourceRequestImpl, response, portlet.getPortletId(),
-				companyId);
+			ResourceResponseFactory.create(resourceRequestImpl, response);
 
 		resourceRequestImpl.defineObjects(portletConfig, resourceResponseImpl);
 

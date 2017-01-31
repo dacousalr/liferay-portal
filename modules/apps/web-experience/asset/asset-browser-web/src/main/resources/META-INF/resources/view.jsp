@@ -37,6 +37,13 @@
 				managementBarFilterItems="<%= assetBrowserDisplayContext.getManagementBarFilterItem() %>"
 				value="<%= assetBrowserDisplayContext.getManagementBarFilterLabel() %>"
 			/>
+
+			<liferay-frontend:management-bar-sort
+				orderByCol="<%= assetBrowserDisplayContext.getOrderByCol() %>"
+				orderByType="<%= assetBrowserDisplayContext.getOrderByType() %>"
+				orderColumns="<%= assetBrowserDisplayContext.getOrderColumns() %>"
+				portletURL="<%= assetBrowserDisplayContext.getPortletURL() %>"
+			/>
 		</liferay-frontend:management-bar-filters>
 
 		<liferay-portlet:actionURL name="changeDisplayStyle" varImpl="changeDisplayStyleURL">
@@ -64,6 +71,8 @@
 		>
 
 			<%
+			AssetRenderer assetRenderer = assetEntry.getAssetRenderer();
+
 			AssetRendererFactory assetRendererFactory = assetBrowserDisplayContext.getAssetRendererFactory();
 
 			Group group = GroupLocalServiceUtil.getGroup(assetEntry.getGroupId());
@@ -73,11 +82,11 @@
 			Map<String, Object> data = new HashMap<String, Object>();
 
 			if (assetEntry.getEntryId() != assetBrowserDisplayContext.getRefererAssetEntryId()) {
-				data.put("assetentryid", assetEntry.getEntryId());
 				data.put("assetclassname", assetEntry.getClassName());
 				data.put("assetclasspk", assetEntry.getClassPK());
+				data.put("assettitle", assetRenderer.getTitle(locale));
 				data.put("assettype", assetRendererFactory.getTypeName(locale, assetBrowserDisplayContext.getSubtypeSelectionId()));
-				data.put("assettitle", assetEntry.getTitle(locale));
+				data.put("entityid", assetEntry.getEntryId());
 				data.put("groupdescriptivename", group.getDescriptiveName(locale));
 
 				cssClass = "selector-button";
@@ -111,11 +120,11 @@
 							<c:choose>
 								<c:when test="<%= assetEntry.getEntryId() != assetBrowserDisplayContext.getRefererAssetEntryId() %>">
 									<aui:a cssClass="<%= cssClass %>" data="<%= data %>" href="javascript:;">
-										<%= assetEntry.getTitle(locale) %>
+										<%= assetRenderer.getTitle(locale) %>
 									</aui:a>
 								</c:when>
 								<c:otherwise>
-									<%= assetEntry.getTitle(locale) %>
+									<%= assetRenderer.getTitle(locale) %>
 								</c:otherwise>
 							</c:choose>
 						</h5>
@@ -129,8 +138,6 @@
 
 					<%
 					row.setCssClass("entry-card lfr-asset-item");
-
-					AssetRenderer assetRenderer = assetEntry.getAssetRenderer();
 					%>
 
 					<liferay-ui:search-container-column-text>
@@ -141,7 +148,7 @@
 									data="<%= data %>"
 									imageUrl="<%= assetRenderer.getThumbnailPath(renderRequest) %>"
 									subtitle="<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>"
-									title="<%= assetEntry.getTitle(locale) %>"
+									title="<%= assetRenderer.getTitle(locale) %>"
 								/>
 							</c:when>
 							<c:otherwise>
@@ -150,7 +157,7 @@
 									data="<%= data %>"
 									icon="<%= assetRendererFactory.getIconCssClass() %>"
 									subtitle="<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>"
-									title="<%= assetEntry.getTitle(locale) %>"
+									title="<%= assetRenderer.getTitle(locale) %>"
 								/>
 							</c:otherwise>
 						</c:choose>
@@ -158,43 +165,38 @@
 				</c:when>
 				<c:when test='<%= Objects.equals(assetBrowserDisplayContext.getDisplayStyle(), "list") %>'>
 					<liferay-ui:search-container-column-text
-						cssClass="content-column title-column"
 						name="title"
 						truncate="<%= true %>"
 					>
 						<c:choose>
 							<c:when test="<%= assetEntry.getEntryId() != assetBrowserDisplayContext.getRefererAssetEntryId() %>">
 								<aui:a cssClass="<%= cssClass %>" data="<%= data %>" href="javascript:;">
-									<%= assetEntry.getTitle(locale) %>
+									<%= assetRenderer.getTitle(locale) %>
 								</aui:a>
 							</c:when>
 							<c:otherwise>
-								<%= assetEntry.getTitle(locale) %>
+								<%= assetRenderer.getTitle(locale) %>
 							</c:otherwise>
 						</c:choose>
 					</liferay-ui:search-container-column-text>
 
 					<liferay-ui:search-container-column-text
-						cssClass="content-column description-column"
 						name="description"
 						truncate="<%= true %>"
-						value="<%= HtmlUtil.stripHtml(assetEntry.getDescription(locale)) %>"
+						value="<%= assetRenderer.getSummary(renderRequest, renderResponse) %>"
 					/>
 
 					<liferay-ui:search-container-column-text
-						cssClass="user-name-column text-column"
 						name="user-name"
 						value="<%= PortalUtil.getUserName(assetEntry) %>"
 					/>
 
 					<liferay-ui:search-container-column-date
-						cssClass="modified-date-column text-column"
 						name="modified-date"
 						value="<%= assetEntry.getModifiedDate() %>"
 					/>
 
 					<liferay-ui:search-container-column-text
-						cssClass="site-column text-column"
 						name="site"
 						value="<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>"
 					/>

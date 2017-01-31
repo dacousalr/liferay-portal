@@ -354,6 +354,14 @@ public interface RoleLocalService extends BaseLocalService,
 		ServiceContext serviceContext) throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getAssigneesTotal(long roleId) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getGroupRolesAndTeamRolesCount(long companyId,
+		java.lang.String keywords, List<java.lang.String> excludedNames,
+		int[] types, long excludedTeamRoleId, long teamGroupId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getGroupRolesCount(long groupId);
 
 	/**
@@ -507,6 +515,12 @@ public interface RoleLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Role> getGroupRoles(long groupId, int start, int end,
 		OrderByComparator<Role> orderByComparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Role> getGroupRolesAndTeamRoles(long companyId,
+		java.lang.String keywords, List<java.lang.String> excludedNames,
+		int[] types, long excludedTeamRoleId, long teamGroupId, int start,
+		int end);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Role> getResourceBlockRoles(long resourceBlockId,

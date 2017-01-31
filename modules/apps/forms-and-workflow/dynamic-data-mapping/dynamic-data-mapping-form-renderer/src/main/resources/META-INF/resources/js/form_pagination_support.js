@@ -6,6 +6,13 @@ AUI.add(
 		var FormPaginationSupport = function() {
 		};
 
+		FormPaginationSupport.ATTRS = {
+			pagesState: {
+				setter: '_setPagesSate',
+				value: []
+			}
+		};
+
 		FormPaginationSupport.prototype = {
 			initializer: function() {
 				var instance = this;
@@ -21,12 +28,18 @@ AUI.add(
 				return pagination.get('page');
 			},
 
+			getCurrentPageNode: function() {
+				var instance = this;
+
+				return instance.getPageNode(instance.getCurrentPage());
+			},
+
 			getFirstPageField: function() {
 				var instance = this;
 
 				var firstField;
 
-				var pageNode = instance._getCurrentPageNode();
+				var pageNode = instance.getCurrentPageNode();
 
 				instance.eachField(
 					function(field) {
@@ -83,7 +96,23 @@ AUI.add(
 
 				var pagination = instance.getPagination();
 
-				pagination.next();
+				var pages = instance.get('pagesState');
+
+				if (!pages.length) {
+					pagination.next();
+					return;
+				}
+
+				var page;
+
+				var nextPage = pagination.get('page');
+
+				do {
+					page = pages[nextPage];
+					nextPage++;
+				} while (!page.enabled);
+
+				pagination.set('page', nextPage);
 			},
 
 			prevPage: function() {
@@ -91,7 +120,23 @@ AUI.add(
 
 				var pagination = instance.getPagination();
 
-				pagination.prev();
+				var pages = instance.get('pagesState');
+
+				if (!pages.length) {
+					pagination.prev();
+					return;
+				}
+
+				var page;
+
+				var prevPage = pagination.get('page') - 2;
+
+				do {
+					page = pages[prevPage];
+					prevPage--;
+				} while (!page.enabled);
+
+				pagination.set('page', prevPage + 2);
 			},
 
 			showPage: function(page) {
@@ -153,12 +198,6 @@ AUI.add(
 				if (firstField) {
 					firstField.focus();
 				}
-			},
-
-			_getCurrentPageNode: function() {
-				var instance = this;
-
-				return instance.getPageNode(instance.getCurrentPage());
 			},
 
 			_getPaginationControlsNode: function() {
@@ -232,6 +271,18 @@ AUI.add(
 				else {
 					pagination.set('page', nextPage);
 				}
+			},
+
+			_setPagesSate: function(pages) {
+				var pagesState = [];
+
+				for (var i = 0; i < pages.length; i++) {
+					pagesState[i] = {
+						enabled: pages[i].enabled
+					};
+				}
+
+				return pagesState;
 			},
 
 			_syncPaginationControlsUI: function() {

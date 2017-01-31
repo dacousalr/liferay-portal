@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -12380,7 +12379,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((BookmarksEntryModelImpl)bookmarksEntry);
+		clearUniqueFindersCache((BookmarksEntryModelImpl)bookmarksEntry, true);
 	}
 
 	@Override
@@ -12392,52 +12391,39 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			entityCache.removeResult(BookmarksEntryModelImpl.ENTITY_CACHE_ENABLED,
 				BookmarksEntryImpl.class, bookmarksEntry.getPrimaryKey());
 
-			clearUniqueFindersCache((BookmarksEntryModelImpl)bookmarksEntry);
+			clearUniqueFindersCache((BookmarksEntryModelImpl)bookmarksEntry,
+				true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		BookmarksEntryModelImpl bookmarksEntryModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					bookmarksEntryModelImpl.getUuid(),
-					bookmarksEntryModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				bookmarksEntryModelImpl);
-		}
-		else {
-			if ((bookmarksEntryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						bookmarksEntryModelImpl.getUuid(),
-						bookmarksEntryModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					bookmarksEntryModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		BookmarksEntryModelImpl bookmarksEntryModelImpl) {
 		Object[] args = new Object[] {
 				bookmarksEntryModelImpl.getUuid(),
 				bookmarksEntryModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			bookmarksEntryModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		BookmarksEntryModelImpl bookmarksEntryModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					bookmarksEntryModelImpl.getUuid(),
+					bookmarksEntryModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((bookmarksEntryModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					bookmarksEntryModelImpl.getOriginalUuid(),
 					bookmarksEntryModelImpl.getOriginalGroupId()
 				};
@@ -12810,8 +12796,8 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 			BookmarksEntryImpl.class, bookmarksEntry.getPrimaryKey(),
 			bookmarksEntry, false);
 
-		clearUniqueFindersCache(bookmarksEntryModelImpl);
-		cacheUniqueFindersCache(bookmarksEntryModelImpl, isNew);
+		clearUniqueFindersCache(bookmarksEntryModelImpl, false);
+		cacheUniqueFindersCache(bookmarksEntryModelImpl);
 
 		bookmarksEntry.resetOriginalValues();
 
@@ -12898,12 +12884,14 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 	 */
 	@Override
 	public BookmarksEntry fetchByPrimaryKey(Serializable primaryKey) {
-		BookmarksEntry bookmarksEntry = (BookmarksEntry)entityCache.getResult(BookmarksEntryModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(BookmarksEntryModelImpl.ENTITY_CACHE_ENABLED,
 				BookmarksEntryImpl.class, primaryKey);
 
-		if (bookmarksEntry == _nullBookmarksEntry) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		BookmarksEntry bookmarksEntry = (BookmarksEntry)serializable;
 
 		if (bookmarksEntry == null) {
 			Session session = null;
@@ -12919,8 +12907,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 				}
 				else {
 					entityCache.putResult(BookmarksEntryModelImpl.ENTITY_CACHE_ENABLED,
-						BookmarksEntryImpl.class, primaryKey,
-						_nullBookmarksEntry);
+						BookmarksEntryImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -12974,18 +12961,20 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			BookmarksEntry bookmarksEntry = (BookmarksEntry)entityCache.getResult(BookmarksEntryModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(BookmarksEntryModelImpl.ENTITY_CACHE_ENABLED,
 					BookmarksEntryImpl.class, primaryKey);
 
-			if (bookmarksEntry == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, bookmarksEntry);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (BookmarksEntry)serializable);
+				}
 			}
 		}
 
@@ -13027,7 +13016,7 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(BookmarksEntryModelImpl.ENTITY_CACHE_ENABLED,
-					BookmarksEntryImpl.class, primaryKey, _nullBookmarksEntry);
+					BookmarksEntryImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -13274,23 +13263,4 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid"
 			});
-	private static final BookmarksEntry _nullBookmarksEntry = new BookmarksEntryImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<BookmarksEntry> toCacheModel() {
-				return _nullBookmarksEntryCacheModel;
-			}
-		};
-
-	private static final CacheModel<BookmarksEntry> _nullBookmarksEntryCacheModel =
-		new CacheModel<BookmarksEntry>() {
-			@Override
-			public BookmarksEntry toEntityModel() {
-				return _nullBookmarksEntry;
-			}
-		};
 }

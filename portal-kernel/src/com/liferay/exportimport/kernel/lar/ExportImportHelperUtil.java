@@ -23,7 +23,7 @@ import com.liferay.portal.kernel.model.StagedModel;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.DateRange;
-import com.liferay.portal.kernel.util.ProxyFactory;
+import com.liferay.portal.kernel.util.ServiceProxyFactory;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.zip.ZipWriter;
@@ -648,7 +648,9 @@ public class ExportImportHelperUtil {
 		_exportImportHelper.writeManifestSummary(document, manifestSummary);
 	}
 
-	private static final ExportImportHelper _exportImportHelper =
-		ProxyFactory.newServiceTrackedInstance(ExportImportHelper.class);
+	private static volatile ExportImportHelper _exportImportHelper =
+		ServiceProxyFactory.newServiceTrackedInstance(
+			ExportImportHelper.class, ExportImportHelperUtil.class,
+			"_exportImportHelper", false);
 
 }

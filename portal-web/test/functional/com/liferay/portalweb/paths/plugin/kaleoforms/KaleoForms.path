@@ -9,16 +9,6 @@
 </thead>
 <tbody>
 <tr>
-	<td>EXTEND_ACTION_PATH</td>
-	<td>BasePortlet</td>
-	<td></td>
-</tr>
-<tr>
-	<td></td>
-	<td></td>
-	<td></td>
-</tr>
-<tr>
 	<td>SUBMIT_NEW</td>
 	<td>//a[@title='Submit New']</td>
 	<td></td>
@@ -349,7 +339,6 @@
 	<td>//tr[contains(.,'${key_kfProcessName}')]/td[5]</td>
 	<td></td>
 </tr>
-
 </tbody>
 </table>
 </body>

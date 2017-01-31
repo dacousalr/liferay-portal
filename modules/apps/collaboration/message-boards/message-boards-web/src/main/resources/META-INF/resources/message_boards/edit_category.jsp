@@ -19,6 +19,8 @@
 <%
 String redirect = ParamUtil.getString(request, "redirect");
 
+MBRequestHelper mbRequestHelper = new MBRequestHelper(request);
+
 MBCategory category = mbRequestHelper.getCategory();
 
 long categoryId = MBUtil.getCategoryId(request, category);
@@ -63,6 +65,8 @@ else {
 }
 
 boolean portletTitleBasedNavigation = GetterUtil.getBoolean(portletConfig.getInitParameter("portlet-title-based-navigation"));
+
+MBHomeDisplayContext mbHomeDisplayContext = mbDisplayContextProvider.getMBHomeDisplayContext(request, response);
 
 if (portletTitleBasedNavigation) {
 	portletDisplay.setShowBackIcon(true);
@@ -148,9 +152,9 @@ if (portletTitleBasedNavigation) {
 			<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="mailing-list">
 				<aui:model-context bean="<%= mailingList %>" model="<%= MBMailingList.class %>" />
 
-				<aui:input fieldParam="mailingListActive" name="active" />
+				<aui:input label="active" name="mailingListActive" type="toggle-switch" value='<%= ParamUtil.getBoolean(request, "mailingListActive", BeanPropertiesUtil.getBoolean(mailingList, "active")) %>' />
 
-				<aui:input label="allow-anonymous-emails" name="allowAnonymous" />
+				<aui:input label="allow-anonymous-emails" name="allowAnonymous" type="toggle-switch" value='<%= BeanParamUtil.getBoolean(mailingList, request, "allowAnonymous") %>' />
 
 				<div id="<portlet:namespace />mailingListSettings">
 					<aui:input name="emailAddress" />
@@ -203,20 +207,20 @@ if (portletTitleBasedNavigation) {
 				<c:if test="<%= (category == null) && PropsValues.CAPTCHA_CHECK_PORTLET_MESSAGE_BOARDS_EDIT_CATEGORY %>">
 					<portlet:resourceURL id="/message_boards/captcha" var="captchaURL" />
 
-					<liferay-ui:captcha url="<%= captchaURL %>" />
+					<liferay-captcha:captcha url="<%= captchaURL %>" />
 				</c:if>
 			</aui:fieldset>
 
-			<liferay-ui:custom-attributes-available className="<%= MBCategory.class.getName() %>">
+			<liferay-expando:custom-attributes-available className="<%= MBCategory.class.getName() %>">
 				<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="custom-fields">
-					<liferay-ui:custom-attribute-list
+					<liferay-expando:custom-attribute-list
 						className="<%= MBCategory.class.getName() %>"
 						classPK="<%= (category != null) ? category.getCategoryId() : 0 %>"
 						editable="<%= true %>"
 						label="<%= true %>"
 					/>
 				</aui:fieldset>
-			</liferay-ui:custom-attributes-available>
+			</liferay-expando:custom-attributes-available>
 
 			<c:if test="<%= category == null %>">
 				<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="permissions">

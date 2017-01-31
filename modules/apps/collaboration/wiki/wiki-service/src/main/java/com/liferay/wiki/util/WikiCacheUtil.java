@@ -38,8 +38,10 @@ import javax.portlet.PortletURL;
 import org.apache.commons.lang.time.StopWatch;
 
 /**
- * @author Jorge Ferrer
+ * @author     Jorge Ferrer
+ * @deprecated As of 1.2.0, replaced by {@link WikiCacheHelper}
  */
+@Deprecated
 public class WikiCacheUtil {
 
 	public static void clearCache(long nodeId) {
@@ -66,7 +68,9 @@ public class WikiCacheUtil {
 			pageDisplay = _getPageDisplay(
 				nodeId, title, viewPageURL, editPageURL, attachmentURLPrefix);
 
-			_portalCache.put(key, pageDisplay);
+			if (pageDisplay != null) {
+				_portalCache.put(key, pageDisplay);
+			}
 		}
 
 		if (_log.isDebugEnabled()) {

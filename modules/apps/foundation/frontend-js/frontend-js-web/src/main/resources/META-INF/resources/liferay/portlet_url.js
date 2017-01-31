@@ -22,9 +22,6 @@ AUI.add(
 				p_l_reset: null,
 				p_p_auth: null,
 				p_p_cacheability: null,
-				p_p_col_count: null,
-				p_p_col_id: null,
-				p_p_col_pos: null,
 				p_p_i_id: null,
 				p_p_id: null,
 				p_p_isolated: null,
@@ -74,9 +71,11 @@ AUI.add(
 		};
 
 		PortletURL.prototype = {
+
 			/*
 			 * @deprecated
 			 */
+
 			setCopyCurrentRenderParameters: function() {
 				var instance = this;
 
@@ -102,6 +101,7 @@ AUI.add(
 			/*
 			 * @deprecated
 			 */
+
 			setEncrypt: function() {
 				var instance = this;
 
@@ -181,6 +181,7 @@ AUI.add(
 			/*
 			 * @deprecated
 			 */
+
 			setPortletConfiguration: function() {
 				var instance = this;
 

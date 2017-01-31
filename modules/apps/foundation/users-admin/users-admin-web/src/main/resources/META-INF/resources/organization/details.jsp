@@ -80,7 +80,7 @@ User selUser = (User)request.getAttribute("user.selUser");
 		</c:choose>
 
 		<c:choose>
-			<c:when test="<%= organization == null && PropsValues.ORGANIZATIONS_TYPES.length > 1 %>">
+			<c:when test="<%= (organization == null) && (PropsValues.ORGANIZATIONS_TYPES.length > 1) %>">
 				<aui:select name="type">
 
 					<%
@@ -195,12 +195,14 @@ if (parentOrganization != null) {
 		</portlet:renderURL>
 
 		<liferay-ui:search-container-column-text
+			cssClass="table-cell-content"
 			href="<%= rowURL %>"
 			name="name"
 			property="name"
 		/>
 
 		<liferay-ui:search-container-column-text
+			cssClass="table-cell-content"
 			href="<%= rowURL %>"
 			name="type"
 			value="<%= LanguageUtil.get(request, curOrganization.getType()) %>"
@@ -264,6 +266,8 @@ if (parentOrganization != null) {
 		selectOrganizationLink.on(
 			'click',
 			function(event) {
+				var searchContainerData = searchContainer.getData();
+
 				Liferay.Util.selectEntity(
 					{
 						dialog: {
@@ -271,21 +275,22 @@ if (parentOrganization != null) {
 							modal: true
 						},
 						id: '<portlet:namespace />selectOrganization',
+						selectedData: [searchContainerData],
 						title: '<liferay-ui:message arguments="organization" key="select-x" />',
 						uri: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="mvcPath" value="/select_organization.jsp" /><portlet:param name="p_u_i_d" value='<%= (selUser == null) ? "0" : String.valueOf(selUser.getUserId()) %>' /></portlet:renderURL>'
 					},
 					function(event) {
 						var rowColumns = [];
 
-						var href = '<portlet:renderURL><portlet:param name="mvcRenderCommandName" value="/users_admin/edit_organization" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>&<portlet:namespace />organizationId=' + event.organizationid;
+						var href = '<portlet:renderURL><portlet:param name="mvcRenderCommandName" value="/users_admin/edit_organization" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>&<portlet:namespace />organizationId=' + event.entityid;
 
-						rowColumns.push(<portlet:namespace />createURL(href, event.name));
+						rowColumns.push(<portlet:namespace />createURL(href, event.entityname));
 						rowColumns.push(<portlet:namespace />createURL(href, event.type));
-						rowColumns.push('<a class="modify-link" data-rowId="' + event.organizationid + '" href="javascript:;"><%= UnicodeFormatter.toString(removeOrganizationIcon) %></a>');
+						rowColumns.push('<a class="modify-link" data-rowId="' + event.entityid + '" href="javascript:;"><%= UnicodeFormatter.toString(removeOrganizationIcon) %></a>');
 
 						searchContainer.deleteRow(1, searchContainer.getData());
-						searchContainer.addRow(rowColumns, event.organizationid);
-						searchContainer.updateDataStore(event.organizationid);
+						searchContainer.addRow(rowColumns, event.entityid);
+						searchContainer.updateDataStore(event.entityid);
 					}
 				);
 			}

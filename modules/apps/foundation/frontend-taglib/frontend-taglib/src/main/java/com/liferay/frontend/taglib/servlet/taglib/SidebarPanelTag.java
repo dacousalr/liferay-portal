@@ -14,7 +14,7 @@
 
 package com.liferay.frontend.taglib.servlet.taglib;
 
-import com.liferay.frontend.taglib.servlet.ServletContextUtil;
+import com.liferay.frontend.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.taglib.util.IncludeTag;
 
 import javax.servlet.jsp.JspException;
@@ -54,14 +54,10 @@ public class SidebarPanelTag extends IncludeTag {
 
 	public void setResourceURL(String resourceURL) {
 		_resourceURL = resourceURL;
-
-		setScopedAttribute("resourceURL", _resourceURL);
 	}
 
 	public void setSearchContainerId(String searchContainerId) {
 		_searchContainerId = searchContainerId;
-
-		setScopedAttribute("searchContainerId", _searchContainerId);
 	}
 
 	@Override

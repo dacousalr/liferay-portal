@@ -1085,11 +1085,31 @@ public class BaseTextExportImportContentProcessor
 			portalURL.concat("/image/image_gallery?")
 		};
 
+		long[] companyIds = PortalUtil.getCompanyIds();
+
+		String[] completePatterns =
+			new String[patterns.length * companyIds.length];
+
+		int i = 0;
+
+		for (long companyId : companyIds) {
+			Company company = CompanyLocalServiceUtil.getCompany(companyId);
+
+			String webId = company.getWebId();
+
+			for (String pattern : patterns) {
+				completePatterns[i] = webId.concat(pattern);
+
+				i++;
+			}
+		}
+
 		int beginPos = -1;
 		int endPos = content.length();
 
 		while (true) {
-			beginPos = StringUtil.lastIndexOfAny(content, patterns, endPos);
+			beginPos = StringUtil.lastIndexOfAny(
+				content, completePatterns, endPos);
 
 			if (beginPos == -1) {
 				break;
@@ -1194,10 +1214,8 @@ public class BaseTextExportImportContentProcessor
 
 				if (urlWithoutLocale.startsWith(
 						PRIVATE_GROUP_SERVLET_MAPPING) ||
-					urlWithoutLocale.startsWith(
-						PRIVATE_USER_SERVLET_MAPPING) ||
-					urlWithoutLocale.startsWith(
-						PUBLIC_GROUP_SERVLET_MAPPING)) {
+					urlWithoutLocale.startsWith(PRIVATE_USER_SERVLET_MAPPING) ||
+					urlWithoutLocale.startsWith(PUBLIC_GROUP_SERVLET_MAPPING)) {
 
 					url = urlWithoutLocale;
 				}
@@ -1225,8 +1243,7 @@ public class BaseTextExportImportContentProcessor
 
 				if (urlSBString.contains(
 						DATA_HANDLER_PUBLIC_LAYOUT_SET_SECURE_URL) ||
-					urlSBString.contains(
-						DATA_HANDLER_PUBLIC_LAYOUT_SET_URL)) {
+					urlSBString.contains(DATA_HANDLER_PUBLIC_LAYOUT_SET_URL)) {
 
 					layoutSet = group.getPublicLayoutSet();
 				}
@@ -1247,9 +1264,11 @@ public class BaseTextExportImportContentProcessor
 
 			String groupFriendlyURL = group.getFriendlyURL();
 
-			if (url.equals(groupFriendlyURL) ||
-				url.startsWith(groupFriendlyURL + StringPool.SLASH)) {
+			if (url.equals(groupFriendlyURL)) {
+				continue;
+			}
 
+			if (url.startsWith(groupFriendlyURL + StringPool.SLASH)) {
 				url = url.substring(groupFriendlyURL.length());
 			}
 

@@ -28,8 +28,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchRegionException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.Region;
 import com.liferay.portal.kernel.service.persistence.RegionPersistence;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
@@ -1950,7 +1948,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((RegionModelImpl)region);
+		clearUniqueFindersCache((RegionModelImpl)region, true);
 	}
 
 	@Override
@@ -1962,50 +1960,36 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 			entityCache.removeResult(RegionModelImpl.ENTITY_CACHE_ENABLED,
 				RegionImpl.class, region.getPrimaryKey());
 
-			clearUniqueFindersCache((RegionModelImpl)region);
+			clearUniqueFindersCache((RegionModelImpl)region, true);
 		}
 	}
 
-	protected void cacheUniqueFindersCache(RegionModelImpl regionModelImpl,
-		boolean isNew) {
-		if (isNew) {
+	protected void cacheUniqueFindersCache(RegionModelImpl regionModelImpl) {
+		Object[] args = new Object[] {
+				regionModelImpl.getCountryId(), regionModelImpl.getRegionCode()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_R, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_R, args, regionModelImpl,
+			false);
+	}
+
+	protected void clearUniqueFindersCache(RegionModelImpl regionModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
 			Object[] args = new Object[] {
 					regionModelImpl.getCountryId(),
 					regionModelImpl.getRegionCode()
 				};
 
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_R, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_R, args,
-				regionModelImpl);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_R, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_R, args);
 		}
-		else {
-			if ((regionModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_R.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						regionModelImpl.getCountryId(),
-						regionModelImpl.getRegionCode()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_R, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_R, args,
-					regionModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(RegionModelImpl regionModelImpl) {
-		Object[] args = new Object[] {
-				regionModelImpl.getCountryId(), regionModelImpl.getRegionCode()
-			};
-
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_R, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_R, args);
 
 		if ((regionModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_R.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					regionModelImpl.getOriginalCountryId(),
 					regionModelImpl.getOriginalRegionCode()
 				};
@@ -2206,8 +2190,8 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 		entityCache.putResult(RegionModelImpl.ENTITY_CACHE_ENABLED,
 			RegionImpl.class, region.getPrimaryKey(), region, false);
 
-		clearUniqueFindersCache(regionModelImpl);
-		cacheUniqueFindersCache(regionModelImpl, isNew);
+		clearUniqueFindersCache(regionModelImpl, false);
+		cacheUniqueFindersCache(regionModelImpl);
 
 		region.resetOriginalValues();
 
@@ -2278,12 +2262,14 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 	 */
 	@Override
 	public Region fetchByPrimaryKey(Serializable primaryKey) {
-		Region region = (Region)entityCache.getResult(RegionModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(RegionModelImpl.ENTITY_CACHE_ENABLED,
 				RegionImpl.class, primaryKey);
 
-		if (region == _nullRegion) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		Region region = (Region)serializable;
 
 		if (region == null) {
 			Session session = null;
@@ -2298,7 +2284,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 				}
 				else {
 					entityCache.putResult(RegionModelImpl.ENTITY_CACHE_ENABLED,
-						RegionImpl.class, primaryKey, _nullRegion);
+						RegionImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -2352,18 +2338,20 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			Region region = (Region)entityCache.getResult(RegionModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(RegionModelImpl.ENTITY_CACHE_ENABLED,
 					RegionImpl.class, primaryKey);
 
-			if (region == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, region);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (Region)serializable);
+				}
 			}
 		}
 
@@ -2405,7 +2393,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(RegionModelImpl.ENTITY_CACHE_ENABLED,
-					RegionImpl.class, primaryKey, _nullRegion);
+					RegionImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -2645,34 +2633,4 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"active"
 			});
-	private static final Region _nullRegion = new RegionImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<Region> toCacheModel() {
-				return _nullRegionCacheModel;
-			}
-		};
-
-	private static final CacheModel<Region> _nullRegionCacheModel = new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<Region>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public Region toEntityModel() {
-			return _nullRegion;
-		}
-	}
 }

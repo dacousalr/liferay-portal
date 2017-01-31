@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -5766,7 +5765,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((DLFileVersionModelImpl)dlFileVersion);
+		clearUniqueFindersCache((DLFileVersionModelImpl)dlFileVersion, true);
 	}
 
 	@Override
@@ -5778,75 +5777,48 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 			entityCache.removeResult(DLFileVersionModelImpl.ENTITY_CACHE_ENABLED,
 				DLFileVersionImpl.class, dlFileVersion.getPrimaryKey());
 
-			clearUniqueFindersCache((DLFileVersionModelImpl)dlFileVersion);
+			clearUniqueFindersCache((DLFileVersionModelImpl)dlFileVersion, true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		DLFileVersionModelImpl dlFileVersionModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					dlFileVersionModelImpl.getUuid(),
-					dlFileVersionModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				dlFileVersionModelImpl);
-
-			args = new Object[] {
-					dlFileVersionModelImpl.getFileEntryId(),
-					dlFileVersionModelImpl.getVersion()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_F_V, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_F_V, args,
-				dlFileVersionModelImpl);
-		}
-		else {
-			if ((dlFileVersionModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						dlFileVersionModelImpl.getUuid(),
-						dlFileVersionModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					dlFileVersionModelImpl);
-			}
-
-			if ((dlFileVersionModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_F_V.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						dlFileVersionModelImpl.getFileEntryId(),
-						dlFileVersionModelImpl.getVersion()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_F_V, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_F_V, args,
-					dlFileVersionModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		DLFileVersionModelImpl dlFileVersionModelImpl) {
 		Object[] args = new Object[] {
 				dlFileVersionModelImpl.getUuid(),
 				dlFileVersionModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			dlFileVersionModelImpl, false);
+
+		args = new Object[] {
+				dlFileVersionModelImpl.getFileEntryId(),
+				dlFileVersionModelImpl.getVersion()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_F_V, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_F_V, args,
+			dlFileVersionModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		DLFileVersionModelImpl dlFileVersionModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					dlFileVersionModelImpl.getUuid(),
+					dlFileVersionModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((dlFileVersionModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					dlFileVersionModelImpl.getOriginalUuid(),
 					dlFileVersionModelImpl.getOriginalGroupId()
 				};
@@ -5855,17 +5827,19 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
 		}
 
-		args = new Object[] {
-				dlFileVersionModelImpl.getFileEntryId(),
-				dlFileVersionModelImpl.getVersion()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					dlFileVersionModelImpl.getFileEntryId(),
+					dlFileVersionModelImpl.getVersion()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_F_V, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_F_V, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_F_V, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_F_V, args);
+		}
 
 		if ((dlFileVersionModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_F_V.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					dlFileVersionModelImpl.getOriginalFileEntryId(),
 					dlFileVersionModelImpl.getOriginalVersion()
 				};
@@ -6210,8 +6184,8 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 			DLFileVersionImpl.class, dlFileVersion.getPrimaryKey(),
 			dlFileVersion, false);
 
-		clearUniqueFindersCache(dlFileVersionModelImpl);
-		cacheUniqueFindersCache(dlFileVersionModelImpl, isNew);
+		clearUniqueFindersCache(dlFileVersionModelImpl, false);
+		cacheUniqueFindersCache(dlFileVersionModelImpl);
 
 		dlFileVersion.resetOriginalValues();
 
@@ -6305,12 +6279,14 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 	 */
 	@Override
 	public DLFileVersion fetchByPrimaryKey(Serializable primaryKey) {
-		DLFileVersion dlFileVersion = (DLFileVersion)entityCache.getResult(DLFileVersionModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(DLFileVersionModelImpl.ENTITY_CACHE_ENABLED,
 				DLFileVersionImpl.class, primaryKey);
 
-		if (dlFileVersion == _nullDLFileVersion) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		DLFileVersion dlFileVersion = (DLFileVersion)serializable;
 
 		if (dlFileVersion == null) {
 			Session session = null;
@@ -6326,7 +6302,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 				}
 				else {
 					entityCache.putResult(DLFileVersionModelImpl.ENTITY_CACHE_ENABLED,
-						DLFileVersionImpl.class, primaryKey, _nullDLFileVersion);
+						DLFileVersionImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -6380,18 +6356,20 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			DLFileVersion dlFileVersion = (DLFileVersion)entityCache.getResult(DLFileVersionModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(DLFileVersionModelImpl.ENTITY_CACHE_ENABLED,
 					DLFileVersionImpl.class, primaryKey);
 
-			if (dlFileVersion == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, dlFileVersion);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (DLFileVersion)serializable);
+				}
 			}
 		}
 
@@ -6433,7 +6411,7 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(DLFileVersionModelImpl.ENTITY_CACHE_ENABLED,
-					DLFileVersionImpl.class, primaryKey, _nullDLFileVersion);
+					DLFileVersionImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -6676,22 +6654,4 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid", "size"
 			});
-	private static final DLFileVersion _nullDLFileVersion = new DLFileVersionImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<DLFileVersion> toCacheModel() {
-				return _nullDLFileVersionCacheModel;
-			}
-		};
-
-	private static final CacheModel<DLFileVersion> _nullDLFileVersionCacheModel = new CacheModel<DLFileVersion>() {
-			@Override
-			public DLFileVersion toEntityModel() {
-				return _nullDLFileVersion;
-			}
-		};
 }

@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
@@ -3031,7 +3030,7 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((AssetLinkModelImpl)assetLink);
+		clearUniqueFindersCache((AssetLinkModelImpl)assetLink, true);
 	}
 
 	@Override
@@ -3043,54 +3042,39 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 			entityCache.removeResult(AssetLinkModelImpl.ENTITY_CACHE_ENABLED,
 				AssetLinkImpl.class, assetLink.getPrimaryKey());
 
-			clearUniqueFindersCache((AssetLinkModelImpl)assetLink);
+			clearUniqueFindersCache((AssetLinkModelImpl)assetLink, true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		AssetLinkModelImpl assetLinkModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					assetLinkModelImpl.getEntryId1(),
-					assetLinkModelImpl.getEntryId2(),
-					assetLinkModelImpl.getType()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_E_E_T, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_E_E_T, args,
-				assetLinkModelImpl);
-		}
-		else {
-			if ((assetLinkModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_E_E_T.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						assetLinkModelImpl.getEntryId1(),
-						assetLinkModelImpl.getEntryId2(),
-						assetLinkModelImpl.getType()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_E_E_T, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_E_E_T, args,
-					assetLinkModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		AssetLinkModelImpl assetLinkModelImpl) {
 		Object[] args = new Object[] {
 				assetLinkModelImpl.getEntryId1(),
 				assetLinkModelImpl.getEntryId2(), assetLinkModelImpl.getType()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_E_E_T, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_E_E_T, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_E_E_T, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_E_E_T, args,
+			assetLinkModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		AssetLinkModelImpl assetLinkModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					assetLinkModelImpl.getEntryId1(),
+					assetLinkModelImpl.getEntryId2(),
+					assetLinkModelImpl.getType()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_E_E_T, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_E_E_T, args);
+		}
 
 		if ((assetLinkModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_E_E_T.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					assetLinkModelImpl.getOriginalEntryId1(),
 					assetLinkModelImpl.getOriginalEntryId2(),
 					assetLinkModelImpl.getOriginalType()
@@ -3339,8 +3323,8 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 		entityCache.putResult(AssetLinkModelImpl.ENTITY_CACHE_ENABLED,
 			AssetLinkImpl.class, assetLink.getPrimaryKey(), assetLink, false);
 
-		clearUniqueFindersCache(assetLinkModelImpl);
-		cacheUniqueFindersCache(assetLinkModelImpl, isNew);
+		clearUniqueFindersCache(assetLinkModelImpl, false);
+		cacheUniqueFindersCache(assetLinkModelImpl);
 
 		assetLink.resetOriginalValues();
 
@@ -3414,12 +3398,14 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 	 */
 	@Override
 	public AssetLink fetchByPrimaryKey(Serializable primaryKey) {
-		AssetLink assetLink = (AssetLink)entityCache.getResult(AssetLinkModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(AssetLinkModelImpl.ENTITY_CACHE_ENABLED,
 				AssetLinkImpl.class, primaryKey);
 
-		if (assetLink == _nullAssetLink) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		AssetLink assetLink = (AssetLink)serializable;
 
 		if (assetLink == null) {
 			Session session = null;
@@ -3435,7 +3421,7 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 				}
 				else {
 					entityCache.putResult(AssetLinkModelImpl.ENTITY_CACHE_ENABLED,
-						AssetLinkImpl.class, primaryKey, _nullAssetLink);
+						AssetLinkImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -3489,18 +3475,20 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			AssetLink assetLink = (AssetLink)entityCache.getResult(AssetLinkModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(AssetLinkModelImpl.ENTITY_CACHE_ENABLED,
 					AssetLinkImpl.class, primaryKey);
 
-			if (assetLink == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, assetLink);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (AssetLink)serializable);
+				}
 			}
 		}
 
@@ -3542,7 +3530,7 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(AssetLinkModelImpl.ENTITY_CACHE_ENABLED,
-					AssetLinkImpl.class, primaryKey, _nullAssetLink);
+					AssetLinkImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -3785,22 +3773,4 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"type"
 			});
-	private static final AssetLink _nullAssetLink = new AssetLinkImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<AssetLink> toCacheModel() {
-				return _nullAssetLinkCacheModel;
-			}
-		};
-
-	private static final CacheModel<AssetLink> _nullAssetLinkCacheModel = new CacheModel<AssetLink>() {
-			@Override
-			public AssetLink toEntityModel() {
-				return _nullAssetLink;
-			}
-		};
 }

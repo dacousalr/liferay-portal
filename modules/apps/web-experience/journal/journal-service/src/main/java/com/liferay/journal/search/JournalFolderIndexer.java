@@ -26,7 +26,7 @@ import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.FolderIndexer;
-import com.liferay.portal.kernel.search.IndexWriterHelperUtil;
+import com.liferay.portal.kernel.search.IndexWriterHelper;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Summary;
@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.trash.kernel.util.TrashUtil;
 
 import java.util.Locale;
 
@@ -111,7 +112,15 @@ public class JournalFolderIndexer
 
 		document.addText(Field.DESCRIPTION, journalFolder.getDescription());
 		document.addKeyword(Field.FOLDER_ID, journalFolder.getParentFolderId());
-		document.addText(Field.TITLE, journalFolder.getName());
+
+		String title = journalFolder.getName();
+
+		if (journalFolder.isInTrash()) {
+			title = TrashUtil.getOriginalTitle(title);
+		}
+
+		document.addText(Field.TITLE, title);
+
 		document.addKeyword(
 			Field.TREE_PATH,
 			StringUtil.split(journalFolder.getTreePath(), CharPool.SLASH));
@@ -140,7 +149,7 @@ public class JournalFolderIndexer
 	protected void doReindex(JournalFolder journalFolder) throws Exception {
 		Document document = getDocument(journalFolder);
 
-		IndexWriterHelperUtil.updateDocument(
+		_indexWriterHelper.updateDocument(
 			getSearchEngineId(), journalFolder.getCompanyId(), document,
 			isCommitImmediately());
 	}
@@ -202,6 +211,9 @@ public class JournalFolderIndexer
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		JournalFolderIndexer.class);
+
+	@Reference
+	private IndexWriterHelper _indexWriterHelper;
 
 	private JournalFolderLocalService _journalFolderLocalService;
 

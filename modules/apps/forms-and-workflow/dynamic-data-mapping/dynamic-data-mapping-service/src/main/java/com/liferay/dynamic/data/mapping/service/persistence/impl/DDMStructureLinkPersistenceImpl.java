@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
@@ -51,7 +50,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * The persistence implementation for the d d m structure link service.
+ * The persistence implementation for the ddm structure link service.
  *
  * <p>
  * Caching information and settings can be found in <code>portal.properties</code>
@@ -68,7 +67,7 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify or reference this class directly. Always use {@link DDMStructureLinkUtil} to access the d d m structure link persistence. Modify <code>service.xml</code> and rerun ServiceBuilder to regenerate this class.
+	 * Never modify or reference this class directly. Always use {@link DDMStructureLinkUtil} to access the ddm structure link persistence. Modify <code>service.xml</code> and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static final String FINDER_CLASS_NAME_ENTITY = DDMStructureLinkImpl.class.getName();
 	public static final String FINDER_CLASS_NAME_LIST_WITH_PAGINATION = FINDER_CLASS_NAME_ENTITY +
@@ -110,10 +109,10 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			new String[] { Long.class.getName() });
 
 	/**
-	 * Returns all the d d m structure links where classNameId = &#63;.
+	 * Returns all the ddm structure links where classNameId = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @return the matching d d m structure links
+	 * @return the matching ddm structure links
 	 */
 	@Override
 	public List<DDMStructureLink> findByClassNameId(long classNameId) {
@@ -122,16 +121,16 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns a range of all the d d m structure links where classNameId = &#63;.
+	 * Returns a range of all the ddm structure links where classNameId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMStructureLinkModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param classNameId the class name ID
-	 * @param start the lower bound of the range of d d m structure links
-	 * @param end the upper bound of the range of d d m structure links (not inclusive)
-	 * @return the range of matching d d m structure links
+	 * @param start the lower bound of the range of ddm structure links
+	 * @param end the upper bound of the range of ddm structure links (not inclusive)
+	 * @return the range of matching ddm structure links
 	 */
 	@Override
 	public List<DDMStructureLink> findByClassNameId(long classNameId,
@@ -140,17 +139,17 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m structure links where classNameId = &#63;.
+	 * Returns an ordered range of all the ddm structure links where classNameId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMStructureLinkModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param classNameId the class name ID
-	 * @param start the lower bound of the range of d d m structure links
-	 * @param end the upper bound of the range of d d m structure links (not inclusive)
+	 * @param start the lower bound of the range of ddm structure links
+	 * @param end the upper bound of the range of ddm structure links (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching d d m structure links
+	 * @return the ordered range of matching ddm structure links
 	 */
 	@Override
 	public List<DDMStructureLink> findByClassNameId(long classNameId,
@@ -161,18 +160,18 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m structure links where classNameId = &#63;.
+	 * Returns an ordered range of all the ddm structure links where classNameId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMStructureLinkModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param classNameId the class name ID
-	 * @param start the lower bound of the range of d d m structure links
-	 * @param end the upper bound of the range of d d m structure links (not inclusive)
+	 * @param start the lower bound of the range of ddm structure links
+	 * @param end the upper bound of the range of ddm structure links (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of matching d d m structure links
+	 * @return the ordered range of matching ddm structure links
 	 */
 	@Override
 	public List<DDMStructureLink> findByClassNameId(long classNameId,
@@ -279,12 +278,12 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the first d d m structure link in the ordered set where classNameId = &#63;.
+	 * Returns the first ddm structure link in the ordered set where classNameId = &#63;.
 	 *
 	 * @param classNameId the class name ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching d d m structure link
-	 * @throws NoSuchStructureLinkException if a matching d d m structure link could not be found
+	 * @return the first matching ddm structure link
+	 * @throws NoSuchStructureLinkException if a matching ddm structure link could not be found
 	 */
 	@Override
 	public DDMStructureLink findByClassNameId_First(long classNameId,
@@ -310,11 +309,11 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the first d d m structure link in the ordered set where classNameId = &#63;.
+	 * Returns the first ddm structure link in the ordered set where classNameId = &#63;.
 	 *
 	 * @param classNameId the class name ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching d d m structure link, or <code>null</code> if a matching d d m structure link could not be found
+	 * @return the first matching ddm structure link, or <code>null</code> if a matching ddm structure link could not be found
 	 */
 	@Override
 	public DDMStructureLink fetchByClassNameId_First(long classNameId,
@@ -330,12 +329,12 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the last d d m structure link in the ordered set where classNameId = &#63;.
+	 * Returns the last ddm structure link in the ordered set where classNameId = &#63;.
 	 *
 	 * @param classNameId the class name ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching d d m structure link
-	 * @throws NoSuchStructureLinkException if a matching d d m structure link could not be found
+	 * @return the last matching ddm structure link
+	 * @throws NoSuchStructureLinkException if a matching ddm structure link could not be found
 	 */
 	@Override
 	public DDMStructureLink findByClassNameId_Last(long classNameId,
@@ -361,11 +360,11 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the last d d m structure link in the ordered set where classNameId = &#63;.
+	 * Returns the last ddm structure link in the ordered set where classNameId = &#63;.
 	 *
 	 * @param classNameId the class name ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching d d m structure link, or <code>null</code> if a matching d d m structure link could not be found
+	 * @return the last matching ddm structure link, or <code>null</code> if a matching ddm structure link could not be found
 	 */
 	@Override
 	public DDMStructureLink fetchByClassNameId_Last(long classNameId,
@@ -387,13 +386,13 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the d d m structure links before and after the current d d m structure link in the ordered set where classNameId = &#63;.
+	 * Returns the ddm structure links before and after the current ddm structure link in the ordered set where classNameId = &#63;.
 	 *
-	 * @param structureLinkId the primary key of the current d d m structure link
+	 * @param structureLinkId the primary key of the current ddm structure link
 	 * @param classNameId the class name ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next d d m structure link
-	 * @throws NoSuchStructureLinkException if a d d m structure link with the primary key could not be found
+	 * @return the previous, current, and next ddm structure link
+	 * @throws NoSuchStructureLinkException if a ddm structure link with the primary key could not be found
 	 */
 	@Override
 	public DDMStructureLink[] findByClassNameId_PrevAndNext(
@@ -534,7 +533,7 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Removes all the d d m structure links where classNameId = &#63; from the database.
+	 * Removes all the ddm structure links where classNameId = &#63; from the database.
 	 *
 	 * @param classNameId the class name ID
 	 */
@@ -547,10 +546,10 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the number of d d m structure links where classNameId = &#63;.
+	 * Returns the number of ddm structure links where classNameId = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @return the number of matching d d m structure links
+	 * @return the number of matching ddm structure links
 	 */
 	@Override
 	public int countByClassNameId(long classNameId) {
@@ -622,10 +621,10 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			new String[] { Long.class.getName() });
 
 	/**
-	 * Returns all the d d m structure links where structureId = &#63;.
+	 * Returns all the ddm structure links where structureId = &#63;.
 	 *
 	 * @param structureId the structure ID
-	 * @return the matching d d m structure links
+	 * @return the matching ddm structure links
 	 */
 	@Override
 	public List<DDMStructureLink> findByStructureId(long structureId) {
@@ -634,16 +633,16 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns a range of all the d d m structure links where structureId = &#63;.
+	 * Returns a range of all the ddm structure links where structureId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMStructureLinkModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param structureId the structure ID
-	 * @param start the lower bound of the range of d d m structure links
-	 * @param end the upper bound of the range of d d m structure links (not inclusive)
-	 * @return the range of matching d d m structure links
+	 * @param start the lower bound of the range of ddm structure links
+	 * @param end the upper bound of the range of ddm structure links (not inclusive)
+	 * @return the range of matching ddm structure links
 	 */
 	@Override
 	public List<DDMStructureLink> findByStructureId(long structureId,
@@ -652,17 +651,17 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m structure links where structureId = &#63;.
+	 * Returns an ordered range of all the ddm structure links where structureId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMStructureLinkModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param structureId the structure ID
-	 * @param start the lower bound of the range of d d m structure links
-	 * @param end the upper bound of the range of d d m structure links (not inclusive)
+	 * @param start the lower bound of the range of ddm structure links
+	 * @param end the upper bound of the range of ddm structure links (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching d d m structure links
+	 * @return the ordered range of matching ddm structure links
 	 */
 	@Override
 	public List<DDMStructureLink> findByStructureId(long structureId,
@@ -673,18 +672,18 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m structure links where structureId = &#63;.
+	 * Returns an ordered range of all the ddm structure links where structureId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMStructureLinkModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param structureId the structure ID
-	 * @param start the lower bound of the range of d d m structure links
-	 * @param end the upper bound of the range of d d m structure links (not inclusive)
+	 * @param start the lower bound of the range of ddm structure links
+	 * @param end the upper bound of the range of ddm structure links (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of matching d d m structure links
+	 * @return the ordered range of matching ddm structure links
 	 */
 	@Override
 	public List<DDMStructureLink> findByStructureId(long structureId,
@@ -791,12 +790,12 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the first d d m structure link in the ordered set where structureId = &#63;.
+	 * Returns the first ddm structure link in the ordered set where structureId = &#63;.
 	 *
 	 * @param structureId the structure ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching d d m structure link
-	 * @throws NoSuchStructureLinkException if a matching d d m structure link could not be found
+	 * @return the first matching ddm structure link
+	 * @throws NoSuchStructureLinkException if a matching ddm structure link could not be found
 	 */
 	@Override
 	public DDMStructureLink findByStructureId_First(long structureId,
@@ -822,11 +821,11 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the first d d m structure link in the ordered set where structureId = &#63;.
+	 * Returns the first ddm structure link in the ordered set where structureId = &#63;.
 	 *
 	 * @param structureId the structure ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching d d m structure link, or <code>null</code> if a matching d d m structure link could not be found
+	 * @return the first matching ddm structure link, or <code>null</code> if a matching ddm structure link could not be found
 	 */
 	@Override
 	public DDMStructureLink fetchByStructureId_First(long structureId,
@@ -842,12 +841,12 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the last d d m structure link in the ordered set where structureId = &#63;.
+	 * Returns the last ddm structure link in the ordered set where structureId = &#63;.
 	 *
 	 * @param structureId the structure ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching d d m structure link
-	 * @throws NoSuchStructureLinkException if a matching d d m structure link could not be found
+	 * @return the last matching ddm structure link
+	 * @throws NoSuchStructureLinkException if a matching ddm structure link could not be found
 	 */
 	@Override
 	public DDMStructureLink findByStructureId_Last(long structureId,
@@ -873,11 +872,11 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the last d d m structure link in the ordered set where structureId = &#63;.
+	 * Returns the last ddm structure link in the ordered set where structureId = &#63;.
 	 *
 	 * @param structureId the structure ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching d d m structure link, or <code>null</code> if a matching d d m structure link could not be found
+	 * @return the last matching ddm structure link, or <code>null</code> if a matching ddm structure link could not be found
 	 */
 	@Override
 	public DDMStructureLink fetchByStructureId_Last(long structureId,
@@ -899,13 +898,13 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the d d m structure links before and after the current d d m structure link in the ordered set where structureId = &#63;.
+	 * Returns the ddm structure links before and after the current ddm structure link in the ordered set where structureId = &#63;.
 	 *
-	 * @param structureLinkId the primary key of the current d d m structure link
+	 * @param structureLinkId the primary key of the current ddm structure link
 	 * @param structureId the structure ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next d d m structure link
-	 * @throws NoSuchStructureLinkException if a d d m structure link with the primary key could not be found
+	 * @return the previous, current, and next ddm structure link
+	 * @throws NoSuchStructureLinkException if a ddm structure link with the primary key could not be found
 	 */
 	@Override
 	public DDMStructureLink[] findByStructureId_PrevAndNext(
@@ -1046,7 +1045,7 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Removes all the d d m structure links where structureId = &#63; from the database.
+	 * Removes all the ddm structure links where structureId = &#63; from the database.
 	 *
 	 * @param structureId the structure ID
 	 */
@@ -1059,10 +1058,10 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the number of d d m structure links where structureId = &#63;.
+	 * Returns the number of ddm structure links where structureId = &#63;.
 	 *
 	 * @param structureId the structure ID
-	 * @return the number of matching d d m structure links
+	 * @return the number of matching ddm structure links
 	 */
 	@Override
 	public int countByStructureId(long structureId) {
@@ -1133,11 +1132,11 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			new String[] { Long.class.getName(), Long.class.getName() });
 
 	/**
-	 * Returns all the d d m structure links where classNameId = &#63; and classPK = &#63;.
+	 * Returns all the ddm structure links where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
-	 * @return the matching d d m structure links
+	 * @param classPK the class pk
+	 * @return the matching ddm structure links
 	 */
 	@Override
 	public List<DDMStructureLink> findByC_C(long classNameId, long classPK) {
@@ -1146,17 +1145,17 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns a range of all the d d m structure links where classNameId = &#63; and classPK = &#63;.
+	 * Returns a range of all the ddm structure links where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMStructureLinkModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
-	 * @param start the lower bound of the range of d d m structure links
-	 * @param end the upper bound of the range of d d m structure links (not inclusive)
-	 * @return the range of matching d d m structure links
+	 * @param classPK the class pk
+	 * @param start the lower bound of the range of ddm structure links
+	 * @param end the upper bound of the range of ddm structure links (not inclusive)
+	 * @return the range of matching ddm structure links
 	 */
 	@Override
 	public List<DDMStructureLink> findByC_C(long classNameId, long classPK,
@@ -1165,18 +1164,18 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m structure links where classNameId = &#63; and classPK = &#63;.
+	 * Returns an ordered range of all the ddm structure links where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMStructureLinkModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
-	 * @param start the lower bound of the range of d d m structure links
-	 * @param end the upper bound of the range of d d m structure links (not inclusive)
+	 * @param classPK the class pk
+	 * @param start the lower bound of the range of ddm structure links
+	 * @param end the upper bound of the range of ddm structure links (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching d d m structure links
+	 * @return the ordered range of matching ddm structure links
 	 */
 	@Override
 	public List<DDMStructureLink> findByC_C(long classNameId, long classPK,
@@ -1187,19 +1186,19 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m structure links where classNameId = &#63; and classPK = &#63;.
+	 * Returns an ordered range of all the ddm structure links where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMStructureLinkModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
-	 * @param start the lower bound of the range of d d m structure links
-	 * @param end the upper bound of the range of d d m structure links (not inclusive)
+	 * @param classPK the class pk
+	 * @param start the lower bound of the range of ddm structure links
+	 * @param end the upper bound of the range of ddm structure links (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of matching d d m structure links
+	 * @return the ordered range of matching ddm structure links
 	 */
 	@Override
 	public List<DDMStructureLink> findByC_C(long classNameId, long classPK,
@@ -1315,13 +1314,13 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the first d d m structure link in the ordered set where classNameId = &#63; and classPK = &#63;.
+	 * Returns the first ddm structure link in the ordered set where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching d d m structure link
-	 * @throws NoSuchStructureLinkException if a matching d d m structure link could not be found
+	 * @return the first matching ddm structure link
+	 * @throws NoSuchStructureLinkException if a matching ddm structure link could not be found
 	 */
 	@Override
 	public DDMStructureLink findByC_C_First(long classNameId, long classPK,
@@ -1350,12 +1349,12 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the first d d m structure link in the ordered set where classNameId = &#63; and classPK = &#63;.
+	 * Returns the first ddm structure link in the ordered set where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching d d m structure link, or <code>null</code> if a matching d d m structure link could not be found
+	 * @return the first matching ddm structure link, or <code>null</code> if a matching ddm structure link could not be found
 	 */
 	@Override
 	public DDMStructureLink fetchByC_C_First(long classNameId, long classPK,
@@ -1371,13 +1370,13 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the last d d m structure link in the ordered set where classNameId = &#63; and classPK = &#63;.
+	 * Returns the last ddm structure link in the ordered set where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching d d m structure link
-	 * @throws NoSuchStructureLinkException if a matching d d m structure link could not be found
+	 * @return the last matching ddm structure link
+	 * @throws NoSuchStructureLinkException if a matching ddm structure link could not be found
 	 */
 	@Override
 	public DDMStructureLink findByC_C_Last(long classNameId, long classPK,
@@ -1406,12 +1405,12 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the last d d m structure link in the ordered set where classNameId = &#63; and classPK = &#63;.
+	 * Returns the last ddm structure link in the ordered set where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching d d m structure link, or <code>null</code> if a matching d d m structure link could not be found
+	 * @return the last matching ddm structure link, or <code>null</code> if a matching ddm structure link could not be found
 	 */
 	@Override
 	public DDMStructureLink fetchByC_C_Last(long classNameId, long classPK,
@@ -1433,14 +1432,14 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the d d m structure links before and after the current d d m structure link in the ordered set where classNameId = &#63; and classPK = &#63;.
+	 * Returns the ddm structure links before and after the current ddm structure link in the ordered set where classNameId = &#63; and classPK = &#63;.
 	 *
-	 * @param structureLinkId the primary key of the current d d m structure link
+	 * @param structureLinkId the primary key of the current ddm structure link
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next d d m structure link
-	 * @throws NoSuchStructureLinkException if a d d m structure link with the primary key could not be found
+	 * @return the previous, current, and next ddm structure link
+	 * @throws NoSuchStructureLinkException if a ddm structure link with the primary key could not be found
 	 */
 	@Override
 	public DDMStructureLink[] findByC_C_PrevAndNext(long structureLinkId,
@@ -1585,10 +1584,10 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Removes all the d d m structure links where classNameId = &#63; and classPK = &#63; from the database.
+	 * Removes all the ddm structure links where classNameId = &#63; and classPK = &#63; from the database.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 */
 	@Override
 	public void removeByC_C(long classNameId, long classPK) {
@@ -1599,11 +1598,11 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the number of d d m structure links where classNameId = &#63; and classPK = &#63;.
+	 * Returns the number of ddm structure links where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
-	 * @return the number of matching d d m structure links
+	 * @param classPK the class pk
+	 * @return the number of matching ddm structure links
 	 */
 	@Override
 	public int countByC_C(long classNameId, long classPK) {
@@ -1674,13 +1673,13 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			});
 
 	/**
-	 * Returns the d d m structure link where classNameId = &#63; and classPK = &#63; and structureId = &#63; or throws a {@link NoSuchStructureLinkException} if it could not be found.
+	 * Returns the ddm structure link where classNameId = &#63; and classPK = &#63; and structureId = &#63; or throws a {@link NoSuchStructureLinkException} if it could not be found.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param structureId the structure ID
-	 * @return the matching d d m structure link
-	 * @throws NoSuchStructureLinkException if a matching d d m structure link could not be found
+	 * @return the matching ddm structure link
+	 * @throws NoSuchStructureLinkException if a matching ddm structure link could not be found
 	 */
 	@Override
 	public DDMStructureLink findByC_C_S(long classNameId, long classPK,
@@ -1715,12 +1714,12 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the d d m structure link where classNameId = &#63; and classPK = &#63; and structureId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 * Returns the ddm structure link where classNameId = &#63; and classPK = &#63; and structureId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param structureId the structure ID
-	 * @return the matching d d m structure link, or <code>null</code> if a matching d d m structure link could not be found
+	 * @return the matching ddm structure link, or <code>null</code> if a matching ddm structure link could not be found
 	 */
 	@Override
 	public DDMStructureLink fetchByC_C_S(long classNameId, long classPK,
@@ -1729,13 +1728,13 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the d d m structure link where classNameId = &#63; and classPK = &#63; and structureId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 * Returns the ddm structure link where classNameId = &#63; and classPK = &#63; and structureId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param structureId the structure ID
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the matching d d m structure link, or <code>null</code> if a matching d d m structure link could not be found
+	 * @return the matching ddm structure link, or <code>null</code> if a matching ddm structure link could not be found
 	 */
 	@Override
 	public DDMStructureLink fetchByC_C_S(long classNameId, long classPK,
@@ -1827,12 +1826,12 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Removes the d d m structure link where classNameId = &#63; and classPK = &#63; and structureId = &#63; from the database.
+	 * Removes the ddm structure link where classNameId = &#63; and classPK = &#63; and structureId = &#63; from the database.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param structureId the structure ID
-	 * @return the d d m structure link that was removed
+	 * @return the ddm structure link that was removed
 	 */
 	@Override
 	public DDMStructureLink removeByC_C_S(long classNameId, long classPK,
@@ -1844,12 +1843,12 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the number of d d m structure links where classNameId = &#63; and classPK = &#63; and structureId = &#63;.
+	 * Returns the number of ddm structure links where classNameId = &#63; and classPK = &#63; and structureId = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param structureId the structure ID
-	 * @return the number of matching d d m structure links
+	 * @return the number of matching ddm structure links
 	 */
 	@Override
 	public int countByC_C_S(long classNameId, long classPK, long structureId) {
@@ -1913,9 +1912,9 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Caches the d d m structure link in the entity cache if it is enabled.
+	 * Caches the ddm structure link in the entity cache if it is enabled.
 	 *
-	 * @param ddmStructureLink the d d m structure link
+	 * @param ddmStructureLink the ddm structure link
 	 */
 	@Override
 	public void cacheResult(DDMStructureLink ddmStructureLink) {
@@ -1933,9 +1932,9 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Caches the d d m structure links in the entity cache if it is enabled.
+	 * Caches the ddm structure links in the entity cache if it is enabled.
 	 *
-	 * @param ddmStructureLinks the d d m structure links
+	 * @param ddmStructureLinks the ddm structure links
 	 */
 	@Override
 	public void cacheResult(List<DDMStructureLink> ddmStructureLinks) {
@@ -1953,7 +1952,7 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Clears the cache for all d d m structure links.
+	 * Clears the cache for all ddm structure links.
 	 *
 	 * <p>
 	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
@@ -1969,7 +1968,7 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Clears the cache for the d d m structure link.
+	 * Clears the cache for the ddm structure link.
 	 *
 	 * <p>
 	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
@@ -1983,7 +1982,8 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((DDMStructureLinkModelImpl)ddmStructureLink);
+		clearUniqueFindersCache((DDMStructureLinkModelImpl)ddmStructureLink,
+			true);
 	}
 
 	@Override
@@ -1995,42 +1995,12 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			entityCache.removeResult(DDMStructureLinkModelImpl.ENTITY_CACHE_ENABLED,
 				DDMStructureLinkImpl.class, ddmStructureLink.getPrimaryKey());
 
-			clearUniqueFindersCache((DDMStructureLinkModelImpl)ddmStructureLink);
+			clearUniqueFindersCache((DDMStructureLinkModelImpl)ddmStructureLink,
+				true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		DDMStructureLinkModelImpl ddmStructureLinkModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					ddmStructureLinkModelImpl.getClassNameId(),
-					ddmStructureLinkModelImpl.getClassPK(),
-					ddmStructureLinkModelImpl.getStructureId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_C_S, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_C_S, args,
-				ddmStructureLinkModelImpl);
-		}
-		else {
-			if ((ddmStructureLinkModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_C_S.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						ddmStructureLinkModelImpl.getClassNameId(),
-						ddmStructureLinkModelImpl.getClassPK(),
-						ddmStructureLinkModelImpl.getStructureId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_C_S, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_C_S, args,
-					ddmStructureLinkModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		DDMStructureLinkModelImpl ddmStructureLinkModelImpl) {
 		Object[] args = new Object[] {
 				ddmStructureLinkModelImpl.getClassNameId(),
@@ -2038,12 +2008,29 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 				ddmStructureLinkModelImpl.getStructureId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C_S, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_C_S, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_C_S, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_C_S, args,
+			ddmStructureLinkModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		DDMStructureLinkModelImpl ddmStructureLinkModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					ddmStructureLinkModelImpl.getClassNameId(),
+					ddmStructureLinkModelImpl.getClassPK(),
+					ddmStructureLinkModelImpl.getStructureId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C_S, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_C_S, args);
+		}
 
 		if ((ddmStructureLinkModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_C_S.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					ddmStructureLinkModelImpl.getOriginalClassNameId(),
 					ddmStructureLinkModelImpl.getOriginalClassPK(),
 					ddmStructureLinkModelImpl.getOriginalStructureId()
@@ -2055,10 +2042,10 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Creates a new d d m structure link with the primary key. Does not add the d d m structure link to the database.
+	 * Creates a new ddm structure link with the primary key. Does not add the ddm structure link to the database.
 	 *
-	 * @param structureLinkId the primary key for the new d d m structure link
-	 * @return the new d d m structure link
+	 * @param structureLinkId the primary key for the new ddm structure link
+	 * @return the new ddm structure link
 	 */
 	@Override
 	public DDMStructureLink create(long structureLinkId) {
@@ -2073,11 +2060,11 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Removes the d d m structure link with the primary key from the database. Also notifies the appropriate model listeners.
+	 * Removes the ddm structure link with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param structureLinkId the primary key of the d d m structure link
-	 * @return the d d m structure link that was removed
-	 * @throws NoSuchStructureLinkException if a d d m structure link with the primary key could not be found
+	 * @param structureLinkId the primary key of the ddm structure link
+	 * @return the ddm structure link that was removed
+	 * @throws NoSuchStructureLinkException if a ddm structure link with the primary key could not be found
 	 */
 	@Override
 	public DDMStructureLink remove(long structureLinkId)
@@ -2086,11 +2073,11 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Removes the d d m structure link with the primary key from the database. Also notifies the appropriate model listeners.
+	 * Removes the ddm structure link with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param primaryKey the primary key of the d d m structure link
-	 * @return the d d m structure link that was removed
-	 * @throws NoSuchStructureLinkException if a d d m structure link with the primary key could not be found
+	 * @param primaryKey the primary key of the ddm structure link
+	 * @return the ddm structure link that was removed
+	 * @throws NoSuchStructureLinkException if a ddm structure link with the primary key could not be found
 	 */
 	@Override
 	public DDMStructureLink remove(Serializable primaryKey)
@@ -2253,8 +2240,8 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 			DDMStructureLinkImpl.class, ddmStructureLink.getPrimaryKey(),
 			ddmStructureLink, false);
 
-		clearUniqueFindersCache(ddmStructureLinkModelImpl);
-		cacheUniqueFindersCache(ddmStructureLinkModelImpl, isNew);
+		clearUniqueFindersCache(ddmStructureLinkModelImpl, false);
+		cacheUniqueFindersCache(ddmStructureLinkModelImpl);
 
 		ddmStructureLink.resetOriginalValues();
 
@@ -2282,11 +2269,11 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the d d m structure link with the primary key or throws a {@link com.liferay.portal.kernel.exception.NoSuchModelException} if it could not be found.
+	 * Returns the ddm structure link with the primary key or throws a {@link com.liferay.portal.kernel.exception.NoSuchModelException} if it could not be found.
 	 *
-	 * @param primaryKey the primary key of the d d m structure link
-	 * @return the d d m structure link
-	 * @throws NoSuchStructureLinkException if a d d m structure link with the primary key could not be found
+	 * @param primaryKey the primary key of the ddm structure link
+	 * @return the ddm structure link
+	 * @throws NoSuchStructureLinkException if a ddm structure link with the primary key could not be found
 	 */
 	@Override
 	public DDMStructureLink findByPrimaryKey(Serializable primaryKey)
@@ -2306,11 +2293,11 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the d d m structure link with the primary key or throws a {@link NoSuchStructureLinkException} if it could not be found.
+	 * Returns the ddm structure link with the primary key or throws a {@link NoSuchStructureLinkException} if it could not be found.
 	 *
-	 * @param structureLinkId the primary key of the d d m structure link
-	 * @return the d d m structure link
-	 * @throws NoSuchStructureLinkException if a d d m structure link with the primary key could not be found
+	 * @param structureLinkId the primary key of the ddm structure link
+	 * @return the ddm structure link
+	 * @throws NoSuchStructureLinkException if a ddm structure link with the primary key could not be found
 	 */
 	@Override
 	public DDMStructureLink findByPrimaryKey(long structureLinkId)
@@ -2319,19 +2306,21 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the d d m structure link with the primary key or returns <code>null</code> if it could not be found.
+	 * Returns the ddm structure link with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param primaryKey the primary key of the d d m structure link
-	 * @return the d d m structure link, or <code>null</code> if a d d m structure link with the primary key could not be found
+	 * @param primaryKey the primary key of the ddm structure link
+	 * @return the ddm structure link, or <code>null</code> if a ddm structure link with the primary key could not be found
 	 */
 	@Override
 	public DDMStructureLink fetchByPrimaryKey(Serializable primaryKey) {
-		DDMStructureLink ddmStructureLink = (DDMStructureLink)entityCache.getResult(DDMStructureLinkModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(DDMStructureLinkModelImpl.ENTITY_CACHE_ENABLED,
 				DDMStructureLinkImpl.class, primaryKey);
 
-		if (ddmStructureLink == _nullDDMStructureLink) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		DDMStructureLink ddmStructureLink = (DDMStructureLink)serializable;
 
 		if (ddmStructureLink == null) {
 			Session session = null;
@@ -2347,8 +2336,7 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 				}
 				else {
 					entityCache.putResult(DDMStructureLinkModelImpl.ENTITY_CACHE_ENABLED,
-						DDMStructureLinkImpl.class, primaryKey,
-						_nullDDMStructureLink);
+						DDMStructureLinkImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -2366,10 +2354,10 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the d d m structure link with the primary key or returns <code>null</code> if it could not be found.
+	 * Returns the ddm structure link with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param structureLinkId the primary key of the d d m structure link
-	 * @return the d d m structure link, or <code>null</code> if a d d m structure link with the primary key could not be found
+	 * @param structureLinkId the primary key of the ddm structure link
+	 * @return the ddm structure link, or <code>null</code> if a ddm structure link with the primary key could not be found
 	 */
 	@Override
 	public DDMStructureLink fetchByPrimaryKey(long structureLinkId) {
@@ -2402,18 +2390,20 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			DDMStructureLink ddmStructureLink = (DDMStructureLink)entityCache.getResult(DDMStructureLinkModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(DDMStructureLinkModelImpl.ENTITY_CACHE_ENABLED,
 					DDMStructureLinkImpl.class, primaryKey);
 
-			if (ddmStructureLink == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, ddmStructureLink);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (DDMStructureLink)serializable);
+				}
 			}
 		}
 
@@ -2455,8 +2445,7 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(DDMStructureLinkModelImpl.ENTITY_CACHE_ENABLED,
-					DDMStructureLinkImpl.class, primaryKey,
-					_nullDDMStructureLink);
+					DDMStructureLinkImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -2470,9 +2459,9 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns all the d d m structure links.
+	 * Returns all the ddm structure links.
 	 *
-	 * @return the d d m structure links
+	 * @return the ddm structure links
 	 */
 	@Override
 	public List<DDMStructureLink> findAll() {
@@ -2480,15 +2469,15 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns a range of all the d d m structure links.
+	 * Returns a range of all the ddm structure links.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMStructureLinkModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param start the lower bound of the range of d d m structure links
-	 * @param end the upper bound of the range of d d m structure links (not inclusive)
-	 * @return the range of d d m structure links
+	 * @param start the lower bound of the range of ddm structure links
+	 * @param end the upper bound of the range of ddm structure links (not inclusive)
+	 * @return the range of ddm structure links
 	 */
 	@Override
 	public List<DDMStructureLink> findAll(int start, int end) {
@@ -2496,16 +2485,16 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m structure links.
+	 * Returns an ordered range of all the ddm structure links.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMStructureLinkModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param start the lower bound of the range of d d m structure links
-	 * @param end the upper bound of the range of d d m structure links (not inclusive)
+	 * @param start the lower bound of the range of ddm structure links
+	 * @param end the upper bound of the range of ddm structure links (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of d d m structure links
+	 * @return the ordered range of ddm structure links
 	 */
 	@Override
 	public List<DDMStructureLink> findAll(int start, int end,
@@ -2514,17 +2503,17 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m structure links.
+	 * Returns an ordered range of all the ddm structure links.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMStructureLinkModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param start the lower bound of the range of d d m structure links
-	 * @param end the upper bound of the range of d d m structure links (not inclusive)
+	 * @param start the lower bound of the range of ddm structure links
+	 * @param end the upper bound of the range of ddm structure links (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of d d m structure links
+	 * @return the ordered range of ddm structure links
 	 */
 	@Override
 	public List<DDMStructureLink> findAll(int start, int end,
@@ -2613,7 +2602,7 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Removes all the d d m structure links from the database.
+	 * Removes all the ddm structure links from the database.
 	 *
 	 */
 	@Override
@@ -2624,9 +2613,9 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Returns the number of d d m structure links.
+	 * Returns the number of ddm structure links.
 	 *
-	 * @return the number of d d m structure links
+	 * @return the number of ddm structure links
 	 */
 	@Override
 	public int countAll() {
@@ -2666,7 +2655,7 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	}
 
 	/**
-	 * Initializes the d d m structure link persistence.
+	 * Initializes the ddm structure link persistence.
 	 */
 	public void afterPropertiesSet() {
 	}
@@ -2693,23 +2682,4 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No DDMStructureLink exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No DDMStructureLink exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(DDMStructureLinkPersistenceImpl.class);
-	private static final DDMStructureLink _nullDDMStructureLink = new DDMStructureLinkImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<DDMStructureLink> toCacheModel() {
-				return _nullDDMStructureLinkCacheModel;
-			}
-		};
-
-	private static final CacheModel<DDMStructureLink> _nullDDMStructureLinkCacheModel =
-		new CacheModel<DDMStructureLink>() {
-			@Override
-			public DDMStructureLink toEntityModel() {
-				return _nullDDMStructureLink;
-			}
-		};
 }

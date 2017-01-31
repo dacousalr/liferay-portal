@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -3252,7 +3251,7 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((MBBanModelImpl)mbBan);
+		clearUniqueFindersCache((MBBanModelImpl)mbBan, true);
 	}
 
 	@Override
@@ -3264,69 +3263,44 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			entityCache.removeResult(MBBanModelImpl.ENTITY_CACHE_ENABLED,
 				MBBanImpl.class, mbBan.getPrimaryKey());
 
-			clearUniqueFindersCache((MBBanModelImpl)mbBan);
+			clearUniqueFindersCache((MBBanModelImpl)mbBan, true);
 		}
 	}
 
-	protected void cacheUniqueFindersCache(MBBanModelImpl mbBanModelImpl,
-		boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					mbBanModelImpl.getUuid(), mbBanModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				mbBanModelImpl);
-
-			args = new Object[] {
-					mbBanModelImpl.getGroupId(), mbBanModelImpl.getBanUserId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_G_B, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_G_B, args, mbBanModelImpl);
-		}
-		else {
-			if ((mbBanModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						mbBanModelImpl.getUuid(), mbBanModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					mbBanModelImpl);
-			}
-
-			if ((mbBanModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_B.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						mbBanModelImpl.getGroupId(),
-						mbBanModelImpl.getBanUserId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_G_B, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_G_B, args,
-					mbBanModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(MBBanModelImpl mbBanModelImpl) {
+	protected void cacheUniqueFindersCache(MBBanModelImpl mbBanModelImpl) {
 		Object[] args = new Object[] {
 				mbBanModelImpl.getUuid(), mbBanModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			mbBanModelImpl, false);
+
+		args = new Object[] {
+				mbBanModelImpl.getGroupId(), mbBanModelImpl.getBanUserId()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_G_B, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_G_B, args, mbBanModelImpl,
+			false);
+	}
+
+	protected void clearUniqueFindersCache(MBBanModelImpl mbBanModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					mbBanModelImpl.getUuid(), mbBanModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((mbBanModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					mbBanModelImpl.getOriginalUuid(),
 					mbBanModelImpl.getOriginalGroupId()
 				};
@@ -3335,16 +3309,18 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
 		}
 
-		args = new Object[] {
-				mbBanModelImpl.getGroupId(), mbBanModelImpl.getBanUserId()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					mbBanModelImpl.getGroupId(), mbBanModelImpl.getBanUserId()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_G_B, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_G_B, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_G_B, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_G_B, args);
+		}
 
 		if ((mbBanModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_B.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					mbBanModelImpl.getOriginalGroupId(),
 					mbBanModelImpl.getOriginalBanUserId()
 				};
@@ -3608,8 +3584,8 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 		entityCache.putResult(MBBanModelImpl.ENTITY_CACHE_ENABLED,
 			MBBanImpl.class, mbBan.getPrimaryKey(), mbBan, false);
 
-		clearUniqueFindersCache(mbBanModelImpl);
-		cacheUniqueFindersCache(mbBanModelImpl, isNew);
+		clearUniqueFindersCache(mbBanModelImpl, false);
+		cacheUniqueFindersCache(mbBanModelImpl);
 
 		mbBan.resetOriginalValues();
 
@@ -3684,12 +3660,14 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 	 */
 	@Override
 	public MBBan fetchByPrimaryKey(Serializable primaryKey) {
-		MBBan mbBan = (MBBan)entityCache.getResult(MBBanModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(MBBanModelImpl.ENTITY_CACHE_ENABLED,
 				MBBanImpl.class, primaryKey);
 
-		if (mbBan == _nullMBBan) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		MBBan mbBan = (MBBan)serializable;
 
 		if (mbBan == null) {
 			Session session = null;
@@ -3704,7 +3682,7 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 				}
 				else {
 					entityCache.putResult(MBBanModelImpl.ENTITY_CACHE_ENABLED,
-						MBBanImpl.class, primaryKey, _nullMBBan);
+						MBBanImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -3758,18 +3736,20 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			MBBan mbBan = (MBBan)entityCache.getResult(MBBanModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(MBBanModelImpl.ENTITY_CACHE_ENABLED,
 					MBBanImpl.class, primaryKey);
 
-			if (mbBan == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, mbBan);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (MBBan)serializable);
+				}
 			}
 		}
 
@@ -3811,7 +3791,7 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(MBBanModelImpl.ENTITY_CACHE_ENABLED,
-					MBBanImpl.class, primaryKey, _nullMBBan);
+					MBBanImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -4053,22 +4033,4 @@ public class MBBanPersistenceImpl extends BasePersistenceImpl<MBBan>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid"
 			});
-	private static final MBBan _nullMBBan = new MBBanImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<MBBan> toCacheModel() {
-				return _nullMBBanCacheModel;
-			}
-		};
-
-	private static final CacheModel<MBBan> _nullMBBanCacheModel = new CacheModel<MBBan>() {
-			@Override
-			public MBBan toEntityModel() {
-				return _nullMBBan;
-			}
-		};
 }

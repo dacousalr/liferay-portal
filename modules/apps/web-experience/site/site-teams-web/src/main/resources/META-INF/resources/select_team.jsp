@@ -98,9 +98,9 @@ teamSearch.setTotal(teamsCount);
 			<%
 			Map<String, Object> data = new HashMap<String, Object>();
 
+			data.put("entityid", curTeam.getTeamId());
+			data.put("entityname", curTeam.getName());
 			data.put("teamdescription", curTeam.getDescription());
-			data.put("teamid", curTeam.getTeamId());
-			data.put("teamname", curTeam.getName());
 
 			Group group = themeDisplay.getScopeGroup();
 
@@ -158,9 +158,8 @@ teamSearch.setTotal(teamsCount);
 				</c:when>
 				<c:when test='<%= displayStyle.equals("list") %>'>
 					<liferay-ui:search-container-column-text
-						cssClass="content-column name-column title-column"
+						cssClass="table-cell-content"
 						name="name"
-						truncate="<%= true %>"
 					>
 						<c:choose>
 							<c:when test="<%= !disabled %>">
@@ -175,9 +174,8 @@ teamSearch.setTotal(teamsCount);
 					</liferay-ui:search-container-column-text>
 
 					<liferay-ui:search-container-column-text
-						cssClass="content-column description-column"
+						cssClass="table-cell-content"
 						name="description"
-						truncate="<%= true %>"
 						value="<%= HtmlUtil.escape(curTeam.getDescription()) %>"
 					/>
 				</c:when>

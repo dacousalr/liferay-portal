@@ -23,7 +23,7 @@ WikiNodeInfoPanelDisplayContext wikiNodeInfoPanelDisplayContext = wikiDisplayCon
 <div class="sidebar-header">
 	<c:choose>
 		<c:when test="<%= wikiNodeInfoPanelDisplayContext.isSingleNodeSelection() %>">
-			<ul class="list-inline list-unstyled sidebar-header-actions">
+			<ul class="sidebar-actions">
 
 				<%
 				request.setAttribute("node_info_panel.jsp-wikiNode", wikiNodeInfoPanelDisplayContext.getFirstNode());
@@ -32,7 +32,6 @@ WikiNodeInfoPanelDisplayContext wikiNodeInfoPanelDisplayContext = wikiDisplayCon
 				<li>
 					<liferay-util:include page="/wiki/subscribe.jsp" servletContext="<%= application %>" />
 				</li>
-
 				<li>
 					<liferay-util:include page="/wiki/node_action.jsp" servletContext="<%= application %>" />
 				</li>
@@ -42,81 +41,88 @@ WikiNodeInfoPanelDisplayContext wikiNodeInfoPanelDisplayContext = wikiDisplayCon
 			WikiNode node = wikiNodeInfoPanelDisplayContext.getFirstNode();
 			%>
 
-			<h4>
+			<h4 class="sidebar-title">
 				<%= HtmlUtil.escape(node.getName()) %>
 			</h4>
 
-			<p>
+			<h5>
 				<liferay-ui:message key="wiki" />
-			</p>
+			</h5>
 		</c:when>
 		<c:when test="<%= wikiNodeInfoPanelDisplayContext.isMultipleNodeSelection() %>">
-			<h4><liferay-ui:message arguments="<%= wikiNodeInfoPanelDisplayContext.getSelectedNodesCount() %>" key="x-items-are-selected" /></h4>
+			<h4 class="sidebar-title"><liferay-ui:message arguments="<%= wikiNodeInfoPanelDisplayContext.getSelectedNodesCount() %>" key="x-items-are-selected" /></h4>
 		</c:when>
 		<c:otherwise>
-			<h4><liferay-ui:message key="wikis" /></h4>
+			<h4 class="sidebar-title"><liferay-ui:message key="wikis" /></h4>
 		</c:otherwise>
 	</c:choose>
 </div>
 
-<liferay-ui:tabs names="details" refresh="<%= false %>" type="dropdown">
+<liferay-ui:tabs cssClass="navbar-no-collapse" names="details" refresh="<%= false %>" type="dropdown">
 	<liferay-ui:section>
 		<div class="sidebar-body">
-			<c:choose>
-				<c:when test="<%= wikiNodeInfoPanelDisplayContext.isSingleNodeSelection() %>">
+			<dl class="sidebar-block">
+				<c:choose>
+					<c:when test="<%= wikiNodeInfoPanelDisplayContext.isSingleNodeSelection() %>">
 
-					<%
-					WikiNode node = wikiNodeInfoPanelDisplayContext.getFirstNode();
-					%>
+						<%
+						WikiNode node = wikiNodeInfoPanelDisplayContext.getFirstNode();
+						%>
 
-					<c:if test="<%= Validator.isNotNull(node.getDescription()) %>">
-						<h5><strong><liferay-ui:message key="description" /></strong></h5>
+						<c:if test="<%= Validator.isNotNull(node.getDescription()) %>">
+							<dt class="h5">
+								<liferay-ui:message key="description" />
+							</dt>
+							<dd class="h6 sidebar-caption">
+								<%= HtmlUtil.escape(node.getDescription()) %>
+							</dd>
+						</c:if>
 
-						<p>
-							<%= HtmlUtil.escape(node.getDescription()) %>
-						</p>
-					</c:if>
-
-					<h5><strong><liferay-ui:message key="total-pages" /></strong></h5>
-
-					<p>
-						<%= WikiPageServiceUtil.getPagesCount(scopeGroupId, node.getNodeId(), true) %>
-					</p>
-
-					<h5><strong><liferay-ui:message key="orphan-pages" /></strong></h5>
-
-					<p>
+						<dt class="h5">
+							<liferay-ui:message key="total-pages" />
+						</dt>
+						<dd class="h6 sidebar-caption">
+							<%= WikiPageServiceUtil.getPagesCount(scopeGroupId, node.getNodeId(), true) %>
+						</dd>
+						<dt class="h5">
+							<liferay-ui:message key="orphan-pages" />
+						</dt>
 
 						<%
 						List<WikiPage> orphanPages = WikiPageServiceUtil.getOrphans(scopeGroupId, node.getNodeId());
 						%>
 
-						<%= orphanPages.size() %>
-					</p>
-
-					<h5><strong><liferay-ui:message key="last-modified" /></strong></h5>
-
-					<p>
-						<%= dateFormatDateTime.format(node.getModifiedDate()) %>
-					</p>
-
-					<h5><strong><liferay-ui:message key="create-date" /></strong></h5>
-
-					<p>
-						<%= dateFormatDateTime.format(node.getModifiedDate()) %>
-					</p>
-				</c:when>
-				<c:when test="<%= wikiNodeInfoPanelDisplayContext.isMultipleNodeSelection() %>">
-					<h5><liferay-ui:message arguments="<%= wikiNodeInfoPanelDisplayContext.getSelectedNodesCount() %>" key="x-items-are-selected" /></h5>
-				</c:when>
-				<c:otherwise>
-					<h5><liferay-ui:message key="num-of-items" /></h5>
-
-					<p>
-						<%= wikiNodeInfoPanelDisplayContext.getNodesCount() %>
-					</p>
-				</c:otherwise>
-			</c:choose>
+						<dd class="h6 sidebar-caption">
+							<%= orphanPages.size() %>
+						</dd>
+						<dt class="h5">
+							<liferay-ui:message key="last-modified" />
+						</dt>
+						<dd class="h6 sidebar-caption">
+							<%= dateFormatDateTime.format(node.getModifiedDate()) %>
+						</dd>
+						<dt class="h5">
+							<liferay-ui:message key="create-date" />
+						</dt>
+						<dd class="h6 sidebar-caption">
+							<%= dateFormatDateTime.format(node.getModifiedDate()) %>
+						</dd>
+					</c:when>
+					<c:when test="<%= wikiNodeInfoPanelDisplayContext.isMultipleNodeSelection() %>">
+						<dt class="h5">
+							<liferay-ui:message arguments="<%= wikiNodeInfoPanelDisplayContext.getSelectedNodesCount() %>" key="x-items-are-selected" />
+						</dt>
+					</c:when>
+					<c:otherwise>
+						<dt class="h5">
+							<liferay-ui:message key="num-of-items" />
+						</dt>
+						<dd class="h6 sidebar-caption">
+							<%= wikiNodeInfoPanelDisplayContext.getNodesCount() %>
+						</dd>
+					</c:otherwise>
+				</c:choose>
+			</dl>
 		</div>
 	</liferay-ui:section>
 </liferay-ui:tabs>

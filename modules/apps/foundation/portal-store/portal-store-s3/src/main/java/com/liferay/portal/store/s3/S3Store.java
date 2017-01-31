@@ -39,6 +39,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.StorageClass;
 
+import com.liferay.document.library.kernel.exception.AccessDeniedException;
 import com.liferay.document.library.kernel.exception.DuplicateFileException;
 import com.liferay.document.library.kernel.exception.NoSuchFileException;
 import com.liferay.document.library.kernel.store.BaseStore;
@@ -274,6 +275,13 @@ public class S3Store extends BaseStore {
 			return true;
 		}
 		catch (NoSuchFileException nsfe) {
+
+			// LPS-52675
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(nsfe, nsfe);
+			}
+
 			return false;
 		}
 		finally {
@@ -384,6 +392,37 @@ public class S3Store extends BaseStore {
 		}
 	}
 
+	protected void configureProxySettings(
+		ClientConfiguration clientConfiguration) {
+
+		String proxyHost = _s3StoreConfiguration.proxyHost();
+
+		if (Validator.isNull(proxyHost)) {
+			return;
+		}
+
+		clientConfiguration.setProxyHost(proxyHost);
+		clientConfiguration.setProxyPort(_s3StoreConfiguration.proxyPort());
+
+		String proxyAuthType = _s3StoreConfiguration.proxyAuthType();
+
+		if (proxyAuthType.equals("ntlm") ||
+			proxyAuthType.equals("username-password")) {
+
+			clientConfiguration.setProxyPassword(
+				_s3StoreConfiguration.proxyPassword());
+			clientConfiguration.setProxyUsername(
+				_s3StoreConfiguration.proxyUsername());
+
+			if (proxyAuthType.equals("ntlm")) {
+				clientConfiguration.setProxyDomain(
+					_s3StoreConfiguration.ntlmProxyDomain());
+				clientConfiguration.setProxyWorkstation(
+					_s3StoreConfiguration.ntlmProxyWorkstation());
+			}
+		}
+	}
+
 	@Deactivate
 	protected void deactivate() {
 		_amazonS3 = null;
@@ -463,6 +502,11 @@ public class S3Store extends BaseStore {
 
 		clientConfiguration.setMaxConnections(
 			_s3StoreConfiguration.httpClientMaxConnections());
+
+		clientConfiguration.setConnectionTimeout(
+			_s3StoreConfiguration.connectionTimeout());
+
+		configureProxySettings(clientConfiguration);
 
 		return clientConfiguration;
 	}
@@ -655,7 +699,11 @@ public class S3Store extends BaseStore {
 			StringBundler sb = new StringBundler(11);
 
 			sb.append("{errorCode=");
-			sb.append(amazonServiceException.getErrorCode());
+
+			String errorCode = amazonServiceException.getErrorCode();
+
+			sb.append(errorCode);
+
 			sb.append(", errorType=");
 			sb.append(amazonServiceException.getErrorType());
 			sb.append(", message=");
@@ -665,6 +713,10 @@ public class S3Store extends BaseStore {
 			sb.append(", statusCode=");
 			sb.append(amazonServiceException.getStatusCode());
 			sb.append("}");
+
+			if (errorCode.equals("AccessDenied")) {
+				return new AccessDeniedException(sb.toString());
+			}
 
 			return new SystemException(sb.toString());
 		}

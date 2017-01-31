@@ -5,6 +5,7 @@
 				alloyeditor: {
 					base: MODULE_PATH + '/js/',
 					combine: Liferay.AUI.getCombine(),
+					filter: Liferay.AUI.getFilterConfig(),
 					modules: {
 						'liferay-alloy-editor': {
 							path: 'alloyeditor.js',
@@ -20,6 +21,15 @@
 								'liferay-fullscreen-source-editor',
 								'liferay-source-editor',
 								'plugin'
+							]
+						},
+						'liferay-editor-image-uploader': {
+							path: 'editor_image_uploader.js',
+							requires: [
+								'aui-alert',
+								'aui-base',
+								'aui-progressbar',
+								'uploader'
 							]
 						}
 					},

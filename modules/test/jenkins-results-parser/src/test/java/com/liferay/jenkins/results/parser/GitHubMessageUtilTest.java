@@ -40,14 +40,26 @@ public class GitHubMessageUtilTest extends BaseJenkinsResultsParserTestCase {
 	@Before
 	public void setUp() throws Exception {
 		downloadSample(
+			"ff-vnc-1", "37", "test-portal-acceptance-pullrequest(master)",
+			"test-1-12");
+		downloadSample(
 			"generic-1", "1609", "test-portal-acceptance-pullrequest(master)",
 			"test-1-1");
 		downloadSample(
 			"jspc-1", "1672", "test-portal-acceptance-pullrequest(master)",
 			"test-1-5");
 		downloadSample(
+			"poshi-syntax-1", "138",
+			"test-portal-acceptance-pullrequest(master)", "test-1-15");
+		downloadSample(
 			"rebase-1", "58", "test-portal-acceptance-pullrequest(ee-6.2.x)",
 			"test-1-19");
+		downloadSample(
+			"sourceformat-1", "729",
+			"test-portal-acceptance-pullrequest(master)", "test-1-1");
+		downloadSample(
+			"top-level-1", "62", "test-portal-acceptance-pullrequest(ee-7.0.x)",
+			"test-1-10");
 	}
 
 	@Test
@@ -102,6 +114,9 @@ public class GitHubMessageUtilTest extends BaseJenkinsResultsParserTestCase {
 		String content = JenkinsResultsParserUtil.toString(
 			JenkinsResultsParserUtil.getLocalURL(progressiveTextURL));
 
+		JenkinsResultsParserUtil.write(
+			new File(sampleDir, "logText/progressiveText"), content);
+
 		Matcher progressiveTextMatcher = _progressiveTextPattern.matcher(
 			content);
 
@@ -121,12 +136,18 @@ public class GitHubMessageUtilTest extends BaseJenkinsResultsParserTestCase {
 
 			File reportFile = new File(sampleDir, jobCount + "-report.html");
 
-			JenkinsResultsParserUtil.write(
-				reportFile,
-				"<h5 job-result=\"" + jsonObject.getString("result") +
-					"\"><a href=\"" + urlString + "\">" +
-						jobNameMatcher.group("jobName") + "</a></h5>" +
-				project.getProperty("report.html.content"));
+			StringBuilder sb = new StringBuilder();
+
+			sb.append("<h5 job-result=\"");
+			sb.append(jsonObject.getString("result"));
+			sb.append("\"><a href=\"");
+			sb.append(urlString);
+			sb.append("\">");
+			sb.append(jobNameMatcher.group("jobName"));
+			sb.append("</a></h5>");
+			sb.append(project.getProperty("report.html.content"));
+
+			JenkinsResultsParserUtil.write(reportFile, sb.toString());
 
 			if (reportFilesSB.length() > 0) {
 				reportFilesSB.append(" ");
@@ -190,10 +211,9 @@ public class GitHubMessageUtilTest extends BaseJenkinsResultsParserTestCase {
 
 		project.setProperty("branch.name", "junit-branch-name");
 		project.setProperty("build.url", buildURLString);
+		project.setProperty("github.origin.name", "junit-pr-origin-username");
 		project.setProperty(
-			"github.pull.request.head.branch", "junit-pr-head-branch");
-		project.setProperty(
-			"github.pull.request.head.username", "junit-pr-head-username");
+			"github.sender.branch.name", "junit-pr-sender-branch");
 		project.setProperty("plugins.branch.name", "junit-plugins-branch-name");
 		project.setProperty("plugins.repository", "junit-plugins-repository");
 		project.setProperty("portal.repository", "junit-portal-repository");
@@ -240,9 +260,9 @@ public class GitHubMessageUtilTest extends BaseJenkinsResultsParserTestCase {
 		new GitHubJobMessageUtilTest();
 
 	private static final Pattern _jobNamePattern = Pattern.compile(
-		".+://(?<hostName>[^.]+).liferay.com/job/(?<jobName>[^/]+).*/" +
+		".+://(?<hostName>[^.]+)[^/]*/job/(?<jobName>[^/]+).*/" +
 			"(?<buildNumber>\\d+)/");
 	private static final Pattern _progressiveTextPattern = Pattern.compile(
-		"\\'.*\\' completed at (?<url>.+)\\.");
+		"[\\'\\\"].*[\\'\\\"] started at (?<url>.+)\\.");
 
 }

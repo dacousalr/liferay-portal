@@ -131,16 +131,20 @@ public class GitHubJobMessageUtilTest extends BaseJenkinsResultsParserTestCase {
 
 		Project project = new Project();
 
+		project.setProperty("env.BUILD_NUMBER", "1");
 		project.setProperty("build.url", buildURLString);
+		project.setProperty("github.origin.name", "junit-pr-origin-username");
 		project.setProperty(
-			"github.pull.request.head.branch", "junit-pr-head-branch");
-		project.setProperty(
-			"github.pull.request.head.username", "junit-pr-head-username");
+			"github.sender.branch.name", "junit-pr-sender-branch");
+		project.setProperty("env.JOB_NAME", "jenkins-job-name");
+		project.setProperty("log.base.url", "log-base-url");
+		project.setProperty("env.MASTER_HOSTNAME", "test-1-1");
 		project.setProperty("plugins.branch.name", "junit-plugins-branch-name");
 		project.setProperty("plugins.repository", "junit-plugins-repository");
 		project.setProperty("portal.repository", "junit-portal-repository");
 		project.setProperty("repository", "junit-repository");
 		project.setProperty("top.level.shared.dir", topLevelSharedDir);
+		project.setProperty("env.TOP_LEVEL_START_TIME", "start-time");
 
 		return project;
 	}

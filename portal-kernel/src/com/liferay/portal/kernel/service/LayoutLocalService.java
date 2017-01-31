@@ -428,8 +428,15 @@ public interface LayoutLocalService extends BaseLocalService,
 	public Layout deleteLayout(long plid) throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Layout fetchDefaultLayout(long groupId, boolean privateLayout);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Layout fetchFirstLayout(long groupId, boolean privateLayout,
 		long parentLayoutId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Layout fetchLayout(java.lang.String uuid, long groupId,
+		boolean privateLayout);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Layout fetchLayout(long groupId, boolean privateLayout, long layoutId);
@@ -440,6 +447,10 @@ public interface LayoutLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Layout fetchLayoutByFriendlyURL(long groupId, boolean privateLayout,
 		java.lang.String friendlyURL);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Layout fetchLayoutByIconImageId(boolean privateLayout,
+		long iconImageId) throws PortalException;
 
 	/**
 	* Returns the layout matching the UUID, group, and privacy.
@@ -958,6 +969,9 @@ public interface LayoutLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Layout> getLayouts(int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Layout> getLayouts(long companyId);
 
 	/**
 	* Returns all the layouts belonging to the group.

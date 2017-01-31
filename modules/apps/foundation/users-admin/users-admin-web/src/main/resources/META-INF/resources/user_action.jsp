@@ -17,11 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
-UserSearch searchContainer = (UserSearch)request.getAttribute("liferay-ui:search:searchContainer");
-
-String redirect = searchContainer.getIteratorURL().toString();
-
-UserSearchTerms searchTerms = (UserSearchTerms)searchContainer.getSearchTerms();
+String redirect = currentURL;
 
 ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 
@@ -123,5 +119,22 @@ long userId = user2.getUserId();
 				</c:when>
 			</c:choose>
 		</c:if>
+	</c:if>
+
+	<%
+	Organization organization = (Organization)request.getAttribute("view.jsp-organization");
+	%>
+
+	<c:if test="<%= (organization != null) && !OrganizationMembershipPolicyUtil.isMembershipProtected(permissionChecker, userId, organization.getOrganizationId()) && !OrganizationMembershipPolicyUtil.isMembershipRequired(userId, organization.getOrganizationId()) %>">
+		<portlet:actionURL name="/users_admin/edit_organization_assignments" var="removeUserURL">
+			<portlet:param name="assignmentsRedirect" value="<%= redirect %>" />
+			<portlet:param name="removeUserIds" value="<%= String.valueOf(userId) %>" />
+			<portlet:param name="organizationId" value="<%= String.valueOf(organization.getOrganizationId()) %>" />
+		</portlet:actionURL>
+
+		<liferay-ui:icon
+			message="remove"
+			url="<%= removeUserURL %>"
+		/>
 	</c:if>
 </liferay-ui:icon-menu>

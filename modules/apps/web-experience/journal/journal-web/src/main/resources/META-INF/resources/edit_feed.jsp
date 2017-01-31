@@ -329,7 +329,7 @@ renderResponse.setTitle((feed == null) ? LanguageUtil.get(request, "new-feed") :
 	function <portlet:namespace />openStructureSelector() {
 		Liferay.Util.openDDMPortlet(
 			{
-				basePortletURL: '<%= PortletURLFactoryUtil.create(request, PortletProviderUtil.getPortletId(DDMStructure.class.getName(), PortletProvider.Action.VIEW), themeDisplay.getPlid(), PortletRequest.RENDER_PHASE) %>',
+				basePortletURL: '<%= PortletURLFactoryUtil.create(request, PortletProviderUtil.getPortletId(DDMStructure.class.getName(), PortletProvider.Action.VIEW), PortletRequest.RENDER_PHASE) %>',
 				classPK: <%= (ddmStructure != null) ? ddmStructure.getPrimaryKey(): 0 %>,
 				dialog: {
 					destroyOnHide: true
@@ -338,13 +338,13 @@ renderResponse.setTitle((feed == null) ? LanguageUtil.get(request, "new-feed") :
 				groupId: <%= themeDisplay.getSiteGroupId() %>,
 				mvcPath: '/select_structure.jsp',
 				navigationStartsOn: '<%= DDMNavigationHelper.SELECT_STRUCTURE %>',
-				refererPortletName: '<%= JournalPortletKeys.JOURNAL %>',
+				refererPortletName: '<%= JournalPortletKeys.JOURNAL + ".selectStructureFeed" %>',
 
 				<%
 				Portlet portlet = PortletLocalServiceUtil.getPortletById(portletDisplay.getId());
 				%>
 
-				refererWebDAVToken: '<%= WebDAVUtil.getStorageToken(portlet) %>',
+				refererWebDAVToken: '<%= HtmlUtil.escapeJS(WebDAVUtil.getStorageToken(portlet)) %>',
 
 				showAncestorScopes: true,
 				title: '<%= UnicodeLanguageUtil.get(request, "structures") %>'
@@ -356,7 +356,7 @@ renderResponse.setTitle((feed == null) ? LanguageUtil.get(request, "new-feed") :
 					document.<portlet:namespace />fm.<portlet:namespace />ddmRendererTemplateKey.value = '';
 					document.<portlet:namespace />fm.<portlet:namespace />contentField.value = '<%= JournalFeedConstants.WEB_CONTENT_DESCRIPTION %>';
 
-					submitForm(document.<portlet:namespace />fm);
+					submitForm(document.<portlet:namespace />fm, null, false, false);
 				}
 			}
 		);
@@ -368,7 +368,7 @@ renderResponse.setTitle((feed == null) ? LanguageUtil.get(request, "new-feed") :
 		document.<portlet:namespace />fm.<portlet:namespace />ddmRendererTemplateKey.value = '';
 		document.<portlet:namespace />fm.<portlet:namespace />contentField.value = '<%= JournalFeedConstants.WEB_CONTENT_DESCRIPTION %>';
 
-		submitForm(document.<portlet:namespace />fm);
+		submitForm(document.<portlet:namespace />fm, null, false, false);
 	}
 
 	function <portlet:namespace />saveFeed() {

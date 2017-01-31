@@ -29,8 +29,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchUserIdMapperException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.UserIdMapper;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
@@ -1207,7 +1205,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((UserIdMapperModelImpl)userIdMapper);
+		clearUniqueFindersCache((UserIdMapperModelImpl)userIdMapper, true);
 	}
 
 	@Override
@@ -1219,75 +1217,48 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			entityCache.removeResult(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
 				UserIdMapperImpl.class, userIdMapper.getPrimaryKey());
 
-			clearUniqueFindersCache((UserIdMapperModelImpl)userIdMapper);
+			clearUniqueFindersCache((UserIdMapperModelImpl)userIdMapper, true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		UserIdMapperModelImpl userIdMapperModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					userIdMapperModelImpl.getUserId(),
-					userIdMapperModelImpl.getType()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_U_T, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_U_T, args,
-				userIdMapperModelImpl);
-
-			args = new Object[] {
-					userIdMapperModelImpl.getType(),
-					userIdMapperModelImpl.getExternalUserId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_T_E, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_T_E, args,
-				userIdMapperModelImpl);
-		}
-		else {
-			if ((userIdMapperModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_U_T.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						userIdMapperModelImpl.getUserId(),
-						userIdMapperModelImpl.getType()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_U_T, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_U_T, args,
-					userIdMapperModelImpl);
-			}
-
-			if ((userIdMapperModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_T_E.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						userIdMapperModelImpl.getType(),
-						userIdMapperModelImpl.getExternalUserId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_T_E, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_T_E, args,
-					userIdMapperModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		UserIdMapperModelImpl userIdMapperModelImpl) {
 		Object[] args = new Object[] {
 				userIdMapperModelImpl.getUserId(),
 				userIdMapperModelImpl.getType()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_U_T, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_U_T, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_U_T, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_U_T, args,
+			userIdMapperModelImpl, false);
+
+		args = new Object[] {
+				userIdMapperModelImpl.getType(),
+				userIdMapperModelImpl.getExternalUserId()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_T_E, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_T_E, args,
+			userIdMapperModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		UserIdMapperModelImpl userIdMapperModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					userIdMapperModelImpl.getUserId(),
+					userIdMapperModelImpl.getType()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_U_T, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_U_T, args);
+		}
 
 		if ((userIdMapperModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_U_T.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					userIdMapperModelImpl.getOriginalUserId(),
 					userIdMapperModelImpl.getOriginalType()
 				};
@@ -1296,17 +1267,19 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_U_T, args);
 		}
 
-		args = new Object[] {
-				userIdMapperModelImpl.getType(),
-				userIdMapperModelImpl.getExternalUserId()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					userIdMapperModelImpl.getType(),
+					userIdMapperModelImpl.getExternalUserId()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_T_E, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_T_E, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_T_E, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_T_E, args);
+		}
 
 		if ((userIdMapperModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_T_E.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					userIdMapperModelImpl.getOriginalType(),
 					userIdMapperModelImpl.getOriginalExternalUserId()
 				};
@@ -1477,8 +1450,8 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 			UserIdMapperImpl.class, userIdMapper.getPrimaryKey(), userIdMapper,
 			false);
 
-		clearUniqueFindersCache(userIdMapperModelImpl);
-		cacheUniqueFindersCache(userIdMapperModelImpl, isNew);
+		clearUniqueFindersCache(userIdMapperModelImpl, false);
+		cacheUniqueFindersCache(userIdMapperModelImpl);
 
 		userIdMapper.resetOriginalValues();
 
@@ -1551,12 +1524,14 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	 */
 	@Override
 	public UserIdMapper fetchByPrimaryKey(Serializable primaryKey) {
-		UserIdMapper userIdMapper = (UserIdMapper)entityCache.getResult(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
 				UserIdMapperImpl.class, primaryKey);
 
-		if (userIdMapper == _nullUserIdMapper) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		UserIdMapper userIdMapper = (UserIdMapper)serializable;
 
 		if (userIdMapper == null) {
 			Session session = null;
@@ -1572,7 +1547,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 				}
 				else {
 					entityCache.putResult(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
-						UserIdMapperImpl.class, primaryKey, _nullUserIdMapper);
+						UserIdMapperImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -1626,18 +1601,20 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			UserIdMapper userIdMapper = (UserIdMapper)entityCache.getResult(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
 					UserIdMapperImpl.class, primaryKey);
 
-			if (userIdMapper == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, userIdMapper);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (UserIdMapper)serializable);
+				}
 			}
 		}
 
@@ -1679,7 +1656,7 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(UserIdMapperModelImpl.ENTITY_CACHE_ENABLED,
-					UserIdMapperImpl.class, primaryKey, _nullUserIdMapper);
+					UserIdMapperImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -1922,34 +1899,4 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"type"
 			});
-	private static final UserIdMapper _nullUserIdMapper = new UserIdMapperImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<UserIdMapper> toCacheModel() {
-				return _nullUserIdMapperCacheModel;
-			}
-		};
-
-	private static final CacheModel<UserIdMapper> _nullUserIdMapperCacheModel = new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<UserIdMapper>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public UserIdMapper toEntityModel() {
-			return _nullUserIdMapper;
-		}
-	}
 }

@@ -158,8 +158,7 @@ public class DDMStructureImplTest extends BaseDDMTestCase {
 			"Campo de Texto",
 			structure.getFieldLabel("field", LocaleUtil.BRAZIL));
 		Assert.assertEquals(
-			"Text Field",
-			structure.getFieldLabel("field", LocaleUtil.US));
+			"Text Field", structure.getFieldLabel("field", LocaleUtil.US));
 	}
 
 	@Test
@@ -179,9 +178,9 @@ public class DDMStructureImplTest extends BaseDDMTestCase {
 
 		Set<String> expectedFieldNames = new HashSet<>();
 
-		expectedFieldNames.add("field1");
 		expectedFieldNames.add("child1Field1");
 		expectedFieldNames.add("child2Field1");
+		expectedFieldNames.add("field1");
 		expectedFieldNames.add("field2");
 		expectedFieldNames.add("field3");
 
@@ -211,9 +210,9 @@ public class DDMStructureImplTest extends BaseDDMTestCase {
 
 		Set<String> expectedFieldNames = new HashSet<>();
 
-		expectedFieldNames.add("field1");
 		expectedFieldNames.add("child1Field1");
 		expectedFieldNames.add("child2Field1");
+		expectedFieldNames.add("field1");
 		expectedFieldNames.add("field2");
 		expectedFieldNames.add("field3");
 		expectedFieldNames.add("field4");

@@ -17,9 +17,9 @@ package com.liferay.portal.search.elasticsearch.internal.cluster;
 import static org.elasticsearch.cluster.health.ClusterHealthStatus.GREEN;
 import static org.elasticsearch.cluster.health.ClusterHealthStatus.YELLOW;
 
-import com.liferay.portal.kernel.test.IdempotentRetryAssert;
 import com.liferay.portal.search.elasticsearch.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch.internal.connection.HealthExpectations;
+import com.liferay.portal.search.test.util.IdempotentRetryAssert;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -37,7 +37,7 @@ public class ClusterAssert {
 			ElasticsearchFixture elasticsearchFixture)
 		throws Exception {
 
-		ClusterAssert.assertHealth(
+		assertHealth(
 			elasticsearchFixture,
 			new HealthExpectations() {
 				{
@@ -55,7 +55,7 @@ public class ClusterAssert {
 			ElasticsearchFixture elasticsearchFixture)
 		throws Exception {
 
-		ClusterAssert.assertHealth(
+		assertHealth(
 			elasticsearchFixture,
 			new HealthExpectations() {
 				{
@@ -73,7 +73,7 @@ public class ClusterAssert {
 			ElasticsearchFixture elasticsearchFixture)
 		throws Exception {
 
-		ClusterAssert.assertHealth(
+		assertHealth(
 			elasticsearchFixture,
 			new HealthExpectations() {
 				{
@@ -91,7 +91,7 @@ public class ClusterAssert {
 			ElasticsearchFixture elasticsearchFixture)
 		throws Exception {
 
-		ClusterAssert.assertHealth(
+		assertHealth(
 			elasticsearchFixture,
 			new HealthExpectations() {
 				{
@@ -109,7 +109,7 @@ public class ClusterAssert {
 			ElasticsearchFixture elasticsearchFixture)
 		throws Exception {
 
-		ClusterAssert.assertHealth(
+		assertHealth(
 			elasticsearchFixture,
 			new HealthExpectations() {
 				{
@@ -127,7 +127,7 @@ public class ClusterAssert {
 			ElasticsearchFixture elasticsearchFixture)
 		throws Exception {
 
-		ClusterAssert.assertHealth(
+		assertHealth(
 			elasticsearchFixture,
 			new HealthExpectations() {
 				{
@@ -145,7 +145,7 @@ public class ClusterAssert {
 			ElasticsearchFixture elasticsearchFixture)
 		throws Exception {
 
-		ClusterAssert.assertHealth(
+		assertHealth(
 			elasticsearchFixture,
 			new HealthExpectations() {
 				{
@@ -163,7 +163,7 @@ public class ClusterAssert {
 			ElasticsearchFixture elasticsearchFixture)
 		throws Exception {
 
-		ClusterAssert.assertHealth(
+		assertHealth(
 			elasticsearchFixture,
 			new HealthExpectations() {
 				{
@@ -181,7 +181,7 @@ public class ClusterAssert {
 			ElasticsearchFixture elasticsearchFixture)
 		throws Exception {
 
-		ClusterAssert.assertHealth(
+		assertHealth(
 			elasticsearchFixture,
 			new HealthExpectations() {
 				{

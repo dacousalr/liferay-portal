@@ -17,7 +17,7 @@ package com.liferay.portal.kernel.search;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.backgroundtask.BackgroundTask;
-import com.liferay.portal.kernel.util.ProxyFactory;
+import com.liferay.portal.kernel.util.ServiceProxyFactory;
 
 import java.io.Serializable;
 
@@ -179,6 +179,16 @@ public class IndexWriterHelperUtil {
 		return _indexWriterHelper.isIndexReadOnly();
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             com.liferay.portal.search.index.IndexStatusManager#
+	 *             isIndexReadOnly(String)}
+	 */
+	@Deprecated
+	public static boolean isIndexReadOnly(String className) {
+		return _indexWriterHelper.isIndexReadOnly(className);
+	}
+
 	public static void partiallyUpdateDocument(
 			String searchEngineId, long companyId, Document document,
 			boolean commitImmediately)
@@ -225,6 +235,18 @@ public class IndexWriterHelperUtil {
 		_indexWriterHelper.setIndexReadOnly(indexReadOnly);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link
+	 *             com.liferay.portal.search.index.IndexStatusManager#
+	 *             setIndexReadOnly(String, boolean)}
+	 */
+	@Deprecated
+	public static void setIndexReadOnly(
+		String className, boolean indexReadOnly) {
+
+		_indexWriterHelper.setIndexReadOnly(className, indexReadOnly);
+	}
+
 	public static void updateDocument(
 			String searchEngineId, long companyId, Document document,
 			boolean commitImmediately)
@@ -247,7 +269,9 @@ public class IndexWriterHelperUtil {
 		_indexWriterHelper.updatePermissionFields(name, primKey);
 	}
 
-	private static final IndexWriterHelper _indexWriterHelper =
-		ProxyFactory.newServiceTrackedInstance(IndexWriterHelper.class);
+	private static volatile IndexWriterHelper _indexWriterHelper =
+		ServiceProxyFactory.newServiceTrackedInstance(
+			IndexWriterHelper.class, IndexWriterHelperUtil.class,
+			"_indexWriterHelper", false);
 
 }

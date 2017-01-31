@@ -35,7 +35,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -48,6 +47,7 @@ import com.liferay.portal.kernel.service.persistence.impl.TableMapper;
 import com.liferay.portal.kernel.service.persistence.impl.TableMapperFactory;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -10714,7 +10714,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((AssetCategoryModelImpl)assetCategory);
+		clearUniqueFindersCache((AssetCategoryModelImpl)assetCategory, true);
 	}
 
 	@Override
@@ -10726,77 +10726,49 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			entityCache.removeResult(AssetCategoryModelImpl.ENTITY_CACHE_ENABLED,
 				AssetCategoryImpl.class, assetCategory.getPrimaryKey());
 
-			clearUniqueFindersCache((AssetCategoryModelImpl)assetCategory);
+			clearUniqueFindersCache((AssetCategoryModelImpl)assetCategory, true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		AssetCategoryModelImpl assetCategoryModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					assetCategoryModelImpl.getUuid(),
-					assetCategoryModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				assetCategoryModelImpl);
-
-			args = new Object[] {
-					assetCategoryModelImpl.getParentCategoryId(),
-					assetCategoryModelImpl.getName(),
-					assetCategoryModelImpl.getVocabularyId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_P_N_V, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_P_N_V, args,
-				assetCategoryModelImpl);
-		}
-		else {
-			if ((assetCategoryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						assetCategoryModelImpl.getUuid(),
-						assetCategoryModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					assetCategoryModelImpl);
-			}
-
-			if ((assetCategoryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_P_N_V.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						assetCategoryModelImpl.getParentCategoryId(),
-						assetCategoryModelImpl.getName(),
-						assetCategoryModelImpl.getVocabularyId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_P_N_V, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_P_N_V, args,
-					assetCategoryModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		AssetCategoryModelImpl assetCategoryModelImpl) {
 		Object[] args = new Object[] {
 				assetCategoryModelImpl.getUuid(),
 				assetCategoryModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			assetCategoryModelImpl, false);
+
+		args = new Object[] {
+				assetCategoryModelImpl.getParentCategoryId(),
+				assetCategoryModelImpl.getName(),
+				assetCategoryModelImpl.getVocabularyId()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_P_N_V, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_P_N_V, args,
+			assetCategoryModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		AssetCategoryModelImpl assetCategoryModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					assetCategoryModelImpl.getUuid(),
+					assetCategoryModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((assetCategoryModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					assetCategoryModelImpl.getOriginalUuid(),
 					assetCategoryModelImpl.getOriginalGroupId()
 				};
@@ -10805,18 +10777,20 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
 		}
 
-		args = new Object[] {
-				assetCategoryModelImpl.getParentCategoryId(),
-				assetCategoryModelImpl.getName(),
-				assetCategoryModelImpl.getVocabularyId()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					assetCategoryModelImpl.getParentCategoryId(),
+					assetCategoryModelImpl.getName(),
+					assetCategoryModelImpl.getVocabularyId()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_P_N_V, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_P_N_V, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_P_N_V, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_P_N_V, args);
+		}
 
 		if ((assetCategoryModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_P_N_V.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					assetCategoryModelImpl.getOriginalParentCategoryId(),
 					assetCategoryModelImpl.getOriginalName(),
 					assetCategoryModelImpl.getOriginalVocabularyId()
@@ -11261,8 +11235,8 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			AssetCategoryImpl.class, assetCategory.getPrimaryKey(),
 			assetCategory, false);
 
-		clearUniqueFindersCache(assetCategoryModelImpl);
-		cacheUniqueFindersCache(assetCategoryModelImpl, isNew);
+		clearUniqueFindersCache(assetCategoryModelImpl, false);
+		cacheUniqueFindersCache(assetCategoryModelImpl);
 
 		assetCategory.resetOriginalValues();
 
@@ -11344,12 +11318,14 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 	 */
 	@Override
 	public AssetCategory fetchByPrimaryKey(Serializable primaryKey) {
-		AssetCategory assetCategory = (AssetCategory)entityCache.getResult(AssetCategoryModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(AssetCategoryModelImpl.ENTITY_CACHE_ENABLED,
 				AssetCategoryImpl.class, primaryKey);
 
-		if (assetCategory == _nullAssetCategory) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		AssetCategory assetCategory = (AssetCategory)serializable;
 
 		if (assetCategory == null) {
 			Session session = null;
@@ -11365,7 +11341,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 				}
 				else {
 					entityCache.putResult(AssetCategoryModelImpl.ENTITY_CACHE_ENABLED,
-						AssetCategoryImpl.class, primaryKey, _nullAssetCategory);
+						AssetCategoryImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -11419,18 +11395,20 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			AssetCategory assetCategory = (AssetCategory)entityCache.getResult(AssetCategoryModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(AssetCategoryModelImpl.ENTITY_CACHE_ENABLED,
 					AssetCategoryImpl.class, primaryKey);
 
-			if (assetCategory == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, assetCategory);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (AssetCategory)serializable);
+				}
 			}
 		}
 
@@ -11472,7 +11450,7 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(AssetCategoryModelImpl.ENTITY_CACHE_ENABLED,
-					AssetCategoryImpl.class, primaryKey, _nullAssetCategory);
+					AssetCategoryImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -11842,10 +11820,8 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			companyId = assetCategory.getCompanyId();
 		}
 
-		for (long assetEntryPK : assetEntryPKs) {
-			assetCategoryToAssetEntryTableMapper.addTableMapping(companyId, pk,
-				assetEntryPK);
-		}
+		assetCategoryToAssetEntryTableMapper.addTableMappings(companyId, pk,
+			assetEntryPKs);
 	}
 
 	/**
@@ -11857,21 +11833,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 	@Override
 	public void addAssetEntries(long pk,
 		List<com.liferay.asset.kernel.model.AssetEntry> assetEntries) {
-		long companyId = 0;
-
-		AssetCategory assetCategory = fetchByPrimaryKey(pk);
-
-		if (assetCategory == null) {
-			companyId = companyProvider.getCompanyId();
-		}
-		else {
-			companyId = assetCategory.getCompanyId();
-		}
-
-		for (com.liferay.asset.kernel.model.AssetEntry assetEntry : assetEntries) {
-			assetCategoryToAssetEntryTableMapper.addTableMapping(companyId, pk,
-				assetEntry.getPrimaryKey());
-		}
+		addAssetEntries(pk,
+			ListUtil.toLongArray(assetEntries,
+				com.liferay.asset.kernel.model.AssetEntry.ENTRY_ID_ACCESSOR));
 	}
 
 	/**
@@ -11916,10 +11880,8 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 	 */
 	@Override
 	public void removeAssetEntries(long pk, long[] assetEntryPKs) {
-		for (long assetEntryPK : assetEntryPKs) {
-			assetCategoryToAssetEntryTableMapper.deleteTableMapping(pk,
-				assetEntryPK);
-		}
+		assetCategoryToAssetEntryTableMapper.deleteTableMappings(pk,
+			assetEntryPKs);
 	}
 
 	/**
@@ -11931,10 +11893,9 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 	@Override
 	public void removeAssetEntries(long pk,
 		List<com.liferay.asset.kernel.model.AssetEntry> assetEntries) {
-		for (com.liferay.asset.kernel.model.AssetEntry assetEntry : assetEntries) {
-			assetCategoryToAssetEntryTableMapper.deleteTableMapping(pk,
-				assetEntry.getPrimaryKey());
-		}
+		removeAssetEntries(pk,
+			ListUtil.toLongArray(assetEntries,
+				com.liferay.asset.kernel.model.AssetEntry.ENTRY_ID_ACCESSOR));
 	}
 
 	/**
@@ -11953,10 +11914,8 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 
 		removeAssetEntryPKsSet.removeAll(newAssetEntryPKsSet);
 
-		for (long removeAssetEntryPK : removeAssetEntryPKsSet) {
-			assetCategoryToAssetEntryTableMapper.deleteTableMapping(pk,
-				removeAssetEntryPK);
-		}
+		assetCategoryToAssetEntryTableMapper.deleteTableMappings(pk,
+			ArrayUtil.toLongArray(removeAssetEntryPKsSet));
 
 		newAssetEntryPKsSet.removeAll(oldAssetEntryPKsSet);
 
@@ -11971,10 +11930,8 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 			companyId = assetCategory.getCompanyId();
 		}
 
-		for (long newAssetEntryPK : newAssetEntryPKsSet) {
-			assetCategoryToAssetEntryTableMapper.addTableMapping(companyId, pk,
-				newAssetEntryPK);
-		}
+		assetCategoryToAssetEntryTableMapper.addTableMappings(companyId, pk,
+			ArrayUtil.toLongArray(newAssetEntryPKsSet));
 	}
 
 	/**
@@ -12310,22 +12267,4 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid"
 			});
-	private static final AssetCategory _nullAssetCategory = new AssetCategoryImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<AssetCategory> toCacheModel() {
-				return _nullAssetCategoryCacheModel;
-			}
-		};
-
-	private static final CacheModel<AssetCategory> _nullAssetCategoryCacheModel = new CacheModel<AssetCategory>() {
-			@Override
-			public AssetCategory toEntityModel() {
-				return _nullAssetCategory;
-			}
-		};
 }

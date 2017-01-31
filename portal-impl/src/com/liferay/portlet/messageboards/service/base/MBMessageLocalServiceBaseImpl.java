@@ -22,9 +22,6 @@ import com.liferay.asset.kernel.service.persistence.AssetLinkPersistence;
 import com.liferay.asset.kernel.service.persistence.AssetTagFinder;
 import com.liferay.asset.kernel.service.persistence.AssetTagPersistence;
 
-import com.liferay.blogs.kernel.service.persistence.BlogsEntryFinder;
-import com.liferay.blogs.kernel.service.persistence.BlogsEntryPersistence;
-
 import com.liferay.expando.kernel.service.persistence.ExpandoRowPersistence;
 
 import com.liferay.exportimport.kernel.lar.ExportImportHelperUtil;
@@ -52,6 +49,7 @@ import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdate;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Conjunction;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DefaultActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Disjunction;
@@ -77,7 +75,6 @@ import com.liferay.portal.kernel.service.persistence.GroupFinder;
 import com.liferay.portal.kernel.service.persistence.GroupPersistence;
 import com.liferay.portal.kernel.service.persistence.PortletPreferencesFinder;
 import com.liferay.portal.kernel.service.persistence.PortletPreferencesPersistence;
-import com.liferay.portal.kernel.service.persistence.SubscriptionPersistence;
 import com.liferay.portal.kernel.service.persistence.UserFinder;
 import com.liferay.portal.kernel.service.persistence.UserPersistence;
 import com.liferay.portal.kernel.service.persistence.WorkflowInstanceLinkPersistence;
@@ -344,6 +341,27 @@ public abstract class MBMessageLocalServiceBaseImpl extends BaseLocalServiceImpl
 				public void addCriteria(DynamicQuery dynamicQuery) {
 					Criterion modifiedDateCriterion = portletDataContext.getDateRangeCriteria(
 							"modifiedDate");
+
+					if (modifiedDateCriterion != null) {
+						Conjunction conjunction = RestrictionsFactoryUtil.conjunction();
+
+						conjunction.add(modifiedDateCriterion);
+
+						Disjunction disjunction = RestrictionsFactoryUtil.disjunction();
+
+						disjunction.add(RestrictionsFactoryUtil.gtProperty(
+								"modifiedDate", "lastPublishDate"));
+
+						Property lastPublishDateProperty = PropertyFactoryUtil.forName(
+								"lastPublishDate");
+
+						disjunction.add(lastPublishDateProperty.isNull());
+
+						conjunction.add(disjunction);
+
+						modifiedDateCriterion = conjunction;
+					}
+
 					Criterion statusDateCriterion = portletDataContext.getDateRangeCriteria(
 							"statusDate");
 
@@ -788,44 +806,6 @@ public abstract class MBMessageLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
-	 * Returns the subscription local service.
-	 *
-	 * @return the subscription local service
-	 */
-	public com.liferay.portal.kernel.service.SubscriptionLocalService getSubscriptionLocalService() {
-		return subscriptionLocalService;
-	}
-
-	/**
-	 * Sets the subscription local service.
-	 *
-	 * @param subscriptionLocalService the subscription local service
-	 */
-	public void setSubscriptionLocalService(
-		com.liferay.portal.kernel.service.SubscriptionLocalService subscriptionLocalService) {
-		this.subscriptionLocalService = subscriptionLocalService;
-	}
-
-	/**
-	 * Returns the subscription persistence.
-	 *
-	 * @return the subscription persistence
-	 */
-	public SubscriptionPersistence getSubscriptionPersistence() {
-		return subscriptionPersistence;
-	}
-
-	/**
-	 * Sets the subscription persistence.
-	 *
-	 * @param subscriptionPersistence the subscription persistence
-	 */
-	public void setSubscriptionPersistence(
-		SubscriptionPersistence subscriptionPersistence) {
-		this.subscriptionPersistence = subscriptionPersistence;
-	}
-
-	/**
 	 * Returns the user local service.
 	 *
 	 * @return the user local service
@@ -1065,62 +1045,6 @@ public abstract class MBMessageLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 */
 	public void setAssetTagFinder(AssetTagFinder assetTagFinder) {
 		this.assetTagFinder = assetTagFinder;
-	}
-
-	/**
-	 * Returns the blogs entry local service.
-	 *
-	 * @return the blogs entry local service
-	 */
-	public com.liferay.blogs.kernel.service.BlogsEntryLocalService getBlogsEntryLocalService() {
-		return blogsEntryLocalService;
-	}
-
-	/**
-	 * Sets the blogs entry local service.
-	 *
-	 * @param blogsEntryLocalService the blogs entry local service
-	 */
-	public void setBlogsEntryLocalService(
-		com.liferay.blogs.kernel.service.BlogsEntryLocalService blogsEntryLocalService) {
-		this.blogsEntryLocalService = blogsEntryLocalService;
-	}
-
-	/**
-	 * Returns the blogs entry persistence.
-	 *
-	 * @return the blogs entry persistence
-	 */
-	public BlogsEntryPersistence getBlogsEntryPersistence() {
-		return blogsEntryPersistence;
-	}
-
-	/**
-	 * Sets the blogs entry persistence.
-	 *
-	 * @param blogsEntryPersistence the blogs entry persistence
-	 */
-	public void setBlogsEntryPersistence(
-		BlogsEntryPersistence blogsEntryPersistence) {
-		this.blogsEntryPersistence = blogsEntryPersistence;
-	}
-
-	/**
-	 * Returns the blogs entry finder.
-	 *
-	 * @return the blogs entry finder
-	 */
-	public BlogsEntryFinder getBlogsEntryFinder() {
-		return blogsEntryFinder;
-	}
-
-	/**
-	 * Sets the blogs entry finder.
-	 *
-	 * @param blogsEntryFinder the blogs entry finder
-	 */
-	public void setBlogsEntryFinder(BlogsEntryFinder blogsEntryFinder) {
-		this.blogsEntryFinder = blogsEntryFinder;
 	}
 
 	/**
@@ -1486,10 +1410,6 @@ public abstract class MBMessageLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected PortletPreferencesFinder portletPreferencesFinder;
 	@BeanReference(type = com.liferay.portal.kernel.service.ResourceLocalService.class)
 	protected com.liferay.portal.kernel.service.ResourceLocalService resourceLocalService;
-	@BeanReference(type = com.liferay.portal.kernel.service.SubscriptionLocalService.class)
-	protected com.liferay.portal.kernel.service.SubscriptionLocalService subscriptionLocalService;
-	@BeanReference(type = SubscriptionPersistence.class)
-	protected SubscriptionPersistence subscriptionPersistence;
 	@BeanReference(type = com.liferay.portal.kernel.service.UserLocalService.class)
 	protected com.liferay.portal.kernel.service.UserLocalService userLocalService;
 	@BeanReference(type = UserPersistence.class)
@@ -1516,12 +1436,6 @@ public abstract class MBMessageLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected AssetTagPersistence assetTagPersistence;
 	@BeanReference(type = AssetTagFinder.class)
 	protected AssetTagFinder assetTagFinder;
-	@BeanReference(type = com.liferay.blogs.kernel.service.BlogsEntryLocalService.class)
-	protected com.liferay.blogs.kernel.service.BlogsEntryLocalService blogsEntryLocalService;
-	@BeanReference(type = BlogsEntryPersistence.class)
-	protected BlogsEntryPersistence blogsEntryPersistence;
-	@BeanReference(type = BlogsEntryFinder.class)
-	protected BlogsEntryFinder blogsEntryFinder;
 	@BeanReference(type = com.liferay.expando.kernel.service.ExpandoRowLocalService.class)
 	protected com.liferay.expando.kernel.service.ExpandoRowLocalService expandoRowLocalService;
 	@BeanReference(type = ExpandoRowPersistence.class)

@@ -14,6 +14,7 @@
 
 package com.liferay.wiki.search;
 
+import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.portal.kernel.comment.Comment;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -30,8 +31,9 @@ import com.liferay.portal.kernel.search.BaseRelatedEntryIndexer;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
-import com.liferay.portal.kernel.search.IndexWriterHelperUtil;
+import com.liferay.portal.kernel.search.IndexWriterHelper;
 import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.RelatedEntryIndexer;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Summary;
@@ -43,6 +45,7 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.trash.kernel.util.TrashUtil;
 import com.liferay.wiki.engine.impl.WikiEngineRenderer;
 import com.liferay.wiki.exception.WikiFormatException;
 import com.liferay.wiki.model.WikiNode;
@@ -193,8 +196,6 @@ public class WikiPageIndexer
 	protected Document doGetDocument(WikiPage wikiPage) throws Exception {
 		Document document = getBaseModelDocument(CLASS_NAME, wikiPage);
 
-		document.addUID(CLASS_NAME, wikiPage.getResourcePrimKey());
-
 		try {
 			String content = HtmlUtil.extractText(
 				_wikiEngineRenderer.convert(wikiPage, null, null, null));
@@ -209,7 +210,14 @@ public class WikiPageIndexer
 		}
 
 		document.addKeyword(Field.NODE_ID, wikiPage.getNodeId());
-		document.addText(Field.TITLE, wikiPage.getTitle());
+
+		String title = wikiPage.getTitle();
+
+		if (wikiPage.isInTrash()) {
+			title = TrashUtil.getOriginalTitle(title);
+		}
+
+		document.addText(Field.TITLE, title);
 
 		return document;
 	}
@@ -258,9 +266,24 @@ public class WikiPageIndexer
 
 		Document document = getDocument(wikiPage);
 
-		IndexWriterHelperUtil.updateDocument(
+		_indexWriterHelper.updateDocument(
 			getSearchEngineId(), wikiPage.getCompanyId(), document,
 			isCommitImmediately());
+
+		reindexAttachments(wikiPage);
+	}
+
+	protected void reindexAttachments(WikiPage wikiPage)
+		throws PortalException {
+
+		Indexer<DLFileEntry> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			DLFileEntry.class);
+
+		for (FileEntry attachmentsFileEntry :
+				wikiPage.getAttachmentsFileEntries()) {
+
+			indexer.reindex((DLFileEntry)attachmentsFileEntry.getModel());
+		}
 	}
 
 	protected void reindexNodes(final long companyId) throws PortalException {
@@ -361,6 +384,9 @@ public class WikiPageIndexer
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		WikiPageIndexer.class);
+
+	@Reference
+	private IndexWriterHelper _indexWriterHelper;
 
 	private final RelatedEntryIndexer _relatedEntryIndexer =
 		new BaseRelatedEntryIndexer();

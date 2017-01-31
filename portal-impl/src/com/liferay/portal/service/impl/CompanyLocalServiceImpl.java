@@ -60,7 +60,6 @@ import com.liferay.portal.kernel.search.facet.AssetEntriesFacet;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.ScopeFacet;
 import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcher;
-import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcherManager;
 import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcherManagerUtil;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -154,7 +153,8 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 		// Company
 
-		virtualHostname = StringUtil.toLowerCase(virtualHostname.trim());
+		virtualHostname = StringUtil.toLowerCase(
+			StringUtil.trim(virtualHostname));
 
 		if (Validator.isNull(webId) ||
 			webId.equals(PropsValues.COMPANY_DEFAULT_WEB_ID) ||
@@ -368,6 +368,7 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 					defaultUser.getLocale(), "welcome", null, false);
 
 				defaultUser.setGreeting(greeting + StringPool.EXCLAMATION);
+
 				defaultUser.setLoginDate(now);
 				defaultUser.setFailedLoginAttempts(0);
 				defaultUser.setAgreedToTermsOfUse(true);
@@ -549,7 +550,8 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	 */
 	@Override
 	public Company fetchCompanyByVirtualHost(String virtualHostname) {
-		virtualHostname = StringUtil.toLowerCase(virtualHostname.trim());
+		virtualHostname = StringUtil.toLowerCase(
+			StringUtil.trim(virtualHostname));
 
 		VirtualHost virtualHost = virtualHostPersistence.fetchByHostname(
 			virtualHostname);
@@ -644,7 +646,8 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 		throws PortalException {
 
 		try {
-			virtualHostname = StringUtil.toLowerCase(virtualHostname.trim());
+			virtualHostname = StringUtil.toLowerCase(
+				StringUtil.trim(virtualHostname));
 
 			VirtualHost virtualHost = virtualHostPersistence.findByHostname(
 				virtualHostname);
@@ -783,11 +786,8 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 		long companyId, long userId, String portletId, long groupId,
 		String type, String keywords, int start, int end) {
 
-		FacetedSearcherManager facetedSearcherManager =
-			FacetedSearcherManagerUtil.getFacetedSearcherManager();
-
 		FacetedSearcher facetedSearcher =
-			facetedSearcherManager.createFacetedSearcher();
+			FacetedSearcherManagerUtil.createFacetedSearcher();
 
 		SearchContext searchContext = createSearchContext(
 			companyId, userId, portletId, groupId, keywords, start, end);
@@ -823,7 +823,8 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 		// Company
 
-		virtualHostname = StringUtil.toLowerCase(virtualHostname.trim());
+		virtualHostname = StringUtil.toLowerCase(
+			StringUtil.trim(virtualHostname));
 
 		if (!active) {
 			if (companyId == PortalInstances.getDefaultCompanyId()) {
@@ -889,7 +890,8 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 		// Company
 
-		virtualHostname = StringUtil.toLowerCase(virtualHostname.trim());
+		virtualHostname = StringUtil.toLowerCase(
+			StringUtil.trim(virtualHostname));
 
 		Company company = companyPersistence.findByPrimaryKey(companyId);
 
@@ -1603,6 +1605,12 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 				}
 			}
 			catch (NoSuchVirtualHostException nsvhe) {
+
+				// LPS-52675
+
+				if (_log.isDebugEnabled()) {
+					_log.debug(nsvhe, nsvhe);
+				}
 			}
 		}
 	}

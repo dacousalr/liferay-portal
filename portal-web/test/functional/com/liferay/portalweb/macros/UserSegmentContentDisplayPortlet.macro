@@ -11,7 +11,7 @@
 			<then>
 				<var name="key_indexNumber" value="${rowIndexNumber}" />
 
-				<execute function="Click" locator1="UserSegmentContentDisplay#CONTENT_PLUS_LINK" />
+				<execute function="Click" locator1="ContentTargeting#PLUS_LINK" />
 			</then>
 		</if>
 
@@ -75,6 +75,7 @@
 		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="${contentType}" />
 
 		<execute function="SelectFrame" value1="relative=top" />
+
 		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 
 		<var name="key_rowEntry" value="${contentTitle}" />
@@ -82,17 +83,22 @@
 		<execute function="ClickNoError" locator1="ContentRow#ENTRY_CONTENT_ENTRY_NAME_LINK" />
 
 		<execute function="SelectFrame" value1="relative=top" />
+
 		<execute function="SelectFrame" locator1="IFrame#CONFIGURATION" />
+
 		<execute function="SelectFrame" value1="relative=top" />
 	</command>
 
-	<command name="configureOtherwiseContenDisplayRule">
+	<command name="configureOtherwiseContentDisplayRule">
 		<execute function="SelectFrame" locator1="IFrame#CONFIGURATION" />
 
 		<if>
 			<isset var="otherwiseContentType" />
 			<then>
 				<execute function="ClickNoError" locator1="ContentTargeting#OTHERWISE_PANEL" />
+
+				<execute function="ScrollWebElementIntoView" locator1="ContentTargeting#OTHERWISE_PANEL_DISPLAY_THIS_CONTENT_RADIO" />
+
 				<execute function="Click" locator1="ContentTargeting#OTHERWISE_PANEL_DISPLAY_THIS_CONTENT_RADIO" />
 
 				<execute function="ClickNoError" locator1="ContentTargeting#OTHERWISE_PANEL_SELECT_CONTENT" />
@@ -102,6 +108,7 @@
 				<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" />
 
 				<execute function="SelectFrame" value1="relative=top" />
+
 				<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 
 				<var name="key_rowEntry" value="${otherwiseContentTitle}" />
@@ -112,7 +119,9 @@
 			</then>
 			<else>
 				<execute function="ClickNoError" locator1="ContentTargeting#OTHERWISE_PANEL" />
+
 				<execute function="Click" locator1="ContentTargeting#OTHERWISE_PANEL_DONT_DISPLAY_ANYTHING_RADIO" />
+
 				<execute function="SelectFrame" value1="relative=top" />
 			</else>
 		</if>
@@ -122,6 +131,7 @@
 		<execute function="SelectFrame" locator1="IFrame#CONFIGURATION" />
 
 		<execute function="ClickNoError" locator1="Button#SAVE" />
+
 		<execute macro="Alert#viewSuccessMessage" />
 
 		<execute function="SelectFrame" value1="relative=top" />
@@ -181,6 +191,7 @@
 			<isset var="otherwiseContentType" />
 			<then>
 				<execute function="Click" locator1="ContentTargeting#OTHERWISE_PANEL" />
+
 				<execute function="AssertChecked" locator1="ContentTargeting#OTHERWISE_PANEL_DISPLAY_THIS_CONTENT_RADIO" />
 
 				<var name="key_contentType" value="${otherwiseContentType}" />
@@ -192,6 +203,10 @@
 				<execute function="AssertTextEquals" locator1="ContentTargeting#OTHERWISE_PANEL_SELECTED_CONTENT_TITLE" value1="${otherwiseContentTitle}" />
 			</then>
 		</if>
+	</command>
+
+	<command name="viewContentOnly">
+		<execute function="AssertTextEquals" locator1="UserSegmentContentDisplay#ENTRY_CONTENT" value1="${entryContentText}" />
 	</command>
 
 	<command name="viewEntryPG">
@@ -217,8 +232,6 @@
 					</execute>
 
 					<var name="key_previewEntry" value="${previewEntry}" />
-
-					<execute function="AssertClick" locator1="ContentTargeting#PREVIEW" value1="${previewEntry}" />
 
 					<if>
 						<and>
@@ -247,6 +260,6 @@
 	</command>
 
 	<command name="viewNoContentPG">
-		<execute function="AssertTextEquals" locator1="UserSegmentContentDisplay#ENTRY_CONTENT" value1="There are no matching rules" />
+		<execute function="AssertTextEquals" locator1="UserSegmentContentDisplay#ENTRY_CONTENT" value1="The selected content no longer exists" />
 	</command>
 </definition>

@@ -188,6 +188,22 @@ public class PortalUtil {
 	}
 
 	/**
+	 * Adds an entry to the portlet breadcrumbs for the page in the request.
+	 *
+	 * @param request the servlet request for the page
+	 * @param title the title of the new breadcrumb entry
+	 * @param url the URL of the new breadcrumb entry
+	 * @param data the HTML5 data parameters of the new breadcrumb entry
+	 */
+	public static void addPortletBreadcrumbEntry(
+		HttpServletRequest request, String title, String url,
+		Map<String, Object> data, boolean portletBreadcrumbEntry) {
+
+		getPortal().addPortletBreadcrumbEntry(
+			request, title, url, data, portletBreadcrumbEntry);
+	}
+
+	/**
 	 * Adds the default resource permissions for the portlet to the page in the
 	 * request.
 	 *
@@ -899,6 +915,10 @@ public class PortalUtil {
 			uploadPortletRequest, name, type, displayType);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static String getFacebookURL(
 			Portlet portlet, String facebookCanvasPageURL,
 			ThemeDisplay themeDisplay)
@@ -1229,9 +1249,8 @@ public class PortalUtil {
 	}
 
 	public static String getLocalizedFriendlyURL(
-			HttpServletRequest request, Layout layout, Locale locale,
-			Locale originalLocale)
-		throws Exception {
+		HttpServletRequest request, Layout layout, Locale locale,
+		Locale originalLocale) {
 
 		return getPortal().getLocalizedFriendlyURL(
 			request, layout, locale, originalLocale);

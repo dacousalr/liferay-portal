@@ -1,7 +1,7 @@
 <definition component-name="portal-collaboration">
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="custom.properties" value="default.layout.template.id=1_column" />
-	<property name="portlet.plugins.includes" value="notifications-portlet" />
 	<property name="testray.main.component.name" value="Notifications" />
 
 	<var name="pageName" value="Bookmarks Page" />
@@ -13,15 +13,15 @@
 		<execute macro="User#firstLoginPG" />
 
 		<execute macro="Page#add">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Bookmarks Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Bookmarks Page" />
 		</execute>
 
 		<execute macro="Portlet#addPG">
-			<var name="portletName" value="${portletName}" />
+			<var name="portletName" value="Bookmarks" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoControlPanelUsers">
@@ -50,7 +50,7 @@
 		</execute>
 
 		<execute macro="User#assignRegularRoleCP">
-			<var name="roleName" value="Administrator" />
+			<var name="roleTitle" value="Administrator" />
 			<var name="userScreenName" value="usersn" />
 		</execute>
 	</set-up>
@@ -77,7 +77,7 @@
 
 	<command name="ViewWebsiteNotificationForNewBookmarkInFolder" priority="4">
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Bookmarks Page" />
 		</execute>
 
 		<execute macro="BookmarksFolder#addPG">
@@ -86,7 +86,7 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Bookmarks Page" />
 		</execute>
 
 		<execute macro="BookmarksFolder#subscribePG">
@@ -106,7 +106,7 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Bookmarks Page" />
 		</execute>
 
 		<execute macro="BookmarksFolder#gotoPG">
@@ -116,6 +116,10 @@
 		<execute macro="Bookmark#addPG">
 			<var name="bookmarkName" value="Bookmark Name" />
 			<var name="bookmarkURL" value="https://www.liferay.com" />
+		</execute>
+
+		<execute macro="Navigator#gotoPage">
+			<var name="pageName" value="Bookmarks Page" />
 		</execute>
 
 		<execute macro="Notifications#viewBadgeCount">
@@ -130,7 +134,7 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Bookmarks Page" />
 		</execute>
 
 		<execute macro="Notifications#viewBadgeCount">
@@ -165,7 +169,7 @@
 
 	<command name="ViewWebsiteNotificationForUpdatedBookmarkInFolder" priority="4">
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Bookmarks Page" />
 		</execute>
 
 		<execute macro="BookmarksFolder#addPG">
@@ -179,7 +183,7 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Bookmarks Page" />
 		</execute>
 
 		<execute macro="BookmarksFolder#gotoPG">
@@ -189,6 +193,10 @@
 		<execute macro="Bookmark#addPG">
 			<var name="bookmarkName" value="Bookmark Name" />
 			<var name="bookmarkURL" value="https://www.liferay.com" />
+		</execute>
+
+		<execute macro="Navigator#gotoPage">
+			<var name="pageName" value="Bookmarks Page" />
 		</execute>
 
 		<execute macro="Notifications#viewBadgeCount">
@@ -203,7 +211,7 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Bookmarks Page" />
 		</execute>
 
 		<execute macro="BookmarksFolder#gotoPG">
@@ -229,7 +237,7 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Bookmarks Page" />
 		</execute>
 
 		<execute macro="Notifications#viewBadgeCount">

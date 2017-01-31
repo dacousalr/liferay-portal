@@ -26,7 +26,6 @@ import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -4613,7 +4612,7 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((WikiNodeModelImpl)wikiNode);
+		clearUniqueFindersCache((WikiNodeModelImpl)wikiNode, true);
 	}
 
 	@Override
@@ -4625,71 +4624,44 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 			entityCache.removeResult(WikiNodeModelImpl.ENTITY_CACHE_ENABLED,
 				WikiNodeImpl.class, wikiNode.getPrimaryKey());
 
-			clearUniqueFindersCache((WikiNodeModelImpl)wikiNode);
+			clearUniqueFindersCache((WikiNodeModelImpl)wikiNode, true);
 		}
 	}
 
-	protected void cacheUniqueFindersCache(
-		WikiNodeModelImpl wikiNodeModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					wikiNodeModelImpl.getUuid(), wikiNodeModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				wikiNodeModelImpl);
-
-			args = new Object[] {
-					wikiNodeModelImpl.getGroupId(), wikiNodeModelImpl.getName()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_G_N, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_G_N, args,
-				wikiNodeModelImpl);
-		}
-		else {
-			if ((wikiNodeModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						wikiNodeModelImpl.getUuid(),
-						wikiNodeModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					wikiNodeModelImpl);
-			}
-
-			if ((wikiNodeModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						wikiNodeModelImpl.getGroupId(),
-						wikiNodeModelImpl.getName()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_G_N, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_G_N, args,
-					wikiNodeModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(WikiNodeModelImpl wikiNodeModelImpl) {
+	protected void cacheUniqueFindersCache(WikiNodeModelImpl wikiNodeModelImpl) {
 		Object[] args = new Object[] {
 				wikiNodeModelImpl.getUuid(), wikiNodeModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			wikiNodeModelImpl, false);
+
+		args = new Object[] {
+				wikiNodeModelImpl.getGroupId(), wikiNodeModelImpl.getName()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_G_N, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_G_N, args,
+			wikiNodeModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		WikiNodeModelImpl wikiNodeModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					wikiNodeModelImpl.getUuid(), wikiNodeModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((wikiNodeModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					wikiNodeModelImpl.getOriginalUuid(),
 					wikiNodeModelImpl.getOriginalGroupId()
 				};
@@ -4698,16 +4670,18 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
 		}
 
-		args = new Object[] {
-				wikiNodeModelImpl.getGroupId(), wikiNodeModelImpl.getName()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					wikiNodeModelImpl.getGroupId(), wikiNodeModelImpl.getName()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_G_N, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_G_N, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_G_N, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_G_N, args);
+		}
 
 		if ((wikiNodeModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_N.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					wikiNodeModelImpl.getOriginalGroupId(),
 					wikiNodeModelImpl.getOriginalName()
 				};
@@ -5002,8 +4976,8 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 		entityCache.putResult(WikiNodeModelImpl.ENTITY_CACHE_ENABLED,
 			WikiNodeImpl.class, wikiNode.getPrimaryKey(), wikiNode, false);
 
-		clearUniqueFindersCache(wikiNodeModelImpl);
-		cacheUniqueFindersCache(wikiNodeModelImpl, isNew);
+		clearUniqueFindersCache(wikiNodeModelImpl, false);
+		cacheUniqueFindersCache(wikiNodeModelImpl);
 
 		wikiNode.resetOriginalValues();
 
@@ -5084,12 +5058,14 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 	 */
 	@Override
 	public WikiNode fetchByPrimaryKey(Serializable primaryKey) {
-		WikiNode wikiNode = (WikiNode)entityCache.getResult(WikiNodeModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(WikiNodeModelImpl.ENTITY_CACHE_ENABLED,
 				WikiNodeImpl.class, primaryKey);
 
-		if (wikiNode == _nullWikiNode) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		WikiNode wikiNode = (WikiNode)serializable;
 
 		if (wikiNode == null) {
 			Session session = null;
@@ -5104,7 +5080,7 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 				}
 				else {
 					entityCache.putResult(WikiNodeModelImpl.ENTITY_CACHE_ENABLED,
-						WikiNodeImpl.class, primaryKey, _nullWikiNode);
+						WikiNodeImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -5158,18 +5134,20 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			WikiNode wikiNode = (WikiNode)entityCache.getResult(WikiNodeModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(WikiNodeModelImpl.ENTITY_CACHE_ENABLED,
 					WikiNodeImpl.class, primaryKey);
 
-			if (wikiNode == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, wikiNode);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (WikiNode)serializable);
+				}
 			}
 		}
 
@@ -5211,7 +5189,7 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(WikiNodeModelImpl.ENTITY_CACHE_ENABLED,
-					WikiNodeImpl.class, primaryKey, _nullWikiNode);
+					WikiNodeImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -5465,22 +5443,4 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid"
 			});
-	private static final WikiNode _nullWikiNode = new WikiNodeImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<WikiNode> toCacheModel() {
-				return _nullWikiNodeCacheModel;
-			}
-		};
-
-	private static final CacheModel<WikiNode> _nullWikiNodeCacheModel = new CacheModel<WikiNode>() {
-			@Override
-			public WikiNode toEntityModel() {
-				return _nullWikiNode;
-			}
-		};
 }

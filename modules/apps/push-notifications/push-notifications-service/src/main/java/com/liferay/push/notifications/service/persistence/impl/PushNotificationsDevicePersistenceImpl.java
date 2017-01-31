@@ -25,7 +25,8 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
+import com.liferay.portal.kernel.service.persistence.CompanyProvider;
+import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -1310,7 +1311,8 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((PushNotificationsDeviceModelImpl)pushNotificationsDevice);
+		clearUniqueFindersCache((PushNotificationsDeviceModelImpl)pushNotificationsDevice,
+			true);
 	}
 
 	@Override
@@ -1324,48 +1326,36 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 				PushNotificationsDeviceImpl.class,
 				pushNotificationsDevice.getPrimaryKey());
 
-			clearUniqueFindersCache((PushNotificationsDeviceModelImpl)pushNotificationsDevice);
+			clearUniqueFindersCache((PushNotificationsDeviceModelImpl)pushNotificationsDevice,
+				true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
+		PushNotificationsDeviceModelImpl pushNotificationsDeviceModelImpl) {
+		Object[] args = new Object[] { pushNotificationsDeviceModelImpl.getToken() };
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_TOKEN, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_TOKEN, args,
+			pushNotificationsDeviceModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
 		PushNotificationsDeviceModelImpl pushNotificationsDeviceModelImpl,
-		boolean isNew) {
-		if (isNew) {
+		boolean clearCurrent) {
+		if (clearCurrent) {
 			Object[] args = new Object[] {
 					pushNotificationsDeviceModelImpl.getToken()
 				};
 
-			finderCache.putResult(FINDER_PATH_COUNT_BY_TOKEN, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_TOKEN, args,
-				pushNotificationsDeviceModelImpl);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_TOKEN, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_TOKEN, args);
 		}
-		else {
-			if ((pushNotificationsDeviceModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_TOKEN.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						pushNotificationsDeviceModelImpl.getToken()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_TOKEN, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_TOKEN, args,
-					pushNotificationsDeviceModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
-		PushNotificationsDeviceModelImpl pushNotificationsDeviceModelImpl) {
-		Object[] args = new Object[] { pushNotificationsDeviceModelImpl.getToken() };
-
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_TOKEN, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_TOKEN, args);
 
 		if ((pushNotificationsDeviceModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_TOKEN.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					pushNotificationsDeviceModelImpl.getOriginalToken()
 				};
 
@@ -1386,6 +1376,8 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 
 		pushNotificationsDevice.setNew(true);
 		pushNotificationsDevice.setPrimaryKey(pushNotificationsDeviceId);
+
+		pushNotificationsDevice.setCompanyId(companyProvider.getCompanyId());
 
 		return pushNotificationsDevice;
 	}
@@ -1540,8 +1532,8 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 			pushNotificationsDevice.getPrimaryKey(), pushNotificationsDevice,
 			false);
 
-		clearUniqueFindersCache(pushNotificationsDeviceModelImpl);
-		cacheUniqueFindersCache(pushNotificationsDeviceModelImpl, isNew);
+		clearUniqueFindersCache(pushNotificationsDeviceModelImpl, false);
+		cacheUniqueFindersCache(pushNotificationsDeviceModelImpl);
 
 		pushNotificationsDevice.resetOriginalValues();
 
@@ -1560,6 +1552,7 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 		pushNotificationsDeviceImpl.setPrimaryKey(pushNotificationsDevice.getPrimaryKey());
 
 		pushNotificationsDeviceImpl.setPushNotificationsDeviceId(pushNotificationsDevice.getPushNotificationsDeviceId());
+		pushNotificationsDeviceImpl.setCompanyId(pushNotificationsDevice.getCompanyId());
 		pushNotificationsDeviceImpl.setUserId(pushNotificationsDevice.getUserId());
 		pushNotificationsDeviceImpl.setCreateDate(pushNotificationsDevice.getCreateDate());
 		pushNotificationsDeviceImpl.setPlatform(pushNotificationsDevice.getPlatform());
@@ -1613,12 +1606,14 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 	 */
 	@Override
 	public PushNotificationsDevice fetchByPrimaryKey(Serializable primaryKey) {
-		PushNotificationsDevice pushNotificationsDevice = (PushNotificationsDevice)entityCache.getResult(PushNotificationsDeviceModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(PushNotificationsDeviceModelImpl.ENTITY_CACHE_ENABLED,
 				PushNotificationsDeviceImpl.class, primaryKey);
 
-		if (pushNotificationsDevice == _nullPushNotificationsDevice) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		PushNotificationsDevice pushNotificationsDevice = (PushNotificationsDevice)serializable;
 
 		if (pushNotificationsDevice == null) {
 			Session session = null;
@@ -1634,8 +1629,7 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 				}
 				else {
 					entityCache.putResult(PushNotificationsDeviceModelImpl.ENTITY_CACHE_ENABLED,
-						PushNotificationsDeviceImpl.class, primaryKey,
-						_nullPushNotificationsDevice);
+						PushNotificationsDeviceImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -1690,18 +1684,20 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			PushNotificationsDevice pushNotificationsDevice = (PushNotificationsDevice)entityCache.getResult(PushNotificationsDeviceModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(PushNotificationsDeviceModelImpl.ENTITY_CACHE_ENABLED,
 					PushNotificationsDeviceImpl.class, primaryKey);
 
-			if (pushNotificationsDevice == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, pushNotificationsDevice);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (PushNotificationsDevice)serializable);
+				}
 			}
 		}
 
@@ -1744,8 +1740,7 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(PushNotificationsDeviceModelImpl.ENTITY_CACHE_ENABLED,
-					PushNotificationsDeviceImpl.class, primaryKey,
-					_nullPushNotificationsDevice);
+					PushNotificationsDeviceImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -1967,6 +1962,8 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 		finderCache.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@ServiceReference(type = CompanyProviderWrapper.class)
+	protected CompanyProvider companyProvider;
 	@ServiceReference(type = EntityCache.class)
 	protected EntityCache entityCache;
 	@ServiceReference(type = FinderCache.class)
@@ -1981,23 +1978,4 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No PushNotificationsDevice exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No PushNotificationsDevice exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(PushNotificationsDevicePersistenceImpl.class);
-	private static final PushNotificationsDevice _nullPushNotificationsDevice = new PushNotificationsDeviceImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<PushNotificationsDevice> toCacheModel() {
-				return _nullPushNotificationsDeviceCacheModel;
-			}
-		};
-
-	private static final CacheModel<PushNotificationsDevice> _nullPushNotificationsDeviceCacheModel =
-		new CacheModel<PushNotificationsDevice>() {
-			@Override
-			public PushNotificationsDevice toEntityModel() {
-				return _nullPushNotificationsDevice;
-			}
-		};
 }

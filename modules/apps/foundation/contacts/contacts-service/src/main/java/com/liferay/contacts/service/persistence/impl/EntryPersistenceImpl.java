@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -719,11 +718,15 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 						finderArgs, list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"EntryPersistenceImpl.fetchByU_EA(long, String, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"EntryPersistenceImpl.fetchByU_EA(long, String, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					Entry entry = list.get(0);
@@ -917,7 +920,7 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((EntryModelImpl)entry);
+		clearUniqueFindersCache((EntryModelImpl)entry, true);
 	}
 
 	@Override
@@ -929,49 +932,35 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 			entityCache.removeResult(EntryModelImpl.ENTITY_CACHE_ENABLED,
 				EntryImpl.class, entry.getPrimaryKey());
 
-			clearUniqueFindersCache((EntryModelImpl)entry);
+			clearUniqueFindersCache((EntryModelImpl)entry, true);
 		}
 	}
 
-	protected void cacheUniqueFindersCache(EntryModelImpl entryModelImpl,
-		boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					entryModelImpl.getUserId(), entryModelImpl.getEmailAddress()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_U_EA, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_U_EA, args,
-				entryModelImpl);
-		}
-		else {
-			if ((entryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_U_EA.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						entryModelImpl.getUserId(),
-						entryModelImpl.getEmailAddress()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_U_EA, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_U_EA, args,
-					entryModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(EntryModelImpl entryModelImpl) {
+	protected void cacheUniqueFindersCache(EntryModelImpl entryModelImpl) {
 		Object[] args = new Object[] {
 				entryModelImpl.getUserId(), entryModelImpl.getEmailAddress()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_U_EA, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_U_EA, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_U_EA, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_U_EA, args, entryModelImpl,
+			false);
+	}
+
+	protected void clearUniqueFindersCache(EntryModelImpl entryModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					entryModelImpl.getUserId(), entryModelImpl.getEmailAddress()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_U_EA, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_U_EA, args);
+		}
 
 		if ((entryModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_U_EA.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					entryModelImpl.getOriginalUserId(),
 					entryModelImpl.getOriginalEmailAddress()
 				};
@@ -1158,8 +1147,8 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 		entityCache.putResult(EntryModelImpl.ENTITY_CACHE_ENABLED,
 			EntryImpl.class, entry.getPrimaryKey(), entry, false);
 
-		clearUniqueFindersCache(entryModelImpl);
-		cacheUniqueFindersCache(entryModelImpl, isNew);
+		clearUniqueFindersCache(entryModelImpl, false);
+		cacheUniqueFindersCache(entryModelImpl);
 
 		entry.resetOriginalValues();
 
@@ -1234,12 +1223,14 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 	 */
 	@Override
 	public Entry fetchByPrimaryKey(Serializable primaryKey) {
-		Entry entry = (Entry)entityCache.getResult(EntryModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(EntryModelImpl.ENTITY_CACHE_ENABLED,
 				EntryImpl.class, primaryKey);
 
-		if (entry == _nullEntry) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		Entry entry = (Entry)serializable;
 
 		if (entry == null) {
 			Session session = null;
@@ -1254,7 +1245,7 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 				}
 				else {
 					entityCache.putResult(EntryModelImpl.ENTITY_CACHE_ENABLED,
-						EntryImpl.class, primaryKey, _nullEntry);
+						EntryImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -1308,18 +1299,20 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			Entry entry = (Entry)entityCache.getResult(EntryModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(EntryModelImpl.ENTITY_CACHE_ENABLED,
 					EntryImpl.class, primaryKey);
 
-			if (entry == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, entry);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (Entry)serializable);
+				}
 			}
 		}
 
@@ -1361,7 +1354,7 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(EntryModelImpl.ENTITY_CACHE_ENABLED,
-					EntryImpl.class, primaryKey, _nullEntry);
+					EntryImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -1597,22 +1590,4 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Entry exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Entry exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(EntryPersistenceImpl.class);
-	private static final Entry _nullEntry = new EntryImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<Entry> toCacheModel() {
-				return _nullEntryCacheModel;
-			}
-		};
-
-	private static final CacheModel<Entry> _nullEntryCacheModel = new CacheModel<Entry>() {
-			@Override
-			public Entry toEntityModel() {
-				return _nullEntry;
-			}
-		};
 }

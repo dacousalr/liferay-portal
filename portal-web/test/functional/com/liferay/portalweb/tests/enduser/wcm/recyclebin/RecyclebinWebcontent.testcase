@@ -1,5 +1,6 @@
 <definition component-name="portal-wcm">
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="Recycle Bin" />
 
 	<set-up>
@@ -87,8 +88,13 @@
 	</command>
 
 	<command name="MoveFolderWithWebContentToRecycleBin" priority="3">
+		<execute macro="TestCase#getSiteName">
+			<return from="siteName" name="siteName" />
+			<var name="siteName" value="${siteName}" />
+		</execute>
+
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -101,7 +107,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -127,7 +133,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -140,7 +146,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -152,7 +158,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -167,8 +173,13 @@
 	</command>
 
 	<command name="RecycleWebContentViaDeleteIcon" priority="3">
+		<execute macro="TestCase#getSiteName">
+			<return from="siteName" name="siteName" />
+			<var name="siteName" value="${siteName}" />
+		</execute>
+
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -189,7 +200,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -199,7 +210,7 @@
 		<execute macro="WebContent#moveToRecycleBinViaDeleteIconCP" />
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -211,7 +222,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -352,8 +363,13 @@
 	</command>
 
 	<command name="ViewDuplicateAssetNamesInRecycleBin" priority="3">
+		<execute macro="TestCase#getSiteName">
+			<return from="siteName" name="siteName" />
+			<var name="siteName" value="${siteName}" />
+		</execute>
+
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -374,7 +390,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -384,7 +400,7 @@
 		<execute macro="WebContent#moveToRecycleBinViaDeleteIconCP" />
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -398,7 +414,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -419,7 +435,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -429,7 +445,7 @@
 		<execute macro="WebContent#moveToRecycleBinViaDeleteIconCP" />
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -442,8 +458,13 @@
 	</command>
 
 	<command name="ViewDuplicateFolderNamesInRecycleBin" priority="4">
+		<execute macro="TestCase#getSiteName">
+			<return from="siteName" name="siteName" />
+			<var name="siteName" value="${siteName}" />
+		</execute>
+
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -456,7 +477,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -469,7 +490,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -483,7 +504,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -496,7 +517,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">
@@ -509,7 +530,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSitesContent">

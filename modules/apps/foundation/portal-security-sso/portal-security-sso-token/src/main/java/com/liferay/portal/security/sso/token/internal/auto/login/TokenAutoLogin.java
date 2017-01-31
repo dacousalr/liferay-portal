@@ -24,7 +24,7 @@ import com.liferay.portal.kernel.security.auto.login.AutoLogin;
 import com.liferay.portal.kernel.security.auto.login.BaseAutoLogin;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.settings.CompanyServiceSettingsLocator;
-import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -73,7 +73,7 @@ public class TokenAutoLogin extends BaseAutoLogin {
 			HttpServletRequest request, HttpServletResponse response)
 		throws Exception {
 
-		long companyId = PortalUtil.getCompanyId(request);
+		long companyId = _portal.getCompanyId(request);
 
 		TokenConfiguration tokenCompanyServiceSettings =
 			_configurationProvider.getConfiguration(
@@ -146,7 +146,7 @@ public class TokenAutoLogin extends BaseAutoLogin {
 				}
 				else {
 					if (_log.isWarnEnabled()) {
-						StringBundler sb = new StringBundler();
+						StringBundler sb = new StringBundler(7);
 
 						sb.append("The property \"");
 						sb.append(PropsKeys.COMPANY_SECURITY_AUTH_TYPE);
@@ -179,12 +179,16 @@ public class TokenAutoLogin extends BaseAutoLogin {
 		}
 		else {
 			if (_log.isWarnEnabled()) {
-				_log.warn(
-					"Incompatible setting for: " +
-						PropsKeys.COMPANY_SECURITY_AUTH_TYPE +
-						". Please configure to either: " +
-						CompanyConstants.AUTH_TYPE_EA + " or " +
-						CompanyConstants.AUTH_TYPE_SN);
+				StringBundler sb = new StringBundler(6);
+
+				sb.append("Incompatible setting for: ");
+				sb.append(PropsKeys.COMPANY_SECURITY_AUTH_TYPE);
+				sb.append(". Please configure to either: ");
+				sb.append(CompanyConstants.AUTH_TYPE_EA);
+				sb.append(" or ");
+				sb.append(CompanyConstants.AUTH_TYPE_SN);
+
+				_log.warn(sb.toString());
 			}
 		}
 
@@ -224,6 +228,10 @@ public class TokenAutoLogin extends BaseAutoLogin {
 	private static final Log _log = LogFactoryUtil.getLog(TokenAutoLogin.class);
 
 	private ConfigurationProvider _configurationProvider;
+
+	@Reference
+	private Portal _portal;
+
 	private final Map<TokenLocation, TokenRetriever> _tokenRetrievers =
 		new ConcurrentHashMap<>();
 	private UserImporter _userImporter;

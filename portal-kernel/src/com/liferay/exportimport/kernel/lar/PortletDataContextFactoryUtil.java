@@ -17,7 +17,7 @@ package com.liferay.exportimport.kernel.lar;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.ProxyFactory;
+import com.liferay.portal.kernel.util.ServiceProxyFactory;
 import com.liferay.portal.kernel.zip.ZipReader;
 import com.liferay.portal.kernel.zip.ZipWriter;
 
@@ -71,7 +71,11 @@ public class PortletDataContextFactoryUtil {
 			themeDisplay, startDate, endDate);
 	}
 
-	private static final PortletDataContextFactory _portletDataContextFactory =
-		ProxyFactory.newServiceTrackedInstance(PortletDataContextFactory.class);
+	private static volatile PortletDataContextFactory
+		_portletDataContextFactory =
+			ServiceProxyFactory.newServiceTrackedInstance(
+				PortletDataContextFactory.class,
+				PortletDataContextFactoryUtil.class,
+				"_portletDataContextFactory", false);
 
 }

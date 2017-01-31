@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -1133,7 +1132,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * Returns all the kaleo actions where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @return the matching kaleo actions
 	 */
 	@Override
@@ -1151,7 +1150,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param start the lower bound of the range of kaleo actions
 	 * @param end the upper bound of the range of kaleo actions (not inclusive)
 	 * @return the range of matching kaleo actions
@@ -1170,7 +1169,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param start the lower bound of the range of kaleo actions
 	 * @param end the upper bound of the range of kaleo actions (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -1192,7 +1191,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param start the lower bound of the range of kaleo actions
 	 * @param end the upper bound of the range of kaleo actions (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -1331,7 +1330,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * Returns the first kaleo action in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching kaleo action
 	 * @throws NoSuchActionException if a matching kaleo action could not be found
@@ -1366,7 +1365,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * Returns the first kaleo action in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching kaleo action, or <code>null</code> if a matching kaleo action could not be found
 	 */
@@ -1387,7 +1386,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * Returns the last kaleo action in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching kaleo action
 	 * @throws NoSuchActionException if a matching kaleo action could not be found
@@ -1422,7 +1421,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * Returns the last kaleo action in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching kaleo action, or <code>null</code> if a matching kaleo action could not be found
 	 */
@@ -1450,7 +1449,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 *
 	 * @param kaleoActionId the primary key of the current kaleo action
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next kaleo action
 	 * @throws NoSuchActionException if a kaleo action with the primary key could not be found
@@ -1615,7 +1614,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * Removes all the kaleo actions where kaleoClassName = &#63; and kaleoClassPK = &#63; from the database.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 */
 	@Override
 	public void removeByKCN_KCPK(String kaleoClassName, long kaleoClassPK) {
@@ -1629,7 +1628,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * Returns the number of kaleo actions where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @return the number of matching kaleo actions
 	 */
 	@Override
@@ -1734,7 +1733,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * Returns all the kaleo actions where kaleoClassName = &#63; and kaleoClassPK = &#63; and executionType = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @return the matching kaleo actions
 	 */
@@ -1753,7 +1752,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @param start the lower bound of the range of kaleo actions
 	 * @param end the upper bound of the range of kaleo actions (not inclusive)
@@ -1774,7 +1773,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @param start the lower bound of the range of kaleo actions
 	 * @param end the upper bound of the range of kaleo actions (not inclusive)
@@ -1797,7 +1796,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @param start the lower bound of the range of kaleo actions
 	 * @param end the upper bound of the range of kaleo actions (not inclusive)
@@ -1959,7 +1958,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * Returns the first kaleo action in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63; and executionType = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching kaleo action
@@ -1999,7 +1998,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * Returns the first kaleo action in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63; and executionType = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching kaleo action, or <code>null</code> if a matching kaleo action could not be found
@@ -2022,7 +2021,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * Returns the last kaleo action in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63; and executionType = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching kaleo action
@@ -2062,7 +2061,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * Returns the last kaleo action in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63; and executionType = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching kaleo action, or <code>null</code> if a matching kaleo action could not be found
@@ -2093,7 +2092,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 *
 	 * @param kaleoActionId the primary key of the current kaleo action
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next kaleo action
@@ -2280,7 +2279,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * Removes all the kaleo actions where kaleoClassName = &#63; and kaleoClassPK = &#63; and executionType = &#63; from the database.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 */
 	@Override
@@ -2297,7 +2296,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 * Returns the number of kaleo actions where kaleoClassName = &#63; and kaleoClassPK = &#63; and executionType = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @return the number of matching kaleo actions
 	 */
@@ -2799,12 +2798,14 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	 */
 	@Override
 	public KaleoAction fetchByPrimaryKey(Serializable primaryKey) {
-		KaleoAction kaleoAction = (KaleoAction)entityCache.getResult(KaleoActionModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(KaleoActionModelImpl.ENTITY_CACHE_ENABLED,
 				KaleoActionImpl.class, primaryKey);
 
-		if (kaleoAction == _nullKaleoAction) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		KaleoAction kaleoAction = (KaleoAction)serializable;
 
 		if (kaleoAction == null) {
 			Session session = null;
@@ -2820,7 +2821,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 				}
 				else {
 					entityCache.putResult(KaleoActionModelImpl.ENTITY_CACHE_ENABLED,
-						KaleoActionImpl.class, primaryKey, _nullKaleoAction);
+						KaleoActionImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -2874,18 +2875,20 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			KaleoAction kaleoAction = (KaleoAction)entityCache.getResult(KaleoActionModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(KaleoActionModelImpl.ENTITY_CACHE_ENABLED,
 					KaleoActionImpl.class, primaryKey);
 
-			if (kaleoAction == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, kaleoAction);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (KaleoAction)serializable);
+				}
 			}
 		}
 
@@ -2927,7 +2930,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(KaleoActionModelImpl.ENTITY_CACHE_ENABLED,
-					KaleoActionImpl.class, primaryKey, _nullKaleoAction);
+					KaleoActionImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -3164,22 +3167,4 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No KaleoAction exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No KaleoAction exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(KaleoActionPersistenceImpl.class);
-	private static final KaleoAction _nullKaleoAction = new KaleoActionImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<KaleoAction> toCacheModel() {
-				return _nullKaleoActionCacheModel;
-			}
-		};
-
-	private static final CacheModel<KaleoAction> _nullKaleoActionCacheModel = new CacheModel<KaleoAction>() {
-			@Override
-			public KaleoAction toEntityModel() {
-				return _nullKaleoAction;
-			}
-		};
 }

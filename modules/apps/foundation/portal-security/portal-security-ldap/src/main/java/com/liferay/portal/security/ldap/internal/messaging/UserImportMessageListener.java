@@ -14,6 +14,8 @@
 
 package com.liferay.portal.security.ldap.internal.messaging;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.BaseSchedulerEntryMessageListener;
 import com.liferay.portal.kernel.messaging.Destination;
 import com.liferay.portal.kernel.messaging.Message;
@@ -26,6 +28,7 @@ import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.security.ldap.configuration.ConfigurationProvider;
 import com.liferay.portal.security.ldap.exportimport.LDAPUserImporter;
 import com.liferay.portal.security.ldap.exportimport.configuration.LDAPImportConfiguration;
+import com.liferay.portal.security.ldap.internal.constants.LDAPDestinationNames;
 
 import java.util.List;
 
@@ -50,6 +53,11 @@ public class UserImportMessageListener
 
 		int interval = ldapImportConfiguration.importInterval();
 
+		if (_log.isDebugEnabled()) {
+			_log.debug(
+				"LDAP user imports will occur every " + interval + " minutes");
+		}
+
 		schedulerEntryImpl.setTrigger(
 			TriggerFactoryUtil.createTrigger(
 				getEventListenerClass(), getEventListenerClass(), interval,
@@ -57,7 +65,7 @@ public class UserImportMessageListener
 
 		_schedulerEngineHelper.register(
 			this, schedulerEntryImpl,
-			DestinationNames.SCHEDULED_USER_LDAP_IMPORT);
+			LDAPDestinationNames.SCHEDULED_USER_LDAP_IMPORT);
 	}
 
 	@Deactivate
@@ -80,6 +88,19 @@ public class UserImportMessageListener
 			LDAPImportConfiguration ldapImportConfiguration =
 				_ldapImportConfigurationProvider.getConfiguration(companyId);
 
+			if (!ldapImportConfiguration.importEnabled()) {
+				continue;
+			}
+
+			if (ldapImportConfiguration.importInterval() <= 0) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(
+						"Skipping LDAP user import for company " + companyId);
+				}
+
+				return;
+			}
+
 			if (time >= ldapImportConfiguration.importInterval()) {
 				_ldapUserImporter.importUsers(companyId);
 			}
@@ -94,7 +115,7 @@ public class UserImportMessageListener
 	}
 
 	@Reference(
-		target = "(destination.name=" + DestinationNames.SCHEDULED_USER_LDAP_IMPORT + ")",
+		target = "(destination.name=" + LDAPDestinationNames.SCHEDULED_USER_LDAP_IMPORT + ")",
 		unbind = "-"
 	)
 	protected void setDestination(Destination destination) {
@@ -126,6 +147,9 @@ public class UserImportMessageListener
 	@Reference(unbind = "-")
 	protected void setTriggerFactory(TriggerFactory triggerFactory) {
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		UserImportMessageListener.class);
 
 	private CompanyLocalService _companyLocalService;
 	private ConfigurationProvider<LDAPImportConfiguration>

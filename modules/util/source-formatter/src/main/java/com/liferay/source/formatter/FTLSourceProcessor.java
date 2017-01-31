@@ -143,11 +143,21 @@ public class FTLSourceProcessor extends BaseSourceProcessor {
 			}
 		}
 
+		content = formatStringRelationalOperations(content);
+
+		content = formatAssignTags(content);
+
 		ImportsFormatter importsFormatter = new FTLImportsFormatter();
 
 		content = importsFormatter.format(content, null, null);
 
-		return formatFTL(fileName, content);
+		content = fixEmptyLinesInNestedTags(content);
+
+		content = fixEmptyLinesBetweenTags(content);
+
+		content = formatFTL(fileName, content);
+
+		return StringUtil.replace(content, "\n\n\n", "\n\n");
 	}
 
 	@Override
@@ -158,6 +168,46 @@ public class FTLSourceProcessor extends BaseSourceProcessor {
 		};
 
 		return getFileNames(excludes, getIncludes());
+	}
+
+	protected String formatAssignTags(String content) {
+		Matcher matcher = _incorrectAssignTagPattern.matcher(content);
+
+		content = matcher.replaceAll("$1 />\n");
+
+		matcher = _assignTagsBlockPattern.matcher(content);
+
+		while (matcher.find()) {
+			String match = matcher.group();
+
+			String tabs = matcher.group(2);
+
+			String replacement = StringUtil.removeSubstrings(
+				match, "<#assign ", "<#assign\n", " />", "\n/>", "\t/>");
+
+			replacement = StringUtil.removeChar(replacement, CharPool.TAB);
+
+			String[] lines = StringUtil.splitLines(replacement);
+
+			StringBundler sb = new StringBundler((3 * lines.length) + 5);
+
+			sb.append(tabs);
+			sb.append("<#assign");
+
+			for (String line : lines) {
+				sb.append("\n\t");
+				sb.append(tabs);
+				sb.append(line);
+			}
+
+			sb.append(StringPool.NEW_LINE);
+			sb.append(tabs);
+			sb.append("/>\n\n");
+
+			content = StringUtil.replace(content, match, sb.toString());
+		}
+
+		return content;
 	}
 
 	protected String formatFTL(String fileName, String content)
@@ -202,6 +252,58 @@ public class FTLSourceProcessor extends BaseSourceProcessor {
 		return newContent;
 	}
 
+	protected String formatStringRelationalOperations(String content) {
+		Matcher matcher = _stringRelationalOperationPattern.matcher(content);
+
+		if (!matcher.find()) {
+			return content;
+		}
+
+		String match = matcher.group();
+
+		String firstChar = matcher.group(1);
+		String lastChar = matcher.group(5);
+
+		if (!firstChar.equals(StringPool.OPEN_PARENTHESIS) ||
+			!lastChar.equals(StringPool.CLOSE_PARENTHESIS)) {
+
+			match = content.substring(matcher.end(1), matcher.start(5));
+		}
+
+		String operator = matcher.group(3);
+		String quotedString = matcher.group(4);
+		String variableName = matcher.group(2);
+
+		String replacement = null;
+
+		if (Validator.isNull(quotedString)) {
+			if (operator.equals("==")) {
+				replacement = "validator.isNull(" + variableName + ")";
+			}
+			else {
+				replacement = "validator.isNotNull(" + variableName + ")";
+			}
+		}
+		else {
+			StringBundler sb = new StringBundler();
+
+			if (operator.equals("!=")) {
+				sb.append(StringPool.EXCLAMATION);
+			}
+
+			sb.append("stringUtil.equals(");
+			sb.append(variableName);
+			sb.append(", \"");
+			sb.append(quotedString);
+			sb.append("\")");
+
+			replacement = sb.toString();
+		}
+
+		return StringUtil.replaceFirst(
+			content, match, replacement, matcher.start());
+	}
+
 	protected String sortLiferayVariables(String content) {
 		Matcher matcher = _liferayVariablesPattern.matcher(content);
 
@@ -235,6 +337,10 @@ public class FTLSourceProcessor extends BaseSourceProcessor {
 
 	private static final String[] _INCLUDES = new String[] {"**/*.ftl"};
 
+	private final Pattern _assignTagsBlockPattern = Pattern.compile(
+		"((\t*)<#assign[^<#/>]*=[^<#/>]*/>(\n|$)+){2,}", Pattern.MULTILINE);
+	private final Pattern _incorrectAssignTagPattern = Pattern.compile(
+		"(<#assign .*=.*[^/])>(\n|$)");
 	private final Pattern _liferayVariablePattern = Pattern.compile(
 		"^\t*<#assign liferay_.*>\n", Pattern.MULTILINE);
 	private final Pattern _liferayVariablesPattern = Pattern.compile(
@@ -243,5 +349,7 @@ public class FTLSourceProcessor extends BaseSourceProcessor {
 		"\n(\t*)<@.+=.+=.+/>");
 	private final Pattern _singleParameterTagPattern = Pattern.compile(
 		"(<@[\\w\\.]+ \\w+)( )?=([^=]+?)/>");
+	private final Pattern _stringRelationalOperationPattern = Pattern.compile(
+		"(\\W)([\\w.]+) ([!=]=) \"(\\w*)\"(.)");
 
 }

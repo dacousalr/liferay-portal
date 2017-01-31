@@ -103,16 +103,16 @@ AUI.add(
 				var options = instance.array[i];
 
 				var select = A.one('#' + options.select);
-				var selectId = options.selectId;
 				var selectDesc = options.selectDesc;
+				var selectId = options.selectId;
+				var selectNullable = options.selectNullable !== false;
 				var selectSort = options.selectSort;
 				var selectVal = options.selectVal;
-				var selectNullable = options.selectNullable || true;
 
 				var selectOptions = [];
 
 				if (selectNullable) {
-					selectOptions.push('<option value="0"></option>');
+					selectOptions.push('<option selected value="0"></option>');
 				}
 
 				list.forEach(

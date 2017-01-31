@@ -75,7 +75,11 @@ public class SetupWizardUtil {
 
 		boolean jndi = Validator.isNotNull(PropsValues.JDBC_DEFAULT_JNDI_NAME);
 
-		return hsqldb && !jndi;
+		if (hsqldb && !jndi) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public static void testDatabase(HttpServletRequest request)
@@ -299,7 +303,8 @@ public class SetupWizardUtil {
 		HttpSession session = request.getSession();
 
 		session.setAttribute(WebKeys.EMAIL_ADDRESS, emailAddress);
-		session.setAttribute(WebKeys.SETUP_WIZARD_PASSWORD_UPDATED, true);
+		session.setAttribute(
+			WebKeys.SETUP_WIZARD_PASSWORD_UPDATED, Boolean.TRUE);
 		session.setAttribute(WebKeys.USER, user);
 		session.setAttribute(WebKeys.USER_ID, user.getUserId());
 

@@ -54,7 +54,7 @@ public interface DLAppLocalService extends BaseLocalService {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify or reference this interface directly. Always use {@link DLAppLocalServiceUtil} to access the d l app local service. Add custom service methods to {@link com.liferay.portlet.documentlibrary.service.impl.DLAppLocalServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
+	 * Never modify or reference this interface directly. Always use {@link DLAppLocalServiceUtil} to access the dl app local service. Add custom service methods to {@link com.liferay.portlet.documentlibrary.service.impl.DLAppLocalServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
 
 	/**
@@ -656,8 +656,8 @@ public interface DLAppLocalService extends BaseLocalService {
 		throws PortalException;
 
 	/**
-	* Deprecated as of 7.0.0, replaced by {@link #updateFileShortcuts(long,
-	* long)}
+	* @deprecated As of 7.0.0, replaced by {@link #updateFileShortcuts(long,
+	long)}
 	*/
 	@java.lang.Deprecated
 	public void updateFileShortcuts(long toRepositoryId, long oldToFileEntryId,

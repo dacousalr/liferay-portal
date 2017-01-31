@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
@@ -2345,7 +2344,8 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((JournalArticleResourceModelImpl)journalArticleResource);
+		clearUniqueFindersCache((JournalArticleResourceModelImpl)journalArticleResource,
+			true);
 	}
 
 	@Override
@@ -2358,76 +2358,50 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 				JournalArticleResourceImpl.class,
 				journalArticleResource.getPrimaryKey());
 
-			clearUniqueFindersCache((JournalArticleResourceModelImpl)journalArticleResource);
+			clearUniqueFindersCache((JournalArticleResourceModelImpl)journalArticleResource,
+				true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		JournalArticleResourceModelImpl journalArticleResourceModelImpl,
-		boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					journalArticleResourceModelImpl.getUuid(),
-					journalArticleResourceModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				journalArticleResourceModelImpl);
-
-			args = new Object[] {
-					journalArticleResourceModelImpl.getGroupId(),
-					journalArticleResourceModelImpl.getArticleId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_G_A, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_G_A, args,
-				journalArticleResourceModelImpl);
-		}
-		else {
-			if ((journalArticleResourceModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						journalArticleResourceModelImpl.getUuid(),
-						journalArticleResourceModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					journalArticleResourceModelImpl);
-			}
-
-			if ((journalArticleResourceModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_A.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						journalArticleResourceModelImpl.getGroupId(),
-						journalArticleResourceModelImpl.getArticleId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_G_A, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_G_A, args,
-					journalArticleResourceModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		JournalArticleResourceModelImpl journalArticleResourceModelImpl) {
 		Object[] args = new Object[] {
 				journalArticleResourceModelImpl.getUuid(),
 				journalArticleResourceModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			journalArticleResourceModelImpl, false);
+
+		args = new Object[] {
+				journalArticleResourceModelImpl.getGroupId(),
+				journalArticleResourceModelImpl.getArticleId()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_G_A, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_G_A, args,
+			journalArticleResourceModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		JournalArticleResourceModelImpl journalArticleResourceModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					journalArticleResourceModelImpl.getUuid(),
+					journalArticleResourceModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((journalArticleResourceModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					journalArticleResourceModelImpl.getOriginalUuid(),
 					journalArticleResourceModelImpl.getOriginalGroupId()
 				};
@@ -2436,17 +2410,19 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
 		}
 
-		args = new Object[] {
-				journalArticleResourceModelImpl.getGroupId(),
-				journalArticleResourceModelImpl.getArticleId()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					journalArticleResourceModelImpl.getGroupId(),
+					journalArticleResourceModelImpl.getArticleId()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_G_A, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_G_A, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_G_A, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_G_A, args);
+		}
 
 		if ((journalArticleResourceModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_A.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					journalArticleResourceModelImpl.getOriginalGroupId(),
 					journalArticleResourceModelImpl.getOriginalArticleId()
 				};
@@ -2668,8 +2644,8 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 			journalArticleResource.getPrimaryKey(), journalArticleResource,
 			false);
 
-		clearUniqueFindersCache(journalArticleResourceModelImpl);
-		cacheUniqueFindersCache(journalArticleResourceModelImpl, isNew);
+		clearUniqueFindersCache(journalArticleResourceModelImpl, false);
+		cacheUniqueFindersCache(journalArticleResourceModelImpl);
 
 		journalArticleResource.resetOriginalValues();
 
@@ -2741,12 +2717,14 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 	 */
 	@Override
 	public JournalArticleResource fetchByPrimaryKey(Serializable primaryKey) {
-		JournalArticleResource journalArticleResource = (JournalArticleResource)entityCache.getResult(JournalArticleResourceModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(JournalArticleResourceModelImpl.ENTITY_CACHE_ENABLED,
 				JournalArticleResourceImpl.class, primaryKey);
 
-		if (journalArticleResource == _nullJournalArticleResource) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		JournalArticleResource journalArticleResource = (JournalArticleResource)serializable;
 
 		if (journalArticleResource == null) {
 			Session session = null;
@@ -2762,8 +2740,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 				}
 				else {
 					entityCache.putResult(JournalArticleResourceModelImpl.ENTITY_CACHE_ENABLED,
-						JournalArticleResourceImpl.class, primaryKey,
-						_nullJournalArticleResource);
+						JournalArticleResourceImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -2817,18 +2794,20 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			JournalArticleResource journalArticleResource = (JournalArticleResource)entityCache.getResult(JournalArticleResourceModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(JournalArticleResourceModelImpl.ENTITY_CACHE_ENABLED,
 					JournalArticleResourceImpl.class, primaryKey);
 
-			if (journalArticleResource == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, journalArticleResource);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (JournalArticleResource)serializable);
+				}
 			}
 		}
 
@@ -2871,8 +2850,7 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(JournalArticleResourceModelImpl.ENTITY_CACHE_ENABLED,
-					JournalArticleResourceImpl.class, primaryKey,
-					_nullJournalArticleResource);
+					JournalArticleResourceImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -3117,23 +3095,4 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid"
 			});
-	private static final JournalArticleResource _nullJournalArticleResource = new JournalArticleResourceImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<JournalArticleResource> toCacheModel() {
-				return _nullJournalArticleResourceCacheModel;
-			}
-		};
-
-	private static final CacheModel<JournalArticleResource> _nullJournalArticleResourceCacheModel =
-		new CacheModel<JournalArticleResource>() {
-			@Override
-			public JournalArticleResource toEntityModel() {
-				return _nullJournalArticleResource;
-			}
-		};
 }

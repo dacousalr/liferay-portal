@@ -18,6 +18,7 @@ import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.asset.publisher.web.constants.AssetPublisherWebKeys;
 import com.liferay.asset.publisher.web.display.context.AssetEntryResult;
 import com.liferay.asset.publisher.web.display.context.AssetPublisherDisplayContext;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
@@ -89,7 +90,8 @@ public class AssetRSSUtil {
 		String rss = exportToRSS(
 			portletRequest, portletResponse, rssName, null, format, version,
 			rssDisplayStyle, assetLinkBehavior,
-			getAssetEntries(portletRequest, portletPreferences));
+			getAssetEntries(
+				portletRequest, portletResponse, portletPreferences));
 
 		return rss.getBytes(StringPool.UTF8);
 	}
@@ -181,8 +183,24 @@ public class AssetRSSUtil {
 		return RSSUtil.export(syndFeed);
 	}
 
+	/**
+	 * @deprecated As of 2.0.0, replaced by {@link
+	 *             #getAssetEntries(PortletRequest, PortletResponse,
+	 *             PortletPreferences)}
+	 */
+	@Deprecated
 	protected static List<AssetEntry> getAssetEntries(
 			PortletRequest portletRequest,
+			PortletPreferences portletPreferences)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method is deprecated and replaced by #getAssetEntries(" +
+				"PortletRequest, PortletResponse, PortletPreferences)");
+	}
+
+	protected static List<AssetEntry> getAssetEntries(
+			PortletRequest portletRequest, PortletResponse portletResponse,
 			PortletPreferences portletPreferences)
 		throws Exception {
 
@@ -190,9 +208,13 @@ public class AssetRSSUtil {
 
 		SearchContainer searchContainer = new SearchContainer();
 
+		AssetPublisherCustomizer assetPublisherCustomizer =
+			(AssetPublisherCustomizer)portletRequest.getAttribute(
+				AssetPublisherWebKeys.ASSET_PUBLISHER_CUSTOMIZER);
+
 		AssetPublisherDisplayContext assetPublisherDisplayContext =
 			new AssetPublisherDisplayContext(
-				PortalUtil.getHttpServletRequest(portletRequest),
+				assetPublisherCustomizer, portletRequest, portletResponse,
 				portletPreferences);
 
 		searchContainer.setDelta(assetPublisherDisplayContext.getRSSDelta());

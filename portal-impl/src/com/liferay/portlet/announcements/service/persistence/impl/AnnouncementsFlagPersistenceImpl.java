@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
@@ -924,7 +923,8 @@ public class AnnouncementsFlagPersistenceImpl extends BasePersistenceImpl<Announ
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((AnnouncementsFlagModelImpl)announcementsFlag);
+		clearUniqueFindersCache((AnnouncementsFlagModelImpl)announcementsFlag,
+			true);
 	}
 
 	@Override
@@ -936,42 +936,12 @@ public class AnnouncementsFlagPersistenceImpl extends BasePersistenceImpl<Announ
 			entityCache.removeResult(AnnouncementsFlagModelImpl.ENTITY_CACHE_ENABLED,
 				AnnouncementsFlagImpl.class, announcementsFlag.getPrimaryKey());
 
-			clearUniqueFindersCache((AnnouncementsFlagModelImpl)announcementsFlag);
+			clearUniqueFindersCache((AnnouncementsFlagModelImpl)announcementsFlag,
+				true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		AnnouncementsFlagModelImpl announcementsFlagModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					announcementsFlagModelImpl.getUserId(),
-					announcementsFlagModelImpl.getEntryId(),
-					announcementsFlagModelImpl.getValue()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_U_E_V, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_U_E_V, args,
-				announcementsFlagModelImpl);
-		}
-		else {
-			if ((announcementsFlagModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_U_E_V.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						announcementsFlagModelImpl.getUserId(),
-						announcementsFlagModelImpl.getEntryId(),
-						announcementsFlagModelImpl.getValue()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_U_E_V, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_U_E_V, args,
-					announcementsFlagModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		AnnouncementsFlagModelImpl announcementsFlagModelImpl) {
 		Object[] args = new Object[] {
 				announcementsFlagModelImpl.getUserId(),
@@ -979,12 +949,29 @@ public class AnnouncementsFlagPersistenceImpl extends BasePersistenceImpl<Announ
 				announcementsFlagModelImpl.getValue()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_U_E_V, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_U_E_V, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_U_E_V, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_U_E_V, args,
+			announcementsFlagModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		AnnouncementsFlagModelImpl announcementsFlagModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					announcementsFlagModelImpl.getUserId(),
+					announcementsFlagModelImpl.getEntryId(),
+					announcementsFlagModelImpl.getValue()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_U_E_V, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_U_E_V, args);
+		}
 
 		if ((announcementsFlagModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_U_E_V.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					announcementsFlagModelImpl.getOriginalUserId(),
 					announcementsFlagModelImpl.getOriginalEntryId(),
 					announcementsFlagModelImpl.getOriginalValue()
@@ -1155,8 +1142,8 @@ public class AnnouncementsFlagPersistenceImpl extends BasePersistenceImpl<Announ
 			AnnouncementsFlagImpl.class, announcementsFlag.getPrimaryKey(),
 			announcementsFlag, false);
 
-		clearUniqueFindersCache(announcementsFlagModelImpl);
-		cacheUniqueFindersCache(announcementsFlagModelImpl, isNew);
+		clearUniqueFindersCache(announcementsFlagModelImpl, false);
+		cacheUniqueFindersCache(announcementsFlagModelImpl);
 
 		announcementsFlag.resetOriginalValues();
 
@@ -1229,12 +1216,14 @@ public class AnnouncementsFlagPersistenceImpl extends BasePersistenceImpl<Announ
 	 */
 	@Override
 	public AnnouncementsFlag fetchByPrimaryKey(Serializable primaryKey) {
-		AnnouncementsFlag announcementsFlag = (AnnouncementsFlag)entityCache.getResult(AnnouncementsFlagModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(AnnouncementsFlagModelImpl.ENTITY_CACHE_ENABLED,
 				AnnouncementsFlagImpl.class, primaryKey);
 
-		if (announcementsFlag == _nullAnnouncementsFlag) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		AnnouncementsFlag announcementsFlag = (AnnouncementsFlag)serializable;
 
 		if (announcementsFlag == null) {
 			Session session = null;
@@ -1250,8 +1239,7 @@ public class AnnouncementsFlagPersistenceImpl extends BasePersistenceImpl<Announ
 				}
 				else {
 					entityCache.putResult(AnnouncementsFlagModelImpl.ENTITY_CACHE_ENABLED,
-						AnnouncementsFlagImpl.class, primaryKey,
-						_nullAnnouncementsFlag);
+						AnnouncementsFlagImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -1305,18 +1293,20 @@ public class AnnouncementsFlagPersistenceImpl extends BasePersistenceImpl<Announ
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			AnnouncementsFlag announcementsFlag = (AnnouncementsFlag)entityCache.getResult(AnnouncementsFlagModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(AnnouncementsFlagModelImpl.ENTITY_CACHE_ENABLED,
 					AnnouncementsFlagImpl.class, primaryKey);
 
-			if (announcementsFlag == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, announcementsFlag);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (AnnouncementsFlag)serializable);
+				}
 			}
 		}
 
@@ -1358,8 +1348,7 @@ public class AnnouncementsFlagPersistenceImpl extends BasePersistenceImpl<Announ
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(AnnouncementsFlagModelImpl.ENTITY_CACHE_ENABLED,
-					AnnouncementsFlagImpl.class, primaryKey,
-					_nullAnnouncementsFlag);
+					AnnouncementsFlagImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -1594,23 +1583,4 @@ public class AnnouncementsFlagPersistenceImpl extends BasePersistenceImpl<Announ
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No AnnouncementsFlag exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No AnnouncementsFlag exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(AnnouncementsFlagPersistenceImpl.class);
-	private static final AnnouncementsFlag _nullAnnouncementsFlag = new AnnouncementsFlagImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<AnnouncementsFlag> toCacheModel() {
-				return _nullAnnouncementsFlagCacheModel;
-			}
-		};
-
-	private static final CacheModel<AnnouncementsFlag> _nullAnnouncementsFlagCacheModel =
-		new CacheModel<AnnouncementsFlag>() {
-			@Override
-			public AnnouncementsFlag toEntityModel() {
-				return _nullAnnouncementsFlag;
-			}
-		};
 }

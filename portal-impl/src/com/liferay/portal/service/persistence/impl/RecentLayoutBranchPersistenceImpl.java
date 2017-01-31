@@ -29,8 +29,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchRecentLayoutBranchException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.RecentLayoutBranch;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
@@ -1950,7 +1948,8 @@ public class RecentLayoutBranchPersistenceImpl extends BasePersistenceImpl<Recen
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((RecentLayoutBranchModelImpl)recentLayoutBranch);
+		clearUniqueFindersCache((RecentLayoutBranchModelImpl)recentLayoutBranch,
+			true);
 	}
 
 	@Override
@@ -1962,42 +1961,12 @@ public class RecentLayoutBranchPersistenceImpl extends BasePersistenceImpl<Recen
 			entityCache.removeResult(RecentLayoutBranchModelImpl.ENTITY_CACHE_ENABLED,
 				RecentLayoutBranchImpl.class, recentLayoutBranch.getPrimaryKey());
 
-			clearUniqueFindersCache((RecentLayoutBranchModelImpl)recentLayoutBranch);
+			clearUniqueFindersCache((RecentLayoutBranchModelImpl)recentLayoutBranch,
+				true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		RecentLayoutBranchModelImpl recentLayoutBranchModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					recentLayoutBranchModelImpl.getUserId(),
-					recentLayoutBranchModelImpl.getLayoutSetBranchId(),
-					recentLayoutBranchModelImpl.getPlid()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_U_L_P, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_U_L_P, args,
-				recentLayoutBranchModelImpl);
-		}
-		else {
-			if ((recentLayoutBranchModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_U_L_P.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						recentLayoutBranchModelImpl.getUserId(),
-						recentLayoutBranchModelImpl.getLayoutSetBranchId(),
-						recentLayoutBranchModelImpl.getPlid()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_U_L_P, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_U_L_P, args,
-					recentLayoutBranchModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		RecentLayoutBranchModelImpl recentLayoutBranchModelImpl) {
 		Object[] args = new Object[] {
 				recentLayoutBranchModelImpl.getUserId(),
@@ -2005,12 +1974,29 @@ public class RecentLayoutBranchPersistenceImpl extends BasePersistenceImpl<Recen
 				recentLayoutBranchModelImpl.getPlid()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_U_L_P, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_U_L_P, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_U_L_P, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_U_L_P, args,
+			recentLayoutBranchModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		RecentLayoutBranchModelImpl recentLayoutBranchModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					recentLayoutBranchModelImpl.getUserId(),
+					recentLayoutBranchModelImpl.getLayoutSetBranchId(),
+					recentLayoutBranchModelImpl.getPlid()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_U_L_P, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_U_L_P, args);
+		}
 
 		if ((recentLayoutBranchModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_U_L_P.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					recentLayoutBranchModelImpl.getOriginalUserId(),
 					recentLayoutBranchModelImpl.getOriginalLayoutSetBranchId(),
 					recentLayoutBranchModelImpl.getOriginalPlid()
@@ -2221,8 +2207,8 @@ public class RecentLayoutBranchPersistenceImpl extends BasePersistenceImpl<Recen
 			RecentLayoutBranchImpl.class, recentLayoutBranch.getPrimaryKey(),
 			recentLayoutBranch, false);
 
-		clearUniqueFindersCache(recentLayoutBranchModelImpl);
-		cacheUniqueFindersCache(recentLayoutBranchModelImpl, isNew);
+		clearUniqueFindersCache(recentLayoutBranchModelImpl, false);
+		cacheUniqueFindersCache(recentLayoutBranchModelImpl);
 
 		recentLayoutBranch.resetOriginalValues();
 
@@ -2297,12 +2283,14 @@ public class RecentLayoutBranchPersistenceImpl extends BasePersistenceImpl<Recen
 	 */
 	@Override
 	public RecentLayoutBranch fetchByPrimaryKey(Serializable primaryKey) {
-		RecentLayoutBranch recentLayoutBranch = (RecentLayoutBranch)entityCache.getResult(RecentLayoutBranchModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(RecentLayoutBranchModelImpl.ENTITY_CACHE_ENABLED,
 				RecentLayoutBranchImpl.class, primaryKey);
 
-		if (recentLayoutBranch == _nullRecentLayoutBranch) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		RecentLayoutBranch recentLayoutBranch = (RecentLayoutBranch)serializable;
 
 		if (recentLayoutBranch == null) {
 			Session session = null;
@@ -2318,8 +2306,7 @@ public class RecentLayoutBranchPersistenceImpl extends BasePersistenceImpl<Recen
 				}
 				else {
 					entityCache.putResult(RecentLayoutBranchModelImpl.ENTITY_CACHE_ENABLED,
-						RecentLayoutBranchImpl.class, primaryKey,
-						_nullRecentLayoutBranch);
+						RecentLayoutBranchImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -2373,18 +2360,20 @@ public class RecentLayoutBranchPersistenceImpl extends BasePersistenceImpl<Recen
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			RecentLayoutBranch recentLayoutBranch = (RecentLayoutBranch)entityCache.getResult(RecentLayoutBranchModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(RecentLayoutBranchModelImpl.ENTITY_CACHE_ENABLED,
 					RecentLayoutBranchImpl.class, primaryKey);
 
-			if (recentLayoutBranch == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, recentLayoutBranch);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (RecentLayoutBranch)serializable);
+				}
 			}
 		}
 
@@ -2427,8 +2416,7 @@ public class RecentLayoutBranchPersistenceImpl extends BasePersistenceImpl<Recen
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(RecentLayoutBranchModelImpl.ENTITY_CACHE_ENABLED,
-					RecentLayoutBranchImpl.class, primaryKey,
-					_nullRecentLayoutBranch);
+					RecentLayoutBranchImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -2663,35 +2651,4 @@ public class RecentLayoutBranchPersistenceImpl extends BasePersistenceImpl<Recen
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No RecentLayoutBranch exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No RecentLayoutBranch exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(RecentLayoutBranchPersistenceImpl.class);
-	private static final RecentLayoutBranch _nullRecentLayoutBranch = new RecentLayoutBranchImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<RecentLayoutBranch> toCacheModel() {
-				return _nullRecentLayoutBranchCacheModel;
-			}
-		};
-
-	private static final CacheModel<RecentLayoutBranch> _nullRecentLayoutBranchCacheModel =
-		new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<RecentLayoutBranch>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public RecentLayoutBranch toEntityModel() {
-			return _nullRecentLayoutBranch;
-		}
-	}
 }

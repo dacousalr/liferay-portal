@@ -33,7 +33,6 @@ import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -6065,7 +6064,7 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((DLFileShortcutModelImpl)dlFileShortcut);
+		clearUniqueFindersCache((DLFileShortcutModelImpl)dlFileShortcut, true);
 	}
 
 	@Override
@@ -6077,52 +6076,39 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			entityCache.removeResult(DLFileShortcutModelImpl.ENTITY_CACHE_ENABLED,
 				DLFileShortcutImpl.class, dlFileShortcut.getPrimaryKey());
 
-			clearUniqueFindersCache((DLFileShortcutModelImpl)dlFileShortcut);
+			clearUniqueFindersCache((DLFileShortcutModelImpl)dlFileShortcut,
+				true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		DLFileShortcutModelImpl dlFileShortcutModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					dlFileShortcutModelImpl.getUuid(),
-					dlFileShortcutModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				dlFileShortcutModelImpl);
-		}
-		else {
-			if ((dlFileShortcutModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						dlFileShortcutModelImpl.getUuid(),
-						dlFileShortcutModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					dlFileShortcutModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		DLFileShortcutModelImpl dlFileShortcutModelImpl) {
 		Object[] args = new Object[] {
 				dlFileShortcutModelImpl.getUuid(),
 				dlFileShortcutModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			dlFileShortcutModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		DLFileShortcutModelImpl dlFileShortcutModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					dlFileShortcutModelImpl.getUuid(),
+					dlFileShortcutModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((dlFileShortcutModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					dlFileShortcutModelImpl.getOriginalUuid(),
 					dlFileShortcutModelImpl.getOriginalGroupId()
 				};
@@ -6452,8 +6438,8 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 			DLFileShortcutImpl.class, dlFileShortcut.getPrimaryKey(),
 			dlFileShortcut, false);
 
-		clearUniqueFindersCache(dlFileShortcutModelImpl);
-		cacheUniqueFindersCache(dlFileShortcutModelImpl, isNew);
+		clearUniqueFindersCache(dlFileShortcutModelImpl, false);
+		cacheUniqueFindersCache(dlFileShortcutModelImpl);
 
 		dlFileShortcut.resetOriginalValues();
 
@@ -6537,12 +6523,14 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 	 */
 	@Override
 	public DLFileShortcut fetchByPrimaryKey(Serializable primaryKey) {
-		DLFileShortcut dlFileShortcut = (DLFileShortcut)entityCache.getResult(DLFileShortcutModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(DLFileShortcutModelImpl.ENTITY_CACHE_ENABLED,
 				DLFileShortcutImpl.class, primaryKey);
 
-		if (dlFileShortcut == _nullDLFileShortcut) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		DLFileShortcut dlFileShortcut = (DLFileShortcut)serializable;
 
 		if (dlFileShortcut == null) {
 			Session session = null;
@@ -6558,8 +6546,7 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 				}
 				else {
 					entityCache.putResult(DLFileShortcutModelImpl.ENTITY_CACHE_ENABLED,
-						DLFileShortcutImpl.class, primaryKey,
-						_nullDLFileShortcut);
+						DLFileShortcutImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -6613,18 +6600,20 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			DLFileShortcut dlFileShortcut = (DLFileShortcut)entityCache.getResult(DLFileShortcutModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(DLFileShortcutModelImpl.ENTITY_CACHE_ENABLED,
 					DLFileShortcutImpl.class, primaryKey);
 
-			if (dlFileShortcut == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, dlFileShortcut);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (DLFileShortcut)serializable);
+				}
 			}
 		}
 
@@ -6666,7 +6655,7 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(DLFileShortcutModelImpl.ENTITY_CACHE_ENABLED,
-					DLFileShortcutImpl.class, primaryKey, _nullDLFileShortcut);
+					DLFileShortcutImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -6919,23 +6908,4 @@ public class DLFileShortcutPersistenceImpl extends BasePersistenceImpl<DLFileSho
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid", "active"
 			});
-	private static final DLFileShortcut _nullDLFileShortcut = new DLFileShortcutImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<DLFileShortcut> toCacheModel() {
-				return _nullDLFileShortcutCacheModel;
-			}
-		};
-
-	private static final CacheModel<DLFileShortcut> _nullDLFileShortcutCacheModel =
-		new CacheModel<DLFileShortcut>() {
-			@Override
-			public DLFileShortcut toEntityModel() {
-				return _nullDLFileShortcut;
-			}
-		};
 }

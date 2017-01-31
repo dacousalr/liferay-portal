@@ -108,8 +108,8 @@ GroupSearch groupSearch = siteBrowserDisplayContext.getGroupSearch();
 			<%
 			Map<String, Object> data = new HashMap<String, Object>();
 
-			data.put("groupdescriptivename", group.getDescriptiveName(locale));
-			data.put("groupid", group.getGroupId());
+			data.put("entityid", group.getGroupId());
+			data.put("entityname", group.getDescriptiveName(locale));
 			data.put("grouptarget", target);
 			data.put("grouptype", LanguageUtil.get(request, group.getTypeLabel()));
 			data.put("url", group.getDisplayURL(themeDisplay));
@@ -171,7 +171,6 @@ GroupSearch groupSearch = siteBrowserDisplayContext.getGroupSearch();
 				</c:when>
 				<c:when test='<%= displayStyle.equals("list") %>'>
 					<liferay-ui:search-container-column-text
-						cssClass="content-column name-column title-column"
 						name="name"
 						truncate="<%= true %>"
 					>
@@ -188,7 +187,6 @@ GroupSearch groupSearch = siteBrowserDisplayContext.getGroupSearch();
 					</liferay-ui:search-container-column-text>
 
 					<liferay-ui:search-container-column-text
-						cssClass="text-column type-column"
 						name="type"
 						value="<%= LanguageUtil.get(request, group.getScopeLabel(themeDisplay)) %>"
 					/>

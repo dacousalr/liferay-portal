@@ -15,7 +15,7 @@
 package com.liferay.portal.kernel.lock;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.util.ProxyFactory;
+import com.liferay.portal.kernel.util.ServiceProxyFactory;
 
 /**
  * @author Tina Tian
@@ -113,7 +113,8 @@ public class LockManagerUtil {
 		_lockManager.unlock(className, key, owner);
 	}
 
-	private static final LockManager _lockManager =
-		ProxyFactory.newServiceTrackedInstance(LockManager.class);
+	private static volatile LockManager _lockManager =
+		ServiceProxyFactory.newServiceTrackedInstance(
+			LockManager.class, LockManagerUtil.class, "_lockManager", false);
 
 }

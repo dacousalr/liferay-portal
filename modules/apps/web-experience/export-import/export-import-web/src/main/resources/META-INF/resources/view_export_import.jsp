@@ -18,6 +18,9 @@
 
 <%
 long backgroundTaskId = ParamUtil.getLong(request, "backgroundTaskId");
+
+portletDisplay.setDescription(LanguageUtil.get(request, "process-details"));
+renderResponse.setTitle(LanguageUtil.get(request, "process-details"));
 %>
 
 <div class="container-fluid-1280" id="<portlet:namespace />exportImportProcessContainer">
@@ -37,7 +40,7 @@ long backgroundTaskId = ParamUtil.getLong(request, "backgroundTaskId");
 			namespace: '<portlet:namespace />',
 			processesNode: '#exportImportProcessContainer',
 			processesResourceURL: '<%= HtmlUtil.escapeJS(exportImportProcessURL) %>',
-			timeZone: '<%= timeZone.getID() %>'
+			timeZoneOffset: <%= timeZoneOffset %>
 		}
 	);
 </aui:script>

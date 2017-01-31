@@ -16,7 +16,7 @@ package com.liferay.portal.kernel.dao.orm;
 
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
-import com.liferay.portal.kernel.util.ProxyFactory;
+import com.liferay.portal.kernel.util.ServiceProxyFactory;
 
 import java.io.Serializable;
 
@@ -92,7 +92,8 @@ public class EntityCacheUtil {
 		_entityCache.removeResult(entityCacheEnabled, clazz, primaryKey);
 	}
 
-	private static final EntityCache _entityCache =
-		ProxyFactory.newServiceTrackedInstance(EntityCache.class);
+	private static volatile EntityCache _entityCache =
+		ServiceProxyFactory.newServiceTrackedInstance(
+			EntityCache.class, EntityCacheUtil.class, "_entityCache", false);
 
 }

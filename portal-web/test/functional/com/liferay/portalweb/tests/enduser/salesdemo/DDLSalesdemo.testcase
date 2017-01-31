@@ -1,5 +1,6 @@
 <definition component-name="portal-web-forms-and-data-lists">
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="Dynamic Data Lists" />
 
 	<set-up>
@@ -170,9 +171,9 @@
 			</execute>
 		</for>
 
-		<execute macro="DDLRecord#viewViaDDLDisplayTable">
-			<var name="ddlRecordFieldData" value="Approved" />
+		<execute macro="DDLRecord#viewStatusViaDDLDisplayTable">
 			<var name="fieldFieldLabel" value="Status" />
+			<var name="workflowStatus" value="Approved" />
 		</execute>
 
 		<execute macro="DDLRecord#viewViaDDLDisplayTable">

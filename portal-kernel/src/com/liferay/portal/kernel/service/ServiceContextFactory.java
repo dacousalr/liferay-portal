@@ -17,11 +17,11 @@ package com.liferay.portal.kernel.service;
 import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 import com.liferay.portal.kernel.exception.NoSuchUserException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.GroupConstants;
-import com.liferay.portal.kernel.model.PortletPreferencesIds;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.service.permission.ModelPermissions;
 import com.liferay.portal.kernel.service.permission.ModelPermissionsFactory;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -109,6 +109,11 @@ public class ServiceContextFactory {
 
 				// LPS-24160
 
+				// LPS-52675
+
+				if (_log.isDebugEnabled()) {
+					_log.debug(nsue, nsue);
+				}
 			}
 
 			if (user != null) {
@@ -200,11 +205,7 @@ public class ServiceContextFactory {
 		String portletId = PortalUtil.getPortletId(request);
 
 		if (Validator.isNotNull(portletId)) {
-			PortletPreferencesIds portletPreferencesIds =
-				PortletPreferencesFactoryUtil.getPortletPreferencesIds(
-					request, portletId);
-
-			serviceContext.setPortletPreferencesIds(portletPreferencesIds);
+			serviceContext.setPortletId(portletId);
 		}
 
 		// Request
@@ -412,13 +413,7 @@ public class ServiceContextFactory {
 		HttpServletRequest request = PortalUtil.getHttpServletRequest(
 			portletRequest);
 
-		String portletId = PortalUtil.getPortletId(portletRequest);
-
-		PortletPreferencesIds portletPreferencesIds =
-			PortletPreferencesFactoryUtil.getPortletPreferencesIds(
-				request, portletId);
-
-		serviceContext.setPortletPreferencesIds(portletPreferencesIds);
+		serviceContext.setPortletId(PortalUtil.getPortletId(portletRequest));
 
 		// Request
 
@@ -609,5 +604,8 @@ public class ServiceContextFactory {
 
 		return serviceContext;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		ServiceContextFactory.class);
 
 }

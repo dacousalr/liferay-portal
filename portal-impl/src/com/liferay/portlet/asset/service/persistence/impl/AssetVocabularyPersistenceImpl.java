@@ -33,7 +33,6 @@ import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -4657,7 +4656,7 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((AssetVocabularyModelImpl)assetVocabulary);
+		clearUniqueFindersCache((AssetVocabularyModelImpl)assetVocabulary, true);
 	}
 
 	@Override
@@ -4669,75 +4668,49 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 			entityCache.removeResult(AssetVocabularyModelImpl.ENTITY_CACHE_ENABLED,
 				AssetVocabularyImpl.class, assetVocabulary.getPrimaryKey());
 
-			clearUniqueFindersCache((AssetVocabularyModelImpl)assetVocabulary);
+			clearUniqueFindersCache((AssetVocabularyModelImpl)assetVocabulary,
+				true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		AssetVocabularyModelImpl assetVocabularyModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					assetVocabularyModelImpl.getUuid(),
-					assetVocabularyModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				assetVocabularyModelImpl);
-
-			args = new Object[] {
-					assetVocabularyModelImpl.getGroupId(),
-					assetVocabularyModelImpl.getName()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_G_N, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_G_N, args,
-				assetVocabularyModelImpl);
-		}
-		else {
-			if ((assetVocabularyModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						assetVocabularyModelImpl.getUuid(),
-						assetVocabularyModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					assetVocabularyModelImpl);
-			}
-
-			if ((assetVocabularyModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						assetVocabularyModelImpl.getGroupId(),
-						assetVocabularyModelImpl.getName()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_G_N, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_G_N, args,
-					assetVocabularyModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		AssetVocabularyModelImpl assetVocabularyModelImpl) {
 		Object[] args = new Object[] {
 				assetVocabularyModelImpl.getUuid(),
 				assetVocabularyModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			assetVocabularyModelImpl, false);
+
+		args = new Object[] {
+				assetVocabularyModelImpl.getGroupId(),
+				assetVocabularyModelImpl.getName()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_G_N, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_G_N, args,
+			assetVocabularyModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		AssetVocabularyModelImpl assetVocabularyModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					assetVocabularyModelImpl.getUuid(),
+					assetVocabularyModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((assetVocabularyModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					assetVocabularyModelImpl.getOriginalUuid(),
 					assetVocabularyModelImpl.getOriginalGroupId()
 				};
@@ -4746,17 +4719,19 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
 		}
 
-		args = new Object[] {
-				assetVocabularyModelImpl.getGroupId(),
-				assetVocabularyModelImpl.getName()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					assetVocabularyModelImpl.getGroupId(),
+					assetVocabularyModelImpl.getName()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_G_N, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_G_N, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_G_N, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_G_N, args);
+		}
 
 		if ((assetVocabularyModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_N.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					assetVocabularyModelImpl.getOriginalGroupId(),
 					assetVocabularyModelImpl.getOriginalName()
 				};
@@ -5015,8 +4990,8 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 			AssetVocabularyImpl.class, assetVocabulary.getPrimaryKey(),
 			assetVocabulary, false);
 
-		clearUniqueFindersCache(assetVocabularyModelImpl);
-		cacheUniqueFindersCache(assetVocabularyModelImpl, isNew);
+		clearUniqueFindersCache(assetVocabularyModelImpl, false);
+		cacheUniqueFindersCache(assetVocabularyModelImpl);
 
 		assetVocabulary.resetOriginalValues();
 
@@ -5095,12 +5070,14 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 	 */
 	@Override
 	public AssetVocabulary fetchByPrimaryKey(Serializable primaryKey) {
-		AssetVocabulary assetVocabulary = (AssetVocabulary)entityCache.getResult(AssetVocabularyModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(AssetVocabularyModelImpl.ENTITY_CACHE_ENABLED,
 				AssetVocabularyImpl.class, primaryKey);
 
-		if (assetVocabulary == _nullAssetVocabulary) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		AssetVocabulary assetVocabulary = (AssetVocabulary)serializable;
 
 		if (assetVocabulary == null) {
 			Session session = null;
@@ -5116,8 +5093,7 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 				}
 				else {
 					entityCache.putResult(AssetVocabularyModelImpl.ENTITY_CACHE_ENABLED,
-						AssetVocabularyImpl.class, primaryKey,
-						_nullAssetVocabulary);
+						AssetVocabularyImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -5171,18 +5147,20 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			AssetVocabulary assetVocabulary = (AssetVocabulary)entityCache.getResult(AssetVocabularyModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(AssetVocabularyModelImpl.ENTITY_CACHE_ENABLED,
 					AssetVocabularyImpl.class, primaryKey);
 
-			if (assetVocabulary == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, assetVocabulary);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (AssetVocabulary)serializable);
+				}
 			}
 		}
 
@@ -5224,7 +5202,7 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(AssetVocabularyModelImpl.ENTITY_CACHE_ENABLED,
-					AssetVocabularyImpl.class, primaryKey, _nullAssetVocabulary);
+					AssetVocabularyImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -5477,23 +5455,4 @@ public class AssetVocabularyPersistenceImpl extends BasePersistenceImpl<AssetVoc
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid", "settings"
 			});
-	private static final AssetVocabulary _nullAssetVocabulary = new AssetVocabularyImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<AssetVocabulary> toCacheModel() {
-				return _nullAssetVocabularyCacheModel;
-			}
-		};
-
-	private static final CacheModel<AssetVocabulary> _nullAssetVocabularyCacheModel =
-		new CacheModel<AssetVocabulary>() {
-			@Override
-			public AssetVocabulary toEntityModel() {
-				return _nullAssetVocabulary;
-			}
-		};
 }

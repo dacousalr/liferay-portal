@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -5691,7 +5690,7 @@ public class CalendarResourcePersistenceImpl extends BasePersistenceImpl<Calenda
 	 * Returns the calendar resource where classNameId = &#63; and classPK = &#63; or throws a {@link NoSuchResourceException} if it could not be found.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the matching calendar resource
 	 * @throws NoSuchResourceException if a matching calendar resource could not be found
 	 */
@@ -5727,7 +5726,7 @@ public class CalendarResourcePersistenceImpl extends BasePersistenceImpl<Calenda
 	 * Returns the calendar resource where classNameId = &#63; and classPK = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the matching calendar resource, or <code>null</code> if a matching calendar resource could not be found
 	 */
 	@Override
@@ -5739,7 +5738,7 @@ public class CalendarResourcePersistenceImpl extends BasePersistenceImpl<Calenda
 	 * Returns the calendar resource where classNameId = &#63; and classPK = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param retrieveFromCache whether to retrieve from the finder cache
 	 * @return the matching calendar resource, or <code>null</code> if a matching calendar resource could not be found
 	 */
@@ -5830,7 +5829,7 @@ public class CalendarResourcePersistenceImpl extends BasePersistenceImpl<Calenda
 	 * Removes the calendar resource where classNameId = &#63; and classPK = &#63; from the database.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the calendar resource that was removed
 	 */
 	@Override
@@ -5845,7 +5844,7 @@ public class CalendarResourcePersistenceImpl extends BasePersistenceImpl<Calenda
 	 * Returns the number of calendar resources where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the number of matching calendar resources
 	 */
 	@Override
@@ -6594,7 +6593,8 @@ public class CalendarResourcePersistenceImpl extends BasePersistenceImpl<Calenda
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((CalendarResourceModelImpl)calendarResource);
+		clearUniqueFindersCache((CalendarResourceModelImpl)calendarResource,
+			true);
 	}
 
 	@Override
@@ -6606,75 +6606,50 @@ public class CalendarResourcePersistenceImpl extends BasePersistenceImpl<Calenda
 			entityCache.removeResult(CalendarResourceModelImpl.ENTITY_CACHE_ENABLED,
 				CalendarResourceImpl.class, calendarResource.getPrimaryKey());
 
-			clearUniqueFindersCache((CalendarResourceModelImpl)calendarResource);
+			clearUniqueFindersCache((CalendarResourceModelImpl)calendarResource,
+				true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		CalendarResourceModelImpl calendarResourceModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					calendarResourceModelImpl.getUuid(),
-					calendarResourceModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				calendarResourceModelImpl);
-
-			args = new Object[] {
-					calendarResourceModelImpl.getClassNameId(),
-					calendarResourceModelImpl.getClassPK()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_C, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_C, args,
-				calendarResourceModelImpl);
-		}
-		else {
-			if ((calendarResourceModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						calendarResourceModelImpl.getUuid(),
-						calendarResourceModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					calendarResourceModelImpl);
-			}
-
-			if ((calendarResourceModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						calendarResourceModelImpl.getClassNameId(),
-						calendarResourceModelImpl.getClassPK()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_C, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_C, args,
-					calendarResourceModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		CalendarResourceModelImpl calendarResourceModelImpl) {
 		Object[] args = new Object[] {
 				calendarResourceModelImpl.getUuid(),
 				calendarResourceModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			calendarResourceModelImpl, false);
+
+		args = new Object[] {
+				calendarResourceModelImpl.getClassNameId(),
+				calendarResourceModelImpl.getClassPK()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_C, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_C, args,
+			calendarResourceModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		CalendarResourceModelImpl calendarResourceModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					calendarResourceModelImpl.getUuid(),
+					calendarResourceModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((calendarResourceModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					calendarResourceModelImpl.getOriginalUuid(),
 					calendarResourceModelImpl.getOriginalGroupId()
 				};
@@ -6683,17 +6658,19 @@ public class CalendarResourcePersistenceImpl extends BasePersistenceImpl<Calenda
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
 		}
 
-		args = new Object[] {
-				calendarResourceModelImpl.getClassNameId(),
-				calendarResourceModelImpl.getClassPK()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					calendarResourceModelImpl.getClassNameId(),
+					calendarResourceModelImpl.getClassPK()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_C, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_C, args);
+		}
 
 		if ((calendarResourceModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					calendarResourceModelImpl.getOriginalClassNameId(),
 					calendarResourceModelImpl.getOriginalClassPK()
 				};
@@ -7015,8 +6992,8 @@ public class CalendarResourcePersistenceImpl extends BasePersistenceImpl<Calenda
 			CalendarResourceImpl.class, calendarResource.getPrimaryKey(),
 			calendarResource, false);
 
-		clearUniqueFindersCache(calendarResourceModelImpl);
-		cacheUniqueFindersCache(calendarResourceModelImpl, isNew);
+		clearUniqueFindersCache(calendarResourceModelImpl, false);
+		cacheUniqueFindersCache(calendarResourceModelImpl);
 
 		calendarResource.resetOriginalValues();
 
@@ -7100,12 +7077,14 @@ public class CalendarResourcePersistenceImpl extends BasePersistenceImpl<Calenda
 	 */
 	@Override
 	public CalendarResource fetchByPrimaryKey(Serializable primaryKey) {
-		CalendarResource calendarResource = (CalendarResource)entityCache.getResult(CalendarResourceModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(CalendarResourceModelImpl.ENTITY_CACHE_ENABLED,
 				CalendarResourceImpl.class, primaryKey);
 
-		if (calendarResource == _nullCalendarResource) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		CalendarResource calendarResource = (CalendarResource)serializable;
 
 		if (calendarResource == null) {
 			Session session = null;
@@ -7121,8 +7100,7 @@ public class CalendarResourcePersistenceImpl extends BasePersistenceImpl<Calenda
 				}
 				else {
 					entityCache.putResult(CalendarResourceModelImpl.ENTITY_CACHE_ENABLED,
-						CalendarResourceImpl.class, primaryKey,
-						_nullCalendarResource);
+						CalendarResourceImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -7176,18 +7154,20 @@ public class CalendarResourcePersistenceImpl extends BasePersistenceImpl<Calenda
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			CalendarResource calendarResource = (CalendarResource)entityCache.getResult(CalendarResourceModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(CalendarResourceModelImpl.ENTITY_CACHE_ENABLED,
 					CalendarResourceImpl.class, primaryKey);
 
-			if (calendarResource == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, calendarResource);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (CalendarResource)serializable);
+				}
 			}
 		}
 
@@ -7229,8 +7209,7 @@ public class CalendarResourcePersistenceImpl extends BasePersistenceImpl<Calenda
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(CalendarResourceModelImpl.ENTITY_CACHE_ENABLED,
-					CalendarResourceImpl.class, primaryKey,
-					_nullCalendarResource);
+					CalendarResourceImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -7477,23 +7456,4 @@ public class CalendarResourcePersistenceImpl extends BasePersistenceImpl<Calenda
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid", "code", "active"
 			});
-	private static final CalendarResource _nullCalendarResource = new CalendarResourceImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<CalendarResource> toCacheModel() {
-				return _nullCalendarResourceCacheModel;
-			}
-		};
-
-	private static final CacheModel<CalendarResource> _nullCalendarResourceCacheModel =
-		new CacheModel<CalendarResource>() {
-			@Override
-			public CalendarResource toEntityModel() {
-				return _nullCalendarResource;
-			}
-		};
 }

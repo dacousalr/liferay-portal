@@ -26,7 +26,7 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -55,12 +55,14 @@ import org.osgi.service.component.annotations.Reference;
 @Component(service = ExportArticleUtil.class)
 public class ExportArticleUtil {
 
+	/**
+	 * @deprecated As of 1.5.0, replaced by {@link #sendFile(String,
+	 *             PortletRequest, PortletResponse)}
+	 */
+	@Deprecated
 	public void sendFile(
 			PortletRequest portletRequest, PortletResponse portletResponse)
 		throws IOException {
-
-		long groupId = ParamUtil.getLong(portletRequest, "groupId");
-		String articleId = ParamUtil.getString(portletRequest, "articleId");
 
 		String targetExtension = ParamUtil.getString(
 			portletRequest, "targetExtension");
@@ -70,14 +72,35 @@ public class ExportArticleUtil {
 		String[] allowedExtensions = StringUtil.split(
 			portletPreferences.getValue("extensions", null));
 
+		if (Validator.isNull(targetExtension) ||
+			!ArrayUtil.contains(allowedExtensions, targetExtension)) {
+
+			return;
+		}
+
+		sendFile(targetExtension, portletRequest, portletResponse);
+	}
+
+	public void sendFile(
+			String targetExtension, PortletRequest portletRequest,
+			PortletResponse portletResponse)
+		throws IOException {
+
+		if (Validator.isNull(targetExtension)) {
+			return;
+		}
+
+		long groupId = ParamUtil.getLong(portletRequest, "groupId");
+		String articleId = ParamUtil.getString(portletRequest, "articleId");
+
 		String languageId = LanguageUtil.getLanguageId(portletRequest);
 		PortletRequestModel portletRequestModel = new PortletRequestModel(
 			portletRequest, portletResponse);
 		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
-		HttpServletRequest request = PortalUtil.getHttpServletRequest(
+		HttpServletRequest request = _portal.getHttpServletRequest(
 			portletRequest);
-		HttpServletResponse response = PortalUtil.getHttpServletResponse(
+		HttpServletResponse response = _portal.getHttpServletResponse(
 			portletResponse);
 
 		JournalArticleDisplay articleDisplay = _journalContent.getDisplay(
@@ -122,16 +145,7 @@ public class ExportArticleUtil {
 		String fileName = title.concat(StringPool.PERIOD).concat(
 			sourceExtension);
 
-		String contentType = MimeTypesUtil.getContentType(fileName);
-
-		if (Validator.isNull(targetExtension) ||
-			!ArrayUtil.contains(allowedExtensions, targetExtension)) {
-
-			ServletResponseUtil.sendFile(
-				request, response, fileName, is, contentType);
-
-			return;
-		}
+		String contentType = ContentTypes.TEXT_HTML;
 
 		String id = DLUtil.getTempFileId(
 			articleDisplay.getId(), String.valueOf(articleDisplay.getVersion()),
@@ -141,7 +155,11 @@ public class ExportArticleUtil {
 			id, is, sourceExtension, targetExtension);
 
 		if (convertedFile != null) {
+			targetExtension = StringUtil.toLowerCase(targetExtension);
+
 			fileName = title.concat(StringPool.PERIOD).concat(targetExtension);
+
+			contentType = MimeTypesUtil.getContentType(fileName);
 
 			is = new FileInputStream(convertedFile);
 		}
@@ -156,5 +174,8 @@ public class ExportArticleUtil {
 	}
 
 	private JournalContent _journalContent;
+
+	@Reference
+	private Portal _portal;
 
 }

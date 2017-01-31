@@ -29,8 +29,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchPluginSettingException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.PluginSetting;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
@@ -986,7 +984,7 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((PluginSettingModelImpl)pluginSetting);
+		clearUniqueFindersCache((PluginSettingModelImpl)pluginSetting, true);
 	}
 
 	@Override
@@ -998,42 +996,11 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 			entityCache.removeResult(PluginSettingModelImpl.ENTITY_CACHE_ENABLED,
 				PluginSettingImpl.class, pluginSetting.getPrimaryKey());
 
-			clearUniqueFindersCache((PluginSettingModelImpl)pluginSetting);
+			clearUniqueFindersCache((PluginSettingModelImpl)pluginSetting, true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		PluginSettingModelImpl pluginSettingModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					pluginSettingModelImpl.getCompanyId(),
-					pluginSettingModelImpl.getPluginId(),
-					pluginSettingModelImpl.getPluginType()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_I_T, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_I_T, args,
-				pluginSettingModelImpl);
-		}
-		else {
-			if ((pluginSettingModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_I_T.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						pluginSettingModelImpl.getCompanyId(),
-						pluginSettingModelImpl.getPluginId(),
-						pluginSettingModelImpl.getPluginType()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_I_T, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_I_T, args,
-					pluginSettingModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		PluginSettingModelImpl pluginSettingModelImpl) {
 		Object[] args = new Object[] {
 				pluginSettingModelImpl.getCompanyId(),
@@ -1041,12 +1008,28 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 				pluginSettingModelImpl.getPluginType()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_I_T, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_I_T, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_I_T, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_I_T, args,
+			pluginSettingModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		PluginSettingModelImpl pluginSettingModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					pluginSettingModelImpl.getCompanyId(),
+					pluginSettingModelImpl.getPluginId(),
+					pluginSettingModelImpl.getPluginType()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_I_T, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_I_T, args);
+		}
 
 		if ((pluginSettingModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_I_T.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					pluginSettingModelImpl.getOriginalCompanyId(),
 					pluginSettingModelImpl.getOriginalPluginId(),
 					pluginSettingModelImpl.getOriginalPluginType()
@@ -1218,8 +1201,8 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 			PluginSettingImpl.class, pluginSetting.getPrimaryKey(),
 			pluginSetting, false);
 
-		clearUniqueFindersCache(pluginSettingModelImpl);
-		cacheUniqueFindersCache(pluginSettingModelImpl, isNew);
+		clearUniqueFindersCache(pluginSettingModelImpl, false);
+		cacheUniqueFindersCache(pluginSettingModelImpl);
 
 		pluginSetting.resetOriginalValues();
 
@@ -1292,12 +1275,14 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 	 */
 	@Override
 	public PluginSetting fetchByPrimaryKey(Serializable primaryKey) {
-		PluginSetting pluginSetting = (PluginSetting)entityCache.getResult(PluginSettingModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(PluginSettingModelImpl.ENTITY_CACHE_ENABLED,
 				PluginSettingImpl.class, primaryKey);
 
-		if (pluginSetting == _nullPluginSetting) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		PluginSetting pluginSetting = (PluginSetting)serializable;
 
 		if (pluginSetting == null) {
 			Session session = null;
@@ -1313,7 +1298,7 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 				}
 				else {
 					entityCache.putResult(PluginSettingModelImpl.ENTITY_CACHE_ENABLED,
-						PluginSettingImpl.class, primaryKey, _nullPluginSetting);
+						PluginSettingImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -1367,18 +1352,20 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			PluginSetting pluginSetting = (PluginSetting)entityCache.getResult(PluginSettingModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(PluginSettingModelImpl.ENTITY_CACHE_ENABLED,
 					PluginSettingImpl.class, primaryKey);
 
-			if (pluginSetting == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, pluginSetting);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (PluginSetting)serializable);
+				}
 			}
 		}
 
@@ -1420,7 +1407,7 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(PluginSettingModelImpl.ENTITY_CACHE_ENABLED,
-					PluginSettingImpl.class, primaryKey, _nullPluginSetting);
+					PluginSettingImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -1663,34 +1650,4 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"active"
 			});
-	private static final PluginSetting _nullPluginSetting = new PluginSettingImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<PluginSetting> toCacheModel() {
-				return _nullPluginSettingCacheModel;
-			}
-		};
-
-	private static final CacheModel<PluginSetting> _nullPluginSettingCacheModel = new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<PluginSetting>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public PluginSetting toEntityModel() {
-			return _nullPluginSetting;
-		}
-	}
 }

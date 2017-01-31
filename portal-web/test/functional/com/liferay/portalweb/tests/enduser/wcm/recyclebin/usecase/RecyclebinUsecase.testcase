@@ -1,5 +1,6 @@
 <definition component-name="portal-wcm">
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="Recycle Bin" />
 
 	<set-up>
@@ -305,6 +306,8 @@
 			<var name="userName" value="Test Test" />
 		</execute>
 
+		<execute macro="ProductMenuHelper#closeProductMenu" />
+
 		<execute macro="MessageboardsThread#restoreMBAttachmentCP">
 			<var name="mbAttachmentFile" value="Document_1.doc" />
 		</execute>
@@ -503,6 +506,15 @@
 			<var name="portletName" value="Documents and Media" />
 		</execute>
 
+		<execute macro="DMDocument#enableActionsMenuOnPortlet" />
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Test Page" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="DMPortlet#setDescriptiveView" />
+
 		<execute macro="DMFolder#addPG">
 			<var name="dmFolderDescription" value="DM Folder Description" />
 			<var name="dmFolderName" value="DM Folder Name" />
@@ -601,6 +613,10 @@
 		<execute macro="WebContent#addPGViaWCD">
 			<var name="webContentContent" value="WC Content" />
 			<var name="webContentTitle" value="WC Title" />
+		</execute>
+
+		<execute macro="WebContent#viewPGViaWCD">
+			<var name="webContentContent" value="WC Content" />
 		</execute>
 
 		<execute macro="Navigator#openSiteURL">
@@ -716,6 +732,8 @@
 		<execute macro="ProductMenu#gotoSitesContent">
 			<var name="portlet" value="Web Content" />
 		</execute>
+
+		<execute macro="WebContentNavigator#gotoManageTemplates" />
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="WC Template Description" />

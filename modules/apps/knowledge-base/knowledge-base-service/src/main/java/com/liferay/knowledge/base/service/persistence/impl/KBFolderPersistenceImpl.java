@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -61,7 +60,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * The persistence implementation for the k b folder service.
+ * The persistence implementation for the kb folder service.
  *
  * <p>
  * Caching information and settings can be found in <code>portal.properties</code>
@@ -78,7 +77,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify or reference this class directly. Always use {@link KBFolderUtil} to access the k b folder persistence. Modify <code>service.xml</code> and rerun ServiceBuilder to regenerate this class.
+	 * Never modify or reference this class directly. Always use {@link KBFolderUtil} to access the kb folder persistence. Modify <code>service.xml</code> and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static final String FINDER_CLASS_NAME_ENTITY = KBFolderImpl.class.getName();
 	public static final String FINDER_CLASS_NAME_LIST_WITH_PAGINATION = FINDER_CLASS_NAME_ENTITY +
@@ -114,10 +113,10 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 			new String[] { String.class.getName() });
 
 	/**
-	 * Returns all the k b folders where uuid = &#63;.
+	 * Returns all the kb folders where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
-	 * @return the matching k b folders
+	 * @return the matching kb folders
 	 */
 	@Override
 	public List<KBFolder> findByUuid(String uuid) {
@@ -125,16 +124,16 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns a range of all the k b folders where uuid = &#63;.
+	 * Returns a range of all the kb folders where uuid = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link KBFolderModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param uuid the uuid
-	 * @param start the lower bound of the range of k b folders
-	 * @param end the upper bound of the range of k b folders (not inclusive)
-	 * @return the range of matching k b folders
+	 * @param start the lower bound of the range of kb folders
+	 * @param end the upper bound of the range of kb folders (not inclusive)
+	 * @return the range of matching kb folders
 	 */
 	@Override
 	public List<KBFolder> findByUuid(String uuid, int start, int end) {
@@ -142,17 +141,17 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns an ordered range of all the k b folders where uuid = &#63;.
+	 * Returns an ordered range of all the kb folders where uuid = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link KBFolderModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param uuid the uuid
-	 * @param start the lower bound of the range of k b folders
-	 * @param end the upper bound of the range of k b folders (not inclusive)
+	 * @param start the lower bound of the range of kb folders
+	 * @param end the upper bound of the range of kb folders (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching k b folders
+	 * @return the ordered range of matching kb folders
 	 */
 	@Override
 	public List<KBFolder> findByUuid(String uuid, int start, int end,
@@ -161,18 +160,18 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns an ordered range of all the k b folders where uuid = &#63;.
+	 * Returns an ordered range of all the kb folders where uuid = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link KBFolderModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param uuid the uuid
-	 * @param start the lower bound of the range of k b folders
-	 * @param end the upper bound of the range of k b folders (not inclusive)
+	 * @param start the lower bound of the range of kb folders
+	 * @param end the upper bound of the range of kb folders (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of matching k b folders
+	 * @return the ordered range of matching kb folders
 	 */
 	@Override
 	public List<KBFolder> findByUuid(String uuid, int start, int end,
@@ -291,12 +290,12 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the first k b folder in the ordered set where uuid = &#63;.
+	 * Returns the first kb folder in the ordered set where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching k b folder
-	 * @throws NoSuchFolderException if a matching k b folder could not be found
+	 * @return the first matching kb folder
+	 * @throws NoSuchFolderException if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder findByUuid_First(String uuid,
@@ -321,11 +320,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the first k b folder in the ordered set where uuid = &#63;.
+	 * Returns the first kb folder in the ordered set where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching k b folder, or <code>null</code> if a matching k b folder could not be found
+	 * @return the first matching kb folder, or <code>null</code> if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder fetchByUuid_First(String uuid,
@@ -340,12 +339,12 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the last k b folder in the ordered set where uuid = &#63;.
+	 * Returns the last kb folder in the ordered set where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching k b folder
-	 * @throws NoSuchFolderException if a matching k b folder could not be found
+	 * @return the last matching kb folder
+	 * @throws NoSuchFolderException if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder findByUuid_Last(String uuid,
@@ -370,11 +369,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the last k b folder in the ordered set where uuid = &#63;.
+	 * Returns the last kb folder in the ordered set where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching k b folder, or <code>null</code> if a matching k b folder could not be found
+	 * @return the last matching kb folder, or <code>null</code> if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder fetchByUuid_Last(String uuid,
@@ -396,13 +395,13 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the k b folders before and after the current k b folder in the ordered set where uuid = &#63;.
+	 * Returns the kb folders before and after the current kb folder in the ordered set where uuid = &#63;.
 	 *
-	 * @param kbFolderId the primary key of the current k b folder
+	 * @param kbFolderId the primary key of the current kb folder
 	 * @param uuid the uuid
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next k b folder
-	 * @throws NoSuchFolderException if a k b folder with the primary key could not be found
+	 * @return the previous, current, and next kb folder
+	 * @throws NoSuchFolderException if a kb folder with the primary key could not be found
 	 */
 	@Override
 	public KBFolder[] findByUuid_PrevAndNext(long kbFolderId, String uuid,
@@ -556,7 +555,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Removes all the k b folders where uuid = &#63; from the database.
+	 * Removes all the kb folders where uuid = &#63; from the database.
 	 *
 	 * @param uuid the uuid
 	 */
@@ -569,10 +568,10 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the number of k b folders where uuid = &#63;.
+	 * Returns the number of kb folders where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
-	 * @return the number of matching k b folders
+	 * @return the number of matching kb folders
 	 */
 	@Override
 	public int countByUuid(String uuid) {
@@ -648,12 +647,12 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 			new String[] { String.class.getName(), Long.class.getName() });
 
 	/**
-	 * Returns the k b folder where uuid = &#63; and groupId = &#63; or throws a {@link NoSuchFolderException} if it could not be found.
+	 * Returns the kb folder where uuid = &#63; and groupId = &#63; or throws a {@link NoSuchFolderException} if it could not be found.
 	 *
 	 * @param uuid the uuid
 	 * @param groupId the group ID
-	 * @return the matching k b folder
-	 * @throws NoSuchFolderException if a matching k b folder could not be found
+	 * @return the matching kb folder
+	 * @throws NoSuchFolderException if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder findByUUID_G(String uuid, long groupId)
@@ -684,11 +683,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the k b folder where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 * Returns the kb folder where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
 	 * @param uuid the uuid
 	 * @param groupId the group ID
-	 * @return the matching k b folder, or <code>null</code> if a matching k b folder could not be found
+	 * @return the matching kb folder, or <code>null</code> if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder fetchByUUID_G(String uuid, long groupId) {
@@ -696,12 +695,12 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the k b folder where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 * Returns the kb folder where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param uuid the uuid
 	 * @param groupId the group ID
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the matching k b folder, or <code>null</code> if a matching k b folder could not be found
+	 * @return the matching kb folder, or <code>null</code> if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder fetchByUUID_G(String uuid, long groupId,
@@ -802,11 +801,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Removes the k b folder where uuid = &#63; and groupId = &#63; from the database.
+	 * Removes the kb folder where uuid = &#63; and groupId = &#63; from the database.
 	 *
 	 * @param uuid the uuid
 	 * @param groupId the group ID
-	 * @return the k b folder that was removed
+	 * @return the kb folder that was removed
 	 */
 	@Override
 	public KBFolder removeByUUID_G(String uuid, long groupId)
@@ -817,11 +816,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the number of k b folders where uuid = &#63; and groupId = &#63;.
+	 * Returns the number of kb folders where uuid = &#63; and groupId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param groupId the group ID
-	 * @return the number of matching k b folders
+	 * @return the number of matching kb folders
 	 */
 	@Override
 	public int countByUUID_G(String uuid, long groupId) {
@@ -912,11 +911,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 			new String[] { String.class.getName(), Long.class.getName() });
 
 	/**
-	 * Returns all the k b folders where uuid = &#63; and companyId = &#63;.
+	 * Returns all the kb folders where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @return the matching k b folders
+	 * @return the matching kb folders
 	 */
 	@Override
 	public List<KBFolder> findByUuid_C(String uuid, long companyId) {
@@ -925,7 +924,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns a range of all the k b folders where uuid = &#63; and companyId = &#63;.
+	 * Returns a range of all the kb folders where uuid = &#63; and companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link KBFolderModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
@@ -933,9 +932,9 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of k b folders
-	 * @param end the upper bound of the range of k b folders (not inclusive)
-	 * @return the range of matching k b folders
+	 * @param start the lower bound of the range of kb folders
+	 * @param end the upper bound of the range of kb folders (not inclusive)
+	 * @return the range of matching kb folders
 	 */
 	@Override
 	public List<KBFolder> findByUuid_C(String uuid, long companyId, int start,
@@ -944,7 +943,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns an ordered range of all the k b folders where uuid = &#63; and companyId = &#63;.
+	 * Returns an ordered range of all the kb folders where uuid = &#63; and companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link KBFolderModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
@@ -952,10 +951,10 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of k b folders
-	 * @param end the upper bound of the range of k b folders (not inclusive)
+	 * @param start the lower bound of the range of kb folders
+	 * @param end the upper bound of the range of kb folders (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching k b folders
+	 * @return the ordered range of matching kb folders
 	 */
 	@Override
 	public List<KBFolder> findByUuid_C(String uuid, long companyId, int start,
@@ -964,7 +963,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns an ordered range of all the k b folders where uuid = &#63; and companyId = &#63;.
+	 * Returns an ordered range of all the kb folders where uuid = &#63; and companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link KBFolderModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
@@ -972,11 +971,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of k b folders
-	 * @param end the upper bound of the range of k b folders (not inclusive)
+	 * @param start the lower bound of the range of kb folders
+	 * @param end the upper bound of the range of kb folders (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of matching k b folders
+	 * @return the ordered range of matching kb folders
 	 */
 	@Override
 	public List<KBFolder> findByUuid_C(String uuid, long companyId, int start,
@@ -1105,13 +1104,13 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the first k b folder in the ordered set where uuid = &#63; and companyId = &#63;.
+	 * Returns the first kb folder in the ordered set where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching k b folder
-	 * @throws NoSuchFolderException if a matching k b folder could not be found
+	 * @return the first matching kb folder
+	 * @throws NoSuchFolderException if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder findByUuid_C_First(String uuid, long companyId,
@@ -1140,12 +1139,12 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the first k b folder in the ordered set where uuid = &#63; and companyId = &#63;.
+	 * Returns the first kb folder in the ordered set where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching k b folder, or <code>null</code> if a matching k b folder could not be found
+	 * @return the first matching kb folder, or <code>null</code> if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder fetchByUuid_C_First(String uuid, long companyId,
@@ -1161,13 +1160,13 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the last k b folder in the ordered set where uuid = &#63; and companyId = &#63;.
+	 * Returns the last kb folder in the ordered set where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching k b folder
-	 * @throws NoSuchFolderException if a matching k b folder could not be found
+	 * @return the last matching kb folder
+	 * @throws NoSuchFolderException if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder findByUuid_C_Last(String uuid, long companyId,
@@ -1196,12 +1195,12 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the last k b folder in the ordered set where uuid = &#63; and companyId = &#63;.
+	 * Returns the last kb folder in the ordered set where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching k b folder, or <code>null</code> if a matching k b folder could not be found
+	 * @return the last matching kb folder, or <code>null</code> if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder fetchByUuid_C_Last(String uuid, long companyId,
@@ -1223,14 +1222,14 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the k b folders before and after the current k b folder in the ordered set where uuid = &#63; and companyId = &#63;.
+	 * Returns the kb folders before and after the current kb folder in the ordered set where uuid = &#63; and companyId = &#63;.
 	 *
-	 * @param kbFolderId the primary key of the current k b folder
+	 * @param kbFolderId the primary key of the current kb folder
 	 * @param uuid the uuid
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next k b folder
-	 * @throws NoSuchFolderException if a k b folder with the primary key could not be found
+	 * @return the previous, current, and next kb folder
+	 * @throws NoSuchFolderException if a kb folder with the primary key could not be found
 	 */
 	@Override
 	public KBFolder[] findByUuid_C_PrevAndNext(long kbFolderId, String uuid,
@@ -1388,7 +1387,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Removes all the k b folders where uuid = &#63; and companyId = &#63; from the database.
+	 * Removes all the kb folders where uuid = &#63; and companyId = &#63; from the database.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
@@ -1402,11 +1401,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the number of k b folders where uuid = &#63; and companyId = &#63;.
+	 * Returns the number of kb folders where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @return the number of matching k b folders
+	 * @return the number of matching kb folders
 	 */
 	@Override
 	public int countByUuid_C(String uuid, long companyId) {
@@ -1496,11 +1495,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 			new String[] { Long.class.getName(), Long.class.getName() });
 
 	/**
-	 * Returns all the k b folders where groupId = &#63; and parentKBFolderId = &#63;.
+	 * Returns all the kb folders where groupId = &#63; and parentKBFolderId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
-	 * @return the matching k b folders
+	 * @param parentKBFolderId the parent kb folder ID
+	 * @return the matching kb folders
 	 */
 	@Override
 	public List<KBFolder> findByG_P(long groupId, long parentKBFolderId) {
@@ -1509,17 +1508,17 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns a range of all the k b folders where groupId = &#63; and parentKBFolderId = &#63;.
+	 * Returns a range of all the kb folders where groupId = &#63; and parentKBFolderId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link KBFolderModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
-	 * @param start the lower bound of the range of k b folders
-	 * @param end the upper bound of the range of k b folders (not inclusive)
-	 * @return the range of matching k b folders
+	 * @param parentKBFolderId the parent kb folder ID
+	 * @param start the lower bound of the range of kb folders
+	 * @param end the upper bound of the range of kb folders (not inclusive)
+	 * @return the range of matching kb folders
 	 */
 	@Override
 	public List<KBFolder> findByG_P(long groupId, long parentKBFolderId,
@@ -1528,18 +1527,18 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns an ordered range of all the k b folders where groupId = &#63; and parentKBFolderId = &#63;.
+	 * Returns an ordered range of all the kb folders where groupId = &#63; and parentKBFolderId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link KBFolderModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
-	 * @param start the lower bound of the range of k b folders
-	 * @param end the upper bound of the range of k b folders (not inclusive)
+	 * @param parentKBFolderId the parent kb folder ID
+	 * @param start the lower bound of the range of kb folders
+	 * @param end the upper bound of the range of kb folders (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching k b folders
+	 * @return the ordered range of matching kb folders
 	 */
 	@Override
 	public List<KBFolder> findByG_P(long groupId, long parentKBFolderId,
@@ -1549,19 +1548,19 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns an ordered range of all the k b folders where groupId = &#63; and parentKBFolderId = &#63;.
+	 * Returns an ordered range of all the kb folders where groupId = &#63; and parentKBFolderId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link KBFolderModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
-	 * @param start the lower bound of the range of k b folders
-	 * @param end the upper bound of the range of k b folders (not inclusive)
+	 * @param parentKBFolderId the parent kb folder ID
+	 * @param start the lower bound of the range of kb folders
+	 * @param end the upper bound of the range of kb folders (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of matching k b folders
+	 * @return the ordered range of matching kb folders
 	 */
 	@Override
 	public List<KBFolder> findByG_P(long groupId, long parentKBFolderId,
@@ -1676,13 +1675,13 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the first k b folder in the ordered set where groupId = &#63; and parentKBFolderId = &#63;.
+	 * Returns the first kb folder in the ordered set where groupId = &#63; and parentKBFolderId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
+	 * @param parentKBFolderId the parent kb folder ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching k b folder
-	 * @throws NoSuchFolderException if a matching k b folder could not be found
+	 * @return the first matching kb folder
+	 * @throws NoSuchFolderException if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder findByG_P_First(long groupId, long parentKBFolderId,
@@ -1711,12 +1710,12 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the first k b folder in the ordered set where groupId = &#63; and parentKBFolderId = &#63;.
+	 * Returns the first kb folder in the ordered set where groupId = &#63; and parentKBFolderId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
+	 * @param parentKBFolderId the parent kb folder ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching k b folder, or <code>null</code> if a matching k b folder could not be found
+	 * @return the first matching kb folder, or <code>null</code> if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder fetchByG_P_First(long groupId, long parentKBFolderId,
@@ -1732,13 +1731,13 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the last k b folder in the ordered set where groupId = &#63; and parentKBFolderId = &#63;.
+	 * Returns the last kb folder in the ordered set where groupId = &#63; and parentKBFolderId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
+	 * @param parentKBFolderId the parent kb folder ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching k b folder
-	 * @throws NoSuchFolderException if a matching k b folder could not be found
+	 * @return the last matching kb folder
+	 * @throws NoSuchFolderException if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder findByG_P_Last(long groupId, long parentKBFolderId,
@@ -1767,12 +1766,12 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the last k b folder in the ordered set where groupId = &#63; and parentKBFolderId = &#63;.
+	 * Returns the last kb folder in the ordered set where groupId = &#63; and parentKBFolderId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
+	 * @param parentKBFolderId the parent kb folder ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching k b folder, or <code>null</code> if a matching k b folder could not be found
+	 * @return the last matching kb folder, or <code>null</code> if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder fetchByG_P_Last(long groupId, long parentKBFolderId,
@@ -1794,14 +1793,14 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the k b folders before and after the current k b folder in the ordered set where groupId = &#63; and parentKBFolderId = &#63;.
+	 * Returns the kb folders before and after the current kb folder in the ordered set where groupId = &#63; and parentKBFolderId = &#63;.
 	 *
-	 * @param kbFolderId the primary key of the current k b folder
+	 * @param kbFolderId the primary key of the current kb folder
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
+	 * @param parentKBFolderId the parent kb folder ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next k b folder
-	 * @throws NoSuchFolderException if a k b folder with the primary key could not be found
+	 * @return the previous, current, and next kb folder
+	 * @throws NoSuchFolderException if a kb folder with the primary key could not be found
 	 */
 	@Override
 	public KBFolder[] findByG_P_PrevAndNext(long kbFolderId, long groupId,
@@ -1945,11 +1944,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns all the k b folders that the user has permission to view where groupId = &#63; and parentKBFolderId = &#63;.
+	 * Returns all the kb folders that the user has permission to view where groupId = &#63; and parentKBFolderId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
-	 * @return the matching k b folders that the user has permission to view
+	 * @param parentKBFolderId the parent kb folder ID
+	 * @return the matching kb folders that the user has permission to view
 	 */
 	@Override
 	public List<KBFolder> filterFindByG_P(long groupId, long parentKBFolderId) {
@@ -1958,17 +1957,17 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns a range of all the k b folders that the user has permission to view where groupId = &#63; and parentKBFolderId = &#63;.
+	 * Returns a range of all the kb folders that the user has permission to view where groupId = &#63; and parentKBFolderId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link KBFolderModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
-	 * @param start the lower bound of the range of k b folders
-	 * @param end the upper bound of the range of k b folders (not inclusive)
-	 * @return the range of matching k b folders that the user has permission to view
+	 * @param parentKBFolderId the parent kb folder ID
+	 * @param start the lower bound of the range of kb folders
+	 * @param end the upper bound of the range of kb folders (not inclusive)
+	 * @return the range of matching kb folders that the user has permission to view
 	 */
 	@Override
 	public List<KBFolder> filterFindByG_P(long groupId, long parentKBFolderId,
@@ -1977,18 +1976,18 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns an ordered range of all the k b folders that the user has permissions to view where groupId = &#63; and parentKBFolderId = &#63;.
+	 * Returns an ordered range of all the kb folders that the user has permissions to view where groupId = &#63; and parentKBFolderId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link KBFolderModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
-	 * @param start the lower bound of the range of k b folders
-	 * @param end the upper bound of the range of k b folders (not inclusive)
+	 * @param parentKBFolderId the parent kb folder ID
+	 * @param start the lower bound of the range of kb folders
+	 * @param end the upper bound of the range of kb folders (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching k b folders that the user has permission to view
+	 * @return the ordered range of matching kb folders that the user has permission to view
 	 */
 	@Override
 	public List<KBFolder> filterFindByG_P(long groupId, long parentKBFolderId,
@@ -2077,14 +2076,14 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the k b folders before and after the current k b folder in the ordered set of k b folders that the user has permission to view where groupId = &#63; and parentKBFolderId = &#63;.
+	 * Returns the kb folders before and after the current kb folder in the ordered set of kb folders that the user has permission to view where groupId = &#63; and parentKBFolderId = &#63;.
 	 *
-	 * @param kbFolderId the primary key of the current k b folder
+	 * @param kbFolderId the primary key of the current kb folder
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
+	 * @param parentKBFolderId the parent kb folder ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next k b folder
-	 * @throws NoSuchFolderException if a k b folder with the primary key could not be found
+	 * @return the previous, current, and next kb folder
+	 * @throws NoSuchFolderException if a kb folder with the primary key could not be found
 	 */
 	@Override
 	public KBFolder[] filterFindByG_P_PrevAndNext(long kbFolderId,
@@ -2269,10 +2268,10 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Removes all the k b folders where groupId = &#63; and parentKBFolderId = &#63; from the database.
+	 * Removes all the kb folders where groupId = &#63; and parentKBFolderId = &#63; from the database.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
+	 * @param parentKBFolderId the parent kb folder ID
 	 */
 	@Override
 	public void removeByG_P(long groupId, long parentKBFolderId) {
@@ -2283,11 +2282,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the number of k b folders where groupId = &#63; and parentKBFolderId = &#63;.
+	 * Returns the number of kb folders where groupId = &#63; and parentKBFolderId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
-	 * @return the number of matching k b folders
+	 * @param parentKBFolderId the parent kb folder ID
+	 * @return the number of matching kb folders
 	 */
 	@Override
 	public int countByG_P(long groupId, long parentKBFolderId) {
@@ -2339,11 +2338,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the number of k b folders that the user has permission to view where groupId = &#63; and parentKBFolderId = &#63;.
+	 * Returns the number of kb folders that the user has permission to view where groupId = &#63; and parentKBFolderId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
-	 * @return the number of matching k b folders that the user has permission to view
+	 * @param parentKBFolderId the parent kb folder ID
+	 * @return the number of matching kb folders that the user has permission to view
 	 */
 	@Override
 	public int filterCountByG_P(long groupId, long parentKBFolderId) {
@@ -2412,13 +2411,13 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 			});
 
 	/**
-	 * Returns the k b folder where groupId = &#63; and parentKBFolderId = &#63; and name = &#63; or throws a {@link NoSuchFolderException} if it could not be found.
+	 * Returns the kb folder where groupId = &#63; and parentKBFolderId = &#63; and name = &#63; or throws a {@link NoSuchFolderException} if it could not be found.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
+	 * @param parentKBFolderId the parent kb folder ID
 	 * @param name the name
-	 * @return the matching k b folder
-	 * @throws NoSuchFolderException if a matching k b folder could not be found
+	 * @return the matching kb folder
+	 * @throws NoSuchFolderException if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder findByG_P_N(long groupId, long parentKBFolderId, String name)
@@ -2452,12 +2451,12 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the k b folder where groupId = &#63; and parentKBFolderId = &#63; and name = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 * Returns the kb folder where groupId = &#63; and parentKBFolderId = &#63; and name = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
+	 * @param parentKBFolderId the parent kb folder ID
 	 * @param name the name
-	 * @return the matching k b folder, or <code>null</code> if a matching k b folder could not be found
+	 * @return the matching kb folder, or <code>null</code> if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder fetchByG_P_N(long groupId, long parentKBFolderId,
@@ -2466,13 +2465,13 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the k b folder where groupId = &#63; and parentKBFolderId = &#63; and name = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 * Returns the kb folder where groupId = &#63; and parentKBFolderId = &#63; and name = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
+	 * @param parentKBFolderId the parent kb folder ID
 	 * @param name the name
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the matching k b folder, or <code>null</code> if a matching k b folder could not be found
+	 * @return the matching kb folder, or <code>null</code> if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder fetchByG_P_N(long groupId, long parentKBFolderId,
@@ -2545,11 +2544,15 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 						finderArgs, list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"KBFolderPersistenceImpl.fetchByG_P_N(long, long, String, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"KBFolderPersistenceImpl.fetchByG_P_N(long, long, String, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					KBFolder kbFolder = list.get(0);
@@ -2586,12 +2589,12 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Removes the k b folder where groupId = &#63; and parentKBFolderId = &#63; and name = &#63; from the database.
+	 * Removes the kb folder where groupId = &#63; and parentKBFolderId = &#63; and name = &#63; from the database.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
+	 * @param parentKBFolderId the parent kb folder ID
 	 * @param name the name
-	 * @return the k b folder that was removed
+	 * @return the kb folder that was removed
 	 */
 	@Override
 	public KBFolder removeByG_P_N(long groupId, long parentKBFolderId,
@@ -2602,12 +2605,12 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the number of k b folders where groupId = &#63; and parentKBFolderId = &#63; and name = &#63;.
+	 * Returns the number of kb folders where groupId = &#63; and parentKBFolderId = &#63; and name = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
+	 * @param parentKBFolderId the parent kb folder ID
 	 * @param name the name
-	 * @return the number of matching k b folders
+	 * @return the number of matching kb folders
 	 */
 	@Override
 	public int countByG_P_N(long groupId, long parentKBFolderId, String name) {
@@ -2700,13 +2703,13 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 			});
 
 	/**
-	 * Returns the k b folder where groupId = &#63; and parentKBFolderId = &#63; and urlTitle = &#63; or throws a {@link NoSuchFolderException} if it could not be found.
+	 * Returns the kb folder where groupId = &#63; and parentKBFolderId = &#63; and urlTitle = &#63; or throws a {@link NoSuchFolderException} if it could not be found.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
+	 * @param parentKBFolderId the parent kb folder ID
 	 * @param urlTitle the url title
-	 * @return the matching k b folder
-	 * @throws NoSuchFolderException if a matching k b folder could not be found
+	 * @return the matching kb folder
+	 * @throws NoSuchFolderException if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder findByG_P_UT(long groupId, long parentKBFolderId,
@@ -2740,12 +2743,12 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the k b folder where groupId = &#63; and parentKBFolderId = &#63; and urlTitle = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 * Returns the kb folder where groupId = &#63; and parentKBFolderId = &#63; and urlTitle = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
+	 * @param parentKBFolderId the parent kb folder ID
 	 * @param urlTitle the url title
-	 * @return the matching k b folder, or <code>null</code> if a matching k b folder could not be found
+	 * @return the matching kb folder, or <code>null</code> if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder fetchByG_P_UT(long groupId, long parentKBFolderId,
@@ -2754,13 +2757,13 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the k b folder where groupId = &#63; and parentKBFolderId = &#63; and urlTitle = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 * Returns the kb folder where groupId = &#63; and parentKBFolderId = &#63; and urlTitle = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
+	 * @param parentKBFolderId the parent kb folder ID
 	 * @param urlTitle the url title
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the matching k b folder, or <code>null</code> if a matching k b folder could not be found
+	 * @return the matching kb folder, or <code>null</code> if a matching kb folder could not be found
 	 */
 	@Override
 	public KBFolder fetchByG_P_UT(long groupId, long parentKBFolderId,
@@ -2833,11 +2836,15 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 						finderArgs, list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"KBFolderPersistenceImpl.fetchByG_P_UT(long, long, String, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"KBFolderPersistenceImpl.fetchByG_P_UT(long, long, String, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					KBFolder kbFolder = list.get(0);
@@ -2874,12 +2881,12 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Removes the k b folder where groupId = &#63; and parentKBFolderId = &#63; and urlTitle = &#63; from the database.
+	 * Removes the kb folder where groupId = &#63; and parentKBFolderId = &#63; and urlTitle = &#63; from the database.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
+	 * @param parentKBFolderId the parent kb folder ID
 	 * @param urlTitle the url title
-	 * @return the k b folder that was removed
+	 * @return the kb folder that was removed
 	 */
 	@Override
 	public KBFolder removeByG_P_UT(long groupId, long parentKBFolderId,
@@ -2890,12 +2897,12 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the number of k b folders where groupId = &#63; and parentKBFolderId = &#63; and urlTitle = &#63;.
+	 * Returns the number of kb folders where groupId = &#63; and parentKBFolderId = &#63; and urlTitle = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param parentKBFolderId the parent k b folder ID
+	 * @param parentKBFolderId the parent kb folder ID
 	 * @param urlTitle the url title
-	 * @return the number of matching k b folders
+	 * @return the number of matching kb folders
 	 */
 	@Override
 	public int countByG_P_UT(long groupId, long parentKBFolderId,
@@ -2976,9 +2983,9 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Caches the k b folder in the entity cache if it is enabled.
+	 * Caches the kb folder in the entity cache if it is enabled.
 	 *
-	 * @param kbFolder the k b folder
+	 * @param kbFolder the kb folder
 	 */
 	@Override
 	public void cacheResult(KBFolder kbFolder) {
@@ -3004,9 +3011,9 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Caches the k b folders in the entity cache if it is enabled.
+	 * Caches the kb folders in the entity cache if it is enabled.
 	 *
-	 * @param kbFolders the k b folders
+	 * @param kbFolders the kb folders
 	 */
 	@Override
 	public void cacheResult(List<KBFolder> kbFolders) {
@@ -3022,7 +3029,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Clears the cache for all k b folders.
+	 * Clears the cache for all kb folders.
 	 *
 	 * <p>
 	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
@@ -3038,7 +3045,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Clears the cache for the k b folder.
+	 * Clears the cache for the kb folder.
 	 *
 	 * <p>
 	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
@@ -3052,7 +3059,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((KBFolderModelImpl)kbFolder);
+		clearUniqueFindersCache((KBFolderModelImpl)kbFolder, true);
 	}
 
 	@Override
@@ -3064,99 +3071,57 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 			entityCache.removeResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,
 				KBFolderImpl.class, kbFolder.getPrimaryKey());
 
-			clearUniqueFindersCache((KBFolderModelImpl)kbFolder);
+			clearUniqueFindersCache((KBFolderModelImpl)kbFolder, true);
 		}
 	}
 
-	protected void cacheUniqueFindersCache(
-		KBFolderModelImpl kbFolderModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					kbFolderModelImpl.getUuid(), kbFolderModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				kbFolderModelImpl);
-
-			args = new Object[] {
-					kbFolderModelImpl.getGroupId(),
-					kbFolderModelImpl.getParentKBFolderId(),
-					kbFolderModelImpl.getName()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_G_P_N, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_G_P_N, args,
-				kbFolderModelImpl);
-
-			args = new Object[] {
-					kbFolderModelImpl.getGroupId(),
-					kbFolderModelImpl.getParentKBFolderId(),
-					kbFolderModelImpl.getUrlTitle()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_G_P_UT, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_G_P_UT, args,
-				kbFolderModelImpl);
-		}
-		else {
-			if ((kbFolderModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						kbFolderModelImpl.getUuid(),
-						kbFolderModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					kbFolderModelImpl);
-			}
-
-			if ((kbFolderModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_P_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						kbFolderModelImpl.getGroupId(),
-						kbFolderModelImpl.getParentKBFolderId(),
-						kbFolderModelImpl.getName()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_G_P_N, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_G_P_N, args,
-					kbFolderModelImpl);
-			}
-
-			if ((kbFolderModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_P_UT.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						kbFolderModelImpl.getGroupId(),
-						kbFolderModelImpl.getParentKBFolderId(),
-						kbFolderModelImpl.getUrlTitle()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_G_P_UT, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_G_P_UT, args,
-					kbFolderModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(KBFolderModelImpl kbFolderModelImpl) {
+	protected void cacheUniqueFindersCache(KBFolderModelImpl kbFolderModelImpl) {
 		Object[] args = new Object[] {
 				kbFolderModelImpl.getUuid(), kbFolderModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			kbFolderModelImpl, false);
+
+		args = new Object[] {
+				kbFolderModelImpl.getGroupId(),
+				kbFolderModelImpl.getParentKBFolderId(),
+				kbFolderModelImpl.getName()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_G_P_N, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_G_P_N, args,
+			kbFolderModelImpl, false);
+
+		args = new Object[] {
+				kbFolderModelImpl.getGroupId(),
+				kbFolderModelImpl.getParentKBFolderId(),
+				kbFolderModelImpl.getUrlTitle()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_G_P_UT, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_G_P_UT, args,
+			kbFolderModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		KBFolderModelImpl kbFolderModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					kbFolderModelImpl.getUuid(), kbFolderModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((kbFolderModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					kbFolderModelImpl.getOriginalUuid(),
 					kbFolderModelImpl.getOriginalGroupId()
 				};
@@ -3165,18 +3130,20 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
 		}
 
-		args = new Object[] {
-				kbFolderModelImpl.getGroupId(),
-				kbFolderModelImpl.getParentKBFolderId(),
-				kbFolderModelImpl.getName()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					kbFolderModelImpl.getGroupId(),
+					kbFolderModelImpl.getParentKBFolderId(),
+					kbFolderModelImpl.getName()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_G_P_N, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_G_P_N, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_G_P_N, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_G_P_N, args);
+		}
 
 		if ((kbFolderModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_P_N.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					kbFolderModelImpl.getOriginalGroupId(),
 					kbFolderModelImpl.getOriginalParentKBFolderId(),
 					kbFolderModelImpl.getOriginalName()
@@ -3186,18 +3153,20 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_G_P_N, args);
 		}
 
-		args = new Object[] {
-				kbFolderModelImpl.getGroupId(),
-				kbFolderModelImpl.getParentKBFolderId(),
-				kbFolderModelImpl.getUrlTitle()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					kbFolderModelImpl.getGroupId(),
+					kbFolderModelImpl.getParentKBFolderId(),
+					kbFolderModelImpl.getUrlTitle()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_G_P_UT, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_G_P_UT, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_G_P_UT, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_G_P_UT, args);
+		}
 
 		if ((kbFolderModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_P_UT.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					kbFolderModelImpl.getOriginalGroupId(),
 					kbFolderModelImpl.getOriginalParentKBFolderId(),
 					kbFolderModelImpl.getOriginalUrlTitle()
@@ -3209,10 +3178,10 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Creates a new k b folder with the primary key. Does not add the k b folder to the database.
+	 * Creates a new kb folder with the primary key. Does not add the kb folder to the database.
 	 *
-	 * @param kbFolderId the primary key for the new k b folder
-	 * @return the new k b folder
+	 * @param kbFolderId the primary key for the new kb folder
+	 * @return the new kb folder
 	 */
 	@Override
 	public KBFolder create(long kbFolderId) {
@@ -3231,11 +3200,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Removes the k b folder with the primary key from the database. Also notifies the appropriate model listeners.
+	 * Removes the kb folder with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param kbFolderId the primary key of the k b folder
-	 * @return the k b folder that was removed
-	 * @throws NoSuchFolderException if a k b folder with the primary key could not be found
+	 * @param kbFolderId the primary key of the kb folder
+	 * @return the kb folder that was removed
+	 * @throws NoSuchFolderException if a kb folder with the primary key could not be found
 	 */
 	@Override
 	public KBFolder remove(long kbFolderId) throws NoSuchFolderException {
@@ -3243,11 +3212,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Removes the k b folder with the primary key from the database. Also notifies the appropriate model listeners.
+	 * Removes the kb folder with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param primaryKey the primary key of the k b folder
-	 * @return the k b folder that was removed
-	 * @throws NoSuchFolderException if a k b folder with the primary key could not be found
+	 * @param primaryKey the primary key of the kb folder
+	 * @return the kb folder that was removed
+	 * @throws NoSuchFolderException if a kb folder with the primary key could not be found
 	 */
 	@Override
 	public KBFolder remove(Serializable primaryKey)
@@ -3439,8 +3408,8 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 		entityCache.putResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,
 			KBFolderImpl.class, kbFolder.getPrimaryKey(), kbFolder, false);
 
-		clearUniqueFindersCache(kbFolderModelImpl);
-		cacheUniqueFindersCache(kbFolderModelImpl, isNew);
+		clearUniqueFindersCache(kbFolderModelImpl, false);
+		cacheUniqueFindersCache(kbFolderModelImpl);
 
 		kbFolder.resetOriginalValues();
 
@@ -3475,11 +3444,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the k b folder with the primary key or throws a {@link com.liferay.portal.kernel.exception.NoSuchModelException} if it could not be found.
+	 * Returns the kb folder with the primary key or throws a {@link com.liferay.portal.kernel.exception.NoSuchModelException} if it could not be found.
 	 *
-	 * @param primaryKey the primary key of the k b folder
-	 * @return the k b folder
-	 * @throws NoSuchFolderException if a k b folder with the primary key could not be found
+	 * @param primaryKey the primary key of the kb folder
+	 * @return the kb folder
+	 * @throws NoSuchFolderException if a kb folder with the primary key could not be found
 	 */
 	@Override
 	public KBFolder findByPrimaryKey(Serializable primaryKey)
@@ -3499,11 +3468,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the k b folder with the primary key or throws a {@link NoSuchFolderException} if it could not be found.
+	 * Returns the kb folder with the primary key or throws a {@link NoSuchFolderException} if it could not be found.
 	 *
-	 * @param kbFolderId the primary key of the k b folder
-	 * @return the k b folder
-	 * @throws NoSuchFolderException if a k b folder with the primary key could not be found
+	 * @param kbFolderId the primary key of the kb folder
+	 * @return the kb folder
+	 * @throws NoSuchFolderException if a kb folder with the primary key could not be found
 	 */
 	@Override
 	public KBFolder findByPrimaryKey(long kbFolderId)
@@ -3512,19 +3481,21 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the k b folder with the primary key or returns <code>null</code> if it could not be found.
+	 * Returns the kb folder with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param primaryKey the primary key of the k b folder
-	 * @return the k b folder, or <code>null</code> if a k b folder with the primary key could not be found
+	 * @param primaryKey the primary key of the kb folder
+	 * @return the kb folder, or <code>null</code> if a kb folder with the primary key could not be found
 	 */
 	@Override
 	public KBFolder fetchByPrimaryKey(Serializable primaryKey) {
-		KBFolder kbFolder = (KBFolder)entityCache.getResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,
 				KBFolderImpl.class, primaryKey);
 
-		if (kbFolder == _nullKBFolder) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		KBFolder kbFolder = (KBFolder)serializable;
 
 		if (kbFolder == null) {
 			Session session = null;
@@ -3539,7 +3510,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 				}
 				else {
 					entityCache.putResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,
-						KBFolderImpl.class, primaryKey, _nullKBFolder);
+						KBFolderImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -3557,10 +3528,10 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the k b folder with the primary key or returns <code>null</code> if it could not be found.
+	 * Returns the kb folder with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param kbFolderId the primary key of the k b folder
-	 * @return the k b folder, or <code>null</code> if a k b folder with the primary key could not be found
+	 * @param kbFolderId the primary key of the kb folder
+	 * @return the kb folder, or <code>null</code> if a kb folder with the primary key could not be found
 	 */
 	@Override
 	public KBFolder fetchByPrimaryKey(long kbFolderId) {
@@ -3593,18 +3564,20 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			KBFolder kbFolder = (KBFolder)entityCache.getResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,
 					KBFolderImpl.class, primaryKey);
 
-			if (kbFolder == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, kbFolder);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (KBFolder)serializable);
+				}
 			}
 		}
 
@@ -3646,7 +3619,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,
-					KBFolderImpl.class, primaryKey, _nullKBFolder);
+					KBFolderImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -3660,9 +3633,9 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns all the k b folders.
+	 * Returns all the kb folders.
 	 *
-	 * @return the k b folders
+	 * @return the kb folders
 	 */
 	@Override
 	public List<KBFolder> findAll() {
@@ -3670,15 +3643,15 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns a range of all the k b folders.
+	 * Returns a range of all the kb folders.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link KBFolderModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param start the lower bound of the range of k b folders
-	 * @param end the upper bound of the range of k b folders (not inclusive)
-	 * @return the range of k b folders
+	 * @param start the lower bound of the range of kb folders
+	 * @param end the upper bound of the range of kb folders (not inclusive)
+	 * @return the range of kb folders
 	 */
 	@Override
 	public List<KBFolder> findAll(int start, int end) {
@@ -3686,16 +3659,16 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns an ordered range of all the k b folders.
+	 * Returns an ordered range of all the kb folders.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link KBFolderModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param start the lower bound of the range of k b folders
-	 * @param end the upper bound of the range of k b folders (not inclusive)
+	 * @param start the lower bound of the range of kb folders
+	 * @param end the upper bound of the range of kb folders (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of k b folders
+	 * @return the ordered range of kb folders
 	 */
 	@Override
 	public List<KBFolder> findAll(int start, int end,
@@ -3704,17 +3677,17 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns an ordered range of all the k b folders.
+	 * Returns an ordered range of all the kb folders.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link KBFolderModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param start the lower bound of the range of k b folders
-	 * @param end the upper bound of the range of k b folders (not inclusive)
+	 * @param start the lower bound of the range of kb folders
+	 * @param end the upper bound of the range of kb folders (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of k b folders
+	 * @return the ordered range of kb folders
 	 */
 	@Override
 	public List<KBFolder> findAll(int start, int end,
@@ -3802,7 +3775,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Removes all the k b folders from the database.
+	 * Removes all the kb folders from the database.
 	 *
 	 */
 	@Override
@@ -3813,9 +3786,9 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Returns the number of k b folders.
+	 * Returns the number of kb folders.
 	 *
-	 * @return the number of k b folders
+	 * @return the number of kb folders
 	 */
 	@Override
 	public int countAll() {
@@ -3860,7 +3833,7 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	}
 
 	/**
-	 * Initializes the k b folder persistence.
+	 * Initializes the kb folder persistence.
 	 */
 	public void afterPropertiesSet() {
 	}
@@ -3900,22 +3873,4 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid"
 			});
-	private static final KBFolder _nullKBFolder = new KBFolderImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<KBFolder> toCacheModel() {
-				return _nullKBFolderCacheModel;
-			}
-		};
-
-	private static final CacheModel<KBFolder> _nullKBFolderCacheModel = new CacheModel<KBFolder>() {
-			@Override
-			public KBFolder toEntityModel() {
-				return _nullKBFolder;
-			}
-		};
 }

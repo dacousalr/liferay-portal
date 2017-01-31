@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.RoleConstants;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.service.permission.ModelPermissions;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
@@ -34,6 +35,7 @@ import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -336,7 +338,7 @@ public class ServiceContext implements Cloneable, Serializable {
 	 * Returns the date when an <code>aui:form</code> was generated in this
 	 * service context. The form date can be used in detecting situations in
 	 * which an entity has been modified while another client was editing that
-	 * entity. </p>
+	 * entity.
 	 *
 	 * <p>
 	 * Example:
@@ -571,6 +573,10 @@ public class ServiceContext implements Cloneable, Serializable {
 	 * @see    PortletPreferencesIds
 	 */
 	public String getPortletId() {
+		if (_portletId != null) {
+			return _portletId;
+		}
+
 		if (_portletPreferencesIds == null) {
 			return null;
 		}
@@ -591,6 +597,21 @@ public class ServiceContext implements Cloneable, Serializable {
 	 * @see    PortletPreferencesIds
 	 */
 	public PortletPreferencesIds getPortletPreferencesIds() {
+		if (_portletPreferencesIds == null) {
+			if (_portletId == null) {
+				return null;
+			}
+
+			try {
+				_portletPreferencesIds =
+					PortletPreferencesFactoryUtil.getPortletPreferencesIds(
+						_request, _portletId);
+			}
+			catch (PortalException pe) {
+				ReflectionUtil.throwException(pe);
+			}
+		}
+
 		return _portletPreferencesIds;
 	}
 
@@ -1171,8 +1192,8 @@ public class ServiceContext implements Cloneable, Serializable {
 	 * Sets an arbitrary number of attributes of an entity to be persisted.
 	 *
 	 * <p>
-	 * These attributes should only include fields that {@link
-	 * ServiceContext} does not possess by default.
+	 * These attributes should only include fields that {@link ServiceContext}
+	 * does not possess by default.
 	 * </p>
 	 *
 	 * @param expandoBridgeAttributes the expando bridge attributes (optionally
@@ -1372,6 +1393,10 @@ public class ServiceContext implements Cloneable, Serializable {
 		_portalURL = portalURL;
 	}
 
+	public void setPortletId(String portletId) {
+		_portletId = portletId;
+	}
+
 	/**
 	 * Sets the portlet preferences IDs of the current portlet if this service
 	 * context is being passed as a parameter to a portlet.
@@ -1542,6 +1567,7 @@ public class ServiceContext implements Cloneable, Serializable {
 	private String _pathMain;
 	private long _plid;
 	private String _portalURL;
+	private String _portletId;
 	private PortletPreferencesIds _portletPreferencesIds;
 	private String _remoteAddr;
 	private String _remoteHost;

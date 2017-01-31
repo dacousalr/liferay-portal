@@ -60,7 +60,7 @@ public interface KBArticleService extends BaseService {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify or reference this interface directly. Always use {@link KBArticleServiceUtil} to access the k b article remote service. Add custom service methods to {@link com.liferay.knowledge.base.service.impl.KBArticleServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
+	 * Never modify or reference this interface directly. Always use {@link KBArticleServiceUtil} to access the kb article remote service. Add custom service methods to {@link com.liferay.knowledge.base.service.impl.KBArticleServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
 	public KBArticle addKBArticle(java.lang.String portletId,
 		long parentResourceClassNameId, long parentResourcePrimKey,
@@ -72,6 +72,14 @@ public interface KBArticleService extends BaseService {
 
 	public KBArticle deleteKBArticle(long resourcePrimKey)
 		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public KBArticle fetchFirstChildKBArticle(long groupId,
+		long parentResourcePrimKey);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public KBArticle fetchKBArticleByUrlTitle(long groupId, long kbFolderId,
+		java.lang.String urlTitle) throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public KBArticle fetchLatestKBArticle(long resourcePrimKey, int status)
@@ -103,6 +111,10 @@ public interface KBArticleService extends BaseService {
 		OrderByComparator<KBArticle> orderByComparator)
 		throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public KBArticle[] getPreviousAndNextKBArticles(long kbArticleId)
+		throws PortalException;
+
 	public int addKBArticlesMarkdown(long groupId, long parentKBFolderId,
 		java.lang.String fileName, boolean prioritizeByNumericalPrefix,
 		InputStream inputStream, ServiceContext serviceContext)
@@ -128,7 +140,7 @@ public interface KBArticleService extends BaseService {
 		java.lang.String[] sections, int status);
 
 	/**
-	* @deprecated As of 7.0.0, replaced by {@link #getKBArticlesCount(long,
+	* @deprecated As of 1.1.0, replaced by {@link #getKBArticlesCount(long,
 	long, int)}
 	*/
 	@java.lang.Deprecated
@@ -159,17 +171,35 @@ public interface KBArticleService extends BaseService {
 		java.lang.String tempFolderName) throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<KBArticle> getAllDescendantKBArticles(long groupId,
+		long resourcePrimKey, int status,
+		OrderByComparator<KBArticle> orderByComparator)
+		throws PortalException;
+
+	/**
+	* @deprecated As of 1.1.0, replaced by {@link
+	#getAllDescendantKBArticles(long, long, int,
+	OrderByComparator)}
+	*/
+	@java.lang.Deprecated
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<KBArticle> getAllDescendantKBArticles(long resourcePrimKey,
+		int status, OrderByComparator<KBArticle> orderByComparator)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<KBArticle> getGroupKBArticles(long groupId, int status,
 		int start, int end, OrderByComparator<KBArticle> orderByComparator);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<KBArticle> getKBArticleAndAllDescendantKBArticles(
-		long groupId, long resourcePrimKey, int status,
-		OrderByComparator<KBArticle> orderByComparator);
+		long resourcePrimKey, int status,
+		OrderByComparator<KBArticle> orderByComparator)
+		throws PortalException;
 
 	/**
-	* @deprecated As of 7.0.0, replaced by {@link
-	#getKBArticleAndAllDescendantKBArticles(long, long, int,
+	* @deprecated As of 1.1.0, replaced by {@link
+	#getKBArticleAndAllDescendantKBArticles(long, int,
 	OrderByComparator)}
 	*/
 	@java.lang.Deprecated
@@ -203,9 +233,8 @@ public interface KBArticleService extends BaseService {
 		OrderByComparator<KBArticle> orderByComparator);
 
 	/**
-	* @deprecated As of 7.0.0, replaced by {@link #getKBArticles(long, long,
-	int, int, int,
-	OrderByComparator)}
+	* @deprecated As of 1.1.0, replaced by {@link #getKBArticles(long, long,
+	int, int, int, OrderByComparator)}
 	*/
 	@java.lang.Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

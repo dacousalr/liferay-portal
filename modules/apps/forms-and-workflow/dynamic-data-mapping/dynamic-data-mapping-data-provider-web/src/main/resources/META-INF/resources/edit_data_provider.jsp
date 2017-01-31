@@ -49,8 +49,8 @@ renderResponse.setTitle((ddmDataProviderInstance == null) ? LanguageUtil.get(req
 	<aui:input name="type" type="hidden" value="<%= type %>" />
 	<aui:input name="languageId" type="hidden" value="<%= String.valueOf(themeDisplay.getLanguageId()) %>" />
 
-	<aui:fieldset-group markupView="lexicon">
-		<div class="container-fluid-1280">
+	<div class="container-fluid-1280">
+		<aui:fieldset-group markupView="lexicon">
 			<aui:fieldset>
 				<liferay-util:buffer var="requiredMark">
 					<span class="icon-asterisk text-warning">
@@ -70,13 +70,13 @@ renderResponse.setTitle((ddmDataProviderInstance == null) ? LanguageUtil.get(req
 			<aui:fieldset>
 				<%= ddmDataProviderDisplayContext.getDataProviderInstanceDDMFormHTML() %>
 			</aui:fieldset>
-		</div>
-	</aui:fieldset-group>
+		</aui:fieldset-group>
+	</div>
 
 	<c:if test="<%= !windowState.equals(LiferayWindowState.POP_UP) %>">
 		<div class="container-fluid-1280">
 			<aui:button-row>
-				<aui:button cssClass="btn-lg" id="submit" label="save" primary="<%= true %>" type="submit" />
+				<aui:button cssClass="btn-lg" id="submit" label="save" type="submit" />
 
 				<aui:button cssClass="btn-lg" href="<%= redirect %>" name="cancelButton" type="cancel" />
 			</aui:button-row>

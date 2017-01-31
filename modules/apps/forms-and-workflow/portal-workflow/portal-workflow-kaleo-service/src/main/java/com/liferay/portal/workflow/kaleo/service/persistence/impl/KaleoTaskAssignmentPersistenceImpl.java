@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -1152,7 +1151,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * Returns all the kaleo task assignments where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @return the matching kaleo task assignments
 	 */
 	@Override
@@ -1170,7 +1169,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param start the lower bound of the range of kaleo task assignments
 	 * @param end the upper bound of the range of kaleo task assignments (not inclusive)
 	 * @return the range of matching kaleo task assignments
@@ -1189,7 +1188,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param start the lower bound of the range of kaleo task assignments
 	 * @param end the upper bound of the range of kaleo task assignments (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -1211,7 +1210,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param start the lower bound of the range of kaleo task assignments
 	 * @param end the upper bound of the range of kaleo task assignments (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -1350,7 +1349,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * Returns the first kaleo task assignment in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching kaleo task assignment
 	 * @throws NoSuchTaskAssignmentException if a matching kaleo task assignment could not be found
@@ -1386,7 +1385,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * Returns the first kaleo task assignment in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching kaleo task assignment, or <code>null</code> if a matching kaleo task assignment could not be found
 	 */
@@ -1408,7 +1407,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * Returns the last kaleo task assignment in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching kaleo task assignment
 	 * @throws NoSuchTaskAssignmentException if a matching kaleo task assignment could not be found
@@ -1444,7 +1443,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * Returns the last kaleo task assignment in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching kaleo task assignment, or <code>null</code> if a matching kaleo task assignment could not be found
 	 */
@@ -1473,7 +1472,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 *
 	 * @param kaleoTaskAssignmentId the primary key of the current kaleo task assignment
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next kaleo task assignment
 	 * @throws NoSuchTaskAssignmentException if a kaleo task assignment with the primary key could not be found
@@ -1640,7 +1639,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * Removes all the kaleo task assignments where kaleoClassName = &#63; and kaleoClassPK = &#63; from the database.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 */
 	@Override
 	public void removeByKCN_KCPK(String kaleoClassName, long kaleoClassPK) {
@@ -1655,7 +1654,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * Returns the number of kaleo task assignments where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @return the number of matching kaleo task assignments
 	 */
 	@Override
@@ -1761,7 +1760,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * Returns all the kaleo task assignments where kaleoClassName = &#63; and kaleoClassPK = &#63; and assigneeClassName = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param assigneeClassName the assignee class name
 	 * @return the matching kaleo task assignments
 	 */
@@ -1780,7 +1779,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param assigneeClassName the assignee class name
 	 * @param start the lower bound of the range of kaleo task assignments
 	 * @param end the upper bound of the range of kaleo task assignments (not inclusive)
@@ -1801,7 +1800,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param assigneeClassName the assignee class name
 	 * @param start the lower bound of the range of kaleo task assignments
 	 * @param end the upper bound of the range of kaleo task assignments (not inclusive)
@@ -1824,7 +1823,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param assigneeClassName the assignee class name
 	 * @param start the lower bound of the range of kaleo task assignments
 	 * @param end the upper bound of the range of kaleo task assignments (not inclusive)
@@ -1986,7 +1985,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * Returns the first kaleo task assignment in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63; and assigneeClassName = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param assigneeClassName the assignee class name
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching kaleo task assignment
@@ -2026,7 +2025,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * Returns the first kaleo task assignment in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63; and assigneeClassName = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param assigneeClassName the assignee class name
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching kaleo task assignment, or <code>null</code> if a matching kaleo task assignment could not be found
@@ -2049,7 +2048,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * Returns the last kaleo task assignment in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63; and assigneeClassName = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param assigneeClassName the assignee class name
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching kaleo task assignment
@@ -2089,7 +2088,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * Returns the last kaleo task assignment in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63; and assigneeClassName = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param assigneeClassName the assignee class name
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching kaleo task assignment, or <code>null</code> if a matching kaleo task assignment could not be found
@@ -2121,7 +2120,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 *
 	 * @param kaleoTaskAssignmentId the primary key of the current kaleo task assignment
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param assigneeClassName the assignee class name
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next kaleo task assignment
@@ -2310,7 +2309,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * Removes all the kaleo task assignments where kaleoClassName = &#63; and kaleoClassPK = &#63; and assigneeClassName = &#63; from the database.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param assigneeClassName the assignee class name
 	 */
 	@Override
@@ -2327,7 +2326,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 * Returns the number of kaleo task assignments where kaleoClassName = &#63; and kaleoClassPK = &#63; and assigneeClassName = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param assigneeClassName the assignee class name
 	 * @return the number of matching kaleo task assignments
 	 */
@@ -2839,12 +2838,14 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	 */
 	@Override
 	public KaleoTaskAssignment fetchByPrimaryKey(Serializable primaryKey) {
-		KaleoTaskAssignment kaleoTaskAssignment = (KaleoTaskAssignment)entityCache.getResult(KaleoTaskAssignmentModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(KaleoTaskAssignmentModelImpl.ENTITY_CACHE_ENABLED,
 				KaleoTaskAssignmentImpl.class, primaryKey);
 
-		if (kaleoTaskAssignment == _nullKaleoTaskAssignment) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		KaleoTaskAssignment kaleoTaskAssignment = (KaleoTaskAssignment)serializable;
 
 		if (kaleoTaskAssignment == null) {
 			Session session = null;
@@ -2860,8 +2861,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 				}
 				else {
 					entityCache.putResult(KaleoTaskAssignmentModelImpl.ENTITY_CACHE_ENABLED,
-						KaleoTaskAssignmentImpl.class, primaryKey,
-						_nullKaleoTaskAssignment);
+						KaleoTaskAssignmentImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -2915,18 +2915,20 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			KaleoTaskAssignment kaleoTaskAssignment = (KaleoTaskAssignment)entityCache.getResult(KaleoTaskAssignmentModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(KaleoTaskAssignmentModelImpl.ENTITY_CACHE_ENABLED,
 					KaleoTaskAssignmentImpl.class, primaryKey);
 
-			if (kaleoTaskAssignment == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, kaleoTaskAssignment);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (KaleoTaskAssignment)serializable);
+				}
 			}
 		}
 
@@ -2969,8 +2971,7 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(KaleoTaskAssignmentModelImpl.ENTITY_CACHE_ENABLED,
-					KaleoTaskAssignmentImpl.class, primaryKey,
-					_nullKaleoTaskAssignment);
+					KaleoTaskAssignmentImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -3207,23 +3208,4 @@ public class KaleoTaskAssignmentPersistenceImpl extends BasePersistenceImpl<Kale
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No KaleoTaskAssignment exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No KaleoTaskAssignment exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(KaleoTaskAssignmentPersistenceImpl.class);
-	private static final KaleoTaskAssignment _nullKaleoTaskAssignment = new KaleoTaskAssignmentImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<KaleoTaskAssignment> toCacheModel() {
-				return _nullKaleoTaskAssignmentCacheModel;
-			}
-		};
-
-	private static final CacheModel<KaleoTaskAssignment> _nullKaleoTaskAssignmentCacheModel =
-		new CacheModel<KaleoTaskAssignment>() {
-			@Override
-			public KaleoTaskAssignment toEntityModel() {
-				return _nullKaleoTaskAssignment;
-			}
-		};
 }

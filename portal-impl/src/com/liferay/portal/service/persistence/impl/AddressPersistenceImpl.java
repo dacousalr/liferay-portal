@@ -30,8 +30,6 @@ import com.liferay.portal.kernel.exception.NoSuchAddressException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Address;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.AddressPersistence;
@@ -2795,7 +2793,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the matching addresses
 	 */
 	@Override
@@ -2814,7 +2812,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of addresses
 	 * @param end the upper bound of the range of addresses (not inclusive)
 	 * @return the range of matching addresses
@@ -2834,7 +2832,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of addresses
 	 * @param end the upper bound of the range of addresses (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -2857,7 +2855,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of addresses
 	 * @param end the upper bound of the range of addresses (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -2986,7 +2984,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching address
 	 * @throws NoSuchAddressException if a matching address could not be found
@@ -3025,7 +3023,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching address, or <code>null</code> if a matching address could not be found
 	 */
@@ -3047,7 +3045,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching address
 	 * @throws NoSuchAddressException if a matching address could not be found
@@ -3086,7 +3084,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching address, or <code>null</code> if a matching address could not be found
 	 */
@@ -3115,7 +3113,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 * @param addressId the primary key of the current address
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next address
 	 * @throws NoSuchAddressException if a address with the primary key could not be found
@@ -3271,7 +3269,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 */
 	@Override
 	public void removeByC_C_C(long companyId, long classNameId, long classPK) {
@@ -3286,7 +3284,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the number of matching addresses
 	 */
 	@Override
@@ -3381,7 +3379,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param mailing the mailing
 	 * @return the matching addresses
 	 */
@@ -3401,7 +3399,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param mailing the mailing
 	 * @param start the lower bound of the range of addresses
 	 * @param end the upper bound of the range of addresses (not inclusive)
@@ -3423,7 +3421,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param mailing the mailing
 	 * @param start the lower bound of the range of addresses
 	 * @param end the upper bound of the range of addresses (not inclusive)
@@ -3447,7 +3445,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param mailing the mailing
 	 * @param start the lower bound of the range of addresses
 	 * @param end the upper bound of the range of addresses (not inclusive)
@@ -3582,7 +3580,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param mailing the mailing
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching address
@@ -3626,7 +3624,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param mailing the mailing
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching address, or <code>null</code> if a matching address could not be found
@@ -3650,7 +3648,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param mailing the mailing
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching address
@@ -3694,7 +3692,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param mailing the mailing
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching address, or <code>null</code> if a matching address could not be found
@@ -3725,7 +3723,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 * @param addressId the primary key of the current address
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param mailing the mailing
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next address
@@ -3887,7 +3885,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param mailing the mailing
 	 */
 	@Override
@@ -3904,7 +3902,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param mailing the mailing
 	 * @return the number of matching addresses
 	 */
@@ -4008,7 +4006,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @return the matching addresses
 	 */
@@ -4028,7 +4026,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param start the lower bound of the range of addresses
 	 * @param end the upper bound of the range of addresses (not inclusive)
@@ -4050,7 +4048,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param start the lower bound of the range of addresses
 	 * @param end the upper bound of the range of addresses (not inclusive)
@@ -4074,7 +4072,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param start the lower bound of the range of addresses
 	 * @param end the upper bound of the range of addresses (not inclusive)
@@ -4209,7 +4207,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching address
@@ -4253,7 +4251,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching address, or <code>null</code> if a matching address could not be found
@@ -4277,7 +4275,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching address
@@ -4321,7 +4319,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching address, or <code>null</code> if a matching address could not be found
@@ -4352,7 +4350,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 * @param addressId the primary key of the current address
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next address
@@ -4514,7 +4512,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 */
 	@Override
@@ -4531,7 +4529,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @return the number of matching addresses
 	 */
@@ -5099,12 +5097,14 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	 */
 	@Override
 	public Address fetchByPrimaryKey(Serializable primaryKey) {
-		Address address = (Address)entityCache.getResult(AddressModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(AddressModelImpl.ENTITY_CACHE_ENABLED,
 				AddressImpl.class, primaryKey);
 
-		if (address == _nullAddress) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		Address address = (Address)serializable;
 
 		if (address == null) {
 			Session session = null;
@@ -5119,7 +5119,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 				}
 				else {
 					entityCache.putResult(AddressModelImpl.ENTITY_CACHE_ENABLED,
-						AddressImpl.class, primaryKey, _nullAddress);
+						AddressImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -5173,18 +5173,20 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			Address address = (Address)entityCache.getResult(AddressModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(AddressModelImpl.ENTITY_CACHE_ENABLED,
 					AddressImpl.class, primaryKey);
 
-			if (address == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, address);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (Address)serializable);
+				}
 			}
 		}
 
@@ -5226,7 +5228,7 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(AddressModelImpl.ENTITY_CACHE_ENABLED,
-					AddressImpl.class, primaryKey, _nullAddress);
+					AddressImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -5468,34 +5470,4 @@ public class AddressPersistenceImpl extends BasePersistenceImpl<Address>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid", "primary"
 			});
-	private static final Address _nullAddress = new AddressImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<Address> toCacheModel() {
-				return _nullAddressCacheModel;
-			}
-		};
-
-	private static final CacheModel<Address> _nullAddressCacheModel = new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<Address>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public Address toEntityModel() {
-			return _nullAddress;
-		}
-	}
 }

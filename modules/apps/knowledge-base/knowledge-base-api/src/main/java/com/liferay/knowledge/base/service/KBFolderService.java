@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
+import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.util.List;
 
@@ -53,7 +54,7 @@ public interface KBFolderService extends BaseService {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify or reference this interface directly. Always use {@link KBFolderServiceUtil} to access the k b folder remote service. Add custom service methods to {@link com.liferay.knowledge.base.service.impl.KBFolderServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
+	 * Never modify or reference this interface directly. Always use {@link KBFolderServiceUtil} to access the kb folder remote service. Add custom service methods to {@link com.liferay.knowledge.base.service.impl.KBFolderServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
 	public KBFolder addKBFolder(long groupId, long parentResourceClassNameId,
 		long parentResourcePrimKey, java.lang.String name,
@@ -61,6 +62,17 @@ public interface KBFolderService extends BaseService {
 		throws PortalException;
 
 	public KBFolder deleteKBFolder(long kbFolderId) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public KBFolder fetchFirstChildKBFolder(long groupId, long kbFolderId)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public KBFolder fetchFirstChildKBFolder(long groupId, long kbFolderId,
+		OrderByComparator<KBFolder> obc) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public KBFolder fetchKBFolder(long kbFolderId) throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public KBFolder fetchKBFolderByUrlTitle(long groupId,
@@ -74,9 +86,24 @@ public interface KBFolderService extends BaseService {
 	public KBFolder getKBFolderByUrlTitle(long groupId, long parentKbFolderId,
 		java.lang.String urlTitle) throws PortalException;
 
+	/**
+	* @deprecated As of 1.1.0, replaced by {@link
+	#updateKBFolder(long, long, long, String, String,
+	ServiceContext)}
+	*/
+	@java.lang.Deprecated
 	public KBFolder updateKBFolder(long parentResourceClassNameId,
 		long parentResourcePrimKey, long kbFolderId, java.lang.String name,
 		java.lang.String description) throws PortalException;
+
+	public KBFolder updateKBFolder(long parentResourceClassNameId,
+		long parentResourcePrimKey, long kbFolderId, java.lang.String name,
+		java.lang.String description, ServiceContext serviceContext)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getKBFoldersAndKBArticlesCount(long groupId,
+		long parentResourcePrimKey, int status);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getKBFoldersCount(long groupId, long parentKBFolderId)
@@ -92,6 +119,11 @@ public interface KBFolderService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<KBFolder> getKBFolders(long groupId, long parentKBFolderId,
 		int start, int end) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<java.lang.Object> getKBFoldersAndKBArticles(long groupId,
+		long parentResourcePrimKey, int status, int start, int end,
+		OrderByComparator<?> orderByComparator);
 
 	public void moveKBFolder(long kbFolderId, long parentKBFolderId)
 		throws PortalException;

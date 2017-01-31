@@ -33,7 +33,6 @@ import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -9881,7 +9880,7 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((MBCategoryModelImpl)mbCategory);
+		clearUniqueFindersCache((MBCategoryModelImpl)mbCategory, true);
 	}
 
 	@Override
@@ -9893,51 +9892,37 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 			entityCache.removeResult(MBCategoryModelImpl.ENTITY_CACHE_ENABLED,
 				MBCategoryImpl.class, mbCategory.getPrimaryKey());
 
-			clearUniqueFindersCache((MBCategoryModelImpl)mbCategory);
+			clearUniqueFindersCache((MBCategoryModelImpl)mbCategory, true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		MBCategoryModelImpl mbCategoryModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					mbCategoryModelImpl.getUuid(),
-					mbCategoryModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				mbCategoryModelImpl);
-		}
-		else {
-			if ((mbCategoryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						mbCategoryModelImpl.getUuid(),
-						mbCategoryModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					mbCategoryModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		MBCategoryModelImpl mbCategoryModelImpl) {
 		Object[] args = new Object[] {
 				mbCategoryModelImpl.getUuid(), mbCategoryModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			mbCategoryModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		MBCategoryModelImpl mbCategoryModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					mbCategoryModelImpl.getUuid(),
+					mbCategoryModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((mbCategoryModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					mbCategoryModelImpl.getOriginalUuid(),
 					mbCategoryModelImpl.getOriginalGroupId()
 				};
@@ -10279,8 +10264,8 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 		entityCache.putResult(MBCategoryModelImpl.ENTITY_CACHE_ENABLED,
 			MBCategoryImpl.class, mbCategory.getPrimaryKey(), mbCategory, false);
 
-		clearUniqueFindersCache(mbCategoryModelImpl);
-		cacheUniqueFindersCache(mbCategoryModelImpl, isNew);
+		clearUniqueFindersCache(mbCategoryModelImpl, false);
+		cacheUniqueFindersCache(mbCategoryModelImpl);
 
 		mbCategory.resetOriginalValues();
 
@@ -10366,12 +10351,14 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 	 */
 	@Override
 	public MBCategory fetchByPrimaryKey(Serializable primaryKey) {
-		MBCategory mbCategory = (MBCategory)entityCache.getResult(MBCategoryModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(MBCategoryModelImpl.ENTITY_CACHE_ENABLED,
 				MBCategoryImpl.class, primaryKey);
 
-		if (mbCategory == _nullMBCategory) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		MBCategory mbCategory = (MBCategory)serializable;
 
 		if (mbCategory == null) {
 			Session session = null;
@@ -10387,7 +10374,7 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 				}
 				else {
 					entityCache.putResult(MBCategoryModelImpl.ENTITY_CACHE_ENABLED,
-						MBCategoryImpl.class, primaryKey, _nullMBCategory);
+						MBCategoryImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -10441,18 +10428,20 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			MBCategory mbCategory = (MBCategory)entityCache.getResult(MBCategoryModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(MBCategoryModelImpl.ENTITY_CACHE_ENABLED,
 					MBCategoryImpl.class, primaryKey);
 
-			if (mbCategory == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, mbCategory);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (MBCategory)serializable);
+				}
 			}
 		}
 
@@ -10494,7 +10483,7 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(MBCategoryModelImpl.ENTITY_CACHE_ENABLED,
-					MBCategoryImpl.class, primaryKey, _nullMBCategory);
+					MBCategoryImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -10747,22 +10736,4 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid"
 			});
-	private static final MBCategory _nullMBCategory = new MBCategoryImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<MBCategory> toCacheModel() {
-				return _nullMBCategoryCacheModel;
-			}
-		};
-
-	private static final CacheModel<MBCategory> _nullMBCategoryCacheModel = new CacheModel<MBCategory>() {
-			@Override
-			public MBCategory toEntityModel() {
-				return _nullMBCategory;
-			}
-		};
 }

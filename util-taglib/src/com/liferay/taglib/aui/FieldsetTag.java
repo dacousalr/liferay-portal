@@ -24,6 +24,7 @@ import javax.portlet.PortletResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
 
 /**
  * @author Julio Camarero
@@ -70,13 +71,23 @@ public class FieldsetTag extends BaseFieldsetTag {
 	}
 
 	@Override
+	protected int processEndTag() throws Exception {
+		JspWriter jspWriter = pageContext.getOut();
+
+		jspWriter.write("</div></fieldset>");
+
+		return EVAL_PAGE;
+	}
+
+	@Override
 	protected void setAttributes(HttpServletRequest request) {
 		if (Validator.isNull(getId()) && Validator.isNotNull(getLabel()) &&
 			getCollapsible()) {
 
-			setId(
-				PortalUtil.getUniqueElementId(
-					request, _getNamespace(), AUIUtil.normalizeId(getLabel())));
+			String id = PortalUtil.getUniqueElementId(
+				request, _getNamespace(), AUIUtil.normalizeId(getLabel()));
+
+			setId(_getNamespace() + id);
 		}
 
 		super.setAttributes(request);

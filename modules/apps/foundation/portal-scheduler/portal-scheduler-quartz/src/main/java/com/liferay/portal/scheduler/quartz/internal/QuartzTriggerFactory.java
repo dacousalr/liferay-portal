@@ -37,7 +37,7 @@ import org.quartz.TriggerBuilder;
  * @author Tina Tian
  */
 @Component(
-	immediate = true,
+	enabled = false, immediate = true,
 	service = {QuartzTriggerFactory.class, TriggerFactory.class}
 )
 public class QuartzTriggerFactory implements TriggerFactory {
@@ -50,8 +50,8 @@ public class QuartzTriggerFactory implements TriggerFactory {
 		if (interval < 0) {
 			if (_log.isWarnEnabled()) {
 				_log.warn(
-					"Not scheduling " + jobName + " because interval is " +
-						"less than 0");
+					"Not scheduling " + jobName + " because interval is less " +
+						"than 0");
 			}
 
 			return null;
@@ -93,6 +93,18 @@ public class QuartzTriggerFactory implements TriggerFactory {
 		return createTrigger(
 			jobName, groupName, startDate, endDate,
 			CronScheduleBuilder.cronSchedule(cronExpression));
+	}
+
+	@Override
+	public Trigger createTrigger(
+		Trigger trigger, Date startDate, Date endDate) {
+
+		org.quartz.Trigger wrappedTrigger =
+			(org.quartz.Trigger)trigger.getWrappedTrigger();
+
+		return createTrigger(
+			trigger.getJobName(), trigger.getGroupName(), startDate, endDate,
+			wrappedTrigger.getScheduleBuilder());
 	}
 
 	protected Trigger createTrigger(

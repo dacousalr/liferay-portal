@@ -19,18 +19,23 @@
 	<td></td>
 </tr>
 <tr>
-	<td>START_DATE_FIELD</td>
+	<td>STATUS</td>
 	<td>//dl[contains(@class,'property-list')]/dd[1]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>END_DATE_FIELD</td>
+	<td>START_DATE_FIELD</td>
 	<td>//dl[contains(@class,'property-list')]/dd[2]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>RESOURCES_FIELD</td>
+	<td>END_DATE_FIELD</td>
 	<td>//dl[contains(@class,'property-list')]/dd[3]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>RESOURCES_FIELD</td>
+	<td>//dl[contains(@class,'property-list')]/dd[4]</td>
 	<td></td>
 </tr>
 <tr>
@@ -270,6 +275,22 @@
 <tr>
 	<td>TAGS_TAG_SPECIFIC</td>
 	<td>//div[@class='entry-tags']//span[contains(@class,'tag') and contains(.,'Tags: ${key_tagText}')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<!--REPEAT_SUMMARY-->
+<tr>
+	<td>REPEAT_OCCURRENCE_SUMMARY</td>
+	<td>//dl[contains(@class,'property-list')]/dd[5]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>REPEAT_EVENT_DESCRIPTION</td>
+	<td>//p[contains(.,'${key_calendarEventDescription}')]</td>
 	<td></td>
 </tr>
 </tbody>

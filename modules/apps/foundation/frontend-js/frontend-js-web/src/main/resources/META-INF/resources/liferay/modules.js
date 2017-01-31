@@ -190,19 +190,16 @@
 							'aui-base'
 						]
 					},
+					'liferay-dd-proxy': {
+						path: 'dd_proxy.js',
+						requires: [
+							'dd-proxy'
+						]
+					},
 					'liferay-dynamic-select': {
 						path: 'dynamic_select.js',
 						requires: [
 							'aui-base'
-						]
-					},
-					'liferay-editor-image-uploader': {
-						path: 'editor_image_uploader.js',
-						requires: [
-							'aui-alert',
-							'aui-base',
-							'aui-progressbar',
-							'uploader'
 						]
 					},
 					'liferay-form': {
@@ -645,6 +642,13 @@
 						requires: [
 							'aui-component',
 							'aui-node'
+						]
+					},
+					'liferay-sortable': {
+						path: 'sortable.js',
+						requires: [
+							'liferay-dd-proxy',
+							'sortable'
 						]
 					},
 					'liferay-source-editor': {

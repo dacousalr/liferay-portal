@@ -17,7 +17,7 @@ package com.liferay.portal.kernel.audit;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
-import com.liferay.portal.kernel.util.ProxyFactory;
+import com.liferay.portal.kernel.util.ServiceProxyFactory;
 
 import java.util.Date;
 
@@ -81,7 +81,9 @@ public class AuditMessageFactoryUtil {
 			additionalInfo);
 	}
 
-	private static final AuditMessageFactory _auditMessageFactory =
-		ProxyFactory.newServiceTrackedInstance(AuditMessageFactory.class);
+	private static volatile AuditMessageFactory _auditMessageFactory =
+		ServiceProxyFactory.newServiceTrackedInstance(
+			AuditMessageFactory.class, AuditMessageFactoryUtil.class,
+			"_auditMessageFactory", false);
 
 }

@@ -14,6 +14,8 @@
 
 package com.liferay.exportimport.staging;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.document.library.kernel.exception.DuplicateFileEntryException;
 import com.liferay.document.library.kernel.exception.FileExtensionException;
 import com.liferay.document.library.kernel.exception.FileNameException;
@@ -109,8 +111,8 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -160,6 +162,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(immediate = true)
 @DoPrivileged
+@ProviderType
 public class StagingImpl implements Staging {
 
 	@Override
@@ -191,7 +194,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #getRemoteSiteURL(Group,
+	 * @deprecated As of 3.0.0, replaced by {@link #getRemoteSiteURL(Group,
 	 *             boolean)}
 	 */
 	@Deprecated
@@ -220,7 +223,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link
+	 * @deprecated As of 3.0.0, replaced by {@link
 	 *             _stagingLocalService#checkDefaultLayoutSetBranches(long,
 	 *             Group, boolean, boolean, boolean, ServiceContext)}
 	 */
@@ -304,8 +307,8 @@ public class StagingImpl implements Staging {
 		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		long scopeGroupId = PortalUtil.getScopeGroupId(
-			PortalUtil.getHttpServletRequest(portletRequest),
+		long scopeGroupId = _portal.getScopeGroupId(
+			_portal.getHttpServletRequest(portletRequest),
 			portlet.getPortletId());
 		long plid = ParamUtil.getLong(portletRequest, "plid");
 
@@ -319,7 +322,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #publishPortlet(long, long,
+	 * @deprecated As of 3.0.0, replaced by {@link #publishPortlet(long, long,
 	 *             long, long, long, String, Map)}
 	 */
 	@Deprecated
@@ -397,7 +400,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #copyRemoteLayouts(long,
+	 * @deprecated As of 3.0.0, replaced by {@link #copyRemoteLayouts(long,
 	 *             boolean, Map, Map, String, int, String, boolean, long,
 	 *             boolean)}
 	 */
@@ -506,7 +509,7 @@ public class StagingImpl implements Staging {
 	public void deleteRecentLayoutRevisionId(
 		HttpServletRequest request, long layoutSetBranchId, long plid) {
 
-		long userId = PortalUtil.getUserId(request);
+		long userId = _portal.getUserId(request);
 
 		deleteRecentLayoutRevisionId(userId, layoutSetBranchId, plid);
 	}
@@ -526,7 +529,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link
+	 * @deprecated As of 3.0.0, replaced by {@link
 	 *             #deleteRecentLayoutRevisionId(long, long, long)}
 	 */
 	@Deprecated
@@ -577,7 +580,7 @@ public class StagingImpl implements Staging {
 				String referrerClassName = entry.getValue();
 
 				if (referrerClassName.equals(Portlet.class.getName())) {
-					referrerDisplayName = PortalUtil.getPortletTitle(
+					referrerDisplayName = _portal.getPortletTitle(
 						referrerDisplayName, locale);
 				}
 
@@ -625,7 +628,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link
+	 * @deprecated As of 3.0.0, replaced by {@link
 	 *             #getErrorMessagesJSONArray(Locale, Map<String,
 	 *             MissingReference>)}
 	 */
@@ -693,8 +696,7 @@ public class StagingImpl implements Staging {
 					ExportImportConfigurationConstants.
 						TYPE_PUBLISH_LAYOUT_REMOTE) ||
 				(exportImportConfiguration.getType() ==
-					ExportImportConfigurationConstants.
-						TYPE_PUBLISH_PORTLET))) {
+					ExportImportConfigurationConstants.TYPE_PUBLISH_PORTLET))) {
 
 				errorMessage = LanguageUtil.get(
 					locale,
@@ -719,6 +721,7 @@ public class StagingImpl implements Staging {
 			errorMessage = LanguageUtil.format(
 				locale, "please-import-a-lar-file-of-the-correct-type-x",
 				lte.getMessage());
+
 			errorType = ServletResponseConstants.SC_FILE_CUSTOM_EXCEPTION;
 		}
 		else if (e instanceof LARFileException) {
@@ -800,8 +803,7 @@ public class StagingImpl implements Staging {
 					ExportImportConfigurationConstants.
 						TYPE_PUBLISH_LAYOUT_REMOTE) ||
 				(exportImportConfiguration.getType() ==
-					ExportImportConfigurationConstants.
-						TYPE_PUBLISH_PORTLET))) {
+					ExportImportConfigurationConstants.TYPE_PUBLISH_PORTLET))) {
 
 				errorMessage = LanguageUtil.get(
 					locale,
@@ -820,6 +822,7 @@ public class StagingImpl implements Staging {
 
 			errorMessagesJSONArray = getErrorMessagesJSONArray(
 				locale, missingReferences.getDependencyMissingReferences());
+
 			errorType = ServletResponseConstants.SC_FILE_CUSTOM_EXCEPTION;
 			warningMessagesJSONArray = getWarningMessagesJSONArray(
 				locale, missingReferences.getWeakMissingReferences());
@@ -837,6 +840,7 @@ public class StagingImpl implements Staging {
 					stagedModel.getStagedModelType();
 
 				referrerClassName = stagedModelType.getClassName();
+
 				referrerDisplayName = StagedModelDataHandlerUtil.getDisplayName(
 					stagedModel);
 			}
@@ -927,7 +931,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link
+	 * @deprecated As of 3.0.0, replaced by {@link
 	 *             #getExceptionMessagesJSONObject(Locale, Exception,
 	 *             ExportImportConfiguration)}
 	 */
@@ -966,7 +970,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, moved to {@link
+	 * @deprecated As of 3.0.0, moved to {@link
 	 *             ExportImportHelperUtil#getMissingParentLayouts(Layout, long)}
 	 */
 	@Deprecated
@@ -983,7 +987,7 @@ public class StagingImpl implements Staging {
 			HttpServletRequest request, long layoutSetBranchId, long plid)
 		throws PortalException {
 
-		long userId = PortalUtil.getUserId(request);
+		long userId = _portal.getUserId(request);
 
 		return getRecentLayoutRevisionId(userId, layoutSetBranchId, plid);
 	}
@@ -1003,7 +1007,7 @@ public class StagingImpl implements Staging {
 
 		RecentLayoutSetBranch recentLayoutSetBranch =
 			_recentLayoutSetBranchLocalService.fetchRecentLayoutSetBranch(
-				PortalUtil.getUserId(request), layoutSetId);
+				_portal.getUserId(request), layoutSetId);
 
 		if (recentLayoutSetBranch != null) {
 			return recentLayoutSetBranch.getLayoutSetBranchId();
@@ -1114,7 +1118,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link
+	 * @deprecated As of 3.0.0, replaced by {@link
 	 *             ExportImportConfigurationParameterMapFactory#buildParameterMap(
 	 *             )}
 	 */
@@ -1125,7 +1129,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link
+	 * @deprecated As of 3.0.0, replaced by {@link
 	 *             ExportImportConfigurationParameterMapFactory#buildParameterMap(
 	 *             PortletRequest)}
 	 */
@@ -1180,7 +1184,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link
+	 * @deprecated As of 3.0.0, replaced by {@link
 	 *             #getWarningMessagesJSONArray(Locale, Map<String,
 	 *             MissingReference>)}
 	 */
@@ -1298,7 +1302,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, see {@link
+	 * @deprecated As of 3.0.0, see {@link
 	 *             com.liferay.portal.kernel.backgroundtask.BackgroundTaskExecutor#getIsolationLevel(
 	 *             )}
 	 */
@@ -1406,7 +1410,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #publishLayouts(long, long,
+	 * @deprecated As of 3.0.0, replaced by {@link #publishLayouts(long, long,
 	 *             long, boolean, long[], Map)}
 	 */
 	@Deprecated
@@ -1466,7 +1470,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #publishLayouts(long, long,
+	 * @deprecated As of 3.0.0, replaced by {@link #publishLayouts(long, long,
 	 *             long, boolean, long[], Map)}
 	 */
 	@Deprecated
@@ -1499,7 +1503,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #publishLayouts(long, long,
+	 * @deprecated As of 3.0.0, replaced by {@link #publishLayouts(long, long,
 	 *             long, boolean, Map)}
 	 */
 	@Deprecated
@@ -1681,8 +1685,8 @@ public class StagingImpl implements Staging {
 		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		long scopeGroupId = PortalUtil.getScopeGroupId(
-			PortalUtil.getHttpServletRequest(portletRequest),
+		long scopeGroupId = _portal.getScopeGroupId(
+			_portal.getHttpServletRequest(portletRequest),
 			portlet.getPortletId());
 
 		long plid = ParamUtil.getLong(portletRequest, "plid");
@@ -2016,7 +2020,7 @@ public class StagingImpl implements Staging {
 		throws PortalException {
 
 		setRecentLayoutBranchId(
-			PortalUtil.getUserId(request), layoutSetBranchId, plid,
+			_portal.getUserId(request), layoutSetBranchId, plid,
 			layoutBranchId);
 	}
 
@@ -2036,7 +2040,7 @@ public class StagingImpl implements Staging {
 		throws PortalException {
 
 		setRecentLayoutRevisionId(
-			PortalUtil.getUserId(request), layoutSetBranchId, plid,
+			_portal.getUserId(request), layoutSetBranchId, plid,
 			layoutRevisionId);
 	}
 
@@ -2056,7 +2060,7 @@ public class StagingImpl implements Staging {
 		throws PortalException {
 
 		setRecentLayoutSetBranchId(
-			PortalUtil.getUserId(request), layoutSetId, layoutSetBranchId);
+			_portal.getUserId(request), layoutSetId, layoutSetBranchId);
 	}
 
 	@Override
@@ -2083,7 +2087,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, see {@link
+	 * @deprecated As of 3.0.0, see {@link
 	 *             com.liferay.portal.kernel.backgroundtask.BackgroundTaskExecutor#getIsolationLevel(
 	 *             )}
 	 */
@@ -2207,7 +2211,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link
+	 * @deprecated As of 3.0.0, replaced by {@link
 	 *             ExportImportDateUtil#updateLastPublishDate(long, boolean,
 	 *             DateRange, Date)}
 	 */
@@ -2222,7 +2226,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link
+	 * @deprecated As of 3.0.0, replaced by {@link
 	 *             ExportImportDateUtil#updateLastPublishDate(String,
 	 *             PortletPreferences, DateRange, Date)}
 	 */
@@ -2348,7 +2352,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #validateRemote(long, String,
+	 * @deprecated As of 3.0.0, replaced by {@link #validateRemote(long, String,
 	 *             int, String, boolean, long)}
 	 */
 	@Deprecated
@@ -2463,6 +2467,12 @@ public class StagingImpl implements Staging {
 			return masterLayoutBranch.getLayoutBranchId();
 		}
 		catch (NoSuchLayoutBranchException nslbe) {
+
+			// LPS-52675
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(nslbe, nslbe);
+			}
 		}
 
 		return 0;
@@ -2494,6 +2504,12 @@ public class StagingImpl implements Staging {
 				layoutBranchId = layoutBranch.getLayoutBranchId();
 			}
 			catch (NoSuchLayoutBranchException nslbe) {
+
+				// LPS-52675
+
+				if (_log.isDebugEnabled()) {
+					_log.debug(nslbe, nslbe);
+				}
 			}
 		}
 
@@ -2508,6 +2524,12 @@ public class StagingImpl implements Staging {
 				}
 			}
 			catch (NoSuchLayoutRevisionException nslre) {
+
+				// LPS-52675
+
+				if (_log.isDebugEnabled()) {
+					_log.debug(nslre, nslre);
+				}
 			}
 		}
 
@@ -2599,7 +2621,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, with no direct replacement
+	 * @deprecated As of 3.0.0, with no direct replacement
 	 */
 	@Deprecated
 	protected long publishLayouts(
@@ -2625,6 +2647,7 @@ public class StagingImpl implements Staging {
 
 		if (sourceLayout.isTypeControlPanel()) {
 			stagingGroup = _groupLocalService.fetchGroup(scopeGroupId);
+
 			liveGroup = stagingGroup.getLiveGroup();
 
 			targetLayout = sourceLayout;
@@ -2633,6 +2656,7 @@ public class StagingImpl implements Staging {
 				 (sourceLayout.getScopeGroup().getGroupId() == scopeGroupId)) {
 
 			stagingGroup = sourceLayout.getScopeGroup();
+
 			liveGroup = stagingGroup.getLiveGroup();
 
 			targetLayout = _layoutLocalService.getLayout(
@@ -2640,6 +2664,7 @@ public class StagingImpl implements Staging {
 		}
 		else {
 			stagingGroup = sourceLayout.getGroup();
+
 			liveGroup = stagingGroup.getLiveGroup();
 
 			targetLayout = _layoutLocalService.fetchLayoutByUuidAndGroupId(
@@ -2661,7 +2686,7 @@ public class StagingImpl implements Staging {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, with no direct replacement
+	 * @deprecated As of 3.0.0, with no direct replacement
 	 */
 	@Deprecated
 	protected long publishToRemote(
@@ -2963,6 +2988,13 @@ public class StagingImpl implements Staging {
 			}
 		}
 		catch (NoSuchGroupException nsge) {
+
+			// LPS-52675
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(nsge, nsge);
+			}
+
 			RemoteExportException ree = new RemoteExportException(
 				RemoteExportException.NO_GROUP);
 
@@ -2971,6 +3003,13 @@ public class StagingImpl implements Staging {
 			throw ree;
 		}
 		catch (PrincipalException pe) {
+
+			// LPS-52675
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(pe, pe);
+			}
+
 			RemoteExportException ree = new RemoteExportException(
 				RemoteExportException.NO_PERMISSIONS);
 
@@ -2979,11 +3018,25 @@ public class StagingImpl implements Staging {
 			throw ree;
 		}
 		catch (RemoteAuthException rae) {
+
+			// LPS-52675
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(rae, rae);
+			}
+
 			rae.setURL(remoteURL);
 
 			throw rae;
 		}
 		catch (SystemException se) {
+
+			// LPS-52675
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(se, se);
+			}
+
 			RemoteExportException ree = new RemoteExportException(
 				RemoteExportException.BAD_CONNECTION, se.getMessage());
 
@@ -3007,6 +3060,10 @@ public class StagingImpl implements Staging {
 	private LayoutService _layoutService;
 	private LayoutSetBranchLocalService _layoutSetBranchLocalService;
 	private LockManager _lockManager;
+
+	@Reference
+	private Portal _portal;
+
 	private RecentLayoutBranchLocalService _recentLayoutBranchLocalService;
 	private RecentLayoutRevisionLocalService _recentLayoutRevisionLocalService;
 	private RecentLayoutSetBranchLocalService

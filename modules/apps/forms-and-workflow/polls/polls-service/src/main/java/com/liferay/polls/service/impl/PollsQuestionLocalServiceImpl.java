@@ -14,6 +14,7 @@
 
 package com.liferay.polls.service.impl;
 
+import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
 import com.liferay.polls.exception.QuestionChoiceException;
 import com.liferay.polls.exception.QuestionDescriptionException;
 import com.liferay.polls.exception.QuestionExpirationDateException;
@@ -33,9 +34,11 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Brian Wing Shun Chan
@@ -56,7 +59,7 @@ public class PollsQuestionLocalServiceImpl
 
 		// Question
 
-		User user = userPersistence.findByPrimaryKey(userId);
+		User user = userLocalService.getUser(userId);
 		long groupId = serviceContext.getScopeGroupId();
 
 		Date expirationDate = null;
@@ -273,7 +276,7 @@ public class PollsQuestionLocalServiceImpl
 
 		// Question
 
-		User user = userPersistence.findByPrimaryKey(userId);
+		User user = userLocalService.getUser(userId);
 
 		Date expirationDate = null;
 
@@ -317,12 +320,12 @@ public class PollsQuestionLocalServiceImpl
 			if (choice == null) {
 				pollsChoiceLocalService.addChoice(
 					userId, questionId, choiceName, choiceDescription,
-					new ServiceContext());
+					serviceContext);
 			}
 			else {
 				pollsChoiceLocalService.updateChoice(
 					choice.getChoiceId(), questionId, choiceName,
-					choiceDescription, new ServiceContext());
+					choiceDescription, serviceContext);
 			}
 		}
 
@@ -353,18 +356,26 @@ public class PollsQuestionLocalServiceImpl
 		}
 
 		if (choices != null) {
+			Set<String> choiceDescriptions = new HashSet<>(choices.size());
+
 			for (PollsChoice choice : choices) {
 				String choiceDescription = choice.getDescription(locale);
 
-				if (Validator.isNull(choiceDescription)) {
+				if (Validator.isNull(choiceDescription) ||
+					choiceDescriptions.contains(choiceDescription)) {
+
 					throw new QuestionChoiceException();
 				}
+
+				choiceDescriptions.add(choiceDescription);
 			}
 		}
 
-		if ((expirationDate != null) && expirationDate.before(new Date())) {
-			throw new QuestionExpirationDateException(
-				"Expiration date " + expirationDate + " is in the past");
+		if (!ExportImportThreadLocal.isImportInProcess()) {
+			if ((expirationDate != null) && expirationDate.before(new Date())) {
+				throw new QuestionExpirationDateException(
+					"Expiration date " + expirationDate + " is in the past");
+			}
 		}
 	}
 

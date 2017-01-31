@@ -24,6 +24,15 @@ public class UpgradePortletId
 	extends com.liferay.portal.upgrade.util.UpgradePortletId {
 
 	@Override
+	protected void doUpgrade() throws Exception {
+		_deleteLegacyResourcePermission();
+
+		upgrade(UpgradeUserNotificationEvent.class);
+
+		super.doUpgrade();
+	}
+
+	@Override
 	protected String[][] getRenamePortletIdsArray() {
 		return new String[][] {
 			new String[] {"115", PortletKeys.BLOGS_AGGREGATOR},
@@ -53,6 +62,15 @@ public class UpgradePortletId
 			new String[] {"88", _LAYOUTS_ADMIN},
 			new String[] {"99", _ASSET_TAGS_ADMIN}
 		};
+	}
+
+	private void _deleteLegacyResourcePermission() throws Exception {
+		runSQL(
+			"delete from ResourcePermission where name = '161' and primKey " +
+				"like '%LAYOUT_33'");
+		runSQL(
+			"delete from ResourcePermission where name = '162' and primKey " +
+				"like '%LAYOUT_19'");
 	}
 
 	private static final String _ASSET_CATEGORIES_ADMIN =

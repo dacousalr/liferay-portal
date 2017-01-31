@@ -18,6 +18,7 @@ import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldRenderer;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldType;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTypeServicesTracker;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTypeSettings;
+import com.liferay.dynamic.data.mapping.internal.util.DDMImpl;
 import com.liferay.dynamic.data.mapping.io.DDMFormJSONDeserializer;
 import com.liferay.dynamic.data.mapping.io.DDMFormJSONSerializer;
 import com.liferay.dynamic.data.mapping.io.internal.DDMFormJSONDeserializerImpl;
@@ -39,7 +40,6 @@ import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.storage.Field;
 import com.liferay.dynamic.data.mapping.storage.Fields;
 import com.liferay.dynamic.data.mapping.test.util.DDMFormFieldTypeSettingsTestUtil;
-import com.liferay.dynamic.data.mapping.util.impl.DDMImpl;
 import com.liferay.portal.configuration.ConfigurationFactoryImpl;
 import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.configuration.ConfigurationFactoryUtil;
@@ -346,6 +346,20 @@ public abstract class BaseDDMTestCase extends PowerMockito {
 		return value;
 	}
 
+	protected DDMFormField createParagraphDDMFormField(String name) {
+		DDMFormField ddmFormField = new DDMFormField(name, "paragraph");
+
+		ddmFormField.setLocalizable(false);
+		ddmFormField.setRepeatable(false);
+		ddmFormField.setRequired(false);
+
+		LocalizedValue localizedValue = ddmFormField.getLabel();
+
+		localizedValue.addString(LocaleUtil.US, name);
+
+		return ddmFormField;
+	}
+
 	protected Document createSampleDocument() {
 		Document document = createEmptyDocument();
 
@@ -643,7 +657,7 @@ public abstract class BaseDDMTestCase extends PowerMockito {
 	}
 
 	protected void setUpDefaultDDMFormFieldType() {
-		when (
+		when(
 			_defaultDDMFormFieldType.getDDMFormFieldTypeSettings()
 		).then(
 			new Answer<Class<? extends DDMFormFieldTypeSettings>>() {

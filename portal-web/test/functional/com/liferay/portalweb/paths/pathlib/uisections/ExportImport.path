@@ -9,13 +9,13 @@
 </thead>
 <tbody>
 <tr>
-	<td>EXPORT_IMPORT_IFRAME</td>
-	<td>//iframe[contains(@id,'configurationIframeDialog')]</td>
+	<td>EXPORT_FILE_NAME</td>
+	<td>//input[contains(@id,'exportFileName')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>EXPORT_FILE_NAME</td>
-	<td>//input[contains(@id,'exportFileName')]</td>
+	<td>EXPORT_VIA_TEMPLATE_FILE_NAME</td>
+	<td>//input[contains(@id,'ExportPortlet_name')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -173,37 +173,6 @@
 	<td></td>
 	<td></td>
 </tr>
-<!--PAGES-->
-<tr>
-	<td>PAGES_CHANGE_LINK</td>
-	<td>//div/a[contains(@id,'pagesLink')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>PAGES_DELETE_MISSING_PAGES_CHECKBOX</td>
-	<td>//input[contains(@id,'DELETE_MISSING_LAYOUTS')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>PAGES_SITE_PAGES_SETTINGS_CHECKBOX</td>
-	<td>//input[contains(@id,'LAYOUT_SET_SETTINGS')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>PAGES_THEME_SETTINGS_CHECKBOX</td>
-	<td>//input[contains(@id,'THEME_REFERENCE')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>PAGES_LOGO_CHECKBOX</td>
-	<td>//input[contains(@id,'LOGO')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td></td>
-	<td></td>
-	<td></td>
-</tr>
 <!--CONTENT-->
 <tr>
 	<td>CONTENT_CHOOSE_CONTENT_GENERAL_CHECKBOX</td>
@@ -241,54 +210,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>CONTENT_CHOOSE_CONTENT_SUBCONTENT_OK_BUTTON</td>
-	<td>//button[contains(.,'OK')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td></td>
-	<td></td>
-	<td></td>
-</tr>
-<!--CHOOSE_CONTENT_DATE_RANGE-->
-<tr>
-	<td>CHOOSE_CONTENT_DATE_RANGE_STATUS</td>
-	<td>//span[contains(@id,'selectedRange')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>CHOOSE_CONTENT_DATE_RANGE_CHANGE</td>
-	<td>//input[contains(@id,'rangeDateRange')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td></td>
-	<td></td>
-	<td></td>
-</tr>
-<!--DATE_RANGE_POPUP-->
-<tr>
-	<td>DATE_RANGE_POPUP_RANGE_RADIO</td>
-	<td>//input[contains(@id,'range${key_contentDateRange}')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td></td>
-	<td></td>
-	<td></td>
-</tr>
-<!--DATE_RANGE-->
-<tr>
-	<td>DATE_RANGE_START_DATE</td>
-	<td>//input[contains(@name,'startDate')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>DATE_RANGE_END_DATE</td>
-	<td>//input[contains(@name,'endDate')]</td>
-	<td></td>
-</tr>
-<tr>
 	<td></td>
 	<td></td>
 	<td></td>
@@ -298,15 +219,15 @@
 	<td>//div[contains(@class,'container-fluid-1280')]//a[contains(@data-qa-id,'addButton')]</td>
 	<td></td>
 </tr>
-<!-- VALIDATION -->
+<!-- PERMISSIONS -->
 <tr>
-	<td>VALIDATION_ERROR_MESSAGE_HEADER</td>
-	<td>//h4[@class='upload-error-message']</td>
+	<td>PERMISSIONS</td>
+	<td>//input[contains(@id,'PERMISSIONS')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>VALIDATION_ERROR_MESSAGE</td>
-	<td>//span[@class='error-message']</td>
+	<td>PERMISSIONS_TITLE</td>
+	<td>//div[contains(@id,'permissionsTitle')]/a</td>
 	<td></td>
 </tr>
 </tbody>

@@ -105,11 +105,13 @@ renderResponse.setTitle(LanguageUtil.get(request, "user-groups"));
 			modelVar="userGroup"
 		>
 			<liferay-ui:search-container-column-text
+				cssClass="table-cell-content"
 				name="name"
 				value="<%= HtmlUtil.escape(userGroup.getName()) %>"
 			/>
 
 			<liferay-ui:search-container-column-text
+				cssClass="table-cell-content"
 				name="description"
 				value="<%= HtmlUtil.escape(userGroup.getDescription()) %>"
 			/>
@@ -120,8 +122,8 @@ renderResponse.setTitle(LanguageUtil.get(request, "user-groups"));
 					<%
 					Map<String, Object> data = new HashMap<String, Object>();
 
-					data.put("usergroupid", userGroup.getUserGroupId());
-					data.put("usergroupname", userGroup.getName());
+					data.put("entityid", userGroup.getUserGroupId());
+					data.put("entityname", userGroup.getName());
 
 					boolean disabled = false;
 

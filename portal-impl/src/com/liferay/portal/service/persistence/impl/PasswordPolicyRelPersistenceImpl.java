@@ -29,8 +29,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchPasswordPolicyRelException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.PasswordPolicyRel;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
@@ -627,7 +625,7 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 	 * Returns the password policy rel where classNameId = &#63; and classPK = &#63; or throws a {@link NoSuchPasswordPolicyRelException} if it could not be found.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the matching password policy rel
 	 * @throws NoSuchPasswordPolicyRelException if a matching password policy rel could not be found
 	 */
@@ -663,7 +661,7 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 	 * Returns the password policy rel where classNameId = &#63; and classPK = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the matching password policy rel, or <code>null</code> if a matching password policy rel could not be found
 	 */
 	@Override
@@ -675,7 +673,7 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 	 * Returns the password policy rel where classNameId = &#63; and classPK = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param retrieveFromCache whether to retrieve from the finder cache
 	 * @return the matching password policy rel, or <code>null</code> if a matching password policy rel could not be found
 	 */
@@ -766,7 +764,7 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 	 * Removes the password policy rel where classNameId = &#63; and classPK = &#63; from the database.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the password policy rel that was removed
 	 */
 	@Override
@@ -781,7 +779,7 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 	 * Returns the number of password policy rels where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the number of matching password policy rels
 	 */
 	@Override
@@ -911,7 +909,8 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((PasswordPolicyRelModelImpl)passwordPolicyRel);
+		clearUniqueFindersCache((PasswordPolicyRelModelImpl)passwordPolicyRel,
+			true);
 	}
 
 	@Override
@@ -923,52 +922,40 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 			entityCache.removeResult(PasswordPolicyRelModelImpl.ENTITY_CACHE_ENABLED,
 				PasswordPolicyRelImpl.class, passwordPolicyRel.getPrimaryKey());
 
-			clearUniqueFindersCache((PasswordPolicyRelModelImpl)passwordPolicyRel);
+			clearUniqueFindersCache((PasswordPolicyRelModelImpl)passwordPolicyRel,
+				true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		PasswordPolicyRelModelImpl passwordPolicyRelModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					passwordPolicyRelModelImpl.getClassNameId(),
-					passwordPolicyRelModelImpl.getClassPK()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_C, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_C, args,
-				passwordPolicyRelModelImpl);
-		}
-		else {
-			if ((passwordPolicyRelModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						passwordPolicyRelModelImpl.getClassNameId(),
-						passwordPolicyRelModelImpl.getClassPK()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_C, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_C, args,
-					passwordPolicyRelModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		PasswordPolicyRelModelImpl passwordPolicyRelModelImpl) {
 		Object[] args = new Object[] {
 				passwordPolicyRelModelImpl.getClassNameId(),
 				passwordPolicyRelModelImpl.getClassPK()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_C, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_C, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_C, args,
+			passwordPolicyRelModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		PasswordPolicyRelModelImpl passwordPolicyRelModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					passwordPolicyRelModelImpl.getClassNameId(),
+					passwordPolicyRelModelImpl.getClassPK()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_C, args);
+		}
 
 		if ((passwordPolicyRelModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					passwordPolicyRelModelImpl.getOriginalClassNameId(),
 					passwordPolicyRelModelImpl.getOriginalClassPK()
 				};
@@ -1143,8 +1130,8 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 			PasswordPolicyRelImpl.class, passwordPolicyRel.getPrimaryKey(),
 			passwordPolicyRel, false);
 
-		clearUniqueFindersCache(passwordPolicyRelModelImpl);
-		cacheUniqueFindersCache(passwordPolicyRelModelImpl, isNew);
+		clearUniqueFindersCache(passwordPolicyRelModelImpl, false);
+		cacheUniqueFindersCache(passwordPolicyRelModelImpl);
 
 		passwordPolicyRel.resetOriginalValues();
 
@@ -1217,12 +1204,14 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 	 */
 	@Override
 	public PasswordPolicyRel fetchByPrimaryKey(Serializable primaryKey) {
-		PasswordPolicyRel passwordPolicyRel = (PasswordPolicyRel)entityCache.getResult(PasswordPolicyRelModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(PasswordPolicyRelModelImpl.ENTITY_CACHE_ENABLED,
 				PasswordPolicyRelImpl.class, primaryKey);
 
-		if (passwordPolicyRel == _nullPasswordPolicyRel) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		PasswordPolicyRel passwordPolicyRel = (PasswordPolicyRel)serializable;
 
 		if (passwordPolicyRel == null) {
 			Session session = null;
@@ -1238,8 +1227,7 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 				}
 				else {
 					entityCache.putResult(PasswordPolicyRelModelImpl.ENTITY_CACHE_ENABLED,
-						PasswordPolicyRelImpl.class, primaryKey,
-						_nullPasswordPolicyRel);
+						PasswordPolicyRelImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -1293,18 +1281,20 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			PasswordPolicyRel passwordPolicyRel = (PasswordPolicyRel)entityCache.getResult(PasswordPolicyRelModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(PasswordPolicyRelModelImpl.ENTITY_CACHE_ENABLED,
 					PasswordPolicyRelImpl.class, primaryKey);
 
-			if (passwordPolicyRel == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, passwordPolicyRel);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (PasswordPolicyRel)serializable);
+				}
 			}
 		}
 
@@ -1346,8 +1336,7 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(PasswordPolicyRelModelImpl.ENTITY_CACHE_ENABLED,
-					PasswordPolicyRelImpl.class, primaryKey,
-					_nullPasswordPolicyRel);
+					PasswordPolicyRelImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -1582,35 +1571,4 @@ public class PasswordPolicyRelPersistenceImpl extends BasePersistenceImpl<Passwo
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No PasswordPolicyRel exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No PasswordPolicyRel exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(PasswordPolicyRelPersistenceImpl.class);
-	private static final PasswordPolicyRel _nullPasswordPolicyRel = new PasswordPolicyRelImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<PasswordPolicyRel> toCacheModel() {
-				return _nullPasswordPolicyRelCacheModel;
-			}
-		};
-
-	private static final CacheModel<PasswordPolicyRel> _nullPasswordPolicyRelCacheModel =
-		new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<PasswordPolicyRel>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public PasswordPolicyRel toEntityModel() {
-			return _nullPasswordPolicyRel;
-		}
-	}
 }

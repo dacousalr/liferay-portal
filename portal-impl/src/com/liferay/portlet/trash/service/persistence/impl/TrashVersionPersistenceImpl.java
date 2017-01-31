@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
@@ -1145,7 +1144,7 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 	 * Returns the trash version where classNameId = &#63; and classPK = &#63; or throws a {@link NoSuchVersionException} if it could not be found.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the matching trash version
 	 * @throws NoSuchVersionException if a matching trash version could not be found
 	 */
@@ -1181,7 +1180,7 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 	 * Returns the trash version where classNameId = &#63; and classPK = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the matching trash version, or <code>null</code> if a matching trash version could not be found
 	 */
 	@Override
@@ -1193,7 +1192,7 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 	 * Returns the trash version where classNameId = &#63; and classPK = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param retrieveFromCache whether to retrieve from the finder cache
 	 * @return the matching trash version, or <code>null</code> if a matching trash version could not be found
 	 */
@@ -1284,7 +1283,7 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 	 * Removes the trash version where classNameId = &#63; and classPK = &#63; from the database.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the trash version that was removed
 	 */
 	@Override
@@ -1299,7 +1298,7 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 	 * Returns the number of trash versions where classNameId = &#63; and classPK = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the number of matching trash versions
 	 */
 	@Override
@@ -1426,7 +1425,7 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((TrashVersionModelImpl)trashVersion);
+		clearUniqueFindersCache((TrashVersionModelImpl)trashVersion, true);
 	}
 
 	@Override
@@ -1438,52 +1437,38 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 			entityCache.removeResult(TrashVersionModelImpl.ENTITY_CACHE_ENABLED,
 				TrashVersionImpl.class, trashVersion.getPrimaryKey());
 
-			clearUniqueFindersCache((TrashVersionModelImpl)trashVersion);
+			clearUniqueFindersCache((TrashVersionModelImpl)trashVersion, true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		TrashVersionModelImpl trashVersionModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					trashVersionModelImpl.getClassNameId(),
-					trashVersionModelImpl.getClassPK()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_C, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_C, args,
-				trashVersionModelImpl);
-		}
-		else {
-			if ((trashVersionModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						trashVersionModelImpl.getClassNameId(),
-						trashVersionModelImpl.getClassPK()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_C, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_C, args,
-					trashVersionModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		TrashVersionModelImpl trashVersionModelImpl) {
 		Object[] args = new Object[] {
 				trashVersionModelImpl.getClassNameId(),
 				trashVersionModelImpl.getClassPK()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_C, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_C, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_C, args,
+			trashVersionModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		TrashVersionModelImpl trashVersionModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					trashVersionModelImpl.getClassNameId(),
+					trashVersionModelImpl.getClassPK()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_C, args);
+		}
 
 		if ((trashVersionModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					trashVersionModelImpl.getOriginalClassNameId(),
 					trashVersionModelImpl.getOriginalClassPK()
 				};
@@ -1674,8 +1659,8 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 			TrashVersionImpl.class, trashVersion.getPrimaryKey(), trashVersion,
 			false);
 
-		clearUniqueFindersCache(trashVersionModelImpl);
-		cacheUniqueFindersCache(trashVersionModelImpl, isNew);
+		clearUniqueFindersCache(trashVersionModelImpl, false);
+		cacheUniqueFindersCache(trashVersionModelImpl);
 
 		trashVersion.resetOriginalValues();
 
@@ -1748,12 +1733,14 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 	 */
 	@Override
 	public TrashVersion fetchByPrimaryKey(Serializable primaryKey) {
-		TrashVersion trashVersion = (TrashVersion)entityCache.getResult(TrashVersionModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(TrashVersionModelImpl.ENTITY_CACHE_ENABLED,
 				TrashVersionImpl.class, primaryKey);
 
-		if (trashVersion == _nullTrashVersion) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		TrashVersion trashVersion = (TrashVersion)serializable;
 
 		if (trashVersion == null) {
 			Session session = null;
@@ -1769,7 +1756,7 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 				}
 				else {
 					entityCache.putResult(TrashVersionModelImpl.ENTITY_CACHE_ENABLED,
-						TrashVersionImpl.class, primaryKey, _nullTrashVersion);
+						TrashVersionImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -1823,18 +1810,20 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			TrashVersion trashVersion = (TrashVersion)entityCache.getResult(TrashVersionModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(TrashVersionModelImpl.ENTITY_CACHE_ENABLED,
 					TrashVersionImpl.class, primaryKey);
 
-			if (trashVersion == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, trashVersion);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (TrashVersion)serializable);
+				}
 			}
 		}
 
@@ -1876,7 +1865,7 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(TrashVersionModelImpl.ENTITY_CACHE_ENABLED,
-					TrashVersionImpl.class, primaryKey, _nullTrashVersion);
+					TrashVersionImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -2111,22 +2100,4 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No TrashVersion exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No TrashVersion exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(TrashVersionPersistenceImpl.class);
-	private static final TrashVersion _nullTrashVersion = new TrashVersionImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<TrashVersion> toCacheModel() {
-				return _nullTrashVersionCacheModel;
-			}
-		};
-
-	private static final CacheModel<TrashVersion> _nullTrashVersionCacheModel = new CacheModel<TrashVersion>() {
-			@Override
-			public TrashVersion toEntityModel() {
-				return _nullTrashVersion;
-			}
-		};
 }

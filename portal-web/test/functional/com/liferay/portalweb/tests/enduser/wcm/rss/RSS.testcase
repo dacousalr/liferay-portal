@@ -1,5 +1,6 @@
 <definition component-name="portal-rss">
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="RSS" />
 
 	<set-up>
@@ -58,6 +59,24 @@
 		</execute>
 
 		<execute macro="RSS#addFeed">
+			<var name="feedRowIndexNumber" value="0" />
+			<var name="feedTitle" value="Technology" />
+			<var name="feedUrlLink" value="http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml" />
+		</execute>
+
+		<execute macro="PortletEntry#save" />
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Site Page Name" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="Portlet#gotoPortletOptions">
+			<var name="portletName" value="RSS Publisher" />
+			<var name="portletOption" value="Configuration" />
+		</execute>
+
+		<execute macro="RSS#addFeed">
 			<var name="buttonRowIndexNumber" value="1" />
 			<var name="feedRowIndexNumber" value="2" />
 			<var name="feedTitle" value="Latimes > Technology News" />
@@ -79,8 +98,8 @@
 		<execute macro="RSS#addFeed">
 			<var name="buttonRowIndexNumber" value="1" />
 			<var name="feedRowIndexNumber" value="3" />
-			<var name="feedTitle" value="NBA" />
-			<var name="feedUrlLink" value="http://sports.espn.go.com/espn/rss/nba/news" />
+			<var name="feedTitle" value="Reuters > Sports News" />
+			<var name="feedUrlLink" value="http://feeds.reuters.com/reuters/sportsNews" />
 		</execute>
 
 		<execute macro="PortletEntry#save" />
@@ -90,8 +109,8 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<for list="Technology,NBA,Latimes > Technology News" param="feedTitle" >
-			<execute macro="RSS#viewDefaultDisplayFeedTitle">
+		<for list="Technology,Reuters > Sports News,Latimes > Technology News" param="feedTitle" >
+			<execute macro="RSS#viewDisplayFeedTitle">
 				<var name="feedTitle" value="${feedTitle}" />
 			</execute>
 		</for>
@@ -113,8 +132,7 @@
 		</execute>
 
 		<execute macro="RSS#addFeed">
-			<var name="buttonRowIndexNumber" value="1" />
-			<var name="feedRowIndexNumber" value="2" />
+			<var name="feedRowIndexNumber" value="0" />
 			<var name="feedTitle" value="General Announcement" />
 			<var name="feedUrlLink" value="www.theverge.com/rss/index.xml" />
 		</execute>
@@ -138,8 +156,7 @@
 		</execute>
 
 		<execute macro="RSS#addFeed">
-			<var name="buttonRowIndexNumber" value="1" />
-			<var name="feedRowIndexNumber" value="2" />
+			<var name="feedRowIndexNumber" value="0" />
 			<var name="feedTitle" value="General Announcement" />
 			<var name="feedUrlLink" value="http://www.theverge.com/rss/index.xml" />
 		</execute>
@@ -151,12 +168,89 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="RSS#viewDefaultDisplayFeedTitle">
+		<execute macro="RSS#viewDisplayFeedTitle">
 			<var name="feedTitle" value="General Announcement" />
 		</execute>
 	</command>
 
-	<command name="AddRSSFeed" priority="4">
+	<command name="AddRSSFeed" priority="5">
+		<property name="portal.acceptance" value="true" />
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Site Page Name" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="Portlet#addPG">
+			<var name="portletName" value="RSS Publisher" />
+		</execute>
+
+		<execute macro="RSS#viewPortletConfigurationInfo" />
+
+		<execute macro="Portlet#gotoPortletOptions">
+			<var name="portletName" value="RSS Publisher" />
+			<var name="portletOption" value="Configuration" />
+		</execute>
+
+		<execute macro="RSS#addFeed">
+			<var name="feedRowIndexNumber" value="0" />
+			<var name="feedTitle" value="Latimes > Technology News" />
+			<var name="feedUrlLink" value="http://www.latimes.com/business/technology/rss2.0.xml" />
+		</execute>
+
+		<execute macro="PortletEntry#save" />
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Site Page Name" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="RSS#viewDisplayFeedTitle">
+			<var name="feedTitle" value="Latimes > Technology News" />
+		</execute>
+	</command>
+
+	<command name="AddWebContentFeed" priority="3">
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Web Content" />
+		</execute>
+
+		<execute macro="WebContentNavigator#gotoAddCP" />
+
+		<execute macro="WebContent#addCP">
+			<var name="webContentContent" value="Web Content Content" />
+			<var name="webContentTitle" value="Web Content Title" />
+		</execute>
+
+		<execute macro="PortletEntry#publish" />
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Web Content" />
+		</execute>
+
+		<execute macro="WebContentNavigator#gotoAddFeed" />
+
+		<execute macro="WebContent#addFeed">
+			<var name="description" value="WC Feed Description" />
+			<var name="feedContent" value="Content(ddm-text-html)" />
+			<var name="feedTitle" value="WC Feed Title" />
+			<var name="feedType" value="RSS 2.0" />
+			<var name="structureName" value="Basic Web Content" />
+			<var name="targetFriendlyUrl" value="/web/guest/home" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Web Content" />
+		</execute>
+
+		<execute macro="WebContentNavigator#gotoEditFeed">
+			<var name="feedName" value="WC Feed Title" />
+		</execute>
+
+		<var attribute="value" locator="//input[contains(@id,'JournalPortlet_url') and contains(@value,'journal/rss')]" name="rssFeedUrl" />
+
 		<execute macro="Navigator#gotoSitePage">
 			<var name="pageName" value="Site Page Name" />
 			<var name="siteName" value="Site Name" />
@@ -172,10 +266,9 @@
 		</execute>
 
 		<execute macro="RSS#addFeed">
-			<var name="buttonRowIndexNumber" value="1" />
-			<var name="feedRowIndexNumber" value="2" />
-			<var name="feedTitle" value="Latimes > Technology News" />
-			<var name="feedUrlLink" value="http://www.latimes.com/business/technology/rss2.0.xml" />
+			<var name="feedRowIndexNumber" value="0" />
+			<var name="feedTitle" value="Web Content Feed Title" />
+			<var name="feedUrlLink" value="${rssFeedUrl}" />
 		</execute>
 
 		<execute macro="PortletEntry#save" />
@@ -185,11 +278,14 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<for list="Technology,Latimes > Technology News" param="feedTitle" >
-			<execute macro="RSS#viewDefaultDisplayFeedTitle">
-				<var name="feedTitle" value="${feedTitle}" />
-			</execute>
-		</for>
+		<execute macro="RSS#viewDisplayFeedTitle">
+			<var name="feedTitle" value="Web Content Feed Title" />
+		</execute>
+
+		<execute macro="RSS#viewFeedContent">
+			<var name="feedEntryContent" value="Web Content Content" />
+			<var name="feedEntryTitle" value="Web Content Title" />
+		</execute>
 	</command>
 
 	<command name="ChangeDefaultToNavigationDisplay" priority="3">
@@ -200,6 +296,24 @@
 
 		<execute macro="Portlet#addPG">
 			<var name="portletName" value="RSS Publisher" />
+		</execute>
+
+		<execute macro="Portlet#gotoPortletOptions">
+			<var name="portletName" value="RSS Publisher" />
+			<var name="portletOption" value="Configuration" />
+		</execute>
+
+		<execute macro="RSS#addFeed">
+			<var name="feedRowIndexNumber" value="0" />
+			<var name="feedTitle" value="Technology" />
+			<var name="feedUrlLink" value="http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml" />
+		</execute>
+
+		<execute macro="PortletEntry#save" />
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Site Page Name" />
+			<var name="siteName" value="Site Name" />
 		</execute>
 
 		<execute macro="Portlet#gotoPortletOptions">
@@ -239,6 +353,24 @@
 		</execute>
 
 		<execute macro="RSS#addFeed">
+			<var name="feedRowIndexNumber" value="0" />
+			<var name="feedTitle" value="Technology" />
+			<var name="feedUrlLink" value="http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml" />
+		</execute>
+
+		<execute macro="PortletEntry#save" />
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Site Page Name" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="Portlet#gotoPortletOptions">
+			<var name="portletName" value="RSS Publisher" />
+			<var name="portletOption" value="Configuration" />
+		</execute>
+
+		<execute macro="RSS#addFeed">
 			<var name="buttonRowIndexNumber" value="1" />
 			<var name="feedRowIndexNumber" value="2" />
 			<var name="feedTitle" value="NBA" />
@@ -259,7 +391,7 @@
 
 		<execute macro="RSS#viewPG">
 			<var name="feedRowIndexNumber" value="0" />
-			<var name="feedUrlLink" value="http://www.ft.com/rss/companies/technology" />
+			<var name="feedUrlLink" value="http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml" />
 			<var name="rowIndexNumber" value="1" />
 		</execute>
 
@@ -271,7 +403,7 @@
 
 		<execute macro="RSS#changeFeedsOrder">
 			<var name="fromRowNumber" value="1" />
-			<var name="rowLocation" value="Title URL" />
+			<var name="rowLocation" value="Title" />
 			<var name="toRowNumber" value="2" />
 		</execute>
 
@@ -295,7 +427,7 @@
 
 		<execute macro="RSS#viewPG">
 			<var name="feedRowIndexNumber" value="1" />
-			<var name="feedUrlLink" value="http://www.ft.com/rss/companies/technology" />
+			<var name="feedUrlLink" value="http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml" />
 			<var name="rowIndexNumber" value="2" />
 		</execute>
 	</command>
@@ -319,8 +451,7 @@
 		</execute>
 
 		<execute macro="RSS#addFeed">
-			<var name="buttonRowIndexNumber" value="1" />
-			<var name="feedRowIndexNumber" value="2" />
+			<var name="feedRowIndexNumber" value="0" />
 			<var name="feedTitle" value="Latimes > Technology News" />
 			<var name="feedUrlLink" value="http://www.latimes.com/business/technology/rss2.0.xml" />
 		</execute>
@@ -331,11 +462,9 @@
 			<var name="pageName" value="Page Name" />
 		</execute>
 
-		<for list="Technology,Latimes > Technology News" param="feedTitle" >
-			<execute macro="RSS#viewDefaultDisplayFeedTitle">
-				<var name="feedTitle" value="${feedTitle}" />
-			</execute>
-		</for>
+		<execute macro="RSS#viewDisplayFeedTitle">
+			<var name="feedTitle" value="Latimes > Technology News" />
+		</execute>
 
 		<execute macro="Portlet#gotoPortletOptions">
 			<var name="portletName" value="RSS Publisher" />
@@ -343,7 +472,7 @@
 		</execute>
 
 		<execute macro="RSS#deleteFeed">
-			<var name="buttonRowIndexNumber" value="2" />
+			<var name="buttonRowIndexNumber" value="1" />
 		</execute>
 
 		<execute macro="PortletEntry#save" />
@@ -371,7 +500,25 @@
 			<var name="portletName" value="RSS Publisher" />
 		</execute>
 
-		<execute macro="RSS#viewDefaultDisplayFeedTitle">
+		<execute macro="Portlet#gotoPortletOptions">
+			<var name="portletName" value="RSS Publisher" />
+			<var name="portletOption" value="Configuration" />
+		</execute>
+
+		<execute macro="RSS#addFeed">
+			<var name="feedRowIndexNumber" value="0" />
+			<var name="feedTitle" value="Technology" />
+			<var name="feedUrlLink" value="http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml" />
+		</execute>
+
+		<execute macro="PortletEntry#save" />
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Site Page Name" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="RSS#viewDisplayFeedTitle">
 			<var name="feedTitle" value="Technology" />
 		</execute>
 
@@ -395,6 +542,11 @@
 	</command>
 
 	<command name="EnableRSSFeedFromAssetpublisher" priority="3">
+		<execute macro="TestCase#getSiteName">
+			<return from="siteName" name="siteName" />
+			<var name="siteName" value="${siteName}" />
+		</execute>
+
 		<execute macro="SitePageNavigator#gotoPages">
 			<var name="page" value="Public Pages" />
 			<var name="site" value="Site Name" />
@@ -456,8 +608,7 @@
 		</execute>
 
 		<execute macro="RSS#addFeed">
-			<var name="buttonRowIndexNumber" value="1" />
-			<var name="feedRowIndexNumber" value="2" />
+			<var name="feedRowIndexNumber" value="0" />
 			<var name="feedTitle" value="Web Asset Publisher" />
 			<var name="feedUrlLink" value="${rssFeedUrl}" />
 		</execute>
@@ -469,12 +620,13 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="RSS#viewDefaultDisplayFeedTitle">
+		<execute macro="RSS#viewDisplayFeedTitle">
 			<var name="feedTitle" value="Web Asset Publisher" />
 		</execute>
 
 		<execute macro="RSS#openFeed">
 			<var name="feedTitle" value="Asset Publisher" />
+			<var name="siteName" value="${siteName}" />
 		</execute>
 
 		<execute macro="AssetPublisherPortlet#viewAssetPG">
@@ -500,9 +652,7 @@
 			<var name="portletName" value="RSS Publisher" />
 		</execute>
 
-		<execute macro="RSS#viewDefaultDisplayFeedTitle">
-			<var name="feedTitle" value="Technology" />
-		</execute>
+		<execute macro="RSS#viewPortletConfigurationInfo" />
 
 		<execute macro="Portlet#deletePG">
 			<var name="portletName" value="RSS Publisher" />
@@ -514,6 +664,131 @@
 
 		<execute macro="Portlet#viewNoSpecificPG">
 			<var name="portletName" value="RSS Publisher" />
+		</execute>
+	</command>
+
+	<command name="UpdateRSSFeedViaAssetpublisher" priority="4">
+		<execute macro="TestCase#getSiteName">
+			<return from="siteName" name="siteName" />
+			<var name="siteName" value="${siteName}" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoControlPanelConfiguration">
+			<var name="portlet" value="System Settings" />
+		</execute>
+
+		<execute macro="SystemSettings#gotoCategory">
+			<var name="category" value="Web Experience" />
+		</execute>
+
+		<execute macro="SystemSettings#editConfiguration">
+			<var name="configurationName" value="RSS Cache" />
+		</execute>
+
+		<execute macro="RSS#updateFeedTime">
+			<var name="feedTime" value="1" />
+		</execute>
+
+		<execute macro="SitePageNavigator#gotoPages">
+			<var name="page" value="Public Pages" />
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="Page#add">
+			<var name="pageName" value="Asset Publisher Page" />
+		</execute>
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Site Page Name" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="Portlet#addPG">
+			<var name="portletName" value="RSS Publisher" />
+		</execute>
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Asset Publisher Page" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="Portlet#addPG">
+			<var name="portletName" value="Asset Publisher" />
+		</execute>
+
+		<execute macro="WebContent#addPGViaAP">
+			<var name="webContentContent" value="This is the web content test for rss feed" />
+			<var name="webContentTitle" value="Web Content Title" />
+		</execute>
+
+		<execute macro="Portlet#gotoPortletOptions">
+			<var name="portletName" value="Asset Publisher" />
+			<var name="portletOption" value="Configuration" />
+		</execute>
+
+		<execute macro="AssetPublisherPortlet#enableRSSSubscription" />
+
+		<execute macro="Button#clickSave" />
+
+		<execute macro="IFrame#selectTopFrame" />
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Asset Publisher Page" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<var attribute="href" locator="//div[@class='subscribe-action']/span/a[contains(@href,'asset_publisher')]" name="rssFeedUrl" />
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Site Page Name" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="Portlet#gotoPortletOptions">
+			<var name="portletName" value="RSS Publisher" />
+			<var name="portletOption" value="Configuration" />
+		</execute>
+
+		<execute macro="RSS#addFeed">
+			<var name="feedRowIndexNumber" value="0" />
+			<var name="feedTitle" value="Web Asset Publisher" />
+			<var name="feedUrlLink" value="${rssFeedUrl}" />
+		</execute>
+
+		<execute macro="PortletEntry#save" />
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Site Page Name" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="RSS#viewDisplayFeedTitle">
+			<var name="feedTitle" value="Web Asset Publisher" />
+		</execute>
+
+		<execute macro="RSS#viewUpdateFeedTitle">
+			<var name="feedHeading" value="Web Content Title" />
+		</execute>
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Asset Publisher Page" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="WebContent#editPGViaAP">
+			<var name="assetTitle" value="Web Content Title" />
+			<var name="webContentContentEdit" value="This is the updated version of web content test for rss feed" />
+			<var name="webContentTitleEdit" value="Web Content Title Updated Feed" />
+		</execute>
+
+		<execute macro="RSS#viewUpdateFeedTitle">
+			<var name="feedHeading" value="Web Content Title Updated Feed" />
+			<var name="pageName" value="Site Page Name" />
+			<var name="updateFeed" value="true" />
+		</execute>
+
+		<execute macro="RSS#viewDisplayFeedTitle">
+			<var name="feedTitle" value="Web Asset Publisher" />
 		</execute>
 	</command>
 </definition>

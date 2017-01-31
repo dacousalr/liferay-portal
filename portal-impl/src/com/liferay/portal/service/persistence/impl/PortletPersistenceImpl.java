@@ -29,8 +29,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchPortletException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
@@ -914,7 +912,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((PortletModelImpl)portlet);
+		clearUniqueFindersCache((PortletModelImpl)portlet, true);
 	}
 
 	@Override
@@ -926,50 +924,36 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 			entityCache.removeResult(PortletModelImpl.ENTITY_CACHE_ENABLED,
 				PortletImpl.class, portlet.getPrimaryKey());
 
-			clearUniqueFindersCache((PortletModelImpl)portlet);
+			clearUniqueFindersCache((PortletModelImpl)portlet, true);
 		}
 	}
 
-	protected void cacheUniqueFindersCache(PortletModelImpl portletModelImpl,
-		boolean isNew) {
-		if (isNew) {
+	protected void cacheUniqueFindersCache(PortletModelImpl portletModelImpl) {
+		Object[] args = new Object[] {
+				portletModelImpl.getCompanyId(), portletModelImpl.getPortletId()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_P, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_P, args, portletModelImpl,
+			false);
+	}
+
+	protected void clearUniqueFindersCache(PortletModelImpl portletModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
 			Object[] args = new Object[] {
 					portletModelImpl.getCompanyId(),
 					portletModelImpl.getPortletId()
 				};
 
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_P, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_P, args,
-				portletModelImpl);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_P, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_P, args);
 		}
-		else {
-			if ((portletModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_P.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						portletModelImpl.getCompanyId(),
-						portletModelImpl.getPortletId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_P, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_P, args,
-					portletModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(PortletModelImpl portletModelImpl) {
-		Object[] args = new Object[] {
-				portletModelImpl.getCompanyId(), portletModelImpl.getPortletId()
-			};
-
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_P, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_P, args);
 
 		if ((portletModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_P.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					portletModelImpl.getOriginalCompanyId(),
 					portletModelImpl.getOriginalPortletId()
 				};
@@ -1137,8 +1121,8 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 		entityCache.putResult(PortletModelImpl.ENTITY_CACHE_ENABLED,
 			PortletImpl.class, portlet.getPrimaryKey(), portlet, false);
 
-		clearUniqueFindersCache(portletModelImpl);
-		cacheUniqueFindersCache(portletModelImpl, isNew);
+		clearUniqueFindersCache(portletModelImpl, false);
+		cacheUniqueFindersCache(portletModelImpl);
 
 		portlet.resetOriginalValues();
 
@@ -1209,12 +1193,14 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 	 */
 	@Override
 	public Portlet fetchByPrimaryKey(Serializable primaryKey) {
-		Portlet portlet = (Portlet)entityCache.getResult(PortletModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(PortletModelImpl.ENTITY_CACHE_ENABLED,
 				PortletImpl.class, primaryKey);
 
-		if (portlet == _nullPortlet) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		Portlet portlet = (Portlet)serializable;
 
 		if (portlet == null) {
 			Session session = null;
@@ -1229,7 +1215,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 				}
 				else {
 					entityCache.putResult(PortletModelImpl.ENTITY_CACHE_ENABLED,
-						PortletImpl.class, primaryKey, _nullPortlet);
+						PortletImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -1283,18 +1269,20 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			Portlet portlet = (Portlet)entityCache.getResult(PortletModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(PortletModelImpl.ENTITY_CACHE_ENABLED,
 					PortletImpl.class, primaryKey);
 
-			if (portlet == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, portlet);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (Portlet)serializable);
+				}
 			}
 		}
 
@@ -1336,7 +1324,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(PortletModelImpl.ENTITY_CACHE_ENABLED,
-					PortletImpl.class, primaryKey, _nullPortlet);
+					PortletImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -1578,34 +1566,4 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"id", "active"
 			});
-	private static final Portlet _nullPortlet = new PortletImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<Portlet> toCacheModel() {
-				return _nullPortletCacheModel;
-			}
-		};
-
-	private static final CacheModel<Portlet> _nullPortletCacheModel = new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<Portlet>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public Portlet toEntityModel() {
-			return _nullPortlet;
-		}
-	}
 }

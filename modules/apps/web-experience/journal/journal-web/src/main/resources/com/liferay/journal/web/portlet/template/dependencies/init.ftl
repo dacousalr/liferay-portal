@@ -1,15 +1,15 @@
 <#-- Common -->
 
-<#assign variableName = name + ".getData()">
+<#assign variableName = name + ".getData()" />
 
 <#if repeatable>
-	<#assign variableName = "cur_" + variableName>
+	<#assign variableName = "cur_" + variableName />
 </#if>
 
 <#-- Util -->
 
 <#function getVariableReferenceCode variableName>
-	<#if language == "ftl">
+	<#if stringUtil.equals(language, "ftl")>
 		<#return "${" + variableName + "}">
 	<#else>
 		<#return "$" + variableName>

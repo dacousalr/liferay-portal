@@ -6,6 +6,10 @@ body.portlet {
 	border-width: 0;
 }
 
+.portlet-icon-back {
+	margin-top: -2px;
+}
+
 .portlet-topper {
 	position: relative;
 
@@ -27,12 +31,12 @@ body.portlet {
 
 .portlet-title-text {
 	display: inline-block;
-
-	@include ellipsis;
-
 	margin-top: 0;
 	max-width: 95%;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	vertical-align: top;
+	white-space: nowrap;
 }
 
 .panel-page-content, .panel-page-body {
@@ -61,7 +65,8 @@ body.portlet {
 	}
 
 	.portlet-title-default {
-		background: url(../images/portlet/draggable_borderless.png) no-repeat 2px center transparent;
+		background: lx-icon(move, $portlet-topper-color) no-repeat 2px center transparent;
+		background-size: 12px;
 		cursor: move;
 		padding-left: 25px;
 	}
@@ -69,7 +74,9 @@ body.portlet {
 
 .portlet {
 	.visible-interaction {
-		display: none;
+		@media (min-width: $grid-float-breakpoint) {
+			display: none;
+		}
 	}
 
 	&:active, &:hover, &:focus, &.active {

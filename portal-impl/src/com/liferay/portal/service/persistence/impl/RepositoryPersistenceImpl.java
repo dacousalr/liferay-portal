@@ -29,8 +29,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchRepositoryException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.Repository;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -2365,7 +2363,7 @@ public class RepositoryPersistenceImpl extends BasePersistenceImpl<Repository>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((RepositoryModelImpl)repository);
+		clearUniqueFindersCache((RepositoryModelImpl)repository, true);
 	}
 
 	@Override
@@ -2377,76 +2375,47 @@ public class RepositoryPersistenceImpl extends BasePersistenceImpl<Repository>
 			entityCache.removeResult(RepositoryModelImpl.ENTITY_CACHE_ENABLED,
 				RepositoryImpl.class, repository.getPrimaryKey());
 
-			clearUniqueFindersCache((RepositoryModelImpl)repository);
+			clearUniqueFindersCache((RepositoryModelImpl)repository, true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		RepositoryModelImpl repositoryModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					repositoryModelImpl.getUuid(),
-					repositoryModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				repositoryModelImpl);
-
-			args = new Object[] {
-					repositoryModelImpl.getGroupId(),
-					repositoryModelImpl.getName(),
-					repositoryModelImpl.getPortletId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_G_N_P, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_G_N_P, args,
-				repositoryModelImpl);
-		}
-		else {
-			if ((repositoryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						repositoryModelImpl.getUuid(),
-						repositoryModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					repositoryModelImpl);
-			}
-
-			if ((repositoryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_N_P.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						repositoryModelImpl.getGroupId(),
-						repositoryModelImpl.getName(),
-						repositoryModelImpl.getPortletId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_G_N_P, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_G_N_P, args,
-					repositoryModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		RepositoryModelImpl repositoryModelImpl) {
 		Object[] args = new Object[] {
 				repositoryModelImpl.getUuid(), repositoryModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			repositoryModelImpl, false);
+
+		args = new Object[] {
+				repositoryModelImpl.getGroupId(), repositoryModelImpl.getName(),
+				repositoryModelImpl.getPortletId()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_G_N_P, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_G_N_P, args,
+			repositoryModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		RepositoryModelImpl repositoryModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					repositoryModelImpl.getUuid(),
+					repositoryModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((repositoryModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					repositoryModelImpl.getOriginalUuid(),
 					repositoryModelImpl.getOriginalGroupId()
 				};
@@ -2455,17 +2424,20 @@ public class RepositoryPersistenceImpl extends BasePersistenceImpl<Repository>
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
 		}
 
-		args = new Object[] {
-				repositoryModelImpl.getGroupId(), repositoryModelImpl.getName(),
-				repositoryModelImpl.getPortletId()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					repositoryModelImpl.getGroupId(),
+					repositoryModelImpl.getName(),
+					repositoryModelImpl.getPortletId()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_G_N_P, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_G_N_P, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_G_N_P, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_G_N_P, args);
+		}
 
 		if ((repositoryModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_N_P.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					repositoryModelImpl.getOriginalGroupId(),
 					repositoryModelImpl.getOriginalName(),
 					repositoryModelImpl.getOriginalPortletId()
@@ -2706,8 +2678,8 @@ public class RepositoryPersistenceImpl extends BasePersistenceImpl<Repository>
 		entityCache.putResult(RepositoryModelImpl.ENTITY_CACHE_ENABLED,
 			RepositoryImpl.class, repository.getPrimaryKey(), repository, false);
 
-		clearUniqueFindersCache(repositoryModelImpl);
-		cacheUniqueFindersCache(repositoryModelImpl, isNew);
+		clearUniqueFindersCache(repositoryModelImpl, false);
+		cacheUniqueFindersCache(repositoryModelImpl);
 
 		repository.resetOriginalValues();
 
@@ -2789,12 +2761,14 @@ public class RepositoryPersistenceImpl extends BasePersistenceImpl<Repository>
 	 */
 	@Override
 	public Repository fetchByPrimaryKey(Serializable primaryKey) {
-		Repository repository = (Repository)entityCache.getResult(RepositoryModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(RepositoryModelImpl.ENTITY_CACHE_ENABLED,
 				RepositoryImpl.class, primaryKey);
 
-		if (repository == _nullRepository) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		Repository repository = (Repository)serializable;
 
 		if (repository == null) {
 			Session session = null;
@@ -2810,7 +2784,7 @@ public class RepositoryPersistenceImpl extends BasePersistenceImpl<Repository>
 				}
 				else {
 					entityCache.putResult(RepositoryModelImpl.ENTITY_CACHE_ENABLED,
-						RepositoryImpl.class, primaryKey, _nullRepository);
+						RepositoryImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -2864,18 +2838,20 @@ public class RepositoryPersistenceImpl extends BasePersistenceImpl<Repository>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			Repository repository = (Repository)entityCache.getResult(RepositoryModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(RepositoryModelImpl.ENTITY_CACHE_ENABLED,
 					RepositoryImpl.class, primaryKey);
 
-			if (repository == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, repository);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (Repository)serializable);
+				}
 			}
 		}
 
@@ -2917,7 +2893,7 @@ public class RepositoryPersistenceImpl extends BasePersistenceImpl<Repository>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(RepositoryModelImpl.ENTITY_CACHE_ENABLED,
-					RepositoryImpl.class, primaryKey, _nullRepository);
+					RepositoryImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -3160,34 +3136,4 @@ public class RepositoryPersistenceImpl extends BasePersistenceImpl<Repository>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid"
 			});
-	private static final Repository _nullRepository = new RepositoryImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<Repository> toCacheModel() {
-				return _nullRepositoryCacheModel;
-			}
-		};
-
-	private static final CacheModel<Repository> _nullRepositoryCacheModel = new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<Repository>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public Repository toEntityModel() {
-			return _nullRepository;
-		}
-	}
 }

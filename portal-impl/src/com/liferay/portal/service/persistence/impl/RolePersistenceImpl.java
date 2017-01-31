@@ -30,8 +30,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchRoleException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -45,6 +43,7 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.service.persistence.impl.TableMapper;
 import com.liferay.portal.kernel.service.persistence.impl.TableMapperFactory;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -8262,7 +8261,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the matching role
 	 * @throws NoSuchRoleException if a matching role could not be found
 	 */
@@ -8302,7 +8301,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the matching role, or <code>null</code> if a matching role could not be found
 	 */
 	@Override
@@ -8315,7 +8314,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param retrieveFromCache whether to retrieve from the finder cache
 	 * @return the matching role, or <code>null</code> if a matching role could not be found
 	 */
@@ -8413,7 +8412,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the role that was removed
 	 */
 	@Override
@@ -8429,7 +8428,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the number of matching roles
 	 */
 	@Override
@@ -8563,7 +8562,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((RoleModelImpl)role);
+		clearUniqueFindersCache((RoleModelImpl)role, true);
 	}
 
 	@Override
@@ -8575,71 +8574,45 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 			entityCache.removeResult(RoleModelImpl.ENTITY_CACHE_ENABLED,
 				RoleImpl.class, role.getPrimaryKey());
 
-			clearUniqueFindersCache((RoleModelImpl)role);
+			clearUniqueFindersCache((RoleModelImpl)role, true);
 		}
 	}
 
-	protected void cacheUniqueFindersCache(RoleModelImpl roleModelImpl,
-		boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					roleModelImpl.getCompanyId(), roleModelImpl.getName()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_N, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_N, args, roleModelImpl);
-
-			args = new Object[] {
-					roleModelImpl.getCompanyId(), roleModelImpl.getClassNameId(),
-					roleModelImpl.getClassPK()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_C_C, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_C_C, args,
-				roleModelImpl);
-		}
-		else {
-			if ((roleModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						roleModelImpl.getCompanyId(), roleModelImpl.getName()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_N, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_N, args,
-					roleModelImpl);
-			}
-
-			if ((roleModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_C_C.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						roleModelImpl.getCompanyId(),
-						roleModelImpl.getClassNameId(),
-						roleModelImpl.getClassPK()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_C_C, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_C_C, args,
-					roleModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(RoleModelImpl roleModelImpl) {
+	protected void cacheUniqueFindersCache(RoleModelImpl roleModelImpl) {
 		Object[] args = new Object[] {
 				roleModelImpl.getCompanyId(), roleModelImpl.getName()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_N, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_N, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_N, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_N, args, roleModelImpl,
+			false);
+
+		args = new Object[] {
+				roleModelImpl.getCompanyId(), roleModelImpl.getClassNameId(),
+				roleModelImpl.getClassPK()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_C_C, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_C_C, args, roleModelImpl,
+			false);
+	}
+
+	protected void clearUniqueFindersCache(RoleModelImpl roleModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					roleModelImpl.getCompanyId(), roleModelImpl.getName()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_N, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_N, args);
+		}
 
 		if ((roleModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_N.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					roleModelImpl.getOriginalCompanyId(),
 					roleModelImpl.getOriginalName()
 				};
@@ -8648,17 +8621,19 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_N, args);
 		}
 
-		args = new Object[] {
-				roleModelImpl.getCompanyId(), roleModelImpl.getClassNameId(),
-				roleModelImpl.getClassPK()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					roleModelImpl.getCompanyId(), roleModelImpl.getClassNameId(),
+					roleModelImpl.getClassPK()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_C_C, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_C_C, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_C_C, args);
+		}
 
 		if ((roleModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_C_C.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					roleModelImpl.getOriginalCompanyId(),
 					roleModelImpl.getOriginalClassNameId(),
 					roleModelImpl.getOriginalClassPK()
@@ -8981,8 +8956,8 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 		entityCache.putResult(RoleModelImpl.ENTITY_CACHE_ENABLED,
 			RoleImpl.class, role.getPrimaryKey(), role, false);
 
-		clearUniqueFindersCache(roleModelImpl);
-		cacheUniqueFindersCache(roleModelImpl, isNew);
+		clearUniqueFindersCache(roleModelImpl, false);
+		cacheUniqueFindersCache(roleModelImpl);
 
 		role.resetOriginalValues();
 
@@ -9062,12 +9037,14 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	 */
 	@Override
 	public Role fetchByPrimaryKey(Serializable primaryKey) {
-		Role role = (Role)entityCache.getResult(RoleModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(RoleModelImpl.ENTITY_CACHE_ENABLED,
 				RoleImpl.class, primaryKey);
 
-		if (role == _nullRole) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		Role role = (Role)serializable;
 
 		if (role == null) {
 			Session session = null;
@@ -9082,7 +9059,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 				}
 				else {
 					entityCache.putResult(RoleModelImpl.ENTITY_CACHE_ENABLED,
-						RoleImpl.class, primaryKey, _nullRole);
+						RoleImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -9136,18 +9113,20 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			Role role = (Role)entityCache.getResult(RoleModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(RoleModelImpl.ENTITY_CACHE_ENABLED,
 					RoleImpl.class, primaryKey);
 
-			if (role == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, role);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (Role)serializable);
+				}
 			}
 		}
 
@@ -9189,7 +9168,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(RoleModelImpl.ENTITY_CACHE_ENABLED,
-					RoleImpl.class, primaryKey, _nullRole);
+					RoleImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -9555,9 +9534,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 			companyId = role.getCompanyId();
 		}
 
-		for (long groupPK : groupPKs) {
-			roleToGroupTableMapper.addTableMapping(companyId, pk, groupPK);
-		}
+		roleToGroupTableMapper.addTableMappings(companyId, pk, groupPKs);
 	}
 
 	/**
@@ -9569,21 +9546,9 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	@Override
 	public void addGroups(long pk,
 		List<com.liferay.portal.kernel.model.Group> groups) {
-		long companyId = 0;
-
-		Role role = fetchByPrimaryKey(pk);
-
-		if (role == null) {
-			companyId = companyProvider.getCompanyId();
-		}
-		else {
-			companyId = role.getCompanyId();
-		}
-
-		for (com.liferay.portal.kernel.model.Group group : groups) {
-			roleToGroupTableMapper.addTableMapping(companyId, pk,
-				group.getPrimaryKey());
-		}
+		addGroups(pk,
+			ListUtil.toLongArray(groups,
+				com.liferay.portal.kernel.model.Group.GROUP_ID_ACCESSOR));
 	}
 
 	/**
@@ -9626,9 +9591,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	 */
 	@Override
 	public void removeGroups(long pk, long[] groupPKs) {
-		for (long groupPK : groupPKs) {
-			roleToGroupTableMapper.deleteTableMapping(pk, groupPK);
-		}
+		roleToGroupTableMapper.deleteTableMappings(pk, groupPKs);
 	}
 
 	/**
@@ -9640,9 +9603,9 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	@Override
 	public void removeGroups(long pk,
 		List<com.liferay.portal.kernel.model.Group> groups) {
-		for (com.liferay.portal.kernel.model.Group group : groups) {
-			roleToGroupTableMapper.deleteTableMapping(pk, group.getPrimaryKey());
-		}
+		removeGroups(pk,
+			ListUtil.toLongArray(groups,
+				com.liferay.portal.kernel.model.Group.GROUP_ID_ACCESSOR));
 	}
 
 	/**
@@ -9661,9 +9624,8 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 
 		removeGroupPKsSet.removeAll(newGroupPKsSet);
 
-		for (long removeGroupPK : removeGroupPKsSet) {
-			roleToGroupTableMapper.deleteTableMapping(pk, removeGroupPK);
-		}
+		roleToGroupTableMapper.deleteTableMappings(pk,
+			ArrayUtil.toLongArray(removeGroupPKsSet));
 
 		newGroupPKsSet.removeAll(oldGroupPKsSet);
 
@@ -9678,9 +9640,8 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 			companyId = role.getCompanyId();
 		}
 
-		for (long newGroupPK : newGroupPKsSet) {
-			roleToGroupTableMapper.addTableMapping(companyId, pk, newGroupPK);
-		}
+		roleToGroupTableMapper.addTableMappings(companyId, pk,
+			ArrayUtil.toLongArray(newGroupPKsSet));
 	}
 
 	/**
@@ -9871,9 +9832,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 			companyId = role.getCompanyId();
 		}
 
-		for (long userPK : userPKs) {
-			roleToUserTableMapper.addTableMapping(companyId, pk, userPK);
-		}
+		roleToUserTableMapper.addTableMappings(companyId, pk, userPKs);
 	}
 
 	/**
@@ -9885,21 +9844,9 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	@Override
 	public void addUsers(long pk,
 		List<com.liferay.portal.kernel.model.User> users) {
-		long companyId = 0;
-
-		Role role = fetchByPrimaryKey(pk);
-
-		if (role == null) {
-			companyId = companyProvider.getCompanyId();
-		}
-		else {
-			companyId = role.getCompanyId();
-		}
-
-		for (com.liferay.portal.kernel.model.User user : users) {
-			roleToUserTableMapper.addTableMapping(companyId, pk,
-				user.getPrimaryKey());
-		}
+		addUsers(pk,
+			ListUtil.toLongArray(users,
+				com.liferay.portal.kernel.model.User.USER_ID_ACCESSOR));
 	}
 
 	/**
@@ -9942,9 +9889,7 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	 */
 	@Override
 	public void removeUsers(long pk, long[] userPKs) {
-		for (long userPK : userPKs) {
-			roleToUserTableMapper.deleteTableMapping(pk, userPK);
-		}
+		roleToUserTableMapper.deleteTableMappings(pk, userPKs);
 	}
 
 	/**
@@ -9956,9 +9901,9 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	@Override
 	public void removeUsers(long pk,
 		List<com.liferay.portal.kernel.model.User> users) {
-		for (com.liferay.portal.kernel.model.User user : users) {
-			roleToUserTableMapper.deleteTableMapping(pk, user.getPrimaryKey());
-		}
+		removeUsers(pk,
+			ListUtil.toLongArray(users,
+				com.liferay.portal.kernel.model.User.USER_ID_ACCESSOR));
 	}
 
 	/**
@@ -9977,9 +9922,8 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 
 		removeUserPKsSet.removeAll(newUserPKsSet);
 
-		for (long removeUserPK : removeUserPKsSet) {
-			roleToUserTableMapper.deleteTableMapping(pk, removeUserPK);
-		}
+		roleToUserTableMapper.deleteTableMappings(pk,
+			ArrayUtil.toLongArray(removeUserPKsSet));
 
 		newUserPKsSet.removeAll(oldUserPKsSet);
 
@@ -9994,9 +9938,8 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 			companyId = role.getCompanyId();
 		}
 
-		for (long newUserPK : newUserPKsSet) {
-			roleToUserTableMapper.addTableMapping(companyId, pk, newUserPK);
-		}
+		roleToUserTableMapper.addTableMappings(companyId, pk,
+			ArrayUtil.toLongArray(newUserPKsSet));
 	}
 
 	/**
@@ -10087,33 +10030,4 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid", "type"
 			});
-	private static final Role _nullRole = new RoleImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<Role> toCacheModel() {
-				return _nullRoleCacheModel;
-			}
-		};
-
-	private static final CacheModel<Role> _nullRoleCacheModel = new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<Role>, MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public Role toEntityModel() {
-			return _nullRole;
-		}
-	}
 }

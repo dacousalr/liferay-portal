@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -1150,7 +1149,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * Returns all the kaleo notifications where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @return the matching kaleo notifications
 	 */
 	@Override
@@ -1168,7 +1167,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param start the lower bound of the range of kaleo notifications
 	 * @param end the upper bound of the range of kaleo notifications (not inclusive)
 	 * @return the range of matching kaleo notifications
@@ -1187,7 +1186,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param start the lower bound of the range of kaleo notifications
 	 * @param end the upper bound of the range of kaleo notifications (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -1209,7 +1208,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param start the lower bound of the range of kaleo notifications
 	 * @param end the upper bound of the range of kaleo notifications (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -1348,7 +1347,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * Returns the first kaleo notification in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching kaleo notification
 	 * @throws NoSuchNotificationException if a matching kaleo notification could not be found
@@ -1384,7 +1383,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * Returns the first kaleo notification in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching kaleo notification, or <code>null</code> if a matching kaleo notification could not be found
 	 */
@@ -1406,7 +1405,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * Returns the last kaleo notification in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching kaleo notification
 	 * @throws NoSuchNotificationException if a matching kaleo notification could not be found
@@ -1442,7 +1441,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * Returns the last kaleo notification in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching kaleo notification, or <code>null</code> if a matching kaleo notification could not be found
 	 */
@@ -1471,7 +1470,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 *
 	 * @param kaleoNotificationId the primary key of the current kaleo notification
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next kaleo notification
 	 * @throws NoSuchNotificationException if a kaleo notification with the primary key could not be found
@@ -1637,7 +1636,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * Removes all the kaleo notifications where kaleoClassName = &#63; and kaleoClassPK = &#63; from the database.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 */
 	@Override
 	public void removeByKCN_KCPK(String kaleoClassName, long kaleoClassPK) {
@@ -1652,7 +1651,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * Returns the number of kaleo notifications where kaleoClassName = &#63; and kaleoClassPK = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @return the number of matching kaleo notifications
 	 */
 	@Override
@@ -1758,7 +1757,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * Returns all the kaleo notifications where kaleoClassName = &#63; and kaleoClassPK = &#63; and executionType = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @return the matching kaleo notifications
 	 */
@@ -1777,7 +1776,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @param start the lower bound of the range of kaleo notifications
 	 * @param end the upper bound of the range of kaleo notifications (not inclusive)
@@ -1798,7 +1797,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @param start the lower bound of the range of kaleo notifications
 	 * @param end the upper bound of the range of kaleo notifications (not inclusive)
@@ -1821,7 +1820,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * </p>
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @param start the lower bound of the range of kaleo notifications
 	 * @param end the upper bound of the range of kaleo notifications (not inclusive)
@@ -1983,7 +1982,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * Returns the first kaleo notification in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63; and executionType = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching kaleo notification
@@ -2023,7 +2022,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * Returns the first kaleo notification in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63; and executionType = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching kaleo notification, or <code>null</code> if a matching kaleo notification could not be found
@@ -2046,7 +2045,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * Returns the last kaleo notification in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63; and executionType = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching kaleo notification
@@ -2086,7 +2085,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * Returns the last kaleo notification in the ordered set where kaleoClassName = &#63; and kaleoClassPK = &#63; and executionType = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching kaleo notification, or <code>null</code> if a matching kaleo notification could not be found
@@ -2117,7 +2116,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 *
 	 * @param kaleoNotificationId the primary key of the current kaleo notification
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next kaleo notification
@@ -2305,7 +2304,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * Removes all the kaleo notifications where kaleoClassName = &#63; and kaleoClassPK = &#63; and executionType = &#63; from the database.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 */
 	@Override
@@ -2322,7 +2321,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 * Returns the number of kaleo notifications where kaleoClassName = &#63; and kaleoClassPK = &#63; and executionType = &#63;.
 	 *
 	 * @param kaleoClassName the kaleo class name
-	 * @param kaleoClassPK the kaleo class p k
+	 * @param kaleoClassPK the kaleo class pk
 	 * @param executionType the execution type
 	 * @return the number of matching kaleo notifications
 	 */
@@ -2831,12 +2830,14 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	 */
 	@Override
 	public KaleoNotification fetchByPrimaryKey(Serializable primaryKey) {
-		KaleoNotification kaleoNotification = (KaleoNotification)entityCache.getResult(KaleoNotificationModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(KaleoNotificationModelImpl.ENTITY_CACHE_ENABLED,
 				KaleoNotificationImpl.class, primaryKey);
 
-		if (kaleoNotification == _nullKaleoNotification) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		KaleoNotification kaleoNotification = (KaleoNotification)serializable;
 
 		if (kaleoNotification == null) {
 			Session session = null;
@@ -2852,8 +2853,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 				}
 				else {
 					entityCache.putResult(KaleoNotificationModelImpl.ENTITY_CACHE_ENABLED,
-						KaleoNotificationImpl.class, primaryKey,
-						_nullKaleoNotification);
+						KaleoNotificationImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -2907,18 +2907,20 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			KaleoNotification kaleoNotification = (KaleoNotification)entityCache.getResult(KaleoNotificationModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(KaleoNotificationModelImpl.ENTITY_CACHE_ENABLED,
 					KaleoNotificationImpl.class, primaryKey);
 
-			if (kaleoNotification == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, kaleoNotification);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (KaleoNotification)serializable);
+				}
 			}
 		}
 
@@ -2960,8 +2962,7 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(KaleoNotificationModelImpl.ENTITY_CACHE_ENABLED,
-					KaleoNotificationImpl.class, primaryKey,
-					_nullKaleoNotification);
+					KaleoNotificationImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -3198,23 +3199,4 @@ public class KaleoNotificationPersistenceImpl extends BasePersistenceImpl<KaleoN
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No KaleoNotification exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No KaleoNotification exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(KaleoNotificationPersistenceImpl.class);
-	private static final KaleoNotification _nullKaleoNotification = new KaleoNotificationImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<KaleoNotification> toCacheModel() {
-				return _nullKaleoNotificationCacheModel;
-			}
-		};
-
-	private static final CacheModel<KaleoNotification> _nullKaleoNotificationCacheModel =
-		new CacheModel<KaleoNotification>() {
-			@Override
-			public KaleoNotification toEntityModel() {
-				return _nullKaleoNotification;
-			}
-		};
 }

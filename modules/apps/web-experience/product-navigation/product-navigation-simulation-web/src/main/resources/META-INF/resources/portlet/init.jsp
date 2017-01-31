@@ -19,7 +19,6 @@
 <%@ taglib uri="http://liferay.com/tld/application-list" prefix="liferay-application-list" %><%@
 taglib uri="http://liferay.com/tld/aui" prefix="aui" %><%@
 taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
-taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
 taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
@@ -30,17 +29,10 @@ page import="com.liferay.application.list.PanelCategory" %><%@
 page import="com.liferay.application.list.PanelCategoryRegistry" %><%@
 page import="com.liferay.application.list.constants.ApplicationListWebKeys" %><%@
 page import="com.liferay.application.list.display.context.logic.PanelCategoryHelper" %><%@
-page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
-page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@
-page import="com.liferay.portal.kernel.portlet.PortletURLFactoryUtil" %><%@
-page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.PortalUtil" %><%@
 page import="com.liferay.product.navigation.simulation.application.list.SimulationPanelCategory" %><%@
 page import="com.liferay.product.navigation.simulation.web.constants.ProductNavigationSimulationPortletKeys" %><%@
 page import="com.liferay.taglib.aui.AUIUtil" %>
-
-<%@ page import="javax.portlet.PortletRequest" %><%@
-page import="javax.portlet.PortletURL" %>
 
 <liferay-frontend:defineObjects />
 

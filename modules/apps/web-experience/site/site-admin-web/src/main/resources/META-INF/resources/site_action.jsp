@@ -57,18 +57,6 @@ boolean hasUpdatePermission = GroupPermissionUtil.contains(permissionChecker, gr
 		url="<%= editURL %>"
 	/>
 
-	<%
-	PortletURL siteAdministrationURL = siteAdminDisplayContext.getSiteAdministrationPortletURL(group);
-	%>
-
-	<c:if test="<%= siteAdministrationURL != null %>">
-		<liferay-ui:icon
-			message="site-administration"
-			method="get"
-			url="<%= siteAdministrationURL.toString() %>"
-		/>
-	</c:if>
-
 	<c:if test="<%= hasUpdatePermission %>">
 
 		<%
@@ -104,6 +92,7 @@ boolean hasUpdatePermission = GroupPermissionUtil.contains(permissionChecker, gr
 	<c:if test="<%= group.getPublicLayoutsPageCount() > 0 %>">
 		<liferay-ui:icon
 			message="go-to-public-pages"
+			method="get"
 			target="_blank"
 			url="<%= group.getDisplayURL(themeDisplay, false) %>"
 		/>
@@ -112,6 +101,7 @@ boolean hasUpdatePermission = GroupPermissionUtil.contains(permissionChecker, gr
 	<c:if test="<%= group.getPrivateLayoutsPageCount() > 0 %>">
 		<liferay-ui:icon
 			message="go-to-private-pages"
+			method="get"
 			target="_blank"
 			url="<%= group.getDisplayURL(themeDisplay, true) %>"
 		/>

@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
@@ -3262,7 +3261,8 @@ public class SocialActivityAchievementPersistenceImpl
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((SocialActivityAchievementModelImpl)socialActivityAchievement);
+		clearUniqueFindersCache((SocialActivityAchievementModelImpl)socialActivityAchievement,
+			true);
 	}
 
 	@Override
@@ -3276,43 +3276,12 @@ public class SocialActivityAchievementPersistenceImpl
 				SocialActivityAchievementImpl.class,
 				socialActivityAchievement.getPrimaryKey());
 
-			clearUniqueFindersCache((SocialActivityAchievementModelImpl)socialActivityAchievement);
+			clearUniqueFindersCache((SocialActivityAchievementModelImpl)socialActivityAchievement,
+				true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		SocialActivityAchievementModelImpl socialActivityAchievementModelImpl,
-		boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					socialActivityAchievementModelImpl.getGroupId(),
-					socialActivityAchievementModelImpl.getUserId(),
-					socialActivityAchievementModelImpl.getName()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_G_U_N, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_G_U_N, args,
-				socialActivityAchievementModelImpl);
-		}
-		else {
-			if ((socialActivityAchievementModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_U_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						socialActivityAchievementModelImpl.getGroupId(),
-						socialActivityAchievementModelImpl.getUserId(),
-						socialActivityAchievementModelImpl.getName()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_G_U_N, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_G_U_N, args,
-					socialActivityAchievementModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		SocialActivityAchievementModelImpl socialActivityAchievementModelImpl) {
 		Object[] args = new Object[] {
 				socialActivityAchievementModelImpl.getGroupId(),
@@ -3320,12 +3289,29 @@ public class SocialActivityAchievementPersistenceImpl
 				socialActivityAchievementModelImpl.getName()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_G_U_N, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_G_U_N, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_G_U_N, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_G_U_N, args,
+			socialActivityAchievementModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		SocialActivityAchievementModelImpl socialActivityAchievementModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					socialActivityAchievementModelImpl.getGroupId(),
+					socialActivityAchievementModelImpl.getUserId(),
+					socialActivityAchievementModelImpl.getName()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_G_U_N, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_G_U_N, args);
+		}
 
 		if ((socialActivityAchievementModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_U_N.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					socialActivityAchievementModelImpl.getOriginalGroupId(),
 					socialActivityAchievementModelImpl.getOriginalUserId(),
 					socialActivityAchievementModelImpl.getOriginalName()
@@ -3589,8 +3575,8 @@ public class SocialActivityAchievementPersistenceImpl
 			socialActivityAchievement.getPrimaryKey(),
 			socialActivityAchievement, false);
 
-		clearUniqueFindersCache(socialActivityAchievementModelImpl);
-		cacheUniqueFindersCache(socialActivityAchievementModelImpl, isNew);
+		clearUniqueFindersCache(socialActivityAchievementModelImpl, false);
+		cacheUniqueFindersCache(socialActivityAchievementModelImpl);
 
 		socialActivityAchievement.resetOriginalValues();
 
@@ -3664,12 +3650,14 @@ public class SocialActivityAchievementPersistenceImpl
 	 */
 	@Override
 	public SocialActivityAchievement fetchByPrimaryKey(Serializable primaryKey) {
-		SocialActivityAchievement socialActivityAchievement = (SocialActivityAchievement)entityCache.getResult(SocialActivityAchievementModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(SocialActivityAchievementModelImpl.ENTITY_CACHE_ENABLED,
 				SocialActivityAchievementImpl.class, primaryKey);
 
-		if (socialActivityAchievement == _nullSocialActivityAchievement) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		SocialActivityAchievement socialActivityAchievement = (SocialActivityAchievement)serializable;
 
 		if (socialActivityAchievement == null) {
 			Session session = null;
@@ -3686,7 +3674,7 @@ public class SocialActivityAchievementPersistenceImpl
 				else {
 					entityCache.putResult(SocialActivityAchievementModelImpl.ENTITY_CACHE_ENABLED,
 						SocialActivityAchievementImpl.class, primaryKey,
-						_nullSocialActivityAchievement);
+						nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -3741,18 +3729,20 @@ public class SocialActivityAchievementPersistenceImpl
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			SocialActivityAchievement socialActivityAchievement = (SocialActivityAchievement)entityCache.getResult(SocialActivityAchievementModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(SocialActivityAchievementModelImpl.ENTITY_CACHE_ENABLED,
 					SocialActivityAchievementImpl.class, primaryKey);
 
-			if (socialActivityAchievement == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, socialActivityAchievement);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (SocialActivityAchievement)serializable);
+				}
 			}
 		}
 
@@ -3795,8 +3785,7 @@ public class SocialActivityAchievementPersistenceImpl
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(SocialActivityAchievementModelImpl.ENTITY_CACHE_ENABLED,
-					SocialActivityAchievementImpl.class, primaryKey,
-					_nullSocialActivityAchievement);
+					SocialActivityAchievementImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -4032,24 +4021,4 @@ public class SocialActivityAchievementPersistenceImpl
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No SocialActivityAchievement exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No SocialActivityAchievement exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(SocialActivityAchievementPersistenceImpl.class);
-	private static final SocialActivityAchievement _nullSocialActivityAchievement =
-		new SocialActivityAchievementImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<SocialActivityAchievement> toCacheModel() {
-				return _nullSocialActivityAchievementCacheModel;
-			}
-		};
-
-	private static final CacheModel<SocialActivityAchievement> _nullSocialActivityAchievementCacheModel =
-		new CacheModel<SocialActivityAchievement>() {
-			@Override
-			public SocialActivityAchievement toEntityModel() {
-				return _nullSocialActivityAchievement;
-			}
-		};
 }

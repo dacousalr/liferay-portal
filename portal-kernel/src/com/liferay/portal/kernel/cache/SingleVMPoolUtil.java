@@ -15,7 +15,7 @@
 package com.liferay.portal.kernel.cache;
 
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
-import com.liferay.portal.kernel.util.ProxyFactory;
+import com.liferay.portal.kernel.util.ServiceProxyFactory;
 
 import java.io.Serializable;
 
@@ -92,7 +92,8 @@ public class SingleVMPoolUtil {
 		_singleVMPool.removePortalCache(portalCacheName);
 	}
 
-	private static final SingleVMPool _singleVMPool =
-		ProxyFactory.newServiceTrackedInstance(SingleVMPool.class);
+	private static volatile SingleVMPool _singleVMPool =
+		ServiceProxyFactory.newServiceTrackedInstance(
+			SingleVMPool.class, SingleVMPoolUtil.class, "_singleVMPool", true);
 
 }

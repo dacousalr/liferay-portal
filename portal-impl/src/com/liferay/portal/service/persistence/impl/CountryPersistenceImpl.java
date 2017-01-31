@@ -28,9 +28,7 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchCountryException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.Country;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.service.persistence.CountryPersistence;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -1354,7 +1352,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((CountryModelImpl)country);
+		clearUniqueFindersCache((CountryModelImpl)country, true);
 	}
 
 	@Override
@@ -1366,100 +1364,75 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 			entityCache.removeResult(CountryModelImpl.ENTITY_CACHE_ENABLED,
 				CountryImpl.class, country.getPrimaryKey());
 
-			clearUniqueFindersCache((CountryModelImpl)country);
+			clearUniqueFindersCache((CountryModelImpl)country, true);
 		}
 	}
 
-	protected void cacheUniqueFindersCache(CountryModelImpl countryModelImpl,
-		boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] { countryModelImpl.getName() };
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_NAME, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_NAME, args,
-				countryModelImpl);
-
-			args = new Object[] { countryModelImpl.getA2() };
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_A2, args, Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_A2, args,
-				countryModelImpl);
-
-			args = new Object[] { countryModelImpl.getA3() };
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_A3, args, Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_A3, args,
-				countryModelImpl);
-		}
-		else {
-			if ((countryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_NAME.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] { countryModelImpl.getName() };
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_NAME, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_NAME, args,
-					countryModelImpl);
-			}
-
-			if ((countryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_A2.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] { countryModelImpl.getA2() };
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_A2, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_A2, args,
-					countryModelImpl);
-			}
-
-			if ((countryModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_A3.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] { countryModelImpl.getA3() };
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_A3, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_A3, args,
-					countryModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(CountryModelImpl countryModelImpl) {
+	protected void cacheUniqueFindersCache(CountryModelImpl countryModelImpl) {
 		Object[] args = new Object[] { countryModelImpl.getName() };
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_NAME, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_NAME, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_NAME, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_NAME, args,
+			countryModelImpl, false);
 
-		if ((countryModelImpl.getColumnBitmask() &
-				FINDER_PATH_FETCH_BY_NAME.getColumnBitmask()) != 0) {
-			args = new Object[] { countryModelImpl.getOriginalName() };
+		args = new Object[] { countryModelImpl.getA2() };
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_A2, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_A2, args, countryModelImpl,
+			false);
+
+		args = new Object[] { countryModelImpl.getA3() };
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_A3, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_A3, args, countryModelImpl,
+			false);
+	}
+
+	protected void clearUniqueFindersCache(CountryModelImpl countryModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] { countryModelImpl.getName() };
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_NAME, args);
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_NAME, args);
 		}
 
-		args = new Object[] { countryModelImpl.getA2() };
-
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_A2, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_A2, args);
-
 		if ((countryModelImpl.getColumnBitmask() &
-				FINDER_PATH_FETCH_BY_A2.getColumnBitmask()) != 0) {
-			args = new Object[] { countryModelImpl.getOriginalA2() };
+				FINDER_PATH_FETCH_BY_NAME.getColumnBitmask()) != 0) {
+			Object[] args = new Object[] { countryModelImpl.getOriginalName() };
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_NAME, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_NAME, args);
+		}
+
+		if (clearCurrent) {
+			Object[] args = new Object[] { countryModelImpl.getA2() };
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_A2, args);
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_A2, args);
 		}
 
-		args = new Object[] { countryModelImpl.getA3() };
+		if ((countryModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_A2.getColumnBitmask()) != 0) {
+			Object[] args = new Object[] { countryModelImpl.getOriginalA2() };
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_A3, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_A3, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_A2, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_A2, args);
+		}
+
+		if (clearCurrent) {
+			Object[] args = new Object[] { countryModelImpl.getA3() };
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_A3, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_A3, args);
+		}
 
 		if ((countryModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_A3.getColumnBitmask()) != 0) {
-			args = new Object[] { countryModelImpl.getOriginalA3() };
+			Object[] args = new Object[] { countryModelImpl.getOriginalA3() };
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_A3, args);
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_A3, args);
@@ -1622,8 +1595,8 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 		entityCache.putResult(CountryModelImpl.ENTITY_CACHE_ENABLED,
 			CountryImpl.class, country.getPrimaryKey(), country, false);
 
-		clearUniqueFindersCache(countryModelImpl);
-		cacheUniqueFindersCache(countryModelImpl, isNew);
+		clearUniqueFindersCache(countryModelImpl, false);
+		cacheUniqueFindersCache(countryModelImpl);
 
 		country.resetOriginalValues();
 
@@ -1698,12 +1671,14 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 	 */
 	@Override
 	public Country fetchByPrimaryKey(Serializable primaryKey) {
-		Country country = (Country)entityCache.getResult(CountryModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(CountryModelImpl.ENTITY_CACHE_ENABLED,
 				CountryImpl.class, primaryKey);
 
-		if (country == _nullCountry) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		Country country = (Country)serializable;
 
 		if (country == null) {
 			Session session = null;
@@ -1718,7 +1693,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 				}
 				else {
 					entityCache.putResult(CountryModelImpl.ENTITY_CACHE_ENABLED,
-						CountryImpl.class, primaryKey, _nullCountry);
+						CountryImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -1772,18 +1747,20 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			Country country = (Country)entityCache.getResult(CountryModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(CountryModelImpl.ENTITY_CACHE_ENABLED,
 					CountryImpl.class, primaryKey);
 
-			if (country == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, country);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (Country)serializable);
+				}
 			}
 		}
 
@@ -1825,7 +1802,7 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(CountryModelImpl.ENTITY_CACHE_ENABLED,
-					CountryImpl.class, primaryKey, _nullCountry);
+					CountryImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -2065,34 +2042,4 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"number", "idd", "active"
 			});
-	private static final Country _nullCountry = new CountryImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<Country> toCacheModel() {
-				return _nullCountryCacheModel;
-			}
-		};
-
-	private static final CacheModel<Country> _nullCountryCacheModel = new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<Country>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public Country toEntityModel() {
-			return _nullCountry;
-		}
-	}
 }

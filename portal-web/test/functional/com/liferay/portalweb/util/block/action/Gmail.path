@@ -168,6 +168,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>GMAIL_HTML_MODE_MAIL_TABLE_SPECIFIC_MESSAGE_TITLE_CHECKBOX</td>
+	<td>//form[@method='POST']//table[2]/tbody/tr[contains(.,'${key_gmailMessageTitle}')]//input[@type='checkbox']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>GMAIL_HTML_MODE_MAIL_TABLE_USER_NAME</td>
 	<td>//form[@method='POST']//table[2]/tbody/tr[contains(.,'${key_gmailAssetType}')]/td[2]</td>
 	<td></td>
@@ -203,6 +208,11 @@
 	<td></td>
 </tr>
 <!--GMAIL_HTML_MODE_MESSAGE-->
+<tr>
+	<td>GMAIL_HTML_MODE_MESSAGE_SHOW_QUOTED_TEXT_LINK</td>
+	<td>//a[contains(.,'- Show quoted text -')]</td>
+	<td></td>
+</tr>
 <tr>
 	<td>GMAIL_HTML_MODE_MESSAGE_FROM</td>
 	<td>//table[4]//table[1]//tr[1]/td[1]</td>
@@ -295,7 +305,7 @@
 </tr>
 <tr>
 	<td>GMAIL_HTML_MODE_MESSAGE_BODY_ATTACHMENT</td>
-	<td>//table[@class='att']//b[contains(.,'${key_gmailMesssageAttachment}')]</td>
+	<td>//table[@class='att']//b[contains(.,'${key_gmailMessageAttachment}')]</td>
 	<td></td>
 </tr>
 <tr>

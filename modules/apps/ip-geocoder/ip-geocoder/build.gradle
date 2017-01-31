@@ -1,5 +1,3 @@
-task deployDependencies(type: Copy)
-
 sourceCompatibility = "1.6"
 targetCompatibility = "1.6"
 
@@ -12,24 +10,9 @@ dependencies {
 	provided group: "org.tukaani", name: "xz", version: "1.5"
 }
 
-deploy {
-	finalizedBy deployDependencies
-}
-
 deployDependencies {
-	ext {
-		autoClean = false
-	}
-
 	from configurations.provided
 
 	include "geoip-api-*.jar"
 	include "xz-*.jar"
-
-	into {
-		liferay.deployDir
-	}
-
-	rename(/geoip-api-.+\.jar/, "com.maxmind.geoip.api.jar")
-	rename(/xz-.+\.jar/, "org.tukaani.xz.jar")
 }

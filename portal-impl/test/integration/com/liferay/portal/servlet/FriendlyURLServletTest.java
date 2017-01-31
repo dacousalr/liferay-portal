@@ -36,7 +36,6 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.test.LayoutTestUtil;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -106,7 +105,7 @@ public class FriendlyURLServletTest {
 
 		testGetRedirect(
 			mockHttpServletRequest, getPath(_group, _layout), Portal.PATH_MAIN,
-			new Object[] {getURL(_layout), false});
+			new FriendlyURLServlet.Redirect(getURL(_layout)));
 	}
 
 	@Test
@@ -116,21 +115,6 @@ public class FriendlyURLServletTest {
 		testGetI18nRedirect("/en", "/en");
 		testGetI18nRedirect("/en_GB", "/en_GB");
 		testGetI18nRedirect("/en_US", "/en_US");
-	}
-
-	@Test
-	public void testGetRedirectWithInvalidPath() throws Exception {
-		MockHttpServletRequest mockHttpServletRequest =
-			new MockHttpServletRequest();
-
-		mockHttpServletRequest.setPathInfo(StringPool.SLASH);
-
-		testGetRedirect(
-			mockHttpServletRequest, null, Portal.PATH_MAIN,
-			new Object[] {Portal.PATH_MAIN, false});
-		testGetRedirect(
-			mockHttpServletRequest, "test", Portal.PATH_MAIN,
-			new Object[] {Portal.PATH_MAIN, false});
 	}
 
 	@Test(expected = NoSuchGroupException.class)
@@ -176,34 +160,34 @@ public class FriendlyURLServletTest {
 
 		mockHttpServletRequest.setRequestURI(requestURI);
 
-		Object[] expectedRedirectArray = null;
+		FriendlyURLServlet.Redirect expectedRedirect = null;
 
 		if (!Objects.equals(i18nPath, expectedI18nPath)) {
-			expectedRedirectArray =
-				new Object[] {expectedI18nPath + requestURI, true};
+			expectedRedirect = new FriendlyURLServlet.Redirect(
+				expectedI18nPath + requestURI, true, true);
 		}
 		else {
-			expectedRedirectArray = new Object[] {getURL(_layout), false};
+			expectedRedirect = new FriendlyURLServlet.Redirect(getURL(_layout));
 		}
 
 		testGetRedirect(
 			mockHttpServletRequest, _group.getFriendlyURL(), Portal.PATH_MAIN,
-			expectedRedirectArray);
+			expectedRedirect);
 
 		testGetRedirect(
 			mockHttpServletRequest, getPath(_group, _layout), Portal.PATH_MAIN,
-			expectedRedirectArray);
+			expectedRedirect);
 	}
 
 	protected void testGetRedirect(
 			HttpServletRequest request, String path, String mainPath,
-			Object[] expectedRedirectArray)
+			FriendlyURLServlet.Redirect expectedRedirect)
 		throws Exception {
 
-		Object[] actualRedirectArray = _friendlyURLServlet.getRedirect(
-			request, path, mainPath, Collections.<String, String[]>emptyMap());
+		FriendlyURLServlet.Redirect actualRedirect =
+			_friendlyURLServlet.getRedirect(request, path);
 
-		Assert.assertArrayEquals(expectedRedirectArray, actualRedirectArray);
+		Assert.assertEquals(expectedRedirect, actualRedirect);
 	}
 
 	private final FriendlyURLServlet _friendlyURLServlet =

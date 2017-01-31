@@ -21,6 +21,8 @@ import com.liferay.expando.kernel.model.ExpandoTable;
 import com.liferay.expando.kernel.model.ExpandoTableConstants;
 import com.liferay.expando.kernel.model.ExpandoValue;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.typeconverter.DateArrayConverter;
 import com.liferay.portal.typeconverter.NumberArrayConverter;
@@ -312,6 +314,29 @@ public class ExpandoValueLocalServiceImpl
 	@Override
 	public ExpandoValue addValue(
 			long companyId, String className, String tableName,
+			String columnName, long classPK, JSONObject data)
+		throws PortalException {
+
+		ExpandoTable table = expandoTableLocalService.getTable(
+			companyId, className, tableName);
+
+		ExpandoColumn column = expandoColumnLocalService.getColumn(
+			table.getTableId(), columnName);
+
+		ExpandoValue value = new ExpandoValueImpl();
+
+		value.setCompanyId(table.getCompanyId());
+		value.setColumnId(column.getColumnId());
+		value.setGeolocationJSONObject(data);
+
+		return expandoValueLocalService.addValue(
+			table.getClassNameId(), table.getTableId(), column.getColumnId(),
+			classPK, value.getData());
+	}
+
+	@Override
+	public ExpandoValue addValue(
+			long companyId, String className, String tableName,
 			String columnName, long classPK, long data)
 		throws PortalException {
 
@@ -486,6 +511,11 @@ public class ExpandoValueLocalServiceImpl
 			return expandoValueLocalService.addValue(
 				companyId, className, tableName, columnName, classPK,
 				(float[])data);
+		}
+		else if (type == ExpandoColumnConstants.GEOLOCATION) {
+			return expandoValueLocalService.addValue(
+				companyId, className, tableName, columnName, classPK,
+				JSONFactoryUtil.createJSONObject(data.toString()));
 		}
 		else if (type == ExpandoColumnConstants.INTEGER) {
 			return expandoValueLocalService.addValue(
@@ -711,11 +741,11 @@ public class ExpandoValueLocalServiceImpl
 		List<ExpandoColumn> columns = expandoColumnLocalService.getColumns(
 			table.getTableId(), attributes.keySet());
 
-		ExpandoValue value = new ExpandoValueImpl();
-
-		value.setCompanyId(companyId);
-
 		for (ExpandoColumn column : columns) {
+			ExpandoValue value = new ExpandoValueImpl();
+
+			value.setCompanyId(companyId);
+
 			Serializable attributeValue = attributes.get(column.getName());
 
 			value.setColumn(column);
@@ -745,6 +775,12 @@ public class ExpandoValueLocalServiceImpl
 			}
 			else if (type == ExpandoColumnConstants.FLOAT_ARRAY) {
 				value.setFloatArray((float[])attributeValue);
+			}
+			else if (type == ExpandoColumnConstants.GEOLOCATION) {
+				JSONObject geolocation = JSONFactoryUtil.createJSONObject(
+					attributeValue.toString());
+
+				value.setGeolocationJSONObject(geolocation);
 			}
 			else if (type == ExpandoColumnConstants.INTEGER) {
 				value.setInteger((Integer)attributeValue);
@@ -1255,6 +1291,23 @@ public class ExpandoValueLocalServiceImpl
 	}
 
 	@Override
+	public JSONObject getData(
+			long companyId, String className, String tableName,
+			String columnName, long classPK, JSONObject defaultData)
+		throws PortalException {
+
+		ExpandoValue value = expandoValueLocalService.getValue(
+			companyId, className, tableName, columnName, classPK);
+
+		if (value == null) {
+			return defaultData;
+		}
+		else {
+			return value.getGeolocationJSONObject();
+		}
+	}
+
+	@Override
 	public long getData(
 			long companyId, String className, String tableName,
 			String columnName, long classPK, long defaultData)
@@ -1728,6 +1781,11 @@ public class ExpandoValueLocalServiceImpl
 				companyId, className, tableName, columnName, classPK,
 				new float[0]);
 		}
+		else if (type == ExpandoColumnConstants.GEOLOCATION) {
+			return expandoValueLocalService.getData(
+				companyId, className, tableName, columnName, classPK,
+				value.getGeolocationJSONObject());
+		}
 		else if (type == ExpandoColumnConstants.INTEGER) {
 			return expandoValueLocalService.getData(
 				companyId, className, tableName, columnName, classPK,
@@ -1802,10 +1860,10 @@ public class ExpandoValueLocalServiceImpl
 
 		String string = (String)object;
 
-		if (string.startsWith(StringPool.OPEN_BRACKET) &&
+		if (isTypeArray(type) && string.startsWith(StringPool.OPEN_BRACKET) &&
 			string.endsWith(StringPool.CLOSE_BRACKET)) {
 
-			string = string.substring(1, (string.length() - 1));
+			string = string.substring(1, string.length() - 1);
 		}
 
 		return string;

@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -63,7 +62,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * The persistence implementation for the d d m data provider instance service.
+ * The persistence implementation for the ddm data provider instance service.
  *
  * <p>
  * Caching information and settings can be found in <code>portal.properties</code>
@@ -80,7 +79,7 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify or reference this class directly. Always use {@link DDMDataProviderInstanceUtil} to access the d d m data provider instance persistence. Modify <code>service.xml</code> and rerun ServiceBuilder to regenerate this class.
+	 * Never modify or reference this class directly. Always use {@link DDMDataProviderInstanceUtil} to access the ddm data provider instance persistence. Modify <code>service.xml</code> and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static final String FINDER_CLASS_NAME_ENTITY = DDMDataProviderInstanceImpl.class.getName();
 	public static final String FINDER_CLASS_NAME_LIST_WITH_PAGINATION = FINDER_CLASS_NAME_ENTITY +
@@ -120,10 +119,10 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 			new String[] { String.class.getName() });
 
 	/**
-	 * Returns all the d d m data provider instances where uuid = &#63;.
+	 * Returns all the ddm data provider instances where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
-	 * @return the matching d d m data provider instances
+	 * @return the matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByUuid(String uuid) {
@@ -131,16 +130,16 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns a range of all the d d m data provider instances where uuid = &#63;.
+	 * Returns a range of all the ddm data provider instances where uuid = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param uuid the uuid
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
-	 * @return the range of matching d d m data provider instances
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
+	 * @return the range of matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByUuid(String uuid, int start,
@@ -149,17 +148,17 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m data provider instances where uuid = &#63;.
+	 * Returns an ordered range of all the ddm data provider instances where uuid = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param uuid the uuid
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching d d m data provider instances
+	 * @return the ordered range of matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByUuid(String uuid, int start,
@@ -168,18 +167,18 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m data provider instances where uuid = &#63;.
+	 * Returns an ordered range of all the ddm data provider instances where uuid = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param uuid the uuid
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of matching d d m data provider instances
+	 * @return the ordered range of matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByUuid(String uuid, int start,
@@ -299,12 +298,12 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the first d d m data provider instance in the ordered set where uuid = &#63;.
+	 * Returns the first ddm data provider instance in the ordered set where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching d d m data provider instance
-	 * @throws NoSuchDataProviderInstanceException if a matching d d m data provider instance could not be found
+	 * @return the first matching ddm data provider instance
+	 * @throws NoSuchDataProviderInstanceException if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance findByUuid_First(String uuid,
@@ -330,11 +329,11 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the first d d m data provider instance in the ordered set where uuid = &#63;.
+	 * Returns the first ddm data provider instance in the ordered set where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching d d m data provider instance, or <code>null</code> if a matching d d m data provider instance could not be found
+	 * @return the first matching ddm data provider instance, or <code>null</code> if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance fetchByUuid_First(String uuid,
@@ -350,12 +349,12 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the last d d m data provider instance in the ordered set where uuid = &#63;.
+	 * Returns the last ddm data provider instance in the ordered set where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching d d m data provider instance
-	 * @throws NoSuchDataProviderInstanceException if a matching d d m data provider instance could not be found
+	 * @return the last matching ddm data provider instance
+	 * @throws NoSuchDataProviderInstanceException if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance findByUuid_Last(String uuid,
@@ -381,11 +380,11 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the last d d m data provider instance in the ordered set where uuid = &#63;.
+	 * Returns the last ddm data provider instance in the ordered set where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching d d m data provider instance, or <code>null</code> if a matching d d m data provider instance could not be found
+	 * @return the last matching ddm data provider instance, or <code>null</code> if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance fetchByUuid_Last(String uuid,
@@ -407,13 +406,13 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the d d m data provider instances before and after the current d d m data provider instance in the ordered set where uuid = &#63;.
+	 * Returns the ddm data provider instances before and after the current ddm data provider instance in the ordered set where uuid = &#63;.
 	 *
-	 * @param dataProviderInstanceId the primary key of the current d d m data provider instance
+	 * @param dataProviderInstanceId the primary key of the current ddm data provider instance
 	 * @param uuid the uuid
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next d d m data provider instance
-	 * @throws NoSuchDataProviderInstanceException if a d d m data provider instance with the primary key could not be found
+	 * @return the previous, current, and next ddm data provider instance
+	 * @throws NoSuchDataProviderInstanceException if a ddm data provider instance with the primary key could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance[] findByUuid_PrevAndNext(
@@ -569,7 +568,7 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Removes all the d d m data provider instances where uuid = &#63; from the database.
+	 * Removes all the ddm data provider instances where uuid = &#63; from the database.
 	 *
 	 * @param uuid the uuid
 	 */
@@ -582,10 +581,10 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the number of d d m data provider instances where uuid = &#63;.
+	 * Returns the number of ddm data provider instances where uuid = &#63;.
 	 *
 	 * @param uuid the uuid
-	 * @return the number of matching d d m data provider instances
+	 * @return the number of matching ddm data provider instances
 	 */
 	@Override
 	public int countByUuid(String uuid) {
@@ -662,12 +661,12 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 			new String[] { String.class.getName(), Long.class.getName() });
 
 	/**
-	 * Returns the d d m data provider instance where uuid = &#63; and groupId = &#63; or throws a {@link NoSuchDataProviderInstanceException} if it could not be found.
+	 * Returns the ddm data provider instance where uuid = &#63; and groupId = &#63; or throws a {@link NoSuchDataProviderInstanceException} if it could not be found.
 	 *
 	 * @param uuid the uuid
 	 * @param groupId the group ID
-	 * @return the matching d d m data provider instance
-	 * @throws NoSuchDataProviderInstanceException if a matching d d m data provider instance could not be found
+	 * @return the matching ddm data provider instance
+	 * @throws NoSuchDataProviderInstanceException if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance findByUUID_G(String uuid, long groupId)
@@ -699,11 +698,11 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the d d m data provider instance where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 * Returns the ddm data provider instance where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
 	 * @param uuid the uuid
 	 * @param groupId the group ID
-	 * @return the matching d d m data provider instance, or <code>null</code> if a matching d d m data provider instance could not be found
+	 * @return the matching ddm data provider instance, or <code>null</code> if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance fetchByUUID_G(String uuid, long groupId) {
@@ -711,12 +710,12 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the d d m data provider instance where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 * Returns the ddm data provider instance where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param uuid the uuid
 	 * @param groupId the group ID
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the matching d d m data provider instance, or <code>null</code> if a matching d d m data provider instance could not be found
+	 * @return the matching ddm data provider instance, or <code>null</code> if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance fetchByUUID_G(String uuid, long groupId,
@@ -817,11 +816,11 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Removes the d d m data provider instance where uuid = &#63; and groupId = &#63; from the database.
+	 * Removes the ddm data provider instance where uuid = &#63; and groupId = &#63; from the database.
 	 *
 	 * @param uuid the uuid
 	 * @param groupId the group ID
-	 * @return the d d m data provider instance that was removed
+	 * @return the ddm data provider instance that was removed
 	 */
 	@Override
 	public DDMDataProviderInstance removeByUUID_G(String uuid, long groupId)
@@ -833,11 +832,11 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the number of d d m data provider instances where uuid = &#63; and groupId = &#63;.
+	 * Returns the number of ddm data provider instances where uuid = &#63; and groupId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param groupId the group ID
-	 * @return the number of matching d d m data provider instances
+	 * @return the number of matching ddm data provider instances
 	 */
 	@Override
 	public int countByUUID_G(String uuid, long groupId) {
@@ -930,11 +929,11 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 			new String[] { String.class.getName(), Long.class.getName() });
 
 	/**
-	 * Returns all the d d m data provider instances where uuid = &#63; and companyId = &#63;.
+	 * Returns all the ddm data provider instances where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @return the matching d d m data provider instances
+	 * @return the matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByUuid_C(String uuid,
@@ -944,7 +943,7 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns a range of all the d d m data provider instances where uuid = &#63; and companyId = &#63;.
+	 * Returns a range of all the ddm data provider instances where uuid = &#63; and companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
@@ -952,9 +951,9 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
-	 * @return the range of matching d d m data provider instances
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
+	 * @return the range of matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByUuid_C(String uuid,
@@ -963,7 +962,7 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m data provider instances where uuid = &#63; and companyId = &#63;.
+	 * Returns an ordered range of all the ddm data provider instances where uuid = &#63; and companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
@@ -971,10 +970,10 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching d d m data provider instances
+	 * @return the ordered range of matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByUuid_C(String uuid,
@@ -984,7 +983,7 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m data provider instances where uuid = &#63; and companyId = &#63;.
+	 * Returns an ordered range of all the ddm data provider instances where uuid = &#63; and companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
@@ -992,11 +991,11 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of matching d d m data provider instances
+	 * @return the ordered range of matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByUuid_C(String uuid,
@@ -1126,13 +1125,13 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the first d d m data provider instance in the ordered set where uuid = &#63; and companyId = &#63;.
+	 * Returns the first ddm data provider instance in the ordered set where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching d d m data provider instance
-	 * @throws NoSuchDataProviderInstanceException if a matching d d m data provider instance could not be found
+	 * @return the first matching ddm data provider instance
+	 * @throws NoSuchDataProviderInstanceException if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance findByUuid_C_First(String uuid,
@@ -1162,12 +1161,12 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the first d d m data provider instance in the ordered set where uuid = &#63; and companyId = &#63;.
+	 * Returns the first ddm data provider instance in the ordered set where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching d d m data provider instance, or <code>null</code> if a matching d d m data provider instance could not be found
+	 * @return the first matching ddm data provider instance, or <code>null</code> if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance fetchByUuid_C_First(String uuid,
@@ -1184,13 +1183,13 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the last d d m data provider instance in the ordered set where uuid = &#63; and companyId = &#63;.
+	 * Returns the last ddm data provider instance in the ordered set where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching d d m data provider instance
-	 * @throws NoSuchDataProviderInstanceException if a matching d d m data provider instance could not be found
+	 * @return the last matching ddm data provider instance
+	 * @throws NoSuchDataProviderInstanceException if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance findByUuid_C_Last(String uuid,
@@ -1220,12 +1219,12 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the last d d m data provider instance in the ordered set where uuid = &#63; and companyId = &#63;.
+	 * Returns the last ddm data provider instance in the ordered set where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching d d m data provider instance, or <code>null</code> if a matching d d m data provider instance could not be found
+	 * @return the last matching ddm data provider instance, or <code>null</code> if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance fetchByUuid_C_Last(String uuid,
@@ -1248,14 +1247,14 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the d d m data provider instances before and after the current d d m data provider instance in the ordered set where uuid = &#63; and companyId = &#63;.
+	 * Returns the ddm data provider instances before and after the current ddm data provider instance in the ordered set where uuid = &#63; and companyId = &#63;.
 	 *
-	 * @param dataProviderInstanceId the primary key of the current d d m data provider instance
+	 * @param dataProviderInstanceId the primary key of the current ddm data provider instance
 	 * @param uuid the uuid
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next d d m data provider instance
-	 * @throws NoSuchDataProviderInstanceException if a d d m data provider instance with the primary key could not be found
+	 * @return the previous, current, and next ddm data provider instance
+	 * @throws NoSuchDataProviderInstanceException if a ddm data provider instance with the primary key could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance[] findByUuid_C_PrevAndNext(
@@ -1418,7 +1417,7 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Removes all the d d m data provider instances where uuid = &#63; and companyId = &#63; from the database.
+	 * Removes all the ddm data provider instances where uuid = &#63; and companyId = &#63; from the database.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
@@ -1432,11 +1431,11 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the number of d d m data provider instances where uuid = &#63; and companyId = &#63;.
+	 * Returns the number of ddm data provider instances where uuid = &#63; and companyId = &#63;.
 	 *
 	 * @param uuid the uuid
 	 * @param companyId the company ID
-	 * @return the number of matching d d m data provider instances
+	 * @return the number of matching ddm data provider instances
 	 */
 	@Override
 	public int countByUuid_C(String uuid, long companyId) {
@@ -1532,10 +1531,10 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 			new String[] { Long.class.getName() });
 
 	/**
-	 * Returns all the d d m data provider instances where groupId = &#63;.
+	 * Returns all the ddm data provider instances where groupId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @return the matching d d m data provider instances
+	 * @return the matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByGroupId(long groupId) {
@@ -1543,16 +1542,16 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns a range of all the d d m data provider instances where groupId = &#63;.
+	 * Returns a range of all the ddm data provider instances where groupId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
-	 * @return the range of matching d d m data provider instances
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
+	 * @return the range of matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByGroupId(long groupId, int start,
@@ -1561,17 +1560,17 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m data provider instances where groupId = &#63;.
+	 * Returns an ordered range of all the ddm data provider instances where groupId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching d d m data provider instances
+	 * @return the ordered range of matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByGroupId(long groupId, int start,
@@ -1580,18 +1579,18 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m data provider instances where groupId = &#63;.
+	 * Returns an ordered range of all the ddm data provider instances where groupId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of matching d d m data provider instances
+	 * @return the ordered range of matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByGroupId(long groupId, int start,
@@ -1697,12 +1696,12 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the first d d m data provider instance in the ordered set where groupId = &#63;.
+	 * Returns the first ddm data provider instance in the ordered set where groupId = &#63;.
 	 *
 	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching d d m data provider instance
-	 * @throws NoSuchDataProviderInstanceException if a matching d d m data provider instance could not be found
+	 * @return the first matching ddm data provider instance
+	 * @throws NoSuchDataProviderInstanceException if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance findByGroupId_First(long groupId,
@@ -1728,11 +1727,11 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the first d d m data provider instance in the ordered set where groupId = &#63;.
+	 * Returns the first ddm data provider instance in the ordered set where groupId = &#63;.
 	 *
 	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching d d m data provider instance, or <code>null</code> if a matching d d m data provider instance could not be found
+	 * @return the first matching ddm data provider instance, or <code>null</code> if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance fetchByGroupId_First(long groupId,
@@ -1748,12 +1747,12 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the last d d m data provider instance in the ordered set where groupId = &#63;.
+	 * Returns the last ddm data provider instance in the ordered set where groupId = &#63;.
 	 *
 	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching d d m data provider instance
-	 * @throws NoSuchDataProviderInstanceException if a matching d d m data provider instance could not be found
+	 * @return the last matching ddm data provider instance
+	 * @throws NoSuchDataProviderInstanceException if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance findByGroupId_Last(long groupId,
@@ -1779,11 +1778,11 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the last d d m data provider instance in the ordered set where groupId = &#63;.
+	 * Returns the last ddm data provider instance in the ordered set where groupId = &#63;.
 	 *
 	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching d d m data provider instance, or <code>null</code> if a matching d d m data provider instance could not be found
+	 * @return the last matching ddm data provider instance, or <code>null</code> if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance fetchByGroupId_Last(long groupId,
@@ -1805,13 +1804,13 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the d d m data provider instances before and after the current d d m data provider instance in the ordered set where groupId = &#63;.
+	 * Returns the ddm data provider instances before and after the current ddm data provider instance in the ordered set where groupId = &#63;.
 	 *
-	 * @param dataProviderInstanceId the primary key of the current d d m data provider instance
+	 * @param dataProviderInstanceId the primary key of the current ddm data provider instance
 	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next d d m data provider instance
-	 * @throws NoSuchDataProviderInstanceException if a d d m data provider instance with the primary key could not be found
+	 * @return the previous, current, and next ddm data provider instance
+	 * @throws NoSuchDataProviderInstanceException if a ddm data provider instance with the primary key could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance[] findByGroupId_PrevAndNext(
@@ -1954,10 +1953,10 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns all the d d m data provider instances that the user has permission to view where groupId = &#63;.
+	 * Returns all the ddm data provider instances that the user has permission to view where groupId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @return the matching d d m data provider instances that the user has permission to view
+	 * @return the matching ddm data provider instances that the user has permission to view
 	 */
 	@Override
 	public List<DDMDataProviderInstance> filterFindByGroupId(long groupId) {
@@ -1966,16 +1965,16 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns a range of all the d d m data provider instances that the user has permission to view where groupId = &#63;.
+	 * Returns a range of all the ddm data provider instances that the user has permission to view where groupId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
-	 * @return the range of matching d d m data provider instances that the user has permission to view
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
+	 * @return the range of matching ddm data provider instances that the user has permission to view
 	 */
 	@Override
 	public List<DDMDataProviderInstance> filterFindByGroupId(long groupId,
@@ -1984,17 +1983,17 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m data provider instances that the user has permissions to view where groupId = &#63;.
+	 * Returns an ordered range of all the ddm data provider instances that the user has permissions to view where groupId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching d d m data provider instances that the user has permission to view
+	 * @return the ordered range of matching ddm data provider instances that the user has permission to view
 	 */
 	@Override
 	public List<DDMDataProviderInstance> filterFindByGroupId(long groupId,
@@ -2082,13 +2081,13 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the d d m data provider instances before and after the current d d m data provider instance in the ordered set of d d m data provider instances that the user has permission to view where groupId = &#63;.
+	 * Returns the ddm data provider instances before and after the current ddm data provider instance in the ordered set of ddm data provider instances that the user has permission to view where groupId = &#63;.
 	 *
-	 * @param dataProviderInstanceId the primary key of the current d d m data provider instance
+	 * @param dataProviderInstanceId the primary key of the current ddm data provider instance
 	 * @param groupId the group ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next d d m data provider instance
-	 * @throws NoSuchDataProviderInstanceException if a d d m data provider instance with the primary key could not be found
+	 * @return the previous, current, and next ddm data provider instance
+	 * @throws NoSuchDataProviderInstanceException if a ddm data provider instance with the primary key could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance[] filterFindByGroupId_PrevAndNext(
@@ -2271,10 +2270,10 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns all the d d m data provider instances that the user has permission to view where groupId = any &#63;.
+	 * Returns all the ddm data provider instances that the user has permission to view where groupId = any &#63;.
 	 *
 	 * @param groupIds the group IDs
-	 * @return the matching d d m data provider instances that the user has permission to view
+	 * @return the matching ddm data provider instances that the user has permission to view
 	 */
 	@Override
 	public List<DDMDataProviderInstance> filterFindByGroupId(long[] groupIds) {
@@ -2283,16 +2282,16 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns a range of all the d d m data provider instances that the user has permission to view where groupId = any &#63;.
+	 * Returns a range of all the ddm data provider instances that the user has permission to view where groupId = any &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupIds the group IDs
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
-	 * @return the range of matching d d m data provider instances that the user has permission to view
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
+	 * @return the range of matching ddm data provider instances that the user has permission to view
 	 */
 	@Override
 	public List<DDMDataProviderInstance> filterFindByGroupId(long[] groupIds,
@@ -2301,17 +2300,17 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m data provider instances that the user has permission to view where groupId = any &#63;.
+	 * Returns an ordered range of all the ddm data provider instances that the user has permission to view where groupId = any &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupIds the group IDs
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching d d m data provider instances that the user has permission to view
+	 * @return the ordered range of matching ddm data provider instances that the user has permission to view
 	 */
 	@Override
 	public List<DDMDataProviderInstance> filterFindByGroupId(long[] groupIds,
@@ -2409,14 +2408,14 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns all the d d m data provider instances where groupId = any &#63;.
+	 * Returns all the ddm data provider instances where groupId = any &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupIds the group IDs
-	 * @return the matching d d m data provider instances
+	 * @return the matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByGroupId(long[] groupIds) {
@@ -2425,16 +2424,16 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns a range of all the d d m data provider instances where groupId = any &#63;.
+	 * Returns a range of all the ddm data provider instances where groupId = any &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupIds the group IDs
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
-	 * @return the range of matching d d m data provider instances
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
+	 * @return the range of matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByGroupId(long[] groupIds,
@@ -2443,17 +2442,17 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m data provider instances where groupId = any &#63;.
+	 * Returns an ordered range of all the ddm data provider instances where groupId = any &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupIds the group IDs
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching d d m data provider instances
+	 * @return the ordered range of matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByGroupId(long[] groupIds,
@@ -2463,18 +2462,18 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m data provider instances where groupId = &#63;, optionally using the finder cache.
+	 * Returns an ordered range of all the ddm data provider instances where groupId = &#63;, optionally using the finder cache.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of matching d d m data provider instances
+	 * @return the ordered range of matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByGroupId(long[] groupIds,
@@ -2599,7 +2598,7 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Removes all the d d m data provider instances where groupId = &#63; from the database.
+	 * Removes all the ddm data provider instances where groupId = &#63; from the database.
 	 *
 	 * @param groupId the group ID
 	 */
@@ -2612,10 +2611,10 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the number of d d m data provider instances where groupId = &#63;.
+	 * Returns the number of ddm data provider instances where groupId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @return the number of matching d d m data provider instances
+	 * @return the number of matching ddm data provider instances
 	 */
 	@Override
 	public int countByGroupId(long groupId) {
@@ -2663,10 +2662,10 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the number of d d m data provider instances where groupId = any &#63;.
+	 * Returns the number of ddm data provider instances where groupId = any &#63;.
 	 *
 	 * @param groupIds the group IDs
-	 * @return the number of matching d d m data provider instances
+	 * @return the number of matching ddm data provider instances
 	 */
 	@Override
 	public int countByGroupId(long[] groupIds) {
@@ -2733,10 +2732,10 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the number of d d m data provider instances that the user has permission to view where groupId = &#63;.
+	 * Returns the number of ddm data provider instances that the user has permission to view where groupId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @return the number of matching d d m data provider instances that the user has permission to view
+	 * @return the number of matching ddm data provider instances that the user has permission to view
 	 */
 	@Override
 	public int filterCountByGroupId(long groupId) {
@@ -2781,10 +2780,10 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the number of d d m data provider instances that the user has permission to view where groupId = any &#63;.
+	 * Returns the number of ddm data provider instances that the user has permission to view where groupId = any &#63;.
 	 *
 	 * @param groupIds the group IDs
-	 * @return the number of matching d d m data provider instances that the user has permission to view
+	 * @return the number of matching ddm data provider instances that the user has permission to view
 	 */
 	@Override
 	public int filterCountByGroupId(long[] groupIds) {
@@ -2872,10 +2871,10 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 			new String[] { Long.class.getName() });
 
 	/**
-	 * Returns all the d d m data provider instances where companyId = &#63;.
+	 * Returns all the ddm data provider instances where companyId = &#63;.
 	 *
 	 * @param companyId the company ID
-	 * @return the matching d d m data provider instances
+	 * @return the matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByCompanyId(long companyId) {
@@ -2884,16 +2883,16 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns a range of all the d d m data provider instances where companyId = &#63;.
+	 * Returns a range of all the ddm data provider instances where companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
-	 * @return the range of matching d d m data provider instances
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
+	 * @return the range of matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByCompanyId(long companyId,
@@ -2902,17 +2901,17 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m data provider instances where companyId = &#63;.
+	 * Returns an ordered range of all the ddm data provider instances where companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching d d m data provider instances
+	 * @return the ordered range of matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByCompanyId(long companyId,
@@ -2922,18 +2921,18 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m data provider instances where companyId = &#63;.
+	 * Returns an ordered range of all the ddm data provider instances where companyId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param companyId the company ID
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of matching d d m data provider instances
+	 * @return the ordered range of matching ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findByCompanyId(long companyId,
@@ -3040,12 +3039,12 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the first d d m data provider instance in the ordered set where companyId = &#63;.
+	 * Returns the first ddm data provider instance in the ordered set where companyId = &#63;.
 	 *
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching d d m data provider instance
-	 * @throws NoSuchDataProviderInstanceException if a matching d d m data provider instance could not be found
+	 * @return the first matching ddm data provider instance
+	 * @throws NoSuchDataProviderInstanceException if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance findByCompanyId_First(long companyId,
@@ -3071,11 +3070,11 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the first d d m data provider instance in the ordered set where companyId = &#63;.
+	 * Returns the first ddm data provider instance in the ordered set where companyId = &#63;.
 	 *
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching d d m data provider instance, or <code>null</code> if a matching d d m data provider instance could not be found
+	 * @return the first matching ddm data provider instance, or <code>null</code> if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance fetchByCompanyId_First(long companyId,
@@ -3091,12 +3090,12 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the last d d m data provider instance in the ordered set where companyId = &#63;.
+	 * Returns the last ddm data provider instance in the ordered set where companyId = &#63;.
 	 *
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching d d m data provider instance
-	 * @throws NoSuchDataProviderInstanceException if a matching d d m data provider instance could not be found
+	 * @return the last matching ddm data provider instance
+	 * @throws NoSuchDataProviderInstanceException if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance findByCompanyId_Last(long companyId,
@@ -3122,11 +3121,11 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the last d d m data provider instance in the ordered set where companyId = &#63;.
+	 * Returns the last ddm data provider instance in the ordered set where companyId = &#63;.
 	 *
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching d d m data provider instance, or <code>null</code> if a matching d d m data provider instance could not be found
+	 * @return the last matching ddm data provider instance, or <code>null</code> if a matching ddm data provider instance could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance fetchByCompanyId_Last(long companyId,
@@ -3148,13 +3147,13 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the d d m data provider instances before and after the current d d m data provider instance in the ordered set where companyId = &#63;.
+	 * Returns the ddm data provider instances before and after the current ddm data provider instance in the ordered set where companyId = &#63;.
 	 *
-	 * @param dataProviderInstanceId the primary key of the current d d m data provider instance
+	 * @param dataProviderInstanceId the primary key of the current ddm data provider instance
 	 * @param companyId the company ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next d d m data provider instance
-	 * @throws NoSuchDataProviderInstanceException if a d d m data provider instance with the primary key could not be found
+	 * @return the previous, current, and next ddm data provider instance
+	 * @throws NoSuchDataProviderInstanceException if a ddm data provider instance with the primary key could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance[] findByCompanyId_PrevAndNext(
@@ -3297,7 +3296,7 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Removes all the d d m data provider instances where companyId = &#63; from the database.
+	 * Removes all the ddm data provider instances where companyId = &#63; from the database.
 	 *
 	 * @param companyId the company ID
 	 */
@@ -3310,10 +3309,10 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the number of d d m data provider instances where companyId = &#63;.
+	 * Returns the number of ddm data provider instances where companyId = &#63;.
 	 *
 	 * @param companyId the company ID
-	 * @return the number of matching d d m data provider instances
+	 * @return the number of matching ddm data provider instances
 	 */
 	@Override
 	public int countByCompanyId(long companyId) {
@@ -3367,9 +3366,9 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Caches the d d m data provider instance in the entity cache if it is enabled.
+	 * Caches the ddm data provider instance in the entity cache if it is enabled.
 	 *
-	 * @param ddmDataProviderInstance the d d m data provider instance
+	 * @param ddmDataProviderInstance the ddm data provider instance
 	 */
 	@Override
 	public void cacheResult(DDMDataProviderInstance ddmDataProviderInstance) {
@@ -3387,9 +3386,9 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Caches the d d m data provider instances in the entity cache if it is enabled.
+	 * Caches the ddm data provider instances in the entity cache if it is enabled.
 	 *
-	 * @param ddmDataProviderInstances the d d m data provider instances
+	 * @param ddmDataProviderInstances the ddm data provider instances
 	 */
 	@Override
 	public void cacheResult(
@@ -3408,7 +3407,7 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Clears the cache for all d d m data provider instances.
+	 * Clears the cache for all ddm data provider instances.
 	 *
 	 * <p>
 	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
@@ -3424,7 +3423,7 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Clears the cache for the d d m data provider instance.
+	 * Clears the cache for the ddm data provider instance.
 	 *
 	 * <p>
 	 * The {@link EntityCache} and {@link FinderCache} are both cleared by this method.
@@ -3439,7 +3438,8 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((DDMDataProviderInstanceModelImpl)ddmDataProviderInstance);
+		clearUniqueFindersCache((DDMDataProviderInstanceModelImpl)ddmDataProviderInstance,
+			true);
 	}
 
 	@Override
@@ -3453,53 +3453,40 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 				DDMDataProviderInstanceImpl.class,
 				ddmDataProviderInstance.getPrimaryKey());
 
-			clearUniqueFindersCache((DDMDataProviderInstanceModelImpl)ddmDataProviderInstance);
+			clearUniqueFindersCache((DDMDataProviderInstanceModelImpl)ddmDataProviderInstance,
+				true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		DDMDataProviderInstanceModelImpl ddmDataProviderInstanceModelImpl,
-		boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					ddmDataProviderInstanceModelImpl.getUuid(),
-					ddmDataProviderInstanceModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				ddmDataProviderInstanceModelImpl);
-		}
-		else {
-			if ((ddmDataProviderInstanceModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						ddmDataProviderInstanceModelImpl.getUuid(),
-						ddmDataProviderInstanceModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					ddmDataProviderInstanceModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		DDMDataProviderInstanceModelImpl ddmDataProviderInstanceModelImpl) {
 		Object[] args = new Object[] {
 				ddmDataProviderInstanceModelImpl.getUuid(),
 				ddmDataProviderInstanceModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			ddmDataProviderInstanceModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		DDMDataProviderInstanceModelImpl ddmDataProviderInstanceModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					ddmDataProviderInstanceModelImpl.getUuid(),
+					ddmDataProviderInstanceModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((ddmDataProviderInstanceModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					ddmDataProviderInstanceModelImpl.getOriginalUuid(),
 					ddmDataProviderInstanceModelImpl.getOriginalGroupId()
 				};
@@ -3510,10 +3497,10 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Creates a new d d m data provider instance with the primary key. Does not add the d d m data provider instance to the database.
+	 * Creates a new ddm data provider instance with the primary key. Does not add the ddm data provider instance to the database.
 	 *
-	 * @param dataProviderInstanceId the primary key for the new d d m data provider instance
-	 * @return the new d d m data provider instance
+	 * @param dataProviderInstanceId the primary key for the new ddm data provider instance
+	 * @return the new ddm data provider instance
 	 */
 	@Override
 	public DDMDataProviderInstance create(long dataProviderInstanceId) {
@@ -3532,11 +3519,11 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Removes the d d m data provider instance with the primary key from the database. Also notifies the appropriate model listeners.
+	 * Removes the ddm data provider instance with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param dataProviderInstanceId the primary key of the d d m data provider instance
-	 * @return the d d m data provider instance that was removed
-	 * @throws NoSuchDataProviderInstanceException if a d d m data provider instance with the primary key could not be found
+	 * @param dataProviderInstanceId the primary key of the ddm data provider instance
+	 * @return the ddm data provider instance that was removed
+	 * @throws NoSuchDataProviderInstanceException if a ddm data provider instance with the primary key could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance remove(long dataProviderInstanceId)
@@ -3545,11 +3532,11 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Removes the d d m data provider instance with the primary key from the database. Also notifies the appropriate model listeners.
+	 * Removes the ddm data provider instance with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
-	 * @param primaryKey the primary key of the d d m data provider instance
-	 * @return the d d m data provider instance that was removed
-	 * @throws NoSuchDataProviderInstanceException if a d d m data provider instance with the primary key could not be found
+	 * @param primaryKey the primary key of the ddm data provider instance
+	 * @return the ddm data provider instance that was removed
+	 * @throws NoSuchDataProviderInstanceException if a ddm data provider instance with the primary key could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance remove(Serializable primaryKey)
@@ -3766,8 +3753,8 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 			ddmDataProviderInstance.getPrimaryKey(), ddmDataProviderInstance,
 			false);
 
-		clearUniqueFindersCache(ddmDataProviderInstanceModelImpl);
-		cacheUniqueFindersCache(ddmDataProviderInstanceModelImpl, isNew);
+		clearUniqueFindersCache(ddmDataProviderInstanceModelImpl, false);
+		cacheUniqueFindersCache(ddmDataProviderInstanceModelImpl);
 
 		ddmDataProviderInstance.resetOriginalValues();
 
@@ -3802,11 +3789,11 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the d d m data provider instance with the primary key or throws a {@link com.liferay.portal.kernel.exception.NoSuchModelException} if it could not be found.
+	 * Returns the ddm data provider instance with the primary key or throws a {@link com.liferay.portal.kernel.exception.NoSuchModelException} if it could not be found.
 	 *
-	 * @param primaryKey the primary key of the d d m data provider instance
-	 * @return the d d m data provider instance
-	 * @throws NoSuchDataProviderInstanceException if a d d m data provider instance with the primary key could not be found
+	 * @param primaryKey the primary key of the ddm data provider instance
+	 * @return the ddm data provider instance
+	 * @throws NoSuchDataProviderInstanceException if a ddm data provider instance with the primary key could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance findByPrimaryKey(Serializable primaryKey)
@@ -3826,11 +3813,11 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the d d m data provider instance with the primary key or throws a {@link NoSuchDataProviderInstanceException} if it could not be found.
+	 * Returns the ddm data provider instance with the primary key or throws a {@link NoSuchDataProviderInstanceException} if it could not be found.
 	 *
-	 * @param dataProviderInstanceId the primary key of the d d m data provider instance
-	 * @return the d d m data provider instance
-	 * @throws NoSuchDataProviderInstanceException if a d d m data provider instance with the primary key could not be found
+	 * @param dataProviderInstanceId the primary key of the ddm data provider instance
+	 * @return the ddm data provider instance
+	 * @throws NoSuchDataProviderInstanceException if a ddm data provider instance with the primary key could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance findByPrimaryKey(long dataProviderInstanceId)
@@ -3839,19 +3826,21 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the d d m data provider instance with the primary key or returns <code>null</code> if it could not be found.
+	 * Returns the ddm data provider instance with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param primaryKey the primary key of the d d m data provider instance
-	 * @return the d d m data provider instance, or <code>null</code> if a d d m data provider instance with the primary key could not be found
+	 * @param primaryKey the primary key of the ddm data provider instance
+	 * @return the ddm data provider instance, or <code>null</code> if a ddm data provider instance with the primary key could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance fetchByPrimaryKey(Serializable primaryKey) {
-		DDMDataProviderInstance ddmDataProviderInstance = (DDMDataProviderInstance)entityCache.getResult(DDMDataProviderInstanceModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(DDMDataProviderInstanceModelImpl.ENTITY_CACHE_ENABLED,
 				DDMDataProviderInstanceImpl.class, primaryKey);
 
-		if (ddmDataProviderInstance == _nullDDMDataProviderInstance) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		DDMDataProviderInstance ddmDataProviderInstance = (DDMDataProviderInstance)serializable;
 
 		if (ddmDataProviderInstance == null) {
 			Session session = null;
@@ -3867,8 +3856,7 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 				}
 				else {
 					entityCache.putResult(DDMDataProviderInstanceModelImpl.ENTITY_CACHE_ENABLED,
-						DDMDataProviderInstanceImpl.class, primaryKey,
-						_nullDDMDataProviderInstance);
+						DDMDataProviderInstanceImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -3886,10 +3874,10 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the d d m data provider instance with the primary key or returns <code>null</code> if it could not be found.
+	 * Returns the ddm data provider instance with the primary key or returns <code>null</code> if it could not be found.
 	 *
-	 * @param dataProviderInstanceId the primary key of the d d m data provider instance
-	 * @return the d d m data provider instance, or <code>null</code> if a d d m data provider instance with the primary key could not be found
+	 * @param dataProviderInstanceId the primary key of the ddm data provider instance
+	 * @return the ddm data provider instance, or <code>null</code> if a ddm data provider instance with the primary key could not be found
 	 */
 	@Override
 	public DDMDataProviderInstance fetchByPrimaryKey(
@@ -3923,18 +3911,20 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			DDMDataProviderInstance ddmDataProviderInstance = (DDMDataProviderInstance)entityCache.getResult(DDMDataProviderInstanceModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(DDMDataProviderInstanceModelImpl.ENTITY_CACHE_ENABLED,
 					DDMDataProviderInstanceImpl.class, primaryKey);
 
-			if (ddmDataProviderInstance == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, ddmDataProviderInstance);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (DDMDataProviderInstance)serializable);
+				}
 			}
 		}
 
@@ -3977,8 +3967,7 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(DDMDataProviderInstanceModelImpl.ENTITY_CACHE_ENABLED,
-					DDMDataProviderInstanceImpl.class, primaryKey,
-					_nullDDMDataProviderInstance);
+					DDMDataProviderInstanceImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -3992,9 +3981,9 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns all the d d m data provider instances.
+	 * Returns all the ddm data provider instances.
 	 *
-	 * @return the d d m data provider instances
+	 * @return the ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findAll() {
@@ -4002,15 +3991,15 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns a range of all the d d m data provider instances.
+	 * Returns a range of all the ddm data provider instances.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
-	 * @return the range of d d m data provider instances
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
+	 * @return the range of ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findAll(int start, int end) {
@@ -4018,16 +4007,16 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m data provider instances.
+	 * Returns an ordered range of all the ddm data provider instances.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of d d m data provider instances
+	 * @return the ordered range of ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findAll(int start, int end,
@@ -4036,17 +4025,17 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns an ordered range of all the d d m data provider instances.
+	 * Returns an ordered range of all the ddm data provider instances.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link DDMDataProviderInstanceModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param start the lower bound of the range of d d m data provider instances
-	 * @param end the upper bound of the range of d d m data provider instances (not inclusive)
+	 * @param start the lower bound of the range of ddm data provider instances
+	 * @param end the upper bound of the range of ddm data provider instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @param retrieveFromCache whether to retrieve from the finder cache
-	 * @return the ordered range of d d m data provider instances
+	 * @return the ordered range of ddm data provider instances
 	 */
 	@Override
 	public List<DDMDataProviderInstance> findAll(int start, int end,
@@ -4135,7 +4124,7 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Removes all the d d m data provider instances from the database.
+	 * Removes all the ddm data provider instances from the database.
 	 *
 	 */
 	@Override
@@ -4146,9 +4135,9 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Returns the number of d d m data provider instances.
+	 * Returns the number of ddm data provider instances.
 	 *
-	 * @return the number of d d m data provider instances
+	 * @return the number of ddm data provider instances
 	 */
 	@Override
 	public int countAll() {
@@ -4193,7 +4182,7 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	}
 
 	/**
-	 * Initializes the d d m data provider instance persistence.
+	 * Initializes the ddm data provider instance persistence.
 	 */
 	public void afterPropertiesSet() {
 	}
@@ -4235,23 +4224,4 @@ public class DDMDataProviderInstancePersistenceImpl extends BasePersistenceImpl<
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid", "type"
 			});
-	private static final DDMDataProviderInstance _nullDDMDataProviderInstance = new DDMDataProviderInstanceImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<DDMDataProviderInstance> toCacheModel() {
-				return _nullDDMDataProviderInstanceCacheModel;
-			}
-		};
-
-	private static final CacheModel<DDMDataProviderInstance> _nullDDMDataProviderInstanceCacheModel =
-		new CacheModel<DDMDataProviderInstance>() {
-			@Override
-			public DDMDataProviderInstance toEntityModel() {
-				return _nullDDMDataProviderInstance;
-			}
-		};
 }

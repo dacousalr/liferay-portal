@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -2314,7 +2313,7 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((PollsChoiceModelImpl)pollsChoice);
+		clearUniqueFindersCache((PollsChoiceModelImpl)pollsChoice, true);
 	}
 
 	@Override
@@ -2326,75 +2325,48 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 			entityCache.removeResult(PollsChoiceModelImpl.ENTITY_CACHE_ENABLED,
 				PollsChoiceImpl.class, pollsChoice.getPrimaryKey());
 
-			clearUniqueFindersCache((PollsChoiceModelImpl)pollsChoice);
+			clearUniqueFindersCache((PollsChoiceModelImpl)pollsChoice, true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		PollsChoiceModelImpl pollsChoiceModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					pollsChoiceModelImpl.getUuid(),
-					pollsChoiceModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				pollsChoiceModelImpl);
-
-			args = new Object[] {
-					pollsChoiceModelImpl.getQuestionId(),
-					pollsChoiceModelImpl.getName()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_Q_N, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_Q_N, args,
-				pollsChoiceModelImpl);
-		}
-		else {
-			if ((pollsChoiceModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						pollsChoiceModelImpl.getUuid(),
-						pollsChoiceModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					pollsChoiceModelImpl);
-			}
-
-			if ((pollsChoiceModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_Q_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						pollsChoiceModelImpl.getQuestionId(),
-						pollsChoiceModelImpl.getName()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_Q_N, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_Q_N, args,
-					pollsChoiceModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		PollsChoiceModelImpl pollsChoiceModelImpl) {
 		Object[] args = new Object[] {
 				pollsChoiceModelImpl.getUuid(),
 				pollsChoiceModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			pollsChoiceModelImpl, false);
+
+		args = new Object[] {
+				pollsChoiceModelImpl.getQuestionId(),
+				pollsChoiceModelImpl.getName()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_Q_N, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_Q_N, args,
+			pollsChoiceModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		PollsChoiceModelImpl pollsChoiceModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					pollsChoiceModelImpl.getUuid(),
+					pollsChoiceModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((pollsChoiceModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					pollsChoiceModelImpl.getOriginalUuid(),
 					pollsChoiceModelImpl.getOriginalGroupId()
 				};
@@ -2403,17 +2375,19 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
 		}
 
-		args = new Object[] {
-				pollsChoiceModelImpl.getQuestionId(),
-				pollsChoiceModelImpl.getName()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					pollsChoiceModelImpl.getQuestionId(),
+					pollsChoiceModelImpl.getName()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_Q_N, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_Q_N, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_Q_N, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_Q_N, args);
+		}
 
 		if ((pollsChoiceModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_Q_N.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					pollsChoiceModelImpl.getOriginalQuestionId(),
 					pollsChoiceModelImpl.getOriginalName()
 				};
@@ -2653,8 +2627,8 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 			PollsChoiceImpl.class, pollsChoice.getPrimaryKey(), pollsChoice,
 			false);
 
-		clearUniqueFindersCache(pollsChoiceModelImpl);
-		cacheUniqueFindersCache(pollsChoiceModelImpl, isNew);
+		clearUniqueFindersCache(pollsChoiceModelImpl, false);
+		cacheUniqueFindersCache(pollsChoiceModelImpl);
 
 		pollsChoice.resetOriginalValues();
 
@@ -2732,12 +2706,14 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 	 */
 	@Override
 	public PollsChoice fetchByPrimaryKey(Serializable primaryKey) {
-		PollsChoice pollsChoice = (PollsChoice)entityCache.getResult(PollsChoiceModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(PollsChoiceModelImpl.ENTITY_CACHE_ENABLED,
 				PollsChoiceImpl.class, primaryKey);
 
-		if (pollsChoice == _nullPollsChoice) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		PollsChoice pollsChoice = (PollsChoice)serializable;
 
 		if (pollsChoice == null) {
 			Session session = null;
@@ -2753,7 +2729,7 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 				}
 				else {
 					entityCache.putResult(PollsChoiceModelImpl.ENTITY_CACHE_ENABLED,
-						PollsChoiceImpl.class, primaryKey, _nullPollsChoice);
+						PollsChoiceImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -2807,18 +2783,20 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			PollsChoice pollsChoice = (PollsChoice)entityCache.getResult(PollsChoiceModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(PollsChoiceModelImpl.ENTITY_CACHE_ENABLED,
 					PollsChoiceImpl.class, primaryKey);
 
-			if (pollsChoice == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, pollsChoice);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (PollsChoice)serializable);
+				}
 			}
 		}
 
@@ -2860,7 +2838,7 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(PollsChoiceModelImpl.ENTITY_CACHE_ENABLED,
-					PollsChoiceImpl.class, primaryKey, _nullPollsChoice);
+					PollsChoiceImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -3105,22 +3083,4 @@ public class PollsChoicePersistenceImpl extends BasePersistenceImpl<PollsChoice>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid"
 			});
-	private static final PollsChoice _nullPollsChoice = new PollsChoiceImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<PollsChoice> toCacheModel() {
-				return _nullPollsChoiceCacheModel;
-			}
-		};
-
-	private static final CacheModel<PollsChoice> _nullPollsChoiceCacheModel = new CacheModel<PollsChoice>() {
-			@Override
-			public PollsChoice toEntityModel() {
-				return _nullPollsChoice;
-			}
-		};
 }

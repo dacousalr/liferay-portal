@@ -174,14 +174,12 @@ public class WallEntryLocalServiceImpl extends WallEntryLocalServiceBaseImpl {
 
 		long companyId = wallEntry.getCompanyId();
 
-		String portalURL = PortalUtil.getPortalURL(themeDisplay);
-		String layoutURL = PortalUtil.getLayoutURL(themeDisplay);
-
-		String wallEntryURL = portalURL + layoutURL;
+		String wallEntryURL = PortalUtil.getLayoutURL(themeDisplay);
 
 		Group group = groupLocalService.getGroup(wallEntry.getGroupId());
 
 		User user = userLocalService.getUserById(group.getClassPK());
+
 		User wallEntryUser = userLocalService.getUserById(
 			wallEntry.getUserId());
 
@@ -195,12 +193,12 @@ public class WallEntryLocalServiceImpl extends WallEntryLocalServiceBaseImpl {
 
 		String subject = StringUtil.read(
 			getClassLoader(),
-			"com/liferay/social/networking/wall/dependencies/" +
-				"wall_entry_added_subject.tmpl");
+			"com/liferay/social/networking/wall/dependencies" +
+				"/wall_entry_added_subject.tmpl");
 		String body = StringUtil.read(
 			getClassLoader(),
-			"com/liferay/social/networking/wall/dependencies/" +
-				"wall_entry_added_body.tmpl");
+			"com/liferay/social/networking/wall/dependencies" +
+				"/wall_entry_added_body.tmpl");
 
 		subject = StringUtil.replace(
 			subject,

@@ -1,6 +1,6 @@
 Bundle-Name: ${manifest.bundle.name}
 Bundle-SymbolicName: ${manifest.bundle.symbolic.name}
-Bundle-Version: 2.2.0
+Bundle-Version: 2.7.0
 Export-Package:\
 	com.liferay.alloy.taglib.*;version="2.0.0",\
 	com.liferay.taglib.*
@@ -20,13 +20,12 @@ Import-Package:\
 Include-Resource:\
 	classes,\
 	@../lib/development/alloy-taglib.jar,\
+	@../tmp/lib-pre/com.liferay.util.taglib.compat.jar,\
 	@../util-java/util-java.jar!/com/liferay/util/Encryptor.class,\
 	@../util-java/util-java.jar!/com/liferay/util/EncryptorException.class,\
 	@../util-java/util-java.jar!/com/liferay/util/JS.class,\
 	@../util-java/util-java.jar!/com/liferay/util/PwdGenerator.class,\
 	@../util-java/util-java.jar!/com/liferay/util/RSSUtil.class
-Liferay-Releng-Module-Group-Description:
-Liferay-Releng-Module-Group-Title:
 Provide-Capability:\
 	osgi.extender;\
 		osgi.extender="jsp.taglib";\
@@ -72,5 +71,4 @@ Provide-Capability:\
 		osgi.extender="jsp.taglib";\
 		uri="http://liferay.com/tld/util";\
 		version:Version="${Bundle-Version}"
--baseline: *;file=${project.dir}/.bnd/ant-baseline-cache/com.liferay.util.taglib-2.1.0.jar
--include: ../modules/apps/foundation/app.bnd
+-baseline: *;file=${project.dir}/.bnd/ant-baseline-cache/com.liferay.util.taglib-2.6.0.jar

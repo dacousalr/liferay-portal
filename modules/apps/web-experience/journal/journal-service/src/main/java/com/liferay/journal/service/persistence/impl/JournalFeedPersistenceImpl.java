@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -2666,7 +2665,7 @@ public class JournalFeedPersistenceImpl extends BasePersistenceImpl<JournalFeed>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((JournalFeedModelImpl)journalFeed);
+		clearUniqueFindersCache((JournalFeedModelImpl)journalFeed, true);
 	}
 
 	@Override
@@ -2678,75 +2677,48 @@ public class JournalFeedPersistenceImpl extends BasePersistenceImpl<JournalFeed>
 			entityCache.removeResult(JournalFeedModelImpl.ENTITY_CACHE_ENABLED,
 				JournalFeedImpl.class, journalFeed.getPrimaryKey());
 
-			clearUniqueFindersCache((JournalFeedModelImpl)journalFeed);
+			clearUniqueFindersCache((JournalFeedModelImpl)journalFeed, true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		JournalFeedModelImpl journalFeedModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					journalFeedModelImpl.getUuid(),
-					journalFeedModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				journalFeedModelImpl);
-
-			args = new Object[] {
-					journalFeedModelImpl.getGroupId(),
-					journalFeedModelImpl.getFeedId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_G_F, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_G_F, args,
-				journalFeedModelImpl);
-		}
-		else {
-			if ((journalFeedModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						journalFeedModelImpl.getUuid(),
-						journalFeedModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					journalFeedModelImpl);
-			}
-
-			if ((journalFeedModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_F.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						journalFeedModelImpl.getGroupId(),
-						journalFeedModelImpl.getFeedId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_G_F, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_G_F, args,
-					journalFeedModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		JournalFeedModelImpl journalFeedModelImpl) {
 		Object[] args = new Object[] {
 				journalFeedModelImpl.getUuid(),
 				journalFeedModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			journalFeedModelImpl, false);
+
+		args = new Object[] {
+				journalFeedModelImpl.getGroupId(),
+				journalFeedModelImpl.getFeedId()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_G_F, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_G_F, args,
+			journalFeedModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		JournalFeedModelImpl journalFeedModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					journalFeedModelImpl.getUuid(),
+					journalFeedModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((journalFeedModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					journalFeedModelImpl.getOriginalUuid(),
 					journalFeedModelImpl.getOriginalGroupId()
 				};
@@ -2755,17 +2727,19 @@ public class JournalFeedPersistenceImpl extends BasePersistenceImpl<JournalFeed>
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
 		}
 
-		args = new Object[] {
-				journalFeedModelImpl.getGroupId(),
-				journalFeedModelImpl.getFeedId()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					journalFeedModelImpl.getGroupId(),
+					journalFeedModelImpl.getFeedId()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_G_F, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_G_F, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_G_F, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_G_F, args);
+		}
 
 		if ((journalFeedModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_F.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					journalFeedModelImpl.getOriginalGroupId(),
 					journalFeedModelImpl.getOriginalFeedId()
 				};
@@ -3005,8 +2979,8 @@ public class JournalFeedPersistenceImpl extends BasePersistenceImpl<JournalFeed>
 			JournalFeedImpl.class, journalFeed.getPrimaryKey(), journalFeed,
 			false);
 
-		clearUniqueFindersCache(journalFeedModelImpl);
-		cacheUniqueFindersCache(journalFeedModelImpl, isNew);
+		clearUniqueFindersCache(journalFeedModelImpl, false);
+		cacheUniqueFindersCache(journalFeedModelImpl);
 
 		journalFeed.resetOriginalValues();
 
@@ -3094,12 +3068,14 @@ public class JournalFeedPersistenceImpl extends BasePersistenceImpl<JournalFeed>
 	 */
 	@Override
 	public JournalFeed fetchByPrimaryKey(Serializable primaryKey) {
-		JournalFeed journalFeed = (JournalFeed)entityCache.getResult(JournalFeedModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(JournalFeedModelImpl.ENTITY_CACHE_ENABLED,
 				JournalFeedImpl.class, primaryKey);
 
-		if (journalFeed == _nullJournalFeed) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		JournalFeed journalFeed = (JournalFeed)serializable;
 
 		if (journalFeed == null) {
 			Session session = null;
@@ -3115,7 +3091,7 @@ public class JournalFeedPersistenceImpl extends BasePersistenceImpl<JournalFeed>
 				}
 				else {
 					entityCache.putResult(JournalFeedModelImpl.ENTITY_CACHE_ENABLED,
-						JournalFeedImpl.class, primaryKey, _nullJournalFeed);
+						JournalFeedImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -3169,18 +3145,20 @@ public class JournalFeedPersistenceImpl extends BasePersistenceImpl<JournalFeed>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			JournalFeed journalFeed = (JournalFeed)entityCache.getResult(JournalFeedModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(JournalFeedModelImpl.ENTITY_CACHE_ENABLED,
 					JournalFeedImpl.class, primaryKey);
 
-			if (journalFeed == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, journalFeed);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (JournalFeed)serializable);
+				}
 			}
 		}
 
@@ -3222,7 +3200,7 @@ public class JournalFeedPersistenceImpl extends BasePersistenceImpl<JournalFeed>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(JournalFeedModelImpl.ENTITY_CACHE_ENABLED,
-					JournalFeedImpl.class, primaryKey, _nullJournalFeed);
+					JournalFeedImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -3477,22 +3455,4 @@ public class JournalFeedPersistenceImpl extends BasePersistenceImpl<JournalFeed>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid", "id"
 			});
-	private static final JournalFeed _nullJournalFeed = new JournalFeedImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<JournalFeed> toCacheModel() {
-				return _nullJournalFeedCacheModel;
-			}
-		};
-
-	private static final CacheModel<JournalFeed> _nullJournalFeedCacheModel = new CacheModel<JournalFeed>() {
-			@Override
-			public JournalFeed toEntityModel() {
-				return _nullJournalFeed;
-			}
-		};
 }

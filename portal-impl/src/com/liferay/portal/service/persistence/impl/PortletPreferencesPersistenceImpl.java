@@ -29,8 +29,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchPortletPreferencesException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.PortletPreferences;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
@@ -4580,7 +4578,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((PortletPreferencesModelImpl)portletPreferences);
+		clearUniqueFindersCache((PortletPreferencesModelImpl)portletPreferences,
+			true);
 	}
 
 	@Override
@@ -4592,44 +4591,12 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 			entityCache.removeResult(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
 				PortletPreferencesImpl.class, portletPreferences.getPrimaryKey());
 
-			clearUniqueFindersCache((PortletPreferencesModelImpl)portletPreferences);
+			clearUniqueFindersCache((PortletPreferencesModelImpl)portletPreferences,
+				true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		PortletPreferencesModelImpl portletPreferencesModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					portletPreferencesModelImpl.getOwnerId(),
-					portletPreferencesModelImpl.getOwnerType(),
-					portletPreferencesModelImpl.getPlid(),
-					portletPreferencesModelImpl.getPortletId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_O_O_P_P, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_O_O_P_P, args,
-				portletPreferencesModelImpl);
-		}
-		else {
-			if ((portletPreferencesModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_O_O_P_P.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						portletPreferencesModelImpl.getOwnerId(),
-						portletPreferencesModelImpl.getOwnerType(),
-						portletPreferencesModelImpl.getPlid(),
-						portletPreferencesModelImpl.getPortletId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_O_O_P_P, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_O_O_P_P, args,
-					portletPreferencesModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		PortletPreferencesModelImpl portletPreferencesModelImpl) {
 		Object[] args = new Object[] {
 				portletPreferencesModelImpl.getOwnerId(),
@@ -4638,12 +4605,30 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 				portletPreferencesModelImpl.getPortletId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_O_O_P_P, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_O_O_P_P, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_O_O_P_P, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_O_O_P_P, args,
+			portletPreferencesModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		PortletPreferencesModelImpl portletPreferencesModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					portletPreferencesModelImpl.getOwnerId(),
+					portletPreferencesModelImpl.getOwnerType(),
+					portletPreferencesModelImpl.getPlid(),
+					portletPreferencesModelImpl.getPortletId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_O_O_P_P, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_O_O_P_P, args);
+		}
 
 		if ((portletPreferencesModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_O_O_P_P.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					portletPreferencesModelImpl.getOriginalOwnerId(),
 					portletPreferencesModelImpl.getOriginalOwnerType(),
 					portletPreferencesModelImpl.getOriginalPlid(),
@@ -4945,8 +4930,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 			PortletPreferencesImpl.class, portletPreferences.getPrimaryKey(),
 			portletPreferences, false);
 
-		clearUniqueFindersCache(portletPreferencesModelImpl);
-		cacheUniqueFindersCache(portletPreferencesModelImpl, isNew);
+		clearUniqueFindersCache(portletPreferencesModelImpl, false);
+		cacheUniqueFindersCache(portletPreferencesModelImpl);
 
 		portletPreferences.resetOriginalValues();
 
@@ -5021,12 +5006,14 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	 */
 	@Override
 	public PortletPreferences fetchByPrimaryKey(Serializable primaryKey) {
-		PortletPreferences portletPreferences = (PortletPreferences)entityCache.getResult(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
 				PortletPreferencesImpl.class, primaryKey);
 
-		if (portletPreferences == _nullPortletPreferences) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		PortletPreferences portletPreferences = (PortletPreferences)serializable;
 
 		if (portletPreferences == null) {
 			Session session = null;
@@ -5042,8 +5029,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 				}
 				else {
 					entityCache.putResult(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
-						PortletPreferencesImpl.class, primaryKey,
-						_nullPortletPreferences);
+						PortletPreferencesImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -5097,18 +5083,20 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			PortletPreferences portletPreferences = (PortletPreferences)entityCache.getResult(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
 					PortletPreferencesImpl.class, primaryKey);
 
-			if (portletPreferences == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, portletPreferences);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (PortletPreferences)serializable);
+				}
 			}
 		}
 
@@ -5151,8 +5139,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
-					PortletPreferencesImpl.class, primaryKey,
-					_nullPortletPreferences);
+					PortletPreferencesImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -5387,35 +5374,4 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No PortletPreferences exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No PortletPreferences exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(PortletPreferencesPersistenceImpl.class);
-	private static final PortletPreferences _nullPortletPreferences = new PortletPreferencesImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<PortletPreferences> toCacheModel() {
-				return _nullPortletPreferencesCacheModel;
-			}
-		};
-
-	private static final CacheModel<PortletPreferences> _nullPortletPreferencesCacheModel =
-		new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<PortletPreferences>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public PortletPreferences toEntityModel() {
-			return _nullPortletPreferences;
-		}
-	}
 }

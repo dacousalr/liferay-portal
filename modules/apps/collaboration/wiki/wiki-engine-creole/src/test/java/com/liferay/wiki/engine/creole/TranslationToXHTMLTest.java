@@ -15,14 +15,15 @@
 package com.liferay.wiki.engine.creole;
 
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.HtmlImpl;
-import com.liferay.wiki.engine.creole.parser.ast.WikiPageNode;
-import com.liferay.wiki.engine.creole.parser.parser.Creole10Lexer;
-import com.liferay.wiki.engine.creole.parser.parser.Creole10Parser;
-import com.liferay.wiki.engine.creole.parser.visitor.impl.XhtmlTranslationVisitor;
-import com.liferay.wiki.engine.creole.util.WikiEngineCreoleComponentProvider;
+import com.liferay.wiki.engine.creole.internal.parser.ast.WikiPageNode;
+import com.liferay.wiki.engine.creole.internal.parser.parser.Creole10Lexer;
+import com.liferay.wiki.engine.creole.internal.parser.parser.Creole10Parser;
+import com.liferay.wiki.engine.creole.internal.parser.visitor.XhtmlTranslationVisitor;
+import com.liferay.wiki.engine.creole.internal.util.WikiEngineCreoleComponentProvider;
 import com.liferay.wiki.engine.creole.util.test.CreoleTestUtil;
 
 import java.io.IOException;
@@ -272,7 +273,7 @@ public class TranslationToXHTMLTest {
 	@Test
 	public void testParseCorrectlyNoWikiBlockInline() throws Exception {
 		Assert.assertEquals(
-			"<p><pre> Inline </pre></p>", translate("nowikiblock-10.creole"));
+			"<p><tt> Inline </tt></p>", translate("nowikiblock-10.creole"));
 	}
 
 	@Test
@@ -542,13 +543,14 @@ public class TranslationToXHTMLTest {
 
 	@Test
 	public void testParseMixedList3() throws Exception {
-		Assert.assertEquals(
-			"<ol><li> T1<ol><li> T1.1</li></ol></li><li> T2</li><li> T3" +
-				"</li></ol><ul><li> Divider 1<ul><li> Divider 2a</li>" +
-					"<li> Divider 2b<ul><li> Divider 3</li></ul></li>" +
-						"</ul></li></ul><ol><li> T3.2</li>" +
-							"<li> T3.3</li></ol>",
-			translate("mixed-list-3.creole"));
+		StringBundler sb = new StringBundler(4);
+
+		sb.append("<ol><li> T1<ol><li> T1.1</li></ol></li><li> T2</li><li> T3");
+		sb.append("</li></ol><ul><li> Divider 1<ul><li> Divider 2a</li><li> ");
+		sb.append("Divider 2b<ul><li> Divider 3</li></ul></li></ul></li></ul>");
+		sb.append("<ol><li> T3.2</li><li> T3.3</li></ol>");
+
+		Assert.assertEquals(sb.toString(), translate("mixed-list-3.creole"));
 	}
 
 	@Test
@@ -578,18 +580,20 @@ public class TranslationToXHTMLTest {
 
 	@Test
 	public void testParseNestedLists() throws Exception {
-		Assert.assertEquals(
-			"<ul><li> 1</li><li> 2<ul><li> 2.1<ul><li> 2.1.1<ul>" +
-				"<li> 2.1.1.1</li><li> 2.1.1.2</li></ul></li><li> 2.1.2</li>" +
-					"<li> 2.1.3</li></ul></li><li> 2.2</li><li> 2.3</li></ul>" +
-						"</li><li>3</li></ul>",
-			translate("list-18.creole"));
+		StringBundler sb = new StringBundler(4);
+
+		sb.append("<ul><li> 1</li><li> 2<ul><li> 2.1<ul><li> 2.1.1<ul><li> ");
+		sb.append("2.1.1.1</li><li> 2.1.1.2</li></ul></li><li> 2.1.2</li>");
+		sb.append("<li> 2.1.3</li></ul></li><li> 2.2</li><li> 2.3</li></ul>");
+		sb.append("</li><li>3</li></ul>");
+
+		Assert.assertEquals(sb.toString(), translate("list-18.creole"));
 	}
 
 	@Test
 	public void testParseNoWikiAndTextInListItem() throws Exception {
 		Assert.assertEquals(
-			"<ul><li><pre>This is nowiki inside a list item</pre> and <em>" +
+			"<ul><li><tt>This is nowiki inside a list item</tt> and <em>" +
 				"italics</em></li></ul>",
 			translate("list-15.creole"));
 	}
@@ -597,7 +601,7 @@ public class TranslationToXHTMLTest {
 	@Test
 	public void testParseNoWikiInListItem() throws Exception {
 		Assert.assertEquals(
-			"<ul><li><pre>This is nowiki inside a list item</pre></li></ul>",
+			"<ul><li><tt>This is nowiki inside a list item</tt></li></ul>",
 			translate("list-14.creole"));
 	}
 
@@ -681,8 +685,8 @@ public class TranslationToXHTMLTest {
 	@Test
 	public void testParseTableImagesNested() throws Exception {
 		Assert.assertEquals(
-			"<table><tr><th>H1</th></tr><tr><td><img " +
-				"src=\"image.png\" alt=\"Image\"/></td></tr></table>",
+			"<table><tr><th>H1</th></tr><tr><td><img src=\"image.png\" " +
+				"alt=\"Image\"/></td></tr></table>",
 			translate("table-4.creole"));
 	}
 
@@ -697,13 +701,15 @@ public class TranslationToXHTMLTest {
 
 	@Test
 	public void testParseTableMultipleRowsAndColumns() throws Exception {
-		Assert.assertEquals(
-			"<table><tr><th>H1</th><th>H2</th><th>H3</th><th>H4</th></tr>" +
-				"<tr><td>C1</td><td>C2</td><td>C3</td><td>C4</td></tr><tr>" +
-					"<td>C5</td><td>C6</td><td>C7</td><td>C8</td></tr><tr>" +
-						"<td>C9</td><td>C10</td><td>C11</td><td>C12</td>" +
-							"</tr></table>",
-			translate("table-2.creole"));
+		StringBundler sb = new StringBundler(5);
+
+		sb.append("<table><tr><th>H1</th><th>H2</th><th>H3</th><th>H4</th>");
+		sb.append("</tr><tr><td>C1</td><td>C2</td><td>C3</td><td>C4</td></tr>");
+		sb.append("<tr><td>C5</td><td>C6</td><td>C7</td><td>C8</td></tr><tr>");
+		sb.append("<td>C9</td><td>C10</td><td>C11</td><td>C12</td></tr>");
+		sb.append("</table>");
+
+		Assert.assertEquals(sb.toString(), translate("table-2.creole"));
 	}
 
 	@Test

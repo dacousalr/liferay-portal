@@ -22,7 +22,6 @@
 taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
 taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
-taglib uri="http://liferay.com/tld/trash" prefix="liferay-trash" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
 taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
@@ -59,12 +58,12 @@ page import="com.liferay.trash.kernel.model.TrashEntryList" %><%@
 page import="com.liferay.trash.kernel.service.TrashEntryLocalServiceUtil" %><%@
 page import="com.liferay.trash.kernel.service.TrashEntryServiceUtil" %><%@
 page import="com.liferay.trash.kernel.util.TrashUtil" %><%@
-page import="com.liferay.trash.web.constants.TrashWebKeys" %><%@
-page import="com.liferay.trash.web.dao.search.TrashResultRowSplitter" %><%@
-page import="com.liferay.trash.web.display.context.TrashContainerModelDisplayContext" %><%@
-page import="com.liferay.trash.web.display.context.TrashDisplayContext" %><%@
-page import="com.liferay.trash.web.search.EntrySearch" %><%@
-page import="com.liferay.trash.web.search.EntrySearchTerms" %>
+page import="com.liferay.trash.web.internal.constants.TrashWebKeys" %><%@
+page import="com.liferay.trash.web.internal.dao.search.TrashResultRowSplitter" %><%@
+page import="com.liferay.trash.web.internal.display.context.TrashContainerModelDisplayContext" %><%@
+page import="com.liferay.trash.web.internal.display.context.TrashDisplayContext" %><%@
+page import="com.liferay.trash.web.internal.search.EntrySearch" %><%@
+page import="com.liferay.trash.web.internal.search.EntrySearchTerms" %>
 
 <%@ page import="java.text.Format" %>
 

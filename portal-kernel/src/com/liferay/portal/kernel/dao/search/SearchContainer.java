@@ -22,12 +22,10 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
-import com.liferay.portal.kernel.util.SearchContainerReference;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.TextFormatter;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +53,8 @@ public class SearchContainer<R> {
 	public static final String DEFAULT_DELTA_PARAM = "delta";
 
 	public static final String DEFAULT_DEPRECATED_TOTAL_VAR = "deprecatedTotal";
+
+	public static final boolean DEFAULT_FORCE_POST = false;
 
 	public static final String DEFAULT_ORDER_BY_COL_PARAM = "orderByCol";
 
@@ -144,14 +144,6 @@ public class SearchContainer<R> {
 		}
 
 		_emptyResultsMessage = emptyResultsMessage;
-
-		SearchContainerReference searchContainerReference =
-			(SearchContainerReference)portletRequest.getAttribute(
-				WebKeys.SEARCH_CONTAINER_REFERENCE);
-
-		if (searchContainerReference != null) {
-			searchContainerReference.register(this);
-		}
 
 		if (Validator.isNotNull(cssClass)) {
 			_cssClass = cssClass;
@@ -253,6 +245,7 @@ public class SearchContainer<R> {
 			id = id.concat("SearchContainer");
 
 			_id = PortalUtil.getUniqueElementId(request, namespace, id);
+
 			_uniqueId = true;
 
 			return _id;
@@ -261,6 +254,7 @@ public class SearchContainer<R> {
 		id = DeterminateKeyGenerator.generate("taglib_search_container");
 
 		_id = id.concat("SearchContainer");
+
 		_uniqueId = true;
 
 		return _id;
@@ -350,6 +344,10 @@ public class SearchContainer<R> {
 		return _deltaConfigurable;
 	}
 
+	public boolean isForcePost() {
+		return _forcePost;
+	}
+
 	public boolean isHover() {
 		return _hover;
 	}
@@ -412,6 +410,10 @@ public class SearchContainer<R> {
 		String emptyResultsMessageCssClass) {
 
 		_emptyResultsMessageCssClass = emptyResultsMessageCssClass;
+	}
+
+	public void setForcePost(boolean forcePost) {
+		_forcePost = forcePost;
 	}
 
 	public void setHeaderNames(List<String> headerNames) {
@@ -513,7 +515,7 @@ public class SearchContainer<R> {
 
 		if (isRecalculateCur()) {
 			if ((_total % _delta) == 0) {
-				_cur = (_total / _delta);
+				_cur = _total / _delta;
 			}
 			else {
 				_cur = (_total / _delta) + 1;
@@ -554,6 +556,7 @@ public class SearchContainer<R> {
 	private String _emptyResultsMessage;
 	private String _emptyResultsMessageCssClass;
 	private int _end;
+	private boolean _forcePost = DEFAULT_FORCE_POST;
 	private List<String> _headerNames;
 	private boolean _hover = true;
 	private String _id;

@@ -1,7 +1,7 @@
 <definition component-name="portal-collaboration">
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="custom.properties" value="default.layout.template.id=1_column" />
-	<property name="portlet.plugins.includes" value="notifications-portlet" />
 	<property name="testray.main.component.name" value="Notifications" />
 
 	<var name="pageName" value="Message Boards Page" />
@@ -13,15 +13,15 @@
 		<execute macro="User#firstLoginPG" />
 
 		<execute macro="Page#add">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
 		<execute macro="Portlet#addPG">
-			<var name="portletName" value="${portletName}" />
+			<var name="portletName" value="Message Boards" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoControlPanelUsers">
@@ -50,7 +50,7 @@
 		</execute>
 
 		<execute macro="User#assignRegularRoleCP">
-			<var name="roleName" value="Administrator" />
+			<var name="roleTitle" value="Administrator" />
 			<var name="userScreenName" value="usersn" />
 		</execute>
 	</set-up>
@@ -81,7 +81,7 @@
 
 	<command name="ViewNoWebsiteNotificationForNewThreadInCategory" priority="4">
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
 		<execute macro="NotificationsPortlet#gotoNotificationDelivery" />
@@ -95,7 +95,7 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
 		<execute macro="MessageboardsCategory#addPG">
@@ -118,7 +118,7 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
 		<execute macro="MessageboardsCategory#gotoPG">
@@ -148,7 +148,7 @@
 
 	<command name="ViewNoWebsiteNotificationForUpdatedThreadInCategory" priority="4">
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
 		<execute macro="NotificationsPortlet#gotoNotificationDelivery" />
@@ -162,7 +162,7 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
 		<execute macro="MessageboardsCategory#addPG">
@@ -194,7 +194,7 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
 		<execute macro="MessageboardsCategory#gotoPG">
@@ -231,7 +231,7 @@
 
 	<command name="ViewWebsiteNotificationForNewThreadInCategory" priority="4">
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
 		<execute macro="MessageboardsCategory#addPG">
@@ -254,7 +254,7 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
 		<execute macro="MessageboardsCategory#gotoPG">
@@ -306,7 +306,7 @@
 
 	<command name="ViewWebsiteNotificationForUpdatedThreadInCategory" priority="4">
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
 		<execute macro="MessageboardsCategory#addPG">
@@ -338,7 +338,7 @@
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName" value="${pageName}" />
+			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
 		<execute macro="MessageboardsCategory#gotoPG">

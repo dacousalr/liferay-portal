@@ -136,7 +136,7 @@ public class BaseTestRule<C, M>
 		_handleBeforeClassThreadLocal.set(enable);
 	}
 
-	public static abstract class StatementWrapper extends Statement {
+	public abstract static class StatementWrapper extends Statement {
 
 		public StatementWrapper(Statement statement) {
 			this.statement = statement;
@@ -157,9 +157,8 @@ public class BaseTestRule<C, M>
 			statement = statementWrapper.getStatement();
 		}
 
-		if ((statement instanceof InvokeMethod) ||
-			(statement instanceof RunAfters) ||
-			(statement instanceof RunBefores)) {
+		if (statement instanceof InvokeMethod ||
+			statement instanceof RunAfters || statement instanceof RunBefores) {
 
 			return ReflectionTestUtil.getFieldValue(statement, "target");
 		}

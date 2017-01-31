@@ -1,5 +1,6 @@
 <definition component-name="portal-wcm">
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="Sitemap" />
 
 	<set-up>
@@ -58,8 +59,6 @@
 	</tear-down>
 
 	<command name="DisplayPrivatePageWithChildPage" priority="4">
-		<property name="portal.acceptance" value="true" />
-
 		<execute macro="Portlet#addPG">
 			<var name="portletName" value="Site Map" />
 		</execute>

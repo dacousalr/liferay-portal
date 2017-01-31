@@ -16,7 +16,7 @@ package com.liferay.portal.kernel.portletdisplaytemplate;
 
 import com.liferay.dynamic.data.mapping.kernel.DDMTemplate;
 import com.liferay.portal.kernel.template.TemplateVariableGroup;
-import com.liferay.portal.kernel.util.ProxyFactory;
+import com.liferay.portal.kernel.util.ServiceProxyFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -58,8 +58,11 @@ public class PortletDisplayTemplateManagerUtil {
 			request, response, templateId, entries, contextObjects);
 	}
 
-	private static final PortletDisplayTemplateManager
-		_portletDisplayTemplateManager = ProxyFactory.newServiceTrackedInstance(
-			PortletDisplayTemplateManager.class);
+	private static volatile PortletDisplayTemplateManager
+		_portletDisplayTemplateManager =
+			ServiceProxyFactory.newServiceTrackedInstance(
+				PortletDisplayTemplateManager.class,
+				PortletDisplayTemplateManagerUtil.class,
+				"_portletDisplayTemplateManager", false);
 
 }

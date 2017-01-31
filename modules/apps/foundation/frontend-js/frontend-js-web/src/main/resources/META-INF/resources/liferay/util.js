@@ -293,9 +293,13 @@
 		},
 
 		focusFormField: function(el) {
+			var doc = $(document);
+
 			var interacting = false;
 
-			var doc = $(document);
+			el = Util.getDOM(el);
+
+			el = $(el);
 
 			doc.on(
 				'click.focusFormField',
@@ -306,12 +310,24 @@
 				}
 			);
 
-			el = Util.getDOM(el);
-
-			el = $(el);
-
 			if (!interacting && Util.inBrowserView(el)) {
-				el.focus();
+				var form = el.closest('form');
+
+				var focusable = !el.is(':disabled') && !el.is(':hidden');
+
+				if (!form.length || focusable) {
+					el.focus();
+				}
+				else {
+					var portletName = form.data('fm-namespace');
+
+					Liferay.once(
+						portletName + 'formReady',
+						function() {
+							el.focus();
+						}
+					);
+				}
 			}
 		},
 
@@ -673,6 +689,18 @@
 			return Util.listCheckboxesExcept(form, except, name, false);
 		},
 
+		normalizeFriendlyURL: function(text) {
+			var newText = text.replace(/[^a-zA-Z0-9_-]/g, '-');
+
+			if (newText[0] === '-') {
+				newText = newText.replace(/^-+/, '');
+			}
+
+			newText = newText.replace(/--+/g, '-');
+
+			return newText.toLowerCase();
+		},
+
 		ns: function(namespace, obj) {
 			var instance = this;
 
@@ -923,7 +951,7 @@
 		showCapsLock: function(event, span) {
 			var keyCode = event.keyCode ? event.keyCode : event.which;
 
-			var shiftKeyCode = keyCode == 16 ? true : false;
+			var shiftKeyCode = keyCode === 16;
 
 			var shiftKey = event.shiftKey ? event.shiftKey : shiftKeyCode;
 
@@ -1234,7 +1262,22 @@
 
 			var dialog = event.dialog;
 
+			var lfrFormContent = iframeBody.one('.lfr-form-content');
+
 			iframeBody.addClass('dialog-iframe-popup');
+
+			if (lfrFormContent && iframeBody.one('.button-holder.dialog-footer')) {
+				iframeBody.addClass('dialog-with-footer');
+
+				var stagingAlert = iframeBody.one('.portlet-body > .lfr-portlet-message-staging-alert');
+
+				if (stagingAlert) {
+					stagingAlert.remove();
+
+					lfrFormContent.prepend(stagingAlert);
+				}
+			}
+
 			iframeBody.addClass(dialog.iframeConfig.bodyCssClass);
 
 			var detachEventHandles = function() {
@@ -1323,12 +1366,22 @@
 
 			ddmURL.setParameter('scopeTitle', config.title);
 
+			if ('searchRestriction' in config) {
+				ddmURL.setParameter('searchRestriction', config.searchRestriction);
+				ddmURL.setParameter('searchRestrictionClassNameId', config.searchRestrictionClassNameId);
+				ddmURL.setParameter('searchRestrictionClassPK', config.searchRestrictionClassPK);
+			}
+
 			if ('showAncestorScopes' in config) {
 				ddmURL.setParameter('showAncestorScopes', config.showAncestorScopes);
 			}
 
 			if ('showBackURL' in config) {
 				ddmURL.setParameter('showBackURL', config.showBackURL);
+			}
+
+			if ('showCacheableInput' in config) {
+				ddmURL.setParameter('showCacheableInput', config.showCacheableInput);
 			}
 
 			if ('showHeader' in config) {
@@ -1532,16 +1585,17 @@
 				if (selectedData && selectedData.length) {
 					var currentWindow = event.currentTarget.node.get('contentWindow.document');
 
-					var selectorButtons = currentWindow.all('.lfr-search-container .selector-button');
+					var selectorButtons = currentWindow.all('.lfr-search-container-wrapper .selector-button');
 
 					A.some(
 						selectorButtons,
 						function(item, index) {
-							var assetEntryId = item.attr('data-assetentryid');
+							var assetEntryId = item.attr('data-entityid') || item.attr('data-entityname');
 
 							var assetEntryIndex = selectedData.indexOf(assetEntryId);
 
 							if (assetEntryIndex > -1) {
+								item.attr('data-prevent-selection', true);
 								item.attr('disabled', true);
 
 								selectedData.splice(assetEntryIndex, 1);
@@ -1583,7 +1637,6 @@
 					}
 				);
 			}
-
 		},
 		['aui-base', 'liferay-util-window']
 	);
@@ -1816,6 +1869,7 @@
 		DROP_POSITION: 450,
 		MENU: 5000,
 		OVERLAY: 1000,
+		POPOVER: 1060,
 		TOOLTIP: 10000,
 		WINDOW: 1200
 	};

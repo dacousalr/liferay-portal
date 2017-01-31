@@ -1,5 +1,6 @@
 <definition component-name="portal-user-interface">
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="browser.type" value="android" />
 	<property name="testray.main.component.name" value="User Interface" />
 	<property name="timeout.explicit.wait" value="180" />
@@ -27,7 +28,6 @@
 	</tear-down>
 
 	<command description="Ensure that the super admin can add pages, add portlets, navigate to the product menu, use the WYSIWYG editor, and view alert messages." name="Smoke" priority="5">
-
 		<execute macro="Smoke#viewWelcomePage" />
 
 		<execute macro="Smoke#runSmoke" />

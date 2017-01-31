@@ -1,5 +1,6 @@
 <definition component-name="portal-wcm">
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="Site and Page Templates" />
 
 	<set-up>
@@ -79,6 +80,11 @@
 	</command>
 
 	<command name="DeactivateAndActivatePageTemplate" priority="4">
+		<execute macro="TestCase#getSiteName">
+			<return from="siteName" name="siteName" />
+			<var name="siteName" value="${siteName}" />
+		</execute>
+
 		<execute macro="ProductMenu#gotoControlPanelSites">
 			<var name="portlet" value="Page Templates" />
 		</execute>
@@ -107,7 +113,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="SitePageNavigator#gotoPages">
@@ -139,7 +145,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="site" value="Liferay" />
+			<var name="site" value="${siteName}" />
 		</execute>
 
 		<execute macro="SitePageNavigator#gotoPages">
@@ -257,7 +263,7 @@
 		</execute>
 
 		<execute macro="PageTemplate#viewDefaultLocalizedCP">
-			<var name="pageTemplateDescriptionList" value="editar y ver los blogs de esta página. Explorar temas utilizando etiquetas y conectar con otros miembros de ese blog.,editar y explorar el contenido de la web desde esta página. Contenido disponible, explorar contenido relacionado con las etiquetas y buscar por categorías de contenido.,Colaborar con los miembros a través de la wiki en esta página. Descubra el contenido relacionado a través de etiquetas y navegar rápida y fácilmente con categorías." />
+			<var name="pageTemplateDescriptionList" value="edite y vea blogs desde esta página. Explore los temas usando etiquetas y conecte con otros miembros del blog.,edite y explore contenidos web de esta página. Busque contenido adicional, explore contenido relacionado con etiquetas y hojee las categorías del contenido.,Colabora con los miembros a través de la wiki en esta página. Descubre el contenido relacionado a través de etiquetas y navega rápida y fácilmente por las categorías." />
 			<var name="pageTemplateNameList" value="Blog,Seleccione una página de visualización,Wiki" />
 		</execute>
 
@@ -273,6 +279,8 @@
 			<var name="saveButton" value="Guardar" />
 			<var name="successMessage" value="Your request completed successfully." />
 		</execute>
+
+		<execute macro="Navigator#openURL" />
 
 		<execute macro="ProductMenu#gotoControlPanelSites">
 			<var name="portlet" value="Page Templates" />
@@ -295,8 +303,14 @@
 			<var name="pageTemplateName" value="Page Template Name" />
 		</execute>
 
+		<execute macro="TestCase#getSiteName">
+			<return from="siteName" name="siteName" />
+			<var name="siteName" value="${siteName}" />
+		</execute>
+
 		<execute macro="PageTemplate#viewPG">
 			<var name="pageTemplateName" value="Page Template Name" />
+			<var name="siteName" value="${siteName}" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoControlPanelSites">
@@ -310,6 +324,7 @@
 
 		<execute macro="PageTemplate#viewPG">
 			<var name="pageTemplateName" value="Page Template Name Edit" />
+			<var name="siteName" value="${siteName}" />
 		</execute>
 	</command>
 </definition>

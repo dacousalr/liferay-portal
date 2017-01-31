@@ -146,22 +146,29 @@ class ImageEditor extends Component {
 	 */
 	getImageEditorImageBlob() {
 		return new CancellablePromise((resolve, reject) => {
-			let canvas = this.getImageEditorCanvas();
+			this.getImageEditorImageData()
+				.then(imageData => {
+					let canvas = document.createElement('canvas');
+					canvas.width = imageData.width;
+					canvas.height = imageData.height;
 
-			if (canvas.toBlob) {
-				canvas.toBlob(resolve);
-			}
-			else {
-				let data = atob(canvas.toDataURL().split(',')[1]);
-				let length = data.length;
-				let bytes = new Uint8Array(length);
+					canvas.getContext('2d').putImageData(imageData, 0, 0);
 
-				for (let i = 0; i < length; i++) {
-					bytes[i] = data.charCodeAt(i);
-				}
+					if (canvas.toBlob) {
+						canvas.toBlob(resolve, this.saveMimeType);
+					}
+					else {
+						let data = atob(canvas.toDataURL(this.saveMimeType).split(',')[1]);
+						let length = data.length;
+						let bytes = new Uint8Array(length);
 
-				resolve(new Blob([bytes], {type: 'image/png'}));
-			}
+						for (let i = 0; i < length; i++) {
+							bytes[i] = data.charCodeAt(i);
+						}
+
+						resolve(new Blob([bytes], {type: this.saveMimeType}));
+					}
+				});
 		});
 	}
 
@@ -172,6 +179,19 @@ class ImageEditor extends Component {
 	 */
 	getImageEditorImageData() {
 		return this.history_[this.historyIndex_].getImageData();
+	}
+
+	/**
+	 * Normalizes different mime types to the most similar mime type
+	 * available to canvas implementations.
+	 *
+	 * @see http://kangax.github.io/jstests/toDataUrl_mime_type_test/
+	 *
+	 * @param  {String} mimeType Original mime type
+	 * @return {String} The normalized mime type
+	 */
+	normalizeCanvasMimeType_(mimeType) {
+		return mimeType.replace('jpg', 'jpeg');
 	}
 
 	/**
@@ -268,6 +288,24 @@ class ImageEditor extends Component {
 	}
 
 	/**
+	 * Setter function for the `saveMimeType` state key
+	 *
+	 * @param  {!String} saveMimeType The optional passed value for the attribute
+	 * @return {String} The computed value for the attribute
+	 * @protected
+	 */
+	setterSaveMimeTypeFn_(saveMimeType) {
+		if (!saveMimeType) {
+			let imageExtensionRegex = /(?:.*:\/\/)?(?:[^\/])*[^.]*.([^?\/$]*)/;
+			let imageExtension = this.image.match(imageExtensionRegex)[1];
+
+			saveMimeType = this.normalizeCanvasMimeType_('image/' + imageExtension);
+		}
+
+		return saveMimeType;
+	}
+
+	/**
 	 * Shows an error message in the editor
 	 *
 	 * @param  {String} message The error message to show
@@ -285,7 +323,7 @@ class ImageEditor extends Component {
 					},
 					duration: 3000,
 					icon: 'exclamation-circle',
-					message: message,
+					message: message.message,
 					type: 'danger'
 				}
 			).render(this.element);
@@ -312,12 +350,13 @@ class ImageEditor extends Component {
 			let requestConfig = {
 				contentType: false,
 				data: formData,
+				dataType: "json",
 				processData: false,
 				type: 'POST',
 				url: this.saveURL
 			};
 
-			$.ajax(requestConfig)
+			AUI.$.ajax(requestConfig)
 				.done(resolve)
 				.fail((jqXHR, status, error) => reject(error));
 		});
@@ -374,7 +413,15 @@ class ImageEditor extends Component {
 
 		let boundingBox = dom.closest(this.element, '.portlet-layout');
 		let availableWidth = boundingBox.offsetWidth;
-		let availableHeight = boundingBox.offsetHeight - 142 - 40;
+
+		let dialogFooterHeight = 0;
+		let dialogFooter = this.element.querySelector('.dialog-footer');
+
+		if (dialogFooter) {
+			dialogFooterHeight = dialogFooter.offsetHeight;
+		}
+
+		let availableHeight = boundingBox.offsetHeight - 142 - 40 - dialogFooterHeight;
 		let availableAspectRatio = availableWidth / availableHeight;
 
 		if (availableAspectRatio > 1) {
@@ -435,6 +482,16 @@ ImageEditor.STATE = {
 	 * @type {String}
 	 */
 	saveFileName: {
+		validator: core.isString
+	},
+
+	/**
+	 * Mime type of the saved image. If not explicitly set,
+	 * the image mime type will be infered from the image url.
+	 * @type {String}
+	 */
+	saveMimeType: {
+		setter: 'setterSaveMimeTypeFn_',
 		validator: core.isString
 	},
 

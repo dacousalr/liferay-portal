@@ -29,8 +29,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchWebsiteException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.Website;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -2795,7 +2793,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the matching websites
 	 */
 	@Override
@@ -2814,7 +2812,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of websites
 	 * @param end the upper bound of the range of websites (not inclusive)
 	 * @return the range of matching websites
@@ -2834,7 +2832,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of websites
 	 * @param end the upper bound of the range of websites (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -2857,7 +2855,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param start the lower bound of the range of websites
 	 * @param end the upper bound of the range of websites (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -2986,7 +2984,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching website
 	 * @throws NoSuchWebsiteException if a matching website could not be found
@@ -3025,7 +3023,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching website, or <code>null</code> if a matching website could not be found
 	 */
@@ -3047,7 +3045,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching website
 	 * @throws NoSuchWebsiteException if a matching website could not be found
@@ -3086,7 +3084,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching website, or <code>null</code> if a matching website could not be found
 	 */
@@ -3115,7 +3113,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 * @param websiteId the primary key of the current website
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next website
 	 * @throws NoSuchWebsiteException if a website with the primary key could not be found
@@ -3271,7 +3269,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 */
 	@Override
 	public void removeByC_C_C(long companyId, long classNameId, long classPK) {
@@ -3286,7 +3284,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @return the number of matching websites
 	 */
 	@Override
@@ -3381,7 +3379,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @return the matching websites
 	 */
@@ -3401,7 +3399,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param start the lower bound of the range of websites
 	 * @param end the upper bound of the range of websites (not inclusive)
@@ -3423,7 +3421,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param start the lower bound of the range of websites
 	 * @param end the upper bound of the range of websites (not inclusive)
@@ -3447,7 +3445,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param start the lower bound of the range of websites
 	 * @param end the upper bound of the range of websites (not inclusive)
@@ -3582,7 +3580,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching website
@@ -3626,7 +3624,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching website, or <code>null</code> if a matching website could not be found
@@ -3650,7 +3648,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching website
@@ -3694,7 +3692,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching website, or <code>null</code> if a matching website could not be found
@@ -3725,7 +3723,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 * @param websiteId the primary key of the current website
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next website
@@ -3887,7 +3885,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 */
 	@Override
@@ -3904,7 +3902,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 *
 	 * @param companyId the company ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param primary the primary
 	 * @return the number of matching websites
 	 */
@@ -4441,12 +4439,14 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	 */
 	@Override
 	public Website fetchByPrimaryKey(Serializable primaryKey) {
-		Website website = (Website)entityCache.getResult(WebsiteModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(WebsiteModelImpl.ENTITY_CACHE_ENABLED,
 				WebsiteImpl.class, primaryKey);
 
-		if (website == _nullWebsite) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		Website website = (Website)serializable;
 
 		if (website == null) {
 			Session session = null;
@@ -4461,7 +4461,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 				}
 				else {
 					entityCache.putResult(WebsiteModelImpl.ENTITY_CACHE_ENABLED,
-						WebsiteImpl.class, primaryKey, _nullWebsite);
+						WebsiteImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -4515,18 +4515,20 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			Website website = (Website)entityCache.getResult(WebsiteModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(WebsiteModelImpl.ENTITY_CACHE_ENABLED,
 					WebsiteImpl.class, primaryKey);
 
-			if (website == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, website);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (Website)serializable);
+				}
 			}
 		}
 
@@ -4568,7 +4570,7 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(WebsiteModelImpl.ENTITY_CACHE_ENABLED,
-					WebsiteImpl.class, primaryKey, _nullWebsite);
+					WebsiteImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -4810,34 +4812,4 @@ public class WebsitePersistenceImpl extends BasePersistenceImpl<Website>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid", "primary"
 			});
-	private static final Website _nullWebsite = new WebsiteImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<Website> toCacheModel() {
-				return _nullWebsiteCacheModel;
-			}
-		};
-
-	private static final CacheModel<Website> _nullWebsiteCacheModel = new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<Website>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public Website toEntityModel() {
-			return _nullWebsite;
-		}
-	}
 }

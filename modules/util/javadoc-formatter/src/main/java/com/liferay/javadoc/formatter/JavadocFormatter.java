@@ -39,10 +39,8 @@ import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.JavaPackage;
 import com.thoughtworks.qdox.model.JavaParameter;
 import com.thoughtworks.qdox.model.Type;
-import com.thoughtworks.qdox.model.annotation.AnnotationValue;
 import com.thoughtworks.qdox.parser.ParseException;
 
 import java.io.BufferedReader;
@@ -56,9 +54,10 @@ import java.io.Writer;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -100,11 +99,8 @@ public class JavadocFormatter {
 	}
 
 	public JavadocFormatter(Map<String, String> arguments) throws Exception {
-		String author = GetterUtil.getString(arguments.get("javadoc.author"));
-
-		if (Validator.isNull(author) || author.startsWith("$")) {
-			author = JavadocFormatterArgs.AUTHOR;
-		}
+		String author = ArgumentsUtil.getString(
+			arguments, "javadoc.author", JavadocFormatterArgs.AUTHOR);
 
 		_author = author;
 
@@ -115,12 +111,8 @@ public class JavadocFormatter {
 
 		_initializeMissingJavadocs = GetterUtil.getBoolean(init);
 
-		String inputDirName = GetterUtil.getString(
-			arguments.get("javadoc.input.dir"));
-
-		if (Validator.isNull(inputDirName) || inputDirName.startsWith("$")) {
-			inputDirName = "./";
-		}
+		String inputDirName = ArgumentsUtil.getString(
+			arguments, "javadoc.input.dir", "./");
 
 		if (!inputDirName.endsWith("/")) {
 			inputDirName += "/";
@@ -156,18 +148,9 @@ public class JavadocFormatter {
 			_languagePropertiesFile = null;
 		}
 
-		_lowestSupportedJavaVersion = GetterUtil.getDouble(
-			arguments.get("javadoc.lowest.supported.java.version"),
-			JavadocFormatterArgs.LOWEST_SUPPORTED_JAVA_VERSION);
-
-		String outputFilePrefix = GetterUtil.getString(
-			arguments.get("javadoc.output.file.prefix"));
-
-		if (Validator.isNull(outputFilePrefix) ||
-			outputFilePrefix.startsWith("$")) {
-
-			outputFilePrefix = JavadocFormatterArgs.OUTPUT_FILE_PREFIX;
-		}
+		String outputFilePrefix = ArgumentsUtil.getString(
+			arguments, "javadoc.output.file.prefix",
+			JavadocFormatterArgs.OUTPUT_FILE_PREFIX);
 
 		_outputFilePrefix = outputFilePrefix;
 
@@ -235,9 +218,14 @@ public class JavadocFormatter {
 					_format(fileName);
 				}
 				catch (Exception e) {
-					if (!(e instanceof ParseException) ||
-						!fileName.contains("/tools/templates/")) {
-
+					if (e instanceof ParseException) {
+						if (!fileName.contains("/tools/templates/")) {
+							System.out.println(
+								"Qdox parsing error while formatting file " +
+									fileName);
+						}
+					}
+					else {
 						throw new RuntimeException(
 							"Unable to format file " + fileName, e);
 					}
@@ -301,39 +289,6 @@ public class JavadocFormatter {
 
 	public Set<String> getModifiedFileNames() {
 		return _modifiedFileNames;
-	}
-
-	private List<Tuple> _addAncestorJavaClassTuples(
-		JavaClass javaClass, List<Tuple> ancestorJavaClassTuples) {
-
-		JavaClass superJavaClass = javaClass.getSuperJavaClass();
-
-		if (superJavaClass != null) {
-			ancestorJavaClassTuples.add(new Tuple(superJavaClass));
-
-			ancestorJavaClassTuples = _addAncestorJavaClassTuples(
-				superJavaClass, ancestorJavaClassTuples);
-		}
-
-		Type[] implementz = javaClass.getImplements();
-
-		for (Type implement : implementz) {
-			Type[] actualTypeArguments = implement.getActualTypeArguments();
-			JavaClass implementedInterface = implement.getJavaClass();
-
-			if (actualTypeArguments == null) {
-				ancestorJavaClassTuples.add(new Tuple(implementedInterface));
-			}
-			else {
-				ancestorJavaClassTuples.add(
-					new Tuple(implementedInterface, actualTypeArguments));
-			}
-
-			ancestorJavaClassTuples = _addAncestorJavaClassTuples(
-				implementedInterface, ancestorJavaClassTuples);
-		}
-
-		return ancestorJavaClassTuples;
 	}
 
 	private void _addClassCommentElement(
@@ -870,7 +825,9 @@ public class JavadocFormatter {
 
 		String originalContent = _read(file);
 
-		if (fileName.contains("modules/third-party") ||
+		String absolutePath = _getAbsolutePath(fileName);
+
+		if (absolutePath.contains("modules/third-party") ||
 			fileName.endsWith("Application.java") ||
 			fileName.endsWith("JavadocFormatter.java") ||
 			fileName.endsWith("Mojo.java") ||
@@ -959,6 +916,17 @@ public class JavadocFormatter {
 		return Dom4jUtil.toString(node);
 	}
 
+	private String _getAbsolutePath(String fileName) {
+		Path filePath = Paths.get(fileName);
+
+		filePath = filePath.toAbsolutePath();
+
+		filePath = filePath.normalize();
+
+		return StringUtil.replace(
+			filePath.toString(), CharPool.BACK_SLASH, CharPool.SLASH);
+	}
+
 	private String _getCDATA(AbstractJavaEntity abstractJavaEntity) {
 		return _getCDATA(abstractJavaEntity.getComment());
 	}
@@ -976,8 +944,17 @@ public class JavadocFormatter {
 			int preTagIndex = cdata.indexOf("<pre>");
 			int tableTagIndex = cdata.indexOf("<table>");
 
-			boolean hasPreTag = (preTagIndex != -1) ? true : false;
-			boolean hasTableTag = (tableTagIndex != -1) ? true : false;
+			boolean hasPreTag = false;
+
+			if (preTagIndex != -1) {
+				hasPreTag = true;
+			}
+
+			boolean hasTableTag = false;
+
+			if (tableTagIndex != -1) {
+				hasTableTag = true;
+			}
 
 			if (!hasPreTag && !hasTableTag) {
 				sb.append(_formatCDATA(cdata));
@@ -985,8 +962,17 @@ public class JavadocFormatter {
 				break;
 			}
 
-			boolean startsWithPreTag = (preTagIndex == 0) ? true : false;
-			boolean startsWithTableTag = (tableTagIndex == 0) ? true : false;
+			boolean startsWithPreTag = false;
+
+			if (preTagIndex == 0) {
+				startsWithPreTag = true;
+			}
+
+			boolean startsWithTableTag = false;
+
+			if (tableTagIndex == 0) {
+				startsWithTableTag = true;
+			}
 
 			if (startsWithPreTag || startsWithTableTag) {
 				sb.append("\n");
@@ -1307,6 +1293,15 @@ public class JavadocFormatter {
 		}
 
 		if (srcDirName == null) {
+			pos = absolutePath.indexOf("/src/main/java/");
+
+			if (pos != -1) {
+				srcDirName =
+					absolutePath.substring(0, pos) + "/src/main/resources";
+			}
+		}
+
+		if (srcDirName == null) {
 			return null;
 		}
 
@@ -1319,7 +1314,7 @@ public class JavadocFormatter {
 		File metaInfDir = new File(srcDirName, "META-INF");
 
 		if (!metaInfDir.exists()) {
-			metaInfDir.mkdir();
+			metaInfDir.mkdirs();
 		}
 
 		File javadocsXmlFile = new File(
@@ -1550,11 +1545,6 @@ public class JavadocFormatter {
 
 		_updateLanguageProperties(document, javaClass.getName());
 
-		List<Tuple> ancestorJavaClassTuples = new ArrayList<>();
-
-		ancestorJavaClassTuples = _addAncestorJavaClassTuples(
-			javaClass, ancestorJavaClassTuples);
-
 		Element rootElement = document.getRootElement();
 
 		Map<Integer, String> commentsMap = new TreeMap<>();
@@ -1590,23 +1580,6 @@ public class JavadocFormatter {
 
 			javaMethodComment = _addDeprecatedTag(
 				javaMethodComment, javaMethod, indent);
-
-			// Handle override tag insertion
-
-			if (!_hasAnnotation(javaMethod, "Override")) {
-				if (_isOverrideMethod(
-						javaClass, javaMethod, ancestorJavaClassTuples)) {
-
-					String overrideLine = indent + "@Override\n";
-
-					if (Validator.isNotNull(javaMethodComment)) {
-						javaMethodComment = javaMethodComment + overrideLine;
-					}
-					else {
-						javaMethodComment = overrideLine;
-					}
-				}
-			}
 
 			commentsMap.put(javaMethod.getLineNumber(), javaMethodComment);
 		}
@@ -1682,7 +1655,8 @@ public class JavadocFormatter {
 	}
 
 	private boolean _hasGeneratedTag(String content) {
-		if ((content.contains("* @generated") || content.contains("$ANTLR")) &&
+		if ((content.contains("* @generated") || content.contains("$ANTLR") ||
+			 content.contains("auto-generated from WSDL")) &&
 			!content.contains("hasGeneratedTag")) {
 
 			return true;
@@ -1702,147 +1676,6 @@ public class JavadocFormatter {
 		for (String modifier : modifiers) {
 			if (modifier.equals("public")) {
 				return true;
-			}
-		}
-
-		return false;
-	}
-
-	private boolean _isOverrideMethod(
-		JavaClass javaClass, JavaMethod javaMethod,
-		Collection<Tuple> ancestorJavaClassTuples) {
-
-		if (javaMethod.isConstructor() || javaMethod.isPrivate() ||
-			javaMethod.isStatic() ||
-			_overridesHigherJavaAPIVersion(javaMethod)) {
-
-			return false;
-		}
-
-		String methodName = javaMethod.getName();
-
-		JavaParameter[] javaParameters = javaMethod.getParameters();
-
-		Type[] types = new Type[javaParameters.length];
-
-		for (int i = 0; i < javaParameters.length; i++) {
-			types[i] = javaParameters[i].getType();
-		}
-
-		// Check for matching method in each ancestor
-
-		for (Tuple ancestorJavaClassTuple : ancestorJavaClassTuples) {
-			JavaClass ancestorJavaClass =
-				(JavaClass)ancestorJavaClassTuple.getObject(0);
-
-			JavaMethod ancestorJavaMethod = null;
-
-			String ancestorJavaClassName =
-				ancestorJavaClass.getFullyQualifiedName();
-
-			if ((ancestorJavaClassTuple.getSize() == 1) ||
-				(ancestorJavaClassName.equals("java.util.Map") &&
-				 methodName.equals("get"))) {
-
-				ancestorJavaMethod = ancestorJavaClass.getMethodBySignature(
-					methodName, types);
-			}
-			else {
-
-				// LPS-35613
-
-				Type[] ancestorActualTypeArguments =
-					(Type[])ancestorJavaClassTuple.getObject(1);
-
-				Type[] genericTypes = new Type[types.length];
-
-				for (int i = 0; i < types.length; i++) {
-					Type type = types[i];
-
-					String typeValue = type.getValue();
-
-					boolean useGenericType = false;
-
-					for (int j = 0; j < ancestorActualTypeArguments.length;
-						j++) {
-
-						if (typeValue.equals(
-								ancestorActualTypeArguments[j].getValue())) {
-
-							useGenericType = true;
-
-							break;
-						}
-					}
-
-					if (useGenericType) {
-						genericTypes[i] = new Type("java.lang.Object");
-					}
-					else {
-						genericTypes[i] = type;
-					}
-				}
-
-				ancestorJavaMethod = ancestorJavaClass.getMethodBySignature(
-					methodName, genericTypes);
-			}
-
-			if (ancestorJavaMethod == null) {
-				continue;
-			}
-
-			boolean samePackage = false;
-
-			JavaPackage ancestorJavaPackage = ancestorJavaClass.getPackage();
-
-			if (ancestorJavaPackage != null) {
-				samePackage = ancestorJavaPackage.equals(
-					javaClass.getPackage());
-			}
-
-			// Check if the method is in scope
-
-			if (samePackage) {
-				return !ancestorJavaMethod.isPrivate();
-			}
-
-			if (ancestorJavaMethod.isProtected() ||
-				ancestorJavaMethod.isPublic()) {
-
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-
-		return false;
-	}
-
-	private boolean _overridesHigherJavaAPIVersion(JavaMethod javaMethod) {
-		Annotation[] annotations = javaMethod.getAnnotations();
-
-		if (annotations == null) {
-			return false;
-		}
-
-		for (Annotation annotation : annotations) {
-			Type type = annotation.getType();
-
-			JavaClass javaClass = type.getJavaClass();
-
-			String javaClassName = javaClass.getFullyQualifiedName();
-
-			if (javaClassName.equals(SinceJava.class.getName())) {
-				AnnotationValue annotationValue = annotation.getProperty(
-					"value");
-
-				double sinceJava = GetterUtil.getDouble(
-					annotationValue.getParameterValue());
-
-				if (sinceJava > _lowestSupportedJavaVersion) {
-					return true;
-				}
 			}
 		}
 
@@ -2240,7 +2073,6 @@ public class JavadocFormatter {
 	private final Map<String, Tuple> _javadocxXmlTuples = new HashMap<>();
 	private final Properties _languageProperties;
 	private final File _languagePropertiesFile;
-	private final double _lowestSupportedJavaVersion;
 	private final Set<String> _modifiedFileNames = new HashSet<>();
 	private final String _outputFilePrefix;
 	private String _packagePath;

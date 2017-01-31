@@ -165,6 +165,10 @@ public interface WebKeys {
 
 	public static final String FORWARD_URL = "FORWARD_URL";
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static final String FRIENDLY_URL = "FRIENDLY_URL";
 
 	public static final String FTL_VARIABLES = "FTL_VARIABLES";
@@ -480,6 +484,10 @@ public interface WebKeys {
 
 	public static final String SEARCH_CONTAINER = "SEARCH_CONTAINER";
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public static final String SEARCH_CONTAINER_REFERENCE = "LIFERAY_SHARED_SEARCH_CONTAINER_REFERENCE";
 
 	public static final String SEARCH_CONTAINER_RESULT_ROW = "SEARCH_CONTAINER_RESULT_ROW";

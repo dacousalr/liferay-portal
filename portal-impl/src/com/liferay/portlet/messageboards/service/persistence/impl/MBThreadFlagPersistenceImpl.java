@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -2781,7 +2780,7 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((MBThreadFlagModelImpl)mbThreadFlag);
+		clearUniqueFindersCache((MBThreadFlagModelImpl)mbThreadFlag, true);
 	}
 
 	@Override
@@ -2793,75 +2792,48 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 			entityCache.removeResult(MBThreadFlagModelImpl.ENTITY_CACHE_ENABLED,
 				MBThreadFlagImpl.class, mbThreadFlag.getPrimaryKey());
 
-			clearUniqueFindersCache((MBThreadFlagModelImpl)mbThreadFlag);
+			clearUniqueFindersCache((MBThreadFlagModelImpl)mbThreadFlag, true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		MBThreadFlagModelImpl mbThreadFlagModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					mbThreadFlagModelImpl.getUuid(),
-					mbThreadFlagModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				mbThreadFlagModelImpl);
-
-			args = new Object[] {
-					mbThreadFlagModelImpl.getUserId(),
-					mbThreadFlagModelImpl.getThreadId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_U_T, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_U_T, args,
-				mbThreadFlagModelImpl);
-		}
-		else {
-			if ((mbThreadFlagModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						mbThreadFlagModelImpl.getUuid(),
-						mbThreadFlagModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					mbThreadFlagModelImpl);
-			}
-
-			if ((mbThreadFlagModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_U_T.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						mbThreadFlagModelImpl.getUserId(),
-						mbThreadFlagModelImpl.getThreadId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_U_T, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_U_T, args,
-					mbThreadFlagModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		MBThreadFlagModelImpl mbThreadFlagModelImpl) {
 		Object[] args = new Object[] {
 				mbThreadFlagModelImpl.getUuid(),
 				mbThreadFlagModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			mbThreadFlagModelImpl, false);
+
+		args = new Object[] {
+				mbThreadFlagModelImpl.getUserId(),
+				mbThreadFlagModelImpl.getThreadId()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_U_T, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_U_T, args,
+			mbThreadFlagModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		MBThreadFlagModelImpl mbThreadFlagModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					mbThreadFlagModelImpl.getUuid(),
+					mbThreadFlagModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((mbThreadFlagModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					mbThreadFlagModelImpl.getOriginalUuid(),
 					mbThreadFlagModelImpl.getOriginalGroupId()
 				};
@@ -2870,17 +2842,19 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
 		}
 
-		args = new Object[] {
-				mbThreadFlagModelImpl.getUserId(),
-				mbThreadFlagModelImpl.getThreadId()
-			};
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					mbThreadFlagModelImpl.getUserId(),
+					mbThreadFlagModelImpl.getThreadId()
+				};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_U_T, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_U_T, args);
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_U_T, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_U_T, args);
+		}
 
 		if ((mbThreadFlagModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_U_T.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					mbThreadFlagModelImpl.getOriginalUserId(),
 					mbThreadFlagModelImpl.getOriginalThreadId()
 				};
@@ -3138,8 +3112,8 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 			MBThreadFlagImpl.class, mbThreadFlag.getPrimaryKey(), mbThreadFlag,
 			false);
 
-		clearUniqueFindersCache(mbThreadFlagModelImpl);
-		cacheUniqueFindersCache(mbThreadFlagModelImpl, isNew);
+		clearUniqueFindersCache(mbThreadFlagModelImpl, false);
+		cacheUniqueFindersCache(mbThreadFlagModelImpl);
 
 		mbThreadFlag.resetOriginalValues();
 
@@ -3215,12 +3189,14 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 	 */
 	@Override
 	public MBThreadFlag fetchByPrimaryKey(Serializable primaryKey) {
-		MBThreadFlag mbThreadFlag = (MBThreadFlag)entityCache.getResult(MBThreadFlagModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(MBThreadFlagModelImpl.ENTITY_CACHE_ENABLED,
 				MBThreadFlagImpl.class, primaryKey);
 
-		if (mbThreadFlag == _nullMBThreadFlag) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		MBThreadFlag mbThreadFlag = (MBThreadFlag)serializable;
 
 		if (mbThreadFlag == null) {
 			Session session = null;
@@ -3236,7 +3212,7 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 				}
 				else {
 					entityCache.putResult(MBThreadFlagModelImpl.ENTITY_CACHE_ENABLED,
-						MBThreadFlagImpl.class, primaryKey, _nullMBThreadFlag);
+						MBThreadFlagImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -3290,18 +3266,20 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			MBThreadFlag mbThreadFlag = (MBThreadFlag)entityCache.getResult(MBThreadFlagModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(MBThreadFlagModelImpl.ENTITY_CACHE_ENABLED,
 					MBThreadFlagImpl.class, primaryKey);
 
-			if (mbThreadFlag == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, mbThreadFlag);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (MBThreadFlag)serializable);
+				}
 			}
 		}
 
@@ -3343,7 +3321,7 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(MBThreadFlagModelImpl.ENTITY_CACHE_ENABLED,
-					MBThreadFlagImpl.class, primaryKey, _nullMBThreadFlag);
+					MBThreadFlagImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -3586,22 +3564,4 @@ public class MBThreadFlagPersistenceImpl extends BasePersistenceImpl<MBThreadFla
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid"
 			});
-	private static final MBThreadFlag _nullMBThreadFlag = new MBThreadFlagImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<MBThreadFlag> toCacheModel() {
-				return _nullMBThreadFlagCacheModel;
-			}
-		};
-
-	private static final CacheModel<MBThreadFlag> _nullMBThreadFlagCacheModel = new CacheModel<MBThreadFlag>() {
-			@Override
-			public MBThreadFlag toEntityModel() {
-				return _nullMBThreadFlag;
-			}
-		};
 }

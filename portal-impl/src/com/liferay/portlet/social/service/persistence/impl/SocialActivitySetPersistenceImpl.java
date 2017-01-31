@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
@@ -1726,7 +1725,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 * Returns all the social activity sets where classNameId = &#63; and classPK = &#63; and type = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @return the matching social activity sets
 	 */
@@ -1745,7 +1744,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 * </p>
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param start the lower bound of the range of social activity sets
 	 * @param end the upper bound of the range of social activity sets (not inclusive)
@@ -1765,7 +1764,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 * </p>
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param start the lower bound of the range of social activity sets
 	 * @param end the upper bound of the range of social activity sets (not inclusive)
@@ -1788,7 +1787,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 * </p>
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param start the lower bound of the range of social activity sets
 	 * @param end the upper bound of the range of social activity sets (not inclusive)
@@ -1918,7 +1917,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 * Returns the first social activity set in the ordered set where classNameId = &#63; and classPK = &#63; and type = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching social activity set
@@ -1957,7 +1956,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 * Returns the first social activity set in the ordered set where classNameId = &#63; and classPK = &#63; and type = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching social activity set, or <code>null</code> if a matching social activity set could not be found
@@ -1979,7 +1978,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 * Returns the last social activity set in the ordered set where classNameId = &#63; and classPK = &#63; and type = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching social activity set
@@ -2018,7 +2017,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 * Returns the last social activity set in the ordered set where classNameId = &#63; and classPK = &#63; and type = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching social activity set, or <code>null</code> if a matching social activity set could not be found
@@ -2047,7 +2046,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 *
 	 * @param activitySetId the primary key of the current social activity set
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next social activity set
@@ -2204,7 +2203,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 * Removes all the social activity sets where classNameId = &#63; and classPK = &#63; and type = &#63; from the database.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 */
 	@Override
@@ -2219,7 +2218,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 * Returns the number of social activity sets where classNameId = &#63; and classPK = &#63; and type = &#63;.
 	 *
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @return the number of matching social activity sets
 	 */
@@ -2946,7 +2945,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @return the matching social activity sets
 	 */
@@ -2966,7 +2965,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param start the lower bound of the range of social activity sets
 	 * @param end the upper bound of the range of social activity sets (not inclusive)
@@ -2988,7 +2987,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param start the lower bound of the range of social activity sets
 	 * @param end the upper bound of the range of social activity sets (not inclusive)
@@ -3012,7 +3011,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param start the lower bound of the range of social activity sets
 	 * @param end the upper bound of the range of social activity sets (not inclusive)
@@ -3148,7 +3147,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching social activity set
@@ -3192,7 +3191,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching social activity set, or <code>null</code> if a matching social activity set could not be found
@@ -3216,7 +3215,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching social activity set
@@ -3260,7 +3259,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching social activity set, or <code>null</code> if a matching social activity set could not be found
@@ -3291,7 +3290,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 * @param activitySetId the primary key of the current social activity set
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next social activity set
@@ -3453,7 +3452,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 */
 	@Override
@@ -3471,7 +3470,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 *
 	 * @param userId the user ID
 	 * @param classNameId the class name ID
-	 * @param classPK the class p k
+	 * @param classPK the class pk
 	 * @param type the type
 	 * @return the number of matching social activity sets
 	 */
@@ -3969,12 +3968,14 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	 */
 	@Override
 	public SocialActivitySet fetchByPrimaryKey(Serializable primaryKey) {
-		SocialActivitySet socialActivitySet = (SocialActivitySet)entityCache.getResult(SocialActivitySetModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(SocialActivitySetModelImpl.ENTITY_CACHE_ENABLED,
 				SocialActivitySetImpl.class, primaryKey);
 
-		if (socialActivitySet == _nullSocialActivitySet) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		SocialActivitySet socialActivitySet = (SocialActivitySet)serializable;
 
 		if (socialActivitySet == null) {
 			Session session = null;
@@ -3990,8 +3991,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 				}
 				else {
 					entityCache.putResult(SocialActivitySetModelImpl.ENTITY_CACHE_ENABLED,
-						SocialActivitySetImpl.class, primaryKey,
-						_nullSocialActivitySet);
+						SocialActivitySetImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -4045,18 +4045,20 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			SocialActivitySet socialActivitySet = (SocialActivitySet)entityCache.getResult(SocialActivitySetModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(SocialActivitySetModelImpl.ENTITY_CACHE_ENABLED,
 					SocialActivitySetImpl.class, primaryKey);
 
-			if (socialActivitySet == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, socialActivitySet);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (SocialActivitySet)serializable);
+				}
 			}
 		}
 
@@ -4098,8 +4100,7 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(SocialActivitySetModelImpl.ENTITY_CACHE_ENABLED,
-					SocialActivitySetImpl.class, primaryKey,
-					_nullSocialActivitySet);
+					SocialActivitySetImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -4342,23 +4343,4 @@ public class SocialActivitySetPersistenceImpl extends BasePersistenceImpl<Social
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"type"
 			});
-	private static final SocialActivitySet _nullSocialActivitySet = new SocialActivitySetImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<SocialActivitySet> toCacheModel() {
-				return _nullSocialActivitySetCacheModel;
-			}
-		};
-
-	private static final CacheModel<SocialActivitySet> _nullSocialActivitySetCacheModel =
-		new CacheModel<SocialActivitySet>() {
-			@Override
-			public SocialActivitySet toEntityModel() {
-				return _nullSocialActivitySet;
-			}
-		};
 }

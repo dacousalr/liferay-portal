@@ -134,6 +134,7 @@ public class PortletURLUtil {
 
 		while (enu.hasMoreElements()) {
 			String param = enu.nextElement();
+
 			String[] values = liferayPortletRequest.getParameterValues(param);
 
 			boolean addParam = true;
@@ -268,6 +269,13 @@ public class PortletURLUtil {
 
 		if (!ppid.equals(portletId)) {
 			return sb.toString();
+		}
+
+		String p_p_auth = ParamUtil.getString(request, "p_p_auth");
+
+		if (!Validator.isBlank(p_p_auth)) {
+			sb.append("&p_p_auth=");
+			sb.append(HttpUtil.encodeURL(p_p_auth));
 		}
 
 		String settingsScope = (String)request.getAttribute(

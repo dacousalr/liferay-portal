@@ -66,16 +66,13 @@ boolean wsrp = ParamUtil.getBoolean(PortalUtil.getOriginalServletRequest(request
 			<%@ include file="/html/common/themes/portlet_content_wrapper.jspf" %>
 		</liferay-wsrp-portlet>
 	</c:when>
-	<c:when test="<%= themeDisplay.isFacebook() %>">
-		<%@ include file="/html/common/themes/portlet_facebook.jspf" %>
-	</c:when>
 	<c:when test="<%= themeDisplay.isStateExclusive() %>">
 		<%@ include file="/html/common/themes/portlet_content_wrapper.jspf" %>
 	</c:when>
 	<c:when test="<%= themeDisplay.isStatePopUp() %>">
 		<div class="portlet-body">
 			<c:if test='<%= !tilesPortletContent.endsWith("/error.jsp") %>'>
-				<%@ include file="/html/common/themes/portlet_messages.jspf" %>
+				<liferay-theme:portlet-messages group="<%= group %>" portlet="<%= portlet %>" />
 			</c:if>
 
 			<c:choose>

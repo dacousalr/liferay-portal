@@ -101,8 +101,7 @@ public class PluginsEnvironmentBuilder {
 
 			if (content.contains(
 					"<import file=\"../build-common-shared.xml\" />") ||
-				content.contains(
-					"../tools/sdk/build-common-shared.xml\" />")) {
+				content.contains("../tools/sdk/build-common-shared.xml\" />")) {
 
 				sharedProject = true;
 			}
@@ -563,6 +562,7 @@ public class PluginsEnvironmentBuilder {
 
 					globalJars.addAll(
 						ListUtil.sort(ListUtil.toList(fileNames)));
+
 					globalJars.removeAll(extGlobalJars);
 				}
 				else if (dirName.equals("portal")) {
@@ -574,6 +574,7 @@ public class PluginsEnvironmentBuilder {
 
 					portalJars.addAll(
 						ListUtil.sort(ListUtil.toList(fileNames)));
+
 					portalJars.removeAll(extPortalJars);
 				}
 			}

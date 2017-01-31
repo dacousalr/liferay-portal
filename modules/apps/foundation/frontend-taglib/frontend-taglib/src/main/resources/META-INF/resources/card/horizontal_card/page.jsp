@@ -43,12 +43,12 @@
 			</div>
 		</c:if>
 
-		<div class="card-col-content card-col-gutters clamp-horizontal">
-			<div class="clamp-container">
-				<span class="lfr-card-title-text truncate-text">
-					<aui:a href="<%= url %>" label="<%= HtmlUtil.escape(text) %>" title="<%= HtmlUtil.escapeAttribute(text) %>" />
-				</span>
-			</div>
+		<div class="card-col-content card-col-gutters">
+			<span class="lfr-card-title-text truncate-text">
+				<aui:a href="<%= url %>" title="<%= HtmlUtil.escapeAttribute(text) %>">
+					<%= HtmlUtil.escape(text) %>
+				</aui:a>
+			</span>
 		</div>
 
 		<liferay-util:buffer var="actionJspBuffer">

@@ -34,11 +34,11 @@
 
 				<nav class="user-personal-bar">
 					<ul class="nav navbar-nav pull-right">
-						<#assign VOID = freeMarkerPortletPreferences.setValue("portletSetupPortletDecoratorId", "barebone")>
+						<#assign VOID = freeMarkerPortletPreferences.setValue("portletSetupPortletDecoratorId", "barebone") />
 
 						<@liferay.user_personal_bar />
 
-						<#assign VOID = freeMarkerPortletPreferences.reset()>
+						<#assign VOID = freeMarkerPortletPreferences.reset() />
 					</ul>
 				<nav>
 
@@ -49,14 +49,13 @@
 						</a>
 					</#if>
 
-					<#if show_site_name || page_group.isUser()>
+					<#if show_site_name>
 						<div class="pull-left site-name" title="#language_format ("go-to-x", [$site_name])">
 							${layout_set_title}
 						</div>
 					</#if>
 				</div>
 			</div>
-
 		</div>
 	</header>
 
@@ -67,10 +66,8 @@
 					<div class="user-info">
 						<div class="aspect-ratio-bg-cover user-icon user-icon-xl" ${main_menu_style}></div>
 
-						<div class="h3">${htmlUtil.escape(user_name)}</div>
+						<div class="h3">${htmlUtil.escape(main_menu_user_name)}</div>
 					</div>
-
-					<div class="aspect-ratio-bg-cover bg-icon" ${main_menu_style}></div>
 				</div>
 			</#if>
 

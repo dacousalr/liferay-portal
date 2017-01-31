@@ -224,6 +224,14 @@ public class SocialActivityLocalServiceUtil {
 				   .getActivitiesCount(mirrorActivityId, classNameId, classPK);
 	}
 
+	public static int getActivitiesCount(long userId, long groupId,
+		java.util.Date createDate, java.lang.String className, long classPK,
+		int type, long receiverUserId) {
+		return getService()
+				   .getActivitiesCount(userId, groupId, createDate, className,
+			classPK, type, receiverUserId);
+	}
+
 	/**
 	* Returns the number of activities done in the group.
 	*
@@ -626,10 +634,10 @@ public class SocialActivityLocalServiceUtil {
 	* <p>
 	* Useful when paginating results. Returns a maximum of <code>end -
 	* start</code> instances. <code>start</code> and <code>end</code> are not
-	* primary keys, they are indexes in the result set. Thus, <>0</code> refers
-	* to the first result in the set. Setting both <code>start</code> and
-	* <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result
-	* set.
+	* primary keys, they are indexes in the result set. Thus, <code>0</code>
+	* refers to the first result in the set. Setting both <code>start</code>
+	* and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full
+	* result set.
 	* </p>
 	*
 	* @param userId the primary key of the user

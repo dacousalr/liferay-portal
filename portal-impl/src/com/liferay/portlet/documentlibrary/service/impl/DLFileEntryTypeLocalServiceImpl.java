@@ -269,7 +269,8 @@ public class DLFileEntryTypeLocalServiceImpl
 	public DLFileEntryType fetchFileEntryType(
 		long groupId, String fileEntryTypeKey) {
 
-		fileEntryTypeKey = StringUtil.toUpperCase(fileEntryTypeKey.trim());
+		fileEntryTypeKey = StringUtil.toUpperCase(
+			StringUtil.trim(fileEntryTypeKey));
 
 		return dlFileEntryTypePersistence.fetchByG_F(groupId, fileEntryTypeKey);
 	}
@@ -302,7 +303,8 @@ public class DLFileEntryTypeLocalServiceImpl
 			long groupId, String fileEntryTypeKey)
 		throws PortalException {
 
-		fileEntryTypeKey = StringUtil.toUpperCase(fileEntryTypeKey.trim());
+		fileEntryTypeKey = StringUtil.toUpperCase(
+			StringUtil.trim(fileEntryTypeKey));
 
 		return dlFileEntryTypePersistence.findByG_F(groupId, fileEntryTypeKey);
 	}
@@ -606,20 +608,20 @@ public class DLFileEntryTypeLocalServiceImpl
 				serviceContext.getAssetLinkEntryIds());
 		}
 
-		List<DLFolder> subFolders = dlFolderPersistence.findByG_M_P_H(
+		List<DLFolder> subfolders = dlFolderPersistence.findByG_M_P_H(
 			groupId, false, folderId, false);
 
-		for (DLFolder subFolder : subFolders) {
-			long subFolderId = subFolder.getFolderId();
+		for (DLFolder subfolder : subfolders) {
+			long subfolderId = subfolder.getFolderId();
 
-			if (subFolder.getRestrictionType() ==
+			if (subfolder.getRestrictionType() ==
 					DLFolderConstants.RESTRICTION_TYPE_INHERIT) {
 
 				continue;
 			}
 
 			cascadeFileEntryTypes(
-				userId, groupId, subFolderId, defaultFileEntryTypeId,
+				userId, groupId, subfolderId, defaultFileEntryTypeId,
 				fileEntryTypeIds, serviceContext);
 		}
 	}

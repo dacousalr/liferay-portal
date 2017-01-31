@@ -1,6 +1,6 @@
 package ${apiPackagePath}.service.persistence;
 
-<#assign noSuchEntity = serviceBuilder.getNoSuchEntityException(entity)>
+<#assign noSuchEntity = serviceBuilder.getNoSuchEntityException(entity) />
 
 import ${apiPackagePath}.exception.${noSuchEntity}Exception;
 import ${apiPackagePath}.model.${entity.name};
@@ -51,13 +51,13 @@ public interface ${entity.name}Persistence extends BasePersistence<${entity.name
 				@Deprecated
 			</#if>
 
-			<#if (method.name == "fetchByPrimaryKeys") || (method.name == "getBadColumnNames")>
+			<#if stringUtil.equals(method.name, "fetchByPrimaryKeys") || stringUtil.equals(method.name, "getBadColumnNames")>
 				@Override
 			</#if>
 
 			public ${serviceBuilder.getTypeGenericsName(method.returns)} ${method.name} (
 
-			<#assign parameters = method.parameters>
+			<#assign parameters = method.parameters />
 
 			<#list parameters as parameter>
 				${serviceBuilder.getTypeGenericsName(parameter.type)} ${parameter.name}

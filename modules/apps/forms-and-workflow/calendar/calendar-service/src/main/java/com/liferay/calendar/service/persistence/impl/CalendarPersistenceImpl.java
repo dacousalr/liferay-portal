@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -3851,7 +3850,7 @@ public class CalendarPersistenceImpl extends BasePersistenceImpl<Calendar>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((CalendarModelImpl)calendar);
+		clearUniqueFindersCache((CalendarModelImpl)calendar, true);
 	}
 
 	@Override
@@ -3863,49 +3862,35 @@ public class CalendarPersistenceImpl extends BasePersistenceImpl<Calendar>
 			entityCache.removeResult(CalendarModelImpl.ENTITY_CACHE_ENABLED,
 				CalendarImpl.class, calendar.getPrimaryKey());
 
-			clearUniqueFindersCache((CalendarModelImpl)calendar);
+			clearUniqueFindersCache((CalendarModelImpl)calendar, true);
 		}
 	}
 
-	protected void cacheUniqueFindersCache(
-		CalendarModelImpl calendarModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					calendarModelImpl.getUuid(), calendarModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				calendarModelImpl);
-		}
-		else {
-			if ((calendarModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						calendarModelImpl.getUuid(),
-						calendarModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					calendarModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(CalendarModelImpl calendarModelImpl) {
+	protected void cacheUniqueFindersCache(CalendarModelImpl calendarModelImpl) {
 		Object[] args = new Object[] {
 				calendarModelImpl.getUuid(), calendarModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			calendarModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		CalendarModelImpl calendarModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					calendarModelImpl.getUuid(), calendarModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((calendarModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					calendarModelImpl.getOriginalUuid(),
 					calendarModelImpl.getOriginalGroupId()
 				};
@@ -4188,8 +4173,8 @@ public class CalendarPersistenceImpl extends BasePersistenceImpl<Calendar>
 		entityCache.putResult(CalendarModelImpl.ENTITY_CACHE_ENABLED,
 			CalendarImpl.class, calendar.getPrimaryKey(), calendar, false);
 
-		clearUniqueFindersCache(calendarModelImpl);
-		cacheUniqueFindersCache(calendarModelImpl, isNew);
+		clearUniqueFindersCache(calendarModelImpl, false);
+		cacheUniqueFindersCache(calendarModelImpl);
 
 		calendar.resetOriginalValues();
 
@@ -4273,12 +4258,14 @@ public class CalendarPersistenceImpl extends BasePersistenceImpl<Calendar>
 	 */
 	@Override
 	public Calendar fetchByPrimaryKey(Serializable primaryKey) {
-		Calendar calendar = (Calendar)entityCache.getResult(CalendarModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(CalendarModelImpl.ENTITY_CACHE_ENABLED,
 				CalendarImpl.class, primaryKey);
 
-		if (calendar == _nullCalendar) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		Calendar calendar = (Calendar)serializable;
 
 		if (calendar == null) {
 			Session session = null;
@@ -4293,7 +4280,7 @@ public class CalendarPersistenceImpl extends BasePersistenceImpl<Calendar>
 				}
 				else {
 					entityCache.putResult(CalendarModelImpl.ENTITY_CACHE_ENABLED,
-						CalendarImpl.class, primaryKey, _nullCalendar);
+						CalendarImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -4347,18 +4334,20 @@ public class CalendarPersistenceImpl extends BasePersistenceImpl<Calendar>
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			Calendar calendar = (Calendar)entityCache.getResult(CalendarModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(CalendarModelImpl.ENTITY_CACHE_ENABLED,
 					CalendarImpl.class, primaryKey);
 
-			if (calendar == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, calendar);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (Calendar)serializable);
+				}
 			}
 		}
 
@@ -4400,7 +4389,7 @@ public class CalendarPersistenceImpl extends BasePersistenceImpl<Calendar>
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(CalendarModelImpl.ENTITY_CACHE_ENABLED,
-					CalendarImpl.class, primaryKey, _nullCalendar);
+					CalendarImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -4646,22 +4635,4 @@ public class CalendarPersistenceImpl extends BasePersistenceImpl<Calendar>
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid"
 			});
-	private static final Calendar _nullCalendar = new CalendarImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<Calendar> toCacheModel() {
-				return _nullCalendarCacheModel;
-			}
-		};
-
-	private static final CacheModel<Calendar> _nullCalendarCacheModel = new CacheModel<Calendar>() {
-			@Override
-			public Calendar toEntityModel() {
-				return _nullCalendar;
-			}
-		};
 }

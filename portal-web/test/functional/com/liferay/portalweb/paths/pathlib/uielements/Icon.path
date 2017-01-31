@@ -9,23 +9,33 @@
 </thead>
 <tbody>
 <tr>
+	<td>ADD_FAVORITE</td>
+	<td>//*[@data-qa-id='row'][contains(.,'${key_rowEntry}')]//span/*[name()='svg'][contains(@class,'lexicon-icon-star')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>ADD_REPEATABLE_ENTRY</td>
+	<td>xpath=(//div[contains(@data-fieldname,'${key_assetType}')]/../div//a[contains(@class,'repeatable-add-button')])[${key_counter}]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>ADVANCED_SEARCH</td>
 	<td>//button[contains(@class,'toggle-advanced') and span[@class='caret']] | //a[contains(@id,'searchtoggleAdvanced')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>ANGLE_LEFT_BACK</td>
-	<td>//div[contains(@class,'taglib-header')]//span[contains(.,'Back')]/a | //div[contains(@class,'toolbar-group-content')]//span[contains(@class,'icon-angle-left')]</td>
+	<td>//div[contains(@class,'taglib-header')]//span[contains(.,'Back')]/a | //*[name()='svg'][contains(@class,'icon-angle-left')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>ASTERISK</td>
-	<td>//span[contains(@class,'icon-asterisk')]</td>
+	<td>//*[name()='svg'][contains(@class,'icon-asterisk')] | //span[contains(@class,'icon-asterisk')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>BACK</td>
-	<td>//a[contains(@class,'icon-circle-arrow-left') and contains(@class,'previous-level')] | //span[contains(@class,'icon-angle-left')]</td>
+	<td>//*[name()='svg'][contains(@class,'icon-angle-left')] | //a[contains(@class,'icon-circle-arrow-left') and contains(@class,'previous-level')] | //span[contains(@class,'icon-angle-left')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -61,6 +71,11 @@
 <tr>
 	<td>CLOSE</td>
 	<td>//button[contains(@class,'close')] | //a[contains(@id,'closePanelAdd') and contains(@class,'close')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>CLOSE_SPECIFIC</td>
+	<td>//div[contains(@class,'alert-danger-content')]//div[contains(.,'${key_messageSpecific}')]/preceding-sibling::button[@class='close']</td>
 	<td></td>
 </tr>
 <tr>
@@ -121,6 +136,11 @@
 <tr>
 	<td>EDIT_CONTROLS</td>
 	<td>//li[contains(@id,'toggleControls')]/a[i[contains(@class,'icon-eye-close') or contains(@class,'icon-eye-open')]]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>EDIT_PENCIL</td>
+	<td>//*[name()='svg'][contains(@class,'lexicon-icon-pencil')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -195,7 +215,12 @@
 </tr>
 <tr>
 	<td>SHARE</td>
-	<td>//div[contains(@class,'dropdown-menu')]//a[@title='Share']</td>
+	<td>//div[contains(@class,'dropdown')]//a[@title='Share']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>STAR_UNSUBSCRIBED</td>
+	<td>//span/*[name()='svg'][contains(@class,'icon-star-o')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -210,7 +235,7 @@
 </tr>
 <tr>
 	<td>INHERIT_CHANGES_TOOLTIP</td>
-	<td>//label[contains(.,'Inherit Changes')]//span/*[name()='svg'][contains(@class,'icon-question')]</td>
+	<td>//div[not(contains(@class,'hide'))]/div/label[contains(.,'Inherit Changes')]//span/*[name()='svg'][contains(@class,'icon-question')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -240,6 +265,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>FAVORITE</td>
+	<td>//div[contains(@class,'open')]//li[contains(@class,'dropdown-header') and contains(.,'Favorite')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>HEADER_VERTICAL_ELLIPSIS</td>
 	<td>//*[@data-qa-id='header']//*[name()='svg'][contains(@class,'icon-ellipsis')]</td>
 	<td></td>
@@ -250,6 +280,16 @@
 	<td></td>
 </tr>
 <tr>
+	<td>PAGE_CUSTOMIZATION_ELLIPSIS</td>
+	<td>//*[@data-qa-id='controlMenu']//div[contains(@class,'icon-menu')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>REMOVE_FAVORITE</td>
+	<td>//*[@data-qa-id='row'][contains(.,'${key_rowEntry}')]//a[contains(@onclick,'removeAddMenuFavIte')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>ROW_VERTICAL_ELLIPSIS</td>
 	<td>//*[@data-qa-id='row' and contains(.,'${key_rowEntry}')]//span/*[name()='svg'][contains(@class,'icon-ellipsis')]</td>
 	<td></td>
@@ -257,6 +297,11 @@
 <tr>
 	<td>ROW_VERTICAL_ELLIPSIS_N</td>
 	<td>xpath=(//*[@data-qa-id='row']//span/*[name()='svg'][contains(@class,'icon-ellipsis')])[${key_rowIndexNumber}]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>STAGING</td>
+	<td>//a[contains(@id,'stagingBarButton')]/i</td>
 	<td></td>
 </tr>
 <tr>

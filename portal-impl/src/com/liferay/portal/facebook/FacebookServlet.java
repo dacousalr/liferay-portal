@@ -36,7 +36,9 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of 7.0.0, with no direct replacement
  */
+@Deprecated
 public class FacebookServlet extends HttpServlet {
 
 	@Override
@@ -58,9 +60,9 @@ public class FacebookServlet extends HttpServlet {
 				String facebookCanvasPageURL = facebookData[0];
 				String redirect = facebookData[1];
 
+				request.setAttribute(GZipFilter.SKIP_FILTER, Boolean.TRUE);
 				request.setAttribute(
 					WebKeys.FACEBOOK_CANVAS_PAGE_URL, facebookCanvasPageURL);
-				request.setAttribute(GZipFilter.SKIP_FILTER, Boolean.TRUE);
 
 				ServletContext servletContext = getServletContext();
 

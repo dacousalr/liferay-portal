@@ -43,9 +43,9 @@ page import="com.liferay.polls.service.PollsQuestionLocalServiceUtil" %><%@
 page import="com.liferay.polls.service.PollsVoteLocalServiceUtil" %><%@
 page import="com.liferay.polls.service.permission.PollsQuestionPermissionChecker" %><%@
 page import="com.liferay.polls.service.permission.PollsResourcePermissionChecker" %><%@
-page import="com.liferay.polls.web.portlet.action.EditQuestionMVCActionCommand" %><%@
-page import="com.liferay.polls.web.portlet.display.context.PollsDisplayContext" %><%@
-page import="com.liferay.polls.web.portlet.util.PollsUtil" %><%@
+page import="com.liferay.polls.web.internal.portlet.action.EditQuestionMVCActionCommand" %><%@
+page import="com.liferay.polls.web.internal.portlet.display.context.PollsDisplayContext" %><%@
+page import="com.liferay.polls.web.internal.portlet.util.PollsUtil" %><%@
 page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
 page import="com.liferay.portal.kernel.dao.search.DisplayTerms" %><%@
 page import="com.liferay.portal.kernel.dao.search.SearchContainer" %><%@
@@ -76,6 +76,7 @@ page import="com.liferay.taglib.search.ResultRow" %>
 page import="java.text.NumberFormat" %>
 
 <%@ page import="java.util.ArrayList" %><%@
+page import="java.util.Date" %><%@
 page import="java.util.List" %>
 
 <%@ page import="javax.portlet.PortletRequest" %><%@

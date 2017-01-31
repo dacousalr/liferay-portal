@@ -19,7 +19,7 @@ import com.liferay.portal.kernel.model.UserGroup;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.users.admin.constants.UsersAdminPortletKeys;
 
@@ -78,7 +78,7 @@ public class GetUsersCountMVCResourceCommand implements MVCResourceCommand {
 
 			params.put("usersOrgs", organizationId);
 
-			count+= _userLocalService.searchCount(
+			count += _userLocalService.searchCount(
 				companyId, null, status, params);
 		}
 
@@ -89,10 +89,10 @@ public class GetUsersCountMVCResourceCommand implements MVCResourceCommand {
 			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
 		throws Exception {
 
-		HttpServletRequest request = PortalUtil.getOriginalServletRequest(
-			PortalUtil.getHttpServletRequest(resourceRequest));
+		HttpServletRequest request = _portal.getOriginalServletRequest(
+			_portal.getHttpServletRequest(resourceRequest));
 
-		long companyId = PortalUtil.getCompanyId(request);
+		long companyId = _portal.getCompanyId(request);
 
 		String className = ParamUtil.getString(request, "className");
 		long[] ids = StringUtil.split(ParamUtil.getString(request, "ids"), 0L);
@@ -121,7 +121,7 @@ public class GetUsersCountMVCResourceCommand implements MVCResourceCommand {
 
 			params.put("usersUserGroups", userGroupId);
 
-			count+= _userLocalService.searchCount(
+			count += _userLocalService.searchCount(
 				companyId, null, status, params);
 		}
 
@@ -132,6 +132,9 @@ public class GetUsersCountMVCResourceCommand implements MVCResourceCommand {
 	protected void setUserLocalService(UserLocalService userLocalService) {
 		_userLocalService = userLocalService;
 	}
+
+	@Reference
+	private Portal _portal;
 
 	private UserLocalService _userLocalService;
 

@@ -58,6 +58,7 @@ import com.liferay.portal.kernel.search.filter.TermsFilter;
 import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 import com.liferay.portal.kernel.search.generic.MatchAllQuery;
 import com.liferay.portal.kernel.search.hits.HitsProcessorRegistryUtil;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.CountryServiceUtil;
@@ -98,6 +99,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
@@ -517,8 +519,9 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 
 	@Override
 	public void reindex(Collection<T> collection) {
-		if (IndexWriterHelperUtil.isIndexReadOnly() || !isIndexerEnabled() ||
-			collection.isEmpty()) {
+		if (IndexWriterHelperUtil.isIndexReadOnly() ||
+			IndexWriterHelperUtil.isIndexReadOnly(getClassName()) ||
+			!isIndexerEnabled() || collection.isEmpty()) {
 
 			return;
 		}
@@ -528,7 +531,7 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 				reindex(element);
 			}
 			catch (SearchException se) {
-				_log.error("Unable to index object: " + element);
+				_log.error("Unable to index object: " + element, se);
 			}
 		}
 	}
@@ -537,6 +540,7 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 	public void reindex(String className, long classPK) throws SearchException {
 		try {
 			if (IndexWriterHelperUtil.isIndexReadOnly() ||
+				IndexWriterHelperUtil.isIndexReadOnly(getClassName()) ||
 				!isIndexerEnabled() || (classPK <= 0)) {
 
 				return;
@@ -559,11 +563,20 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 
 	@Override
 	public void reindex(String[] ids) throws SearchException {
+		long companyThreadLocalCompanyId = CompanyThreadLocal.getCompanyId();
+
 		try {
 			if (IndexWriterHelperUtil.isIndexReadOnly() ||
+				IndexWriterHelperUtil.isIndexReadOnly(getClassName()) ||
 				!isIndexerEnabled()) {
 
 				return;
+			}
+
+			if (ids.length > 0) {
+				long companyId = GetterUtil.getLong(ids[0]);
+
+				CompanyThreadLocal.setCompanyId(companyId);
 			}
 
 			doReindex(ids);
@@ -574,12 +587,16 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		catch (Exception e) {
 			throw new SearchException(e);
 		}
+		finally {
+			CompanyThreadLocal.setCompanyId(companyThreadLocalCompanyId);
+		}
 	}
 
 	@Override
 	public void reindex(T object) throws SearchException {
 		try {
 			if (IndexWriterHelperUtil.isIndexReadOnly() ||
+				IndexWriterHelperUtil.isIndexReadOnly(getClassName()) ||
 				!isIndexerEnabled()) {
 
 				return;
@@ -885,6 +902,25 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		queryConfig.setSelectedFieldNames(selectedFieldNames);
 	}
 
+	protected void addLocalizedField(
+		Document document, String field, Locale siteDefaultLocale,
+		Map<Locale, String> map) {
+
+		for (Entry<Locale, String> entry : map.entrySet()) {
+			Locale locale = entry.getKey();
+
+			if (locale.equals(siteDefaultLocale)) {
+				document.addText(field, entry.getValue());
+			}
+
+			String languageId = LocaleUtil.toLanguageId(locale);
+
+			document.addText(
+				LocalizationUtil.getLocalizedName(field, languageId),
+				entry.getValue());
+		}
+	}
+
 	protected void addSearchAssetCategoryIds(
 			BooleanFilter queryBooleanFilter, SearchContext searchContext)
 		throws Exception {
@@ -1010,22 +1046,29 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 			int indexType = GetterUtil.getInteger(
 				properties.getProperty(ExpandoColumnConstants.INDEX_TYPE));
 
-			if (indexType != ExpandoColumnConstants.INDEX_TYPE_NONE) {
+			if ((indexType != ExpandoColumnConstants.INDEX_TYPE_NONE) &&
+				Validator.isNotNull(keywords)) {
+
 				String fieldName = getExpandoFieldName(
 					searchContext, expandoBridge, attributeName);
 
-				if (Validator.isNotNull(keywords)) {
-					if (searchContext.isAndSearch()) {
-						Query query = searchQuery.addRequiredTerm(
-							fieldName, keywords);
+				boolean like = false;
 
-						expandoQueries.put(attributeName, query);
-					}
-					else {
-						Query query = searchQuery.addTerm(fieldName, keywords);
+				if (indexType == ExpandoColumnConstants.INDEX_TYPE_TEXT) {
+					like = true;
+				}
 
-						expandoQueries.put(attributeName, query);
-					}
+				if (searchContext.isAndSearch()) {
+					Query query = searchQuery.addRequiredTerm(
+						fieldName, keywords, like);
+
+					expandoQueries.put(attributeName, query);
+				}
+				else {
+					Query query = searchQuery.addTerm(
+						fieldName, keywords, like);
+
+					expandoQueries.put(attributeName, query);
 				}
 			}
 		}
@@ -1255,7 +1298,7 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		}
 		catch (PortalException pe) {
 			if (_log.isDebugEnabled()) {
-				_log.debug("Unable to get trash entry for " + trashedModel);
+				_log.debug("Unable to get trash entry for " + trashedModel, pe);
 			}
 		}
 
@@ -1316,7 +1359,8 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 			if (_log.isDebugEnabled()) {
 				_log.debug(
 					"Unable to get trash renderer for " +
-						trashEntry.getClassName());
+						trashEntry.getClassName(),
+					pe);
 			}
 		}
 	}
@@ -1649,8 +1693,14 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 				expandoBridge.getCompanyId(), expandoBridge.getClassName(),
 				attributeName);
 
+		UnicodeProperties unicodeProperties =
+			expandoColumn.getTypeSettingsProperties();
+
+		int indexType = GetterUtil.getInteger(
+			unicodeProperties.getProperty(ExpandoColumnConstants.INDEX_TYPE));
+
 		String fieldName = ExpandoBridgeIndexerUtil.encodeFieldName(
-			attributeName);
+			attributeName, indexType);
 
 		if (expandoColumn.getType() ==
 				ExpandoColumnConstants.STRING_LOCALIZED) {
@@ -1685,7 +1735,7 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0 replaced by {@link #getClassName}
+	 * @deprecated As of 7.0.0, replaced by {@link #getClassName}
 	 */
 	@Deprecated
 	protected String getPortletId(SearchContext searchContext) {

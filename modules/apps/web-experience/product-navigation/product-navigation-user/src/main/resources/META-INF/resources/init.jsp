@@ -21,8 +21,7 @@
 <%@ taglib uri="http://liferay.com/tld/application-list" prefix="liferay-application-list" %><%@
 taglib uri="http://liferay.com/tld/aui" prefix="aui" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
-taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
-taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
+taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.application.list.PanelCategory" %><%@
 page import="com.liferay.application.list.constants.ApplicationListWebKeys" %><%@
@@ -33,8 +32,8 @@ page import="com.liferay.portal.kernel.util.HttpUtil" %><%@
 page import="com.liferay.portal.kernel.util.PortalUtil" %><%@
 page import="com.liferay.portal.kernel.util.StringPool" %><%@
 page import="com.liferay.product.navigation.product.menu.web.display.context.ProductMenuDisplayContext" %><%@
-page import="com.liferay.product.navigation.user.application.list.UserPanelCategory" %><%@
-page import="com.liferay.product.navigation.user.display.context.MyAccountPanelCategoryDisplayContext" %><%@
+page import="com.liferay.product.navigation.user.internal.application.list.UserPanelCategory" %><%@
+page import="com.liferay.product.navigation.user.internal.display.context.MyAccountPanelCategoryDisplayContext" %><%@
 page import="com.liferay.taglib.aui.AUIUtil" %>
 
 <%@ page import="java.util.Locale" %><%@

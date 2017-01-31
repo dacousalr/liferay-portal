@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
@@ -2463,11 +2462,15 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 						finderArgs, list);
 				}
 				else {
-					if ((list.size() > 1) && _log.isWarnEnabled()) {
-						_log.warn(
-							"SocialActivitySettingPersistenceImpl.fetchByG_C_A_N(long, long, int, String, boolean) with parameters (" +
-							StringUtil.merge(finderArgs) +
-							") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"SocialActivitySettingPersistenceImpl.fetchByG_C_A_N(long, long, int, String, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
 					}
 
 					SocialActivitySetting socialActivitySetting = list.get(0);
@@ -2692,7 +2695,8 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((SocialActivitySettingModelImpl)socialActivitySetting);
+		clearUniqueFindersCache((SocialActivitySettingModelImpl)socialActivitySetting,
+			true);
 	}
 
 	@Override
@@ -2705,45 +2709,12 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 				SocialActivitySettingImpl.class,
 				socialActivitySetting.getPrimaryKey());
 
-			clearUniqueFindersCache((SocialActivitySettingModelImpl)socialActivitySetting);
+			clearUniqueFindersCache((SocialActivitySettingModelImpl)socialActivitySetting,
+				true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		SocialActivitySettingModelImpl socialActivitySettingModelImpl,
-		boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					socialActivitySettingModelImpl.getGroupId(),
-					socialActivitySettingModelImpl.getClassNameId(),
-					socialActivitySettingModelImpl.getActivityType(),
-					socialActivitySettingModelImpl.getName()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_G_C_A_N, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_G_C_A_N, args,
-				socialActivitySettingModelImpl);
-		}
-		else {
-			if ((socialActivitySettingModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_G_C_A_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						socialActivitySettingModelImpl.getGroupId(),
-						socialActivitySettingModelImpl.getClassNameId(),
-						socialActivitySettingModelImpl.getActivityType(),
-						socialActivitySettingModelImpl.getName()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_G_C_A_N, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_G_C_A_N, args,
-					socialActivitySettingModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		SocialActivitySettingModelImpl socialActivitySettingModelImpl) {
 		Object[] args = new Object[] {
 				socialActivitySettingModelImpl.getGroupId(),
@@ -2752,12 +2723,30 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 				socialActivitySettingModelImpl.getName()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_G_C_A_N, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_G_C_A_N, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_G_C_A_N, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_G_C_A_N, args,
+			socialActivitySettingModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		SocialActivitySettingModelImpl socialActivitySettingModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					socialActivitySettingModelImpl.getGroupId(),
+					socialActivitySettingModelImpl.getClassNameId(),
+					socialActivitySettingModelImpl.getActivityType(),
+					socialActivitySettingModelImpl.getName()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_G_C_A_N, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_G_C_A_N, args);
+		}
 
 		if ((socialActivitySettingModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_G_C_A_N.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					socialActivitySettingModelImpl.getOriginalGroupId(),
 					socialActivitySettingModelImpl.getOriginalClassNameId(),
 					socialActivitySettingModelImpl.getOriginalActivityType(),
@@ -2997,8 +2986,8 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 			SocialActivitySettingImpl.class,
 			socialActivitySetting.getPrimaryKey(), socialActivitySetting, false);
 
-		clearUniqueFindersCache(socialActivitySettingModelImpl);
-		cacheUniqueFindersCache(socialActivitySettingModelImpl, isNew);
+		clearUniqueFindersCache(socialActivitySettingModelImpl, false);
+		cacheUniqueFindersCache(socialActivitySettingModelImpl);
 
 		socialActivitySetting.resetOriginalValues();
 
@@ -3072,12 +3061,14 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 	 */
 	@Override
 	public SocialActivitySetting fetchByPrimaryKey(Serializable primaryKey) {
-		SocialActivitySetting socialActivitySetting = (SocialActivitySetting)entityCache.getResult(SocialActivitySettingModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(SocialActivitySettingModelImpl.ENTITY_CACHE_ENABLED,
 				SocialActivitySettingImpl.class, primaryKey);
 
-		if (socialActivitySetting == _nullSocialActivitySetting) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		SocialActivitySetting socialActivitySetting = (SocialActivitySetting)serializable;
 
 		if (socialActivitySetting == null) {
 			Session session = null;
@@ -3093,8 +3084,7 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 				}
 				else {
 					entityCache.putResult(SocialActivitySettingModelImpl.ENTITY_CACHE_ENABLED,
-						SocialActivitySettingImpl.class, primaryKey,
-						_nullSocialActivitySetting);
+						SocialActivitySettingImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -3148,18 +3138,20 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			SocialActivitySetting socialActivitySetting = (SocialActivitySetting)entityCache.getResult(SocialActivitySettingModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(SocialActivitySettingModelImpl.ENTITY_CACHE_ENABLED,
 					SocialActivitySettingImpl.class, primaryKey);
 
-			if (socialActivitySetting == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, socialActivitySetting);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (SocialActivitySetting)serializable);
+				}
 			}
 		}
 
@@ -3202,8 +3194,7 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(SocialActivitySettingModelImpl.ENTITY_CACHE_ENABLED,
-					SocialActivitySettingImpl.class, primaryKey,
-					_nullSocialActivitySetting);
+					SocialActivitySettingImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -3438,23 +3429,4 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No SocialActivitySetting exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No SocialActivitySetting exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(SocialActivitySettingPersistenceImpl.class);
-	private static final SocialActivitySetting _nullSocialActivitySetting = new SocialActivitySettingImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<SocialActivitySetting> toCacheModel() {
-				return _nullSocialActivitySettingCacheModel;
-			}
-		};
-
-	private static final CacheModel<SocialActivitySetting> _nullSocialActivitySettingCacheModel =
-		new CacheModel<SocialActivitySetting>() {
-			@Override
-			public SocialActivitySetting toEntityModel() {
-				return _nullSocialActivitySetting;
-			}
-		};
 }

@@ -16,6 +16,8 @@
 
 <%@ include file="/display/init.jsp" %>
 
+<liferay-util:dynamic-include key="com.liferay.dynamic.data.lists.form.web#/display/view.jsp#pre" />
+
 <%
 String redirect = ParamUtil.getString(request, "redirect", currentURL);
 
@@ -23,7 +25,7 @@ long recordSetId = ddlFormDisplayContext.getRecordSetId();
 %>
 
 <c:choose>
-	<c:when test="<%= (recordSetId == 0) %>">
+	<c:when test="<%= recordSetId == 0 %>">
 		<div class="alert alert-info">
 			<liferay-ui:message key="select-an-existing-form-or-add-a-form-to-be-displayed-in-this-application" />
 		</div>
@@ -34,7 +36,7 @@ long recordSetId = ddlFormDisplayContext.getRecordSetId();
 				<portlet:actionURL name="addRecord" var="addRecordActionURL" />
 
 				<div class="portlet-forms">
-					<aui:form action="<%= addRecordActionURL %>" method="post" name="fm">
+					<aui:form action="<%= addRecordActionURL %>" data-DDLRecordSetId="<%= recordSetId %>" method="post" name="fm">
 
 						<%
 						String redirectURL = ddlFormDisplayContext.getRedirectURL();
@@ -50,36 +52,19 @@ long recordSetId = ddlFormDisplayContext.getRecordSetId();
 
 						<aui:input name="groupId" type="hidden" value="<%= recordSet.getGroupId() %>" />
 						<aui:input name="recordSetId" type="hidden" value="<%= recordSet.getRecordSetId() %>" />
-						<aui:input name="availableLanguageId" type="hidden" value="<%= themeDisplay.getLanguageId() %>" />
-						<aui:input name="defaultLanguageId" type="hidden" value="<%= themeDisplay.getLanguageId() %>" />
 						<aui:input name="workflowAction" type="hidden" value="<%= WorkflowConstants.ACTION_PUBLISH %>" />
 
 						<liferay-ui:error exception="<%= CaptchaTextException.class %>" message="text-verification-failed" />
 						<liferay-ui:error exception="<%= DDMFormRenderingException.class %>" message="unable-to-render-the-selected-form" />
 						<liferay-ui:error exception="<%= DDMFormValuesValidationException.class %>" message="field-validation-failed" />
 
-						<liferay-ui:error exception="<%= DDMFormValuesValidationException.MustSetValidValues.class %>">
+						<liferay-ui:error exception="<%= DDMFormValuesValidationException.MustSetValidValue.class %>">
 
 							<%
-							DDMFormValuesValidationException.MustSetValidValues msvv = (DDMFormValuesValidationException.MustSetValidValues)errorException;
-
-							List<DDMFormFieldEvaluationResult> ddmFormFieldEvaluationResults = msvv.getDDMFormFieldEvaluationResults();
-
-							for (DDMFormFieldEvaluationResult ddmFormFieldEvaluationResult : ddmFormFieldEvaluationResults) {
+							DDMFormValuesValidationException.MustSetValidValue msvv = (DDMFormValuesValidationException.MustSetValidValue)errorException;
 							%>
 
-								<liferay-ui:message
-									arguments="<%= new Object[] {ddmFormFieldEvaluationResult.getName(), ddmFormFieldEvaluationResult.getErrorMessage()} %>"
-									key="validation-failed-for-field-x"
-									translateArguments="<%= false %>"
-								/>
-
-								<br />
-
-							<%
-							}
-							%>
-
+							<liferay-ui:message arguments="<%= msvv.getFieldName() %>" key="validation-failed-for-field-x" translateArguments="<%= false %>" />
 						</liferay-ui:error>
 
 						<liferay-ui:error exception="<%= DDMFormValuesValidationException.RequiredValue.class %>">
@@ -106,7 +91,7 @@ long recordSetId = ddlFormDisplayContext.getRecordSetId();
 								%>
 
 								<c:if test="<%= Validator.isNotNull(description) %>">
-									<h2 class="ddl-form-description"><%= description %></h2>
+									<h5 class="ddl-form-description"><%= description %></h5>
 								</c:if>
 							</div>
 						</div>
@@ -141,3 +126,5 @@ long recordSetId = ddlFormDisplayContext.getRecordSetId();
 		</div>
 	</div>
 </c:if>
+
+<liferay-util:dynamic-include key="com.liferay.dynamic.data.lists.form.web#/display/view.jsp#post" />

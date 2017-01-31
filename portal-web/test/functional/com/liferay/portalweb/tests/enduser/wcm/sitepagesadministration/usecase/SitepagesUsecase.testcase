@@ -1,5 +1,6 @@
 <definition component-name="portal-wcm">
 	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
 	<property name="testray.main.component.name" value="Site Pages Administration" />
 
 	<set-up>
@@ -67,6 +68,10 @@
 			<var name="webContentTitle" value="WC WebContent Title" />
 		</execute>
 
+		<execute macro="WebContent#viewPGViaWCD">
+			<var name="webContentContent" value="WC WebContent Content" />
+		</execute>
+
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="${sitePage3Name}" />
 		</execute>
@@ -130,9 +135,8 @@
 		</execute>
 
 		<execute macro="Page#editSelectPageType">
-			<var name="indexNumber" value="4" />
 			<var name="page" value="Site Page2 Name" />
-			<var name="pageName" value="- - Child Page Name" />
+			<var name="pageLinkName" value="Site Page1 Name" />
 			<var name="pageType" value="Link to a Page of This Site" />
 		</execute>
 
@@ -182,18 +186,15 @@
 			<var name="page" value="Page Name" />
 		</execute>
 
-		<execute macro="Page#viewPageFriendURLPG">
-			<var name="localizedFriendlyURL" value="/german" />
+		<execute macro="Page#viewPageFriendlyURLPG">
 			<var name="pageName" value="page-name" />
 		</execute>
 	</command>
 
 	<command name="LoadMoreResultsLinkAreMissingAtAllLevelsInTreeView" priority="3">
 		<property name="custom.properties" value="layout.manage.pages.initial.children=3" />
-		<var name="childPageNameList" value="Child Page1 Name,Child Page2 Name,Child Page3 Name,Child Page4 Name, Child Page5 Name" />
-		<var name="pageNameList" value="Page1 Name,Page2 Name,Page3 Name,Page4 Name" />
 
-		<for list="${pageNameList}" param="pageName">
+		<for list="Page1 Name,Page2 Name,Page3 Name,Page4 Name" param="pageName">
 			<execute macro="Page#add">
 				<var name="pageName" value="${pageName}" />
 			</execute>
@@ -207,7 +208,7 @@
 			<var name="siteChildPages" value="false" />
 		</execute>
 
-		<for list="${childPageNameList}" param="siteChildPageName">
+		<for list="Child Page1 Name,Child Page2 Name,Child Page3 Name,Child Page4 Name, Child Page5 Name" param="siteChildPageName">
 			<execute macro="Page#addChild">
 				<var name="page" value="Public Pages" />
 				<var name="pageName" value="Welcome" />
@@ -243,6 +244,15 @@
 
 		<execute macro="User#editPasswordCP">
 			<var name="userEmailAddress" value="userea@liferay.com" />
+			<var name="userScreenName" value="usersn" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoControlPanelUsers">
+			<var name="portlet" value="Roles" />
+		</execute>
+
+		<execute macro="Role#assignRegRoleCP">
+			<var name="roleTitle" value="Power User" />
 			<var name="userScreenName" value="usersn" />
 		</execute>
 
@@ -296,7 +306,7 @@
 		</execute>
 
 		<execute macro="Role#addCP">
-			<var name="roleName" value="Roles Regrole Name" />
+			<var name="roleTitle" value="Roles Regrole Name" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoControlPanelUsers">
@@ -333,7 +343,7 @@
 		</execute>
 
 		<execute macro="User#assignRegularRoleCP">
-			<var name="roleName" value="Roles Regrole Name" />
+			<var name="roleTitle" value="Roles Regrole Name" />
 			<var name="userScreenName" value="usersn" />
 		</execute>
 
@@ -351,12 +361,12 @@
 
 		<execute macro="Role#removePermissionPG">
 			<var name="permissionDefinitionKey" value="CONTENT_PERMISSIONS_VIEW_CHECKBOX" />
-			<var name="roleName" value="Site Member" />
+			<var name="roleTitle" value="Site Member" />
 		</execute>
 
 		<execute macro="Role#definePermissionPG">
 			<var name="permissionDefinitionKey" value="CONTENT_PERMISSIONS_VIEW_CHECKBOX" />
-			<var name="roleName" value="Roles Regrole Name" />
+			<var name="roleTitle" value="Roles Regrole Name" />
 		</execute>
 
 		<execute macro="User#firstLoginPG">
@@ -369,7 +379,7 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute function="AssertTextNotPresent" locator1="Home#ERROR_MESSAGE_ALERT_ERROR" value1="Not Found" />
+		<execute function="AssertTextNotPresent" locator1="Home#ERROR_MESSAGE_ALERT_ERROR" value1="Forbidden" />
 
 		<execute macro="User#firstLoginPG">
 			<var name="password" value="test" />
@@ -391,7 +401,7 @@
 
 		<execute macro="Role#removePermissionPG">
 			<var name="permissionDefinitionKey" value="CONTENT_PERMISSIONS_VIEW_CHECKBOX" />
-			<var name="roleName" value="Roles Regrole Name" />
+			<var name="roleTitle" value="Roles Regrole Name" />
 		</execute>
 
 		<execute macro="User#firstLoginPG">
@@ -404,7 +414,7 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute function="AssertTextEquals" locator1="Home#ERROR_MESSAGE_ALERT_ERROR" value1="Not Found" />
+		<execute function="AssertTextEquals" locator1="Home#ERROR_MESSAGE_ALERT_ERROR" value1="Forbidden" />
 
 		<execute function="AssertTextNotPresent" locator1="Home#BREADCRUMB_2" value1="Site Page" />
 
@@ -415,6 +425,11 @@
 	</command>
 
 	<command name="ViewSecureContentAndPageAsGuest" priority="3">
+		<execute macro="TestCase#getSiteName">
+			<return from="siteName" name="siteName" />
+			<var name="siteName" value="${siteName}" />
+		</execute>
+
 		<execute macro="ProductMenu#gotoControlPanelConfiguration">
 			<var name="portlet" value="Server Administration" />
 		</execute>
@@ -422,6 +437,14 @@
 		<execute macro="ServerAdministration#configureMailServerSettings">
 			<var method="TestPropsUtil#get('email.address.1')" name="userName" />
 			<var method="TestPropsUtil#get('email.password.1')" name="userPassword" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoControlPanelConfiguration">
+			<var name="portlet" value="Server Administration" />
+		</execute>
+
+		<execute macro="ServerAdministration#executeServerResourcesActions">
+			<var name="actionsDescription" value="Reindex all search indexes." />
 		</execute>
 
 		<execute macro="ProductMenu#gotoControlPanelUsers">
@@ -440,7 +463,7 @@
 		</execute>
 
 		<execute macro="Role#assignRegRoleCP">
-			<var name="roleName" value="Administrator" />
+			<var name="roleTitle" value="Administrator" />
 			<var name="userScreenName" value="usersn1" />
 		</execute>
 
@@ -459,7 +482,7 @@
 
 		<execute macro="Page#add">
 			<var name="pageName" value="Test Private Page" />
-			<var name="siteName" value="Liferay" />
+			<var name="siteName" value="${siteName}" />
 			<var name="sitePagePrivacy" value="Private" />
 		</execute>
 
@@ -511,7 +534,7 @@
 
 		<execute macro="Blogs#addEntryWithPermissions">
 			<var name="entryContent" value="Blogs Entry Content" />
-			<var name="entryTitle" value="Blogs Entry Title" />
+			<var name="entryTitle" value="Blogs Entry Title GMB1" />
 			<var name="viewableBy" value="Site Members" />
 		</execute>
 
@@ -521,7 +544,7 @@
 
 		<execute macro="MessageboardsThread#addPGWithPermissions">
 			<var name="threadBody" value="MB Thread Message Body" />
-			<var name="threadSubject" value="MB Thread Message Subject" />
+			<var name="threadSubject" value="MB Thread Message Subject GMMB2" />
 			<var name="viewableBySelection" value="Site Members" />
 		</execute>
 
@@ -540,18 +563,15 @@
 
 		<execute macro="Gmail#viewMail">
 			<var name="emailFromUserName" value="Joe Bloggs" />
-			<var name="gmailAssetType" value="Blogs" />
-			<var name="gmailMailTableMessageTitle" value="Blogs Entry Title" />
-			<var name="gmailMessageBody" value="Blogs Entry Title" />
-			<var name="gmailMessageBodyClosing" value="Sincerely" />
-			<var name="gmailMessageBodyGreeting" value="Joe Bloggs" />
-			<var name="gmailMessageTitle" value="Test Test Published &quot;Blogs Entry Title&quot; on Liferay Blogs" />
+			<var name="gmailAssetType" value="GMB1" />
+			<var name="gmailMessageBody" value="Blogs Entry Title GMB1" />
+			<var name="gmailMessageTitle" value="Test Test Published &quot;Blogs Entry Title GMB1&quot; on ${siteName} Blogs" />
 		</execute>
 
 		<execute macro="Gmail#openMessageContinueReadingButton">
-			<var name="contentTitle" value="Blogs Entry Title" />
-			<var name="gmailAssetType" value="Blogs" />
+			<var name="contentTitle" value="Blogs Entry Title GMB1" />
 			<var name="pageName" value="Blog and Message Board Page" />
+			<var name="siteName" value="${siteName}" />
 		</execute>
 
 		<var method="selenium#getLocation()" name="blogEntryURL" />
@@ -568,18 +588,16 @@
 
 		<execute macro="Gmail#viewMail">
 			<var name="emailFromUserName" value="Test Test" />
-			<var name="gmailAssetType" value="Message Boards" />
-			<var name="gmailMailTableMessageTitle" value="Message Boards" />
+			<var name="gmailAssetType" value="GMMB2" />
 			<var name="gmailMessageBody" value="MB Thread Message Body" />
-			<var name="gmailMessageBodyClosing" value="http://localhost" />
-			<var name="gmailMessageBodyGreeting" value="Liferay Message Boards" />
-			<var name="gmailMessageTitle" value="Message Boards Home - Liferay New Message: MB Thread Message Subject" />
+			<var name="gmailMessageTitle" value="Message Boards Home - ${siteName} New Message: MB Thread Message Subject GMMB2" />
 		</execute>
 
 		<execute macro="Gmail#openMessageLink">
-			<var name="contentTitle" value="MB Thread Message Subject" />
+			<var name="contentTitle" value="MB Thread Message Subject GMMB2" />
 			<var name="gmailAssetType" value="Message Boards" />
 			<var name="pageName" value="Blog and Message Board Page" />
+			<var name="siteName" value="${siteName}" />
 		</execute>
 
 		<var method="selenium#getLocation()" name="messageBoardsThreadURL" />
@@ -592,9 +610,10 @@
 			<var name="pageName" value="Blog and Message Board Page" />
 		</execute>
 
-		<execute macro="Gmail#tearDown">
-			<var method="TestPropsUtil#get('email.address.2')" name="userEmailAddress" />
-			<var method="TestPropsUtil#get('email.password.2')" name="userPassword" />
+		<execute macro="Gmail#gotoHtmlMode" />
+
+		<execute macro="Gmail#deleteSpecificMail">
+			<var name="gmailMessageTitleList" value="Test Test Published &quot;Blogs Entry Title GMB1&quot; on ${siteName} Blogs,Message Boards Home - ${siteName} New Message: MB Thread Message Subject GMMB2,Your New Account,Your New Password,GMB1,GMMB2" />
 		</execute>
 
 		<execute macro="User#logoutPG" />
@@ -619,6 +638,11 @@
 	</command>
 
 	<command name="ViewSecureContentAndPageAsSiteMember" priority="3">
+		<execute macro="TestCase#getSiteName">
+			<return from="siteName" name="siteName" />
+			<var name="siteName" value="${siteName}" />
+		</execute>
+
 		<execute macro="ProductMenu#gotoControlPanelConfiguration">
 			<var name="portlet" value="Server Administration" />
 		</execute>
@@ -655,7 +679,7 @@
 		</execute>
 
 		<execute macro="Role#assignRegRoleCP">
-			<var name="roleName" value="Administrator" />
+			<var name="roleTitle" value="Administrator" />
 			<var name="userScreenName" value="usersn1" />
 		</execute>
 
@@ -664,7 +688,7 @@
 		</execute>
 
 		<execute macro="Site#assignUserSitesCP">
-			<var name="siteName" value="Liferay" />
+			<var name="siteName" value="${siteName}" />
 			<var name="userScreenName" value="usersn2" />
 		</execute>
 
@@ -692,7 +716,7 @@
 
 		<execute macro="Page#add">
 			<var name="pageName" value="Test Private Page" />
-			<var name="siteName" value="Liferay" />
+			<var name="siteName" value="${siteName}" />
 			<var name="sitePagePrivacy" value="Private" />
 		</execute>
 
@@ -740,7 +764,7 @@
 
 		<execute macro="Blogs#addEntryWithPermissions">
 			<var name="entryContent" value="Blogs Entry Content" />
-			<var name="entryTitle" value="Blogs Entry Title" />
+			<var name="entryTitle" value="Blogs Entry Title GMB2" />
 			<var name="viewableBy" value="Site Members" />
 		</execute>
 
@@ -750,7 +774,7 @@
 
 		<execute macro="MessageboardsThread#addPGWithPermissions">
 			<var name="threadBody" value="MB Thread Message Body" />
-			<var name="threadSubject" value="MB Thread Message Subject" />
+			<var name="threadSubject" value="MB Thread Message Subject GMMB3" />
 			<var name="viewableBySelection" value="Site Members" />
 		</execute>
 
@@ -769,18 +793,15 @@
 
 		<execute macro="Gmail#viewMail">
 			<var name="emailFromUserName" value="Joe Bloggs" />
-			<var name="gmailAssetType" value="Blogs" />
-			<var name="gmailMailTableMessageTitle" value="Blogs Entry Title" />
-			<var name="gmailMessageBody" value="Blogs Entry Title" />
-			<var name="gmailMessageBodyClosing" value="Sincerely" />
-			<var name="gmailMessageBodyGreeting" value="Joe Bloggs" />
-			<var name="gmailMessageTitle" value="Test Test Published &quot;Blogs Entry Title&quot; on Liferay Blogs" />
+			<var name="gmailAssetType" value="GMB2" />
+			<var name="gmailMessageBody" value="Blogs Entry Title GMB2" />
+			<var name="gmailMessageTitle" value="Test Test Published &quot;Blogs Entry Title GMB2&quot; on ${siteName} Blogs" />
 		</execute>
 
 		<execute macro="Gmail#openMessageContinueReadingButton">
-			<var name="contentTitle" value="Blogs Entry Title" />
-			<var name="gmailAssetType" value="Blogs" />
+			<var name="contentTitle" value="Blogs Entry Title GMB2" />
 			<var name="pageName" value="Blog and Message Board Page" />
+			<var name="siteName" value="${siteName}" />
 		</execute>
 
 		<var method="selenium#getLocation()" name="blogEntryURL" />
@@ -797,18 +818,16 @@
 
 		<execute macro="Gmail#viewMail">
 			<var name="emailFromUserName" value="Test Test" />
-			<var name="gmailAssetType" value="Message Boards" />
-			<var name="gmailMailTableMessageTitle" value="Message Boards" />
+			<var name="gmailAssetType" value="GMMB3" />
 			<var name="gmailMessageBody" value="MB Thread Message Body" />
-			<var name="gmailMessageBodyClosing" value="http://localhost" />
-			<var name="gmailMessageBodyGreeting" value="Liferay Message Boards" />
-			<var name="gmailMessageTitle" value="Message Boards Home - Liferay New Message: MB Thread Message Subject" />
+			<var name="gmailMessageTitle" value="Message Boards Home - ${siteName} New Message: MB Thread Message Subject GMMB3" />
 		</execute>
 
 		<execute macro="Gmail#openMessageLink">
-			<var name="contentTitle" value="MB Thread Message Subject" />
+			<var name="contentTitle" value="MB Thread Message Subject GMMB3" />
 			<var name="gmailAssetType" value="Message Boards" />
 			<var name="pageName" value="Blog and Message Board Page" />
+			<var name="siteName" value="${siteName}" />
 		</execute>
 
 		<var method="selenium#getLocation()" name="messageBoardsThreadURL" />
@@ -821,9 +840,10 @@
 			<var name="pageName" value="Blog and Message Board Page" />
 		</execute>
 
-		<execute macro="Gmail#tearDown">
-			<var method="TestPropsUtil#get('email.address.2')" name="userEmailAddress" />
-			<var method="TestPropsUtil#get('email.password.2')" name="userPassword" />
+		<execute macro="Gmail#gotoHtmlMode" />
+
+		<execute macro="Gmail#deleteSpecificMail">
+			<var name="gmailMessageTitleList" value="Test Test Published &quot;Blogs Entry Title GMB2&quot; on ${siteName} Blogs,Message Boards Home - ${siteName} New Message: MB Thread Message Subject GMMB3,Your New Account,Your New Password,GMB2,GMMB3" />
 		</execute>
 
 		<execute macro="User#logoutAndLoginPG">
@@ -845,7 +865,7 @@
 		<execute macro="BlogsNavigator#gotoPG">
 			<var name="blogEntryURL" value="${blogEntryURL}" />
 			<var name="entryContent" value="Blogs Entry Content" />
-			<var name="entryTitle" value="Blogs Entry Title" />
+			<var name="entryTitle" value="Blogs Entry Title GMB2" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -859,16 +879,21 @@
 			<var name="messageBoardsThreadURL" value="${messageBoardsThreadURL}" />
 			<var name="postCount" value="1" />
 			<var name="threadBody" value="MB Thread Message Body" />
-			<var name="threadSubject" value="MB Thread Message Subject" />
+			<var name="threadSubject" value="MB Thread Message Subject GMMB3" />
 		</execute>
 
 		<execute macro="MessageboardsThread#viewPG">
 			<var name="threadBody" value="MB Thread Message Body" />
-			<var name="threadSubject" value="MB Thread Message Subject" />
+			<var name="threadSubject" value="MB Thread Message Subject GMMB3" />
 		</execute>
 	</command>
 
 	<command name="ViewSecureContentAndPageAsUser" priority="3">
+		<execute macro="TestCase#getSiteName">
+			<return from="siteName" name="siteName" />
+			<var name="siteName" value="${siteName}" />
+		</execute>
+
 		<execute macro="ProductMenu#gotoControlPanelConfiguration">
 			<var name="portlet" value="Server Administration" />
 		</execute>
@@ -905,7 +930,7 @@
 		</execute>
 
 		<execute macro="Role#assignRegRoleCP">
-			<var name="roleName" value="Administrator" />
+			<var name="roleTitle" value="Administrator" />
 			<var name="userScreenName" value="usersn1" />
 		</execute>
 
@@ -933,7 +958,7 @@
 
 		<execute macro="Page#add">
 			<var name="pageName" value="Test Private Page" />
-			<var name="siteName" value="Liferay" />
+			<var name="siteName" value="${siteName}" />
 			<var name="sitePagePrivacy" value="Private Pages" />
 		</execute>
 
@@ -981,7 +1006,7 @@
 
 		<execute macro="Blogs#addEntryWithPermissions">
 			<var name="entryContent" value="Blogs Entry Content" />
-			<var name="entryTitle" value="Blogs Entry Title" />
+			<var name="entryTitle" value="Blogs Entry Title GMB3" />
 			<var name="viewableBy" value="Site Members" />
 		</execute>
 
@@ -991,7 +1016,7 @@
 
 		<execute macro="MessageboardsThread#addPGWithPermissions">
 			<var name="threadBody" value="MB Thread Message Body" />
-			<var name="threadSubject" value="MB Thread Message Subject" />
+			<var name="threadSubject" value="MB Thread Message Subject GMMB4" />
 			<var name="viewableBySelection" value="Site Members" />
 		</execute>
 
@@ -1010,18 +1035,15 @@
 
 		<execute macro="Gmail#viewMail">
 			<var name="emailFromUserName" value="Joe Bloggs" />
-			<var name="gmailAssetType" value="Blogs" />
-			<var name="gmailMailTableMessageTitle" value="Blogs Entry Title" />
-			<var name="gmailMessageBody" value="Blogs Entry Title" />
-			<var name="gmailMessageBodyClosing" value="Sincerely" />
-			<var name="gmailMessageBodyGreeting" value="Joe Bloggs" />
-			<var name="gmailMessageTitle" value="Test Test Published &quot;Blogs Entry Title&quot; on Liferay Blogs" />
+			<var name="gmailAssetType" value="GMB3" />
+			<var name="gmailMessageBody" value="Blogs Entry Title GMB3" />
+			<var name="gmailMessageTitle" value="Test Test Published &quot;Blogs Entry Title GMB3&quot; on ${siteName} Blogs" />
 		</execute>
 
 		<execute macro="Gmail#openMessageContinueReadingButton">
-			<var name="contentTitle" value="Blogs Entry Title" />
-			<var name="gmailAssetType" value="Blogs" />
+			<var name="contentTitle" value="Blogs Entry Title GMB3" />
 			<var name="pageName" value="Blog and Message Board Page" />
+			<var name="siteName" value="${siteName}" />
 		</execute>
 
 		<var method="selenium#getLocation()" name="blogEntryURL" />
@@ -1038,18 +1060,16 @@
 
 		<execute macro="Gmail#viewMail">
 			<var name="emailFromUserName" value="Test Test" />
-			<var name="gmailAssetType" value="Message Boards" />
-			<var name="gmailMailTableMessageTitle" value="Message Boards" />
+			<var name="gmailAssetType" value="GMMB4" />
 			<var name="gmailMessageBody" value="MB Thread Message Body" />
-			<var name="gmailMessageBodyClosing" value="http://localhost" />
-			<var name="gmailMessageBodyGreeting" value="Liferay Message Boards" />
-			<var name="gmailMessageTitle" value="Message Boards Home - Liferay New Message: MB Thread Message Subject" />
+			<var name="gmailMessageTitle" value="Message Boards Home - ${siteName} New Message: MB Thread Message Subject GMMB4" />
 		</execute>
 
 		<execute macro="Gmail#openMessageLink">
-			<var name="contentTitle" value="MB Thread Message Subject" />
+			<var name="contentTitle" value="MB Thread Message Subject GMMB4" />
 			<var name="gmailAssetType" value="Message Boards" />
 			<var name="pageName" value="Blog and Message Board Page" />
+			<var name="siteName" value="${siteName}" />
 		</execute>
 
 		<var method="selenium#getLocation()" name="messageBoardsThreadURL" />
@@ -1062,9 +1082,10 @@
 			<var name="pageName" value="Blog and Message Board Page" />
 		</execute>
 
-		<execute macro="Gmail#tearDown">
-			<var method="TestPropsUtil#get('email.address.2')" name="userEmailAddress" />
-			<var method="TestPropsUtil#get('email.password.2')" name="userPassword" />
+		<execute macro="Gmail#gotoHtmlMode" />
+
+		<execute macro="Gmail#deleteSpecificMail">
+			<var name="gmailMessageTitleList" value="Test Test Published &quot;Blogs Entry Title GMB3&quot; on ${siteName} Blogs,Message Boards Home - ${siteName} New Message: MB Thread Message Subject GMMB4,Your New Account,Your New Password,GMB3,GMMB4" />
 		</execute>
 
 		<execute macro="User#logoutAndLoginPG">
@@ -1215,10 +1236,6 @@
 			<var name="sitePageType" value="Embedded" />
 		</execute>
 
-		<execute macro="ProductMenu#gotoControlPanelSites">
-			<var name="portlet" value="Sites" />
-		</execute>
-
 		<execute macro="Page#add">
 			<var name="componentName" value="Community" />
 			<var name="pageName" value="Panel Page" />
@@ -1236,9 +1253,9 @@
 			<var name="siteName" value="Page Type Test Site Name" />
 		</execute>
 
-		<var name="key_pageName" value="Link to URL Page" />
-
-		<execute function="AssertClick" locator1="Home#PAGE" value1="Link to URL Page" />
+		<execute function="AssertClick" locator1="Home#PAGE" value1="Link to URL Page">
+			<var name="key_pageName" value="Link to URL Page" />
+		</execute>
 
 		<execute function="AssertLocation" value1="https://www.google.com/" />
 
@@ -1249,9 +1266,9 @@
 
 		<execute function="AssertLocation" value1="http://localhost:8080/web/page-type-test-site-name/embedded-page" />
 
-		<execute function="SelectFrame" locator1="Embedded#EMBEDDED_IFRAME" />
-		<execute function="AssertTextEquals#assertPartialText" locator1="Embedded#EMBEDDED_SITE_TEXT" value1="Yes" />
-		<execute function="AssertTextEquals#assertPartialText" locator1="Embedded#EMBEDDED_SITE_TEXT" value1="updated" />
+		<execute function="SelectFrame" locator1="IFrame#EMBEDDED_IFRAME" />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Embedded#EMBEDDED_TEXT_YES" value1="Yes" />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Embedded#EMBEDDED_TEXT_UPDATED" value1="updated" />
 		<execute function="SelectFrameTop" value1="relative=top" />
 
 		<execute macro="Navigator#gotoSitePage">

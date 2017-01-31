@@ -58,7 +58,7 @@ public interface DDMStructureService extends BaseService {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify or reference this interface directly. Always use {@link DDMStructureServiceUtil} to access the d d m structure remote service. Add custom service methods to {@link com.liferay.dynamic.data.mapping.service.impl.DDMStructureServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
+	 * Never modify or reference this interface directly. Always use {@link DDMStructureServiceUtil} to access the ddm structure remote service. Add custom service methods to {@link com.liferay.dynamic.data.mapping.service.impl.DDMStructureServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
 	public DDMStructure addStructure(long groupId, long parentStructureId,
 		long classNameId, java.lang.String structureKey,
@@ -91,7 +91,7 @@ public interface DDMStructureService extends BaseService {
 	UUID, creation date, modification date, guest permissions,
 	and group permissions for the structure.
 	* @return the structure
-	* @deprecated As of 7.0.0, replaced by {@link #addStructure(long, long,
+	* @deprecated As of 2.1.0, replaced by {@link #addStructure(long, long,
 	long, String, Map, Map, DDMForm, DDMFormLayout, String, int,
 	ServiceContext)}
 	*/
@@ -137,7 +137,7 @@ public interface DDMStructureService extends BaseService {
 	Can set the UUID, creation date, modification date, guest
 	permissions, and group permissions for the structure.
 	* @return the structure
-	* @deprecated As of 7.0.0, replaced by {@link #addStructure(long, long,
+	* @deprecated As of 2.1.0, replaced by {@link #addStructure(long, long,
 	String, long, String, Map, Map, DDMForm, DDMFormLayout,
 	String, int, ServiceContext)}
 	*/
@@ -172,7 +172,7 @@ public interface DDMStructureService extends BaseService {
 	UUID, creation date, modification date, guest permissions,
 	and group permissions for the structure.
 	* @return the structure
-	* @deprecated As of 7.0.0, replaced by {@link #addStructure(long, long,
+	* @deprecated As of 2.1.0, replaced by {@link #addStructure(long, long,
 	long, Map, Map, DDMForm, DDMFormLayout, ServiceContext)}
 	*/
 	@java.lang.Deprecated
@@ -297,7 +297,7 @@ public interface DDMStructureService extends BaseService {
 	* @param serviceContext the service context to be applied. Can set the
 	modification date.
 	* @return the updated structure
-	* @deprecated As of 7.0.0, replaced by {@link #updateStructure(long, long,
+	* @deprecated As of 2.1.0, replaced by {@link #updateStructure(long, long,
 	long, String, Map, Map, DDMForm, DDMFormLayout,
 	ServiceContext)}
 	*/
@@ -328,7 +328,7 @@ public interface DDMStructureService extends BaseService {
 	* @param serviceContext the service context to be applied. Can set the
 	modification date.
 	* @return the updated structure
-	* @deprecated As of 7.0.0, replaced by {@link #updateStructure(long, long,
+	* @deprecated As of 2.1.0, replaced by {@link #updateStructure(long, long,
 	Map, Map, DDMForm, DDMFormLayout, ServiceContext)}
 	*/
 	@java.lang.Deprecated

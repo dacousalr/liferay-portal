@@ -31,10 +31,11 @@ import org.osgi.service.component.annotations.Reference;
 public class OmniAdminUserDemoDataCreatorImpl
 	extends BaseUserDemoDataCreator implements OmniAdminUserDemoDataCreator {
 
+	@Override
 	public User create(long companyId, String emailAddress)
 		throws PortalException {
 
-		User user = createBaseUser(companyId, emailAddress);
+		User user = createUser(companyId, emailAddress);
 
 		Role role = _roleLocalService.getRole(
 			companyId, RoleConstants.ADMINISTRATOR);

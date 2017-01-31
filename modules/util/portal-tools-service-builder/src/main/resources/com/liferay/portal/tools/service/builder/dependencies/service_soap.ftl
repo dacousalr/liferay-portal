@@ -70,17 +70,19 @@ import java.util.Map;
 @ProviderType
 public class ${entity.name}ServiceSoap {
 
-	<#assign hasMethods = false>
+	<#assign hasMethods = false />
 
 	<#list methods as method>
 		<#if !method.isConstructor() && method.isPublic() && serviceBuilder.isCustomMethod(method) && serviceBuilder.isSoapMethod(method)>
-			<#assign hasMethods = true>
+			<#assign
+				hasMethods = true
 
-			<#assign returnValueName = method.returns.value>
-			<#assign returnValueDimension = serviceBuilder.getDimensions(method.returns.dimensions)>
-			<#assign returnTypeGenericsName = serviceBuilder.getTypeGenericsName(method.returns)>
-			<#assign extendedModelName = apiPackagePath + ".model." + entity.name>
-			<#assign soapModelName = apiPackagePath + ".model." + entity.name + "Soap">
+				returnValueName = method.returns.value
+				returnValueDimension = serviceBuilder.getDimensions(method.returns.dimensions)
+				returnTypeGenericsName = serviceBuilder.getTypeGenericsName(method.returns)
+				extendedModelName = apiPackagePath + ".model." + entity.name
+				soapModelName = apiPackagePath + ".model." + entity.name + "Soap"
+			/>
 
 			${serviceBuilder.getJavadocComment(method)}
 
@@ -130,30 +132,37 @@ public class ${entity.name}ServiceSoap {
 
 			${method.name}(
 
-			<#assign localizationMapVariables = "">
+			<#assign localizationMapVariables = "" />
 
 			<#list method.parameters as parameter>
-				<#assign parameterTypeName = serviceBuilder.getTypeGenericsName(parameter.type)>
-				<#assign parameterListActualType = serviceBuilder.getListActualTypeArguments(parameter.type)>
+				<#assign
+					parameterTypeName = serviceBuilder.getTypeGenericsName(parameter.type)
+					parameterListActualType = serviceBuilder.getListActualTypeArguments(parameter.type)
+				/>
 
 				<#if parameterTypeName == "java.util.Locale">
-					<#assign parameterTypeName = "String">
+					<#assign parameterTypeName = "String" />
 				<#elseif parameterTypeName == "java.util.List<java.lang.Long>">
-					<#assign parameterTypeName = "Long[]">
+					<#assign parameterTypeName = "Long[]" />
 				<#elseif (parameter.type.value == "java.util.List") && serviceBuilder.hasEntityByGenericsName(parameterListActualType)>
-					<#assign parameterEntity = serviceBuilder.getEntityByGenericsName(parameterListActualType)>
+					<#assign
+						parameterEntity = serviceBuilder.getEntityByGenericsName(parameterListActualType)
 
-					<#assign parameterTypeName = parameterEntity.apiPackagePath + ".model." + parameterEntity.name + "Soap[]">
+						parameterTypeName = parameterEntity.apiPackagePath + ".model." + parameterEntity.name + "Soap[]"
+					/>
+
 				<#elseif serviceBuilder.hasEntityByParameterTypeValue(parameter.type.value)>
-					<#assign parameterEntity = serviceBuilder.getEntityByParameterTypeValue(parameter.type.value)>
+					<#assign
+						parameterEntity = serviceBuilder.getEntityByParameterTypeValue(parameter.type.value)
 
-					<#assign parameterTypeName = parameterEntity.apiPackagePath + ".model." + parameterEntity.name + "Soap">
+						parameterTypeName = parameterEntity.apiPackagePath + ".model." + parameterEntity.name + "Soap"
+					/>
 				</#if>
 
 				<#if parameterTypeName == "java.util.Map<java.util.Locale, java.lang.String>">
 					java.lang.String[] ${parameter.name}LanguageIds, java.lang.String[] ${parameter.name}Values
 
-					<#assign localizationMapVariables = localizationMapVariables + "Map<Locale, String>" + parameter.name + " = LocalizationUtil.getLocalizationMap(" + parameter.name + "LanguageIds, " + parameter.name + "Values);">
+					<#assign localizationMapVariables = localizationMapVariables + "Map<Locale, String>" + parameter.name + " = LocalizationUtil.getLocalizationMap(" + parameter.name + "LanguageIds, " + parameter.name + "Values);" />
 				<#else>
 					${parameterTypeName} ${parameter.name}
 				</#if>
@@ -167,26 +176,28 @@ public class ${entity.name}ServiceSoap {
 				try {
 					${localizationMapVariables}
 
-					<#if returnValueName != "void">
+					<#if !stringUtil.equals(returnValueName, "void")>
 						${returnTypeGenericsName} returnValue =
 					</#if>
 
 					${entity.name}ServiceUtil.${method.name}(
 
 					<#list method.parameters as parameter>
-						<#assign parameterTypeName = serviceBuilder.getTypeGenericsName(parameter.type)>
-						<#assign parameterListActualType = serviceBuilder.getListActualTypeArguments(parameter.type)>
+						<#assign
+							parameterTypeName = serviceBuilder.getTypeGenericsName(parameter.type)
+							parameterListActualType = serviceBuilder.getListActualTypeArguments(parameter.type)
+						/>
 
 						<#if parameterTypeName == "java.util.Locale">
 							LocaleUtil.fromLanguageId(
 						<#elseif parameterTypeName == "java.util.List<java.lang.Long>">
 							ListUtil.toList(
 						<#elseif (parameter.type.value == "java.util.List") && serviceBuilder.hasEntityByGenericsName(parameterListActualType)>
-							<#assign parameterEntity = serviceBuilder.getEntityByGenericsName(parameterListActualType)>
+							<#assign parameterEntity = serviceBuilder.getEntityByGenericsName(parameterListActualType) />
 
 							${parameterEntity.packagePath}.model.impl.${parameterEntity.name}ModelImpl.toModels(
 						<#elseif serviceBuilder.hasEntityByParameterTypeValue(parameter.type.value)>
-							<#assign parameterEntity = serviceBuilder.getEntityByGenericsName(parameter.type.value)>
+							<#assign parameterEntity = serviceBuilder.getEntityByGenericsName(parameter.type.value) />
 
 							${parameterEntity.packagePath}.model.impl.${parameterEntity.name}ModelImpl.toModel(
 						</#if>
@@ -210,15 +221,15 @@ public class ${entity.name}ServiceSoap {
 
 					);
 
-					<#if returnValueName != "void">
+					<#if !stringUtil.equals(returnValueName, "void")>
 						<#if returnValueName == extendedModelName>
-							<#if returnValueDimension == "">
+							<#if validator.isNull(returnValueDimension)>
 								return ${soapModelName}.toSoapModel(returnValue);
 							<#else>
 								return ${soapModelName}.toSoapModels(returnValue);
 							</#if>
 						<#elseif stringUtil.startsWith(returnValueName, apiPackagePath + ".model.") && serviceBuilder.hasEntityByGenericsName(returnValueName)>
-							<#if returnValueDimension == "">
+							<#if validator.isNull(returnValueDimension)>
 								return ${returnValueName}Soap.toSoapModel(returnValue);
 							<#else>
 								return ${returnValueName}Soap.toSoapModels(returnValue);

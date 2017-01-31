@@ -25,13 +25,14 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
-import com.liferay.portal.kernel.search.IndexWriterHelperUtil;
+import com.liferay.portal.kernel.search.IndexWriterHelper;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.trash.kernel.util.TrashUtil;
 import com.liferay.wiki.model.WikiNode;
 import com.liferay.wiki.service.WikiNodeLocalService;
 import com.liferay.wiki.service.permission.WikiNodePermissionChecker;
@@ -86,10 +87,15 @@ public class WikiNodeIndexer extends BaseIndexer<WikiNode> {
 	protected Document doGetDocument(WikiNode wikiNode) throws Exception {
 		Document document = getBaseModelDocument(CLASS_NAME, wikiNode);
 
-		document.addUID(CLASS_NAME, wikiNode.getNodeId());
-
 		document.addText(Field.DESCRIPTION, wikiNode.getDescription());
-		document.addText(Field.TITLE, wikiNode.getName());
+
+		String title = wikiNode.getName();
+
+		if (wikiNode.isInTrash()) {
+			title = TrashUtil.getOriginalTitle(title);
+		}
+
+		document.addText(Field.TITLE, title);
 
 		return document;
 	}
@@ -122,14 +128,14 @@ public class WikiNodeIndexer extends BaseIndexer<WikiNode> {
 		Document document = getDocument(wikiNode);
 
 		if (!wikiNode.isInTrash()) {
-			IndexWriterHelperUtil.deleteDocument(
+			_indexWriterHelper.deleteDocument(
 				getSearchEngineId(), wikiNode.getCompanyId(),
 				document.get(Field.UID), isCommitImmediately());
 
 			return;
 		}
 
-		IndexWriterHelperUtil.updateDocument(
+		_indexWriterHelper.updateDocument(
 			getSearchEngineId(), wikiNode.getCompanyId(), document,
 			isCommitImmediately());
 	}
@@ -185,6 +191,9 @@ public class WikiNodeIndexer extends BaseIndexer<WikiNode> {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		WikiNodeIndexer.class);
+
+	@Reference
+	private IndexWriterHelper _indexWriterHelper;
 
 	private WikiNodeLocalService _wikiNodeLocalService;
 

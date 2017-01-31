@@ -32,7 +32,7 @@
 					<a class="collapsed management-bar-toggle management-bar-toggle-link" data-toggle="collapse" href="#<%= namespace %>managementBarCollapse">
 						<span class="management-bar-item-title"><liferay-ui:message key="filter-order" /></span>
 
-						<span class="icon-sort"></span>
+						<aui:icon image="caret-double-l" markupView="lexicon" />
 					</a>
 				</c:if>
 			</div>
@@ -54,7 +54,7 @@
 	</div>
 
 	<c:if test="<%= Validator.isNotNull(actionButtons) || includeCheckBox %>">
-		<div class="management-bar management-bar-default management-bar-no-collapse" id="<%= namespace %>actionButtons">
+		<div class="management-bar management-bar-default management-bar-no-collapse management-bar-secondary-bar" id="<%= namespace %>actionButtons">
 			<div class="container-fluid-1280">
 				<div class="management-bar-header">
 					<c:if test="<%= includeCheckBox %>">

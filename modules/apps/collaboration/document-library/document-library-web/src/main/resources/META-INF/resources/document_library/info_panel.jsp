@@ -49,7 +49,7 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 %>
 
 <c:choose>
-	<c:when test="<%= (ListUtil.isEmpty(fileEntries) && ListUtil.isEmpty(fileShortcuts) && ListUtil.isNotEmpty(folders) && (folders.size() == 1)) %>">
+	<c:when test="<%= ListUtil.isEmpty(fileEntries) && ListUtil.isEmpty(fileShortcuts) && ListUtil.isNotEmpty(folders) && (folders.size() == 1) %>">
 
 		<%
 		Folder folder = folders.get(0);
@@ -58,29 +58,26 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 		%>
 
 		<div class="sidebar-header">
-			<ul class="list-inline list-unstyled sidebar-header-actions">
+			<ul class="sidebar-actions">
 				<li>
 					<liferay-util:include page="/document_library/subscribe.jsp" servletContext="<%= application %>" />
 				</li>
-
 				<li>
 					<liferay-util:include page="/document_library/folder_action.jsp" servletContext="<%= application %>" />
 				</li>
 			</ul>
 
-			<h4><%= (folder != null) ? folder.getName() : LanguageUtil.get(request, "home") %></h4>
+			<h4 class="sidebar-title"><%= (folder != null) ? folder.getName() : LanguageUtil.get(request, "home") %></h4>
 
-			<h5 class="text-default">
-				<span>
-					<liferay-ui:message key="folder" />
-				</span>
+			<h5>
+				<liferay-ui:message key="folder" />
 			</h5>
 		</div>
 
-		<liferay-ui:tabs names="details" refresh="<%= false %>" type="dropdown">
+		<liferay-ui:tabs cssClass="navbar-no-collapse" names="details" refresh="<%= false %>" type="dropdown">
 			<liferay-ui:section>
 				<div class="sidebar-body">
-					<dl>
+					<dl class="sidebar-block">
 						<dt class="h5">
 							<liferay-ui:message key="num-of-items" />
 						</dt>
@@ -93,7 +90,7 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 						}
 						%>
 
-						<dd>
+						<dd class="h6 sidebar-caption">
 							<%= DLAppServiceUtil.getFoldersAndFileEntriesAndFileShortcutsCount(repositoryId, folderId, WorkflowConstants.STATUS_APPROVED, true) %>
 						</dd>
 
@@ -101,8 +98,7 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 							<dt class="h5">
 								<liferay-ui:message key="created" />
 							</dt>
-
-							<dd>
+							<dd class="h6 sidebar-caption">
 								<%= HtmlUtil.escape(folder.getUserName()) %>
 							</dd>
 						</c:if>
@@ -120,25 +116,20 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 		%>
 
 		<div class="sidebar-header">
-			<ul class="list-inline list-unstyled sidebar-header-actions">
+			<ul class="sidebar-actions">
 				<li>
 					<liferay-util:include page="/document_library/file_entry_action.jsp" servletContext="<%= application %>" />
 				</li>
-				<li>
-					<aui:icon cssClass="icon-monospaced sidenav-close visible-xs-block" data="<%= infoPanelToggleData %>" image="times" markupView="lexicon" url="javascript:;" />
-				</li>
 			</ul>
 
-			<h4><%= HtmlUtil.escape(fileEntry.getTitle()) %></h4>
+			<h4 class="sidebar-title"><%= HtmlUtil.escape(fileEntry.getTitle()) %></h4>
 
-			<h5 class="text-default">
-				<span>
-					<liferay-ui:message key="document" />
-				</span>
+			<h5>
+				<liferay-ui:message key="document" />
 			</h5>
 		</div>
 
-		<liferay-ui:tabs names="details,versions" refresh="<%= false %>" type="dropdown">
+		<liferay-ui:tabs cssClass="navbar-no-collapse" names="details,versions" refresh="<%= false %>" type="dropdown">
 			<liferay-ui:section>
 				<div class="sidebar-body">
 
@@ -156,37 +147,40 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 					%>
 
 					<c:if test="<%= Validator.isNotNull(thumbnailSrc) %>">
-						<img alt="<liferay-ui:message escapeAttribute="<%= true %>" key="thumbnail" />" class="crop-img img-rounded" src="<%= DLUtil.getThumbnailSrc(fileEntry, fileVersion, themeDisplay) %>" />
+						<div class="crop-img crop-img-center crop-img-middle sidebar-panel">
+							<img alt="<liferay-ui:message escapeAttribute="<%= true %>" key="thumbnail" />" class="img-responsive" src="<%= DLUtil.getThumbnailSrc(fileEntry, fileVersion, themeDisplay) %>" />
+						</div>
 					</c:if>
 
-					<div class="btn-group">
+					<aui:button-row>
 						<aui:button cssClass="btn-sm" href="<%= DLUtil.getDownloadURL(fileEntry, fileVersion, themeDisplay, StringPool.BLANK) %>" value="download" />
+					</aui:button-row>
+
+					<div class="sidebar-block">
+						<aui:input name="url" type="resource" value="<%= DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK, false, true) %>" />
+
+						<c:if test="<%= portletDisplay.isWebDAVEnabled() && fileEntry.isSupportsSocial() %>">
+
+							<%
+							String webDavHelpMessage = null;
+
+							if (BrowserSnifferUtil.isWindows(request)) {
+								webDavHelpMessage = LanguageUtil.format(request, "webdav-windows-help", new Object[] {"https://support.microsoft.com/en-us/kb/892211", "https://dev.liferay.com/discover/portal/-/knowledge_base/7-0/publishing-files#desktop-access-to-documents-and-media"}, false);
+							}
+							else {
+								webDavHelpMessage = LanguageUtil.format(request, "webdav-help", "https://dev.liferay.com/discover/portal/-/knowledge_base/7-0/publishing-files#desktop-access-to-documents-and-media", false);
+							}
+							%>
+
+							<aui:input helpMessage="<%= webDavHelpMessage %>" name="webDavURL" type="resource" value="<%= DLUtil.getWebDavURL(themeDisplay, fileEntry.getFolder(), fileEntry) %>" />
+						</c:if>
 					</div>
 
-					<aui:input name="url" type="resource" value="<%= DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK, false, true) %>" />
-
-					<c:if test="<%= portletDisplay.isWebDAVEnabled() && fileEntry.isSupportsSocial() %>">
-
-						<%
-						String webDavHelpMessage = null;
-
-						if (BrowserSnifferUtil.isWindows(request)) {
-							webDavHelpMessage = LanguageUtil.format(request, "webdav-windows-help", new Object[] {"http://www.microsoft.com/downloads/details.aspx?FamilyId=17C36612-632E-4C04-9382-987622ED1D64", "http://www.liferay.com/web/guest/community/wiki/-/wiki/Main/WebDAV"}, false);
-						}
-						else {
-							webDavHelpMessage = LanguageUtil.format(request, "webdav-help", "http://www.liferay.com/web/guest/community/wiki/-/wiki/Main/WebDAV", false);
-						}
-						%>
-
-						<aui:input helpMessage="<%= webDavHelpMessage %>" name="webDavURL" type="resource" value="<%= DLUtil.getWebDavURL(themeDisplay, fileEntry.getFolder(), fileEntry) %>" />
-					</c:if>
-
-					<dl>
+					<dl class="sidebar-block">
 						<dt class="h5">
 							<liferay-ui:message key="created" />
 						</dt>
-
-						<dd>
+						<dd class="h6 sidebar-caption">
 							<%= HtmlUtil.escape(fileEntry.getUserName()) %>
 						</dd>
 
@@ -194,8 +188,7 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 							<dt class="h5">
 								<liferay-ui:message key="description" />
 							</dt>
-
-							<dd>
+							<dd class="h6 sidebar-caption">
 								<%= HtmlUtil.escape(fileEntry.getDescription()) %>
 							</dd>
 						</c:if>
@@ -203,8 +196,7 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 						<dt class="h5">
 							<liferay-ui:message key="size" />
 						</dt>
-
-						<dd>
+						<dd class="h6 sidebar-caption">
 							<%= HtmlUtil.escape(TextFormatter.formatStorageSize(fileEntry.getSize(), locale)) %>
 						</dd>
 
@@ -212,8 +204,7 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 							<dt class="h5">
 								<liferay-ui:message key="extension" />
 							</dt>
-
-							<dd>
+							<dd class="h6 sidebar-caption">
 								<%= HtmlUtil.escape(fileVersion.getExtension()) %>
 							</dd>
 						</c:if>
@@ -221,8 +212,7 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 						<dt class="h5">
 							<liferay-ui:message key="version" />
 						</dt>
-
-						<dd>
+						<dd class="h6 sidebar-caption">
 							<%= HtmlUtil.escape(fileVersion.getVersion()) %>
 						</dd>
 					</dl>
@@ -238,14 +228,14 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 					}
 					%>
 
-					<div class="lfr-asset-categories">
+					<div class="lfr-asset-categories sidebar-block">
 						<liferay-ui:asset-categories-summary
 							className="<%= DLFileEntryConstants.getClassName() %>"
 							classPK="<%= assetClassPK %>"
 						/>
 					</div>
 
-					<div class="lfr-asset-tags">
+					<div class="lfr-asset-tags sidebar-block">
 						<liferay-ui:asset-tags-summary
 							className="<%= DLFileEntryConstants.getClassName() %>"
 							classPK="<%= assetClassPK %>"
@@ -258,14 +248,14 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 						classPK="<%= fileEntry.getFileEntryId() %>"
 					/>
 
-					<liferay-ui:custom-attributes-available className="<%= DLFileEntryConstants.getClassName() %>">
-						<liferay-ui:custom-attribute-list
+					<liferay-expando:custom-attributes-available className="<%= DLFileEntryConstants.getClassName() %>">
+						<liferay-expando:custom-attribute-list
 							className="<%= DLFileEntryConstants.getClassName() %>"
 							classPK="<%= fileVersion.getFileVersionId() %>"
 							editable="<%= false %>"
 							label="<%= true %>"
 						/>
-					</liferay-ui:custom-attributes-available>
+					</liferay-expando:custom-attributes-available>
 
 					<%
 					AssetEntry layoutAssetEntry = AssetEntryLocalServiceUtil.fetchEntry(DLFileEntryConstants.getClassName(), assetClassPK);
@@ -302,25 +292,20 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 		%>
 
 		<div class="sidebar-header">
-			<ul class="list-inline list-unstyled sidebar-header-actions">
+			<ul class="sidebar-actions">
 				<li>
 					<liferay-util:include page="/document_library/file_entry_action.jsp" servletContext="<%= application %>" />
 				</li>
-				<li>
-					<aui:icon cssClass="icon-monospaced sidenav-close visible-xs-block" data="<%= infoPanelToggleData %>" image="times" markupView="lexicon" url="javascript:;" />
-				</li>
 			</ul>
 
-			<h4><%= HtmlUtil.escape(fileShortcut.getToTitle()) %></h4>
+			<h4 class="sidebar-title"><%= HtmlUtil.escape(fileShortcut.getToTitle()) %></h4>
 
-			<h5 class="text-default">
-				<span>
-					<liferay-ui:message key="shortcut" />
-				</span>
+			<h5>
+				<liferay-ui:message key="shortcut" />
 			</h5>
 		</div>
 
-		<liferay-ui:tabs names="details" refresh="<%= false %>" type="dropdown">
+		<liferay-ui:tabs cssClass="navbar-no-collapse" names="details" refresh="<%= false %>" type="dropdown">
 			<liferay-ui:section>
 				<div class="sidebar-body">
 
@@ -328,12 +313,11 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 					FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileShortcut.getToFileEntryId());
 					%>
 
-					<dl>
+					<dl class="sidebar-block">
 						<dt class="h5">
 							<liferay-ui:message key="description" />
 						</dt>
-
-						<dd>
+						<dd class="h6 sidebar-caption">
 							<%= HtmlUtil.escape(fileEntry.getDescription()) %>
 						</dd>
 
@@ -351,8 +335,7 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 							<dt class="h5">
 								<liferay-ui:message key="target-site" />
 							</dt>
-
-							<dd>
+							<dd class="h6 sidebar-caption">
 								<%= HtmlUtil.escape(fileEntrySiteGroup.getName(locale)) %>
 							</dd>
 						</c:if>
@@ -360,8 +343,7 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 						<dt class="h5">
 							<liferay-ui:message key="target-folder" />
 						</dt>
-
-						<dd>
+						<dd class="h6 sidebar-caption">
 
 							<%
 							Folder folder = fileEntry.getFolder();
@@ -383,12 +365,10 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 								</c:choose>
 							</a>
 						</dd>
-
 						<dt class="h5">
 							<liferay-ui:message key="size" />
 						</dt>
-
-						<dd>
+						<dd class="h6 sidebar-caption">
 							<%= TextFormatter.formatStorageSize(fileEntry.getSize(), locale) %>
 						</dd>
 
@@ -402,8 +382,7 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 							<dt class="h5">
 								<liferay-ui:message key="document-type" />
 							</dt>
-
-							<dd>
+							<dd class="h6 sidebar-caption">
 								<%= HtmlUtil.escape(dlFileEntryType.getName(locale)) %>
 							</dd>
 						</c:if>
@@ -411,33 +390,24 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 						<dt class="h5">
 							<liferay-ui:message key="content-type" />
 						</dt>
-
-						<dd>
+						<dd class="h6 sidebar-caption">
 							<%= HtmlUtil.escape(fileEntry.getMimeType()) %>
-						</dd>>
+						</dd>
+					</dl>
 				</div>
 			</liferay-ui:section>
 		</liferay-ui:tabs>
 	</c:when>
 	<c:otherwise>
 		<div class="sidebar-header">
-			<ul class="list-inline list-unstyled">
-				<li>
-					<h4><liferay-ui:message arguments="<%= folders.size() + fileEntries.size() %>" key="x-items-selected" /></h4>
-				</li>
-				<li>
-					<aui:icon cssClass="icon-monospaced sidenav-close visible-xs-block" data="<%= infoPanelToggleData %>" image="times" markupView="lexicon" url="javascript:;" />
-				</li>
-			</ul>
+			<h4 class="sidebar-title"><liferay-ui:message arguments="<%= folders.size() + fileEntries.size() %>" key="x-items-are-selected" /></h4>
 		</div>
 
-		<liferay-ui:tabs names="details" refresh="<%= false %>" type="dropdown">
+		<liferay-ui:tabs cssClass="navbar-no-collapse" names="details" refresh="<%= false %>" type="dropdown">
 			<liferay-ui:section>
 				<div class="sidebar-body">
-					<h5 class="text-default">
-						<span>
-							<liferay-ui:message arguments="<%= folders.size() + fileEntries.size() %>" key="x-items-selected" />
-						</span>
+					<h5>
+						<liferay-ui:message arguments="<%= folders.size() + fileEntries.size() %>" key="x-items-are-selected" />
 					</h5>
 				</div>
 			</liferay-ui:section>

@@ -1,7 +1,8 @@
 'use strict';
 
 import HtmlScreen from 'senna/src/screen/HtmlScreen';
-import { CancellablePromise } from 'metal-promise/src/promise/Promise';
+import globals from 'senna/src/globals/globals';
+import {CancellablePromise} from 'metal-promise/src/promise/Promise';
 import Utils from '../util/Utils.es';
 
 class EventScreen extends HtmlScreen {
@@ -9,7 +10,6 @@ class EventScreen extends HtmlScreen {
 		super();
 
 		this.cacheable = false;
-		this.timeout = Liferay.PropsValues.JAVASCRIPT_SINGLE_PAGE_APPLICATION_TIMEOUT;
 	}
 
 	dispose() {
@@ -42,8 +42,18 @@ class EventScreen extends HtmlScreen {
 		this.cacheLastModified = (new Date()).getTime();
 	}
 
+	checkRedirectPath(redirectPath) {
+		var app = Liferay.SPA.app;
+
+		if (!globals.capturedFormElement && !app.findRoute(redirectPath)) {
+			window.location.href = redirectPath;
+		}
+	}
+
 	deactivate() {
 		super.deactivate();
+
+		Utils.resetAllPortlets();
 
 		Liferay.fire(
 			'screenDeactivate',
@@ -64,21 +74,31 @@ class EventScreen extends HtmlScreen {
 		);
 	}
 
-	flip(surfaces) {
-		document.body.className = this.virtualDocument.querySelector('body').className;
+	copyBodyAttributes() {
+		var virtualBody = this.virtualDocument.querySelector('body');
 
-		return CancellablePromise.resolve(Utils.resetAllPortlets())
-			.then(CancellablePromise.resolve(this.beforeScreenFlip()))
+		document.body.className = virtualBody.className;
+		document.body.onload = virtualBody.onload;
+	}
+
+	flip(surfaces) {
+		this.copyBodyAttributes();
+
+		return CancellablePromise.resolve(this.beforeScreenFlip())
 			.then(super.flip(surfaces))
-			.then(() => {
-				Liferay.fire(
-					'screenFlip',
-					{
-						app: Liferay.SPA.app,
-						screen: this
-					}
-				);
-			});
+			.then(
+				() => {
+					this.runBodyOnLoad();
+
+					Liferay.fire(
+						'screenFlip',
+						{
+							app: Liferay.SPA.app,
+							screen: this
+						}
+					);
+				}
+			);
 	}
 
 	getCache() {
@@ -98,23 +118,37 @@ class EventScreen extends HtmlScreen {
 	isValidResponseStatusCode(statusCode) {
 		var validStatusCodes = Liferay.SPA.app.getValidStatusCodes();
 
-		return super.isValidResponseStatusCode(statusCode) || (validStatusCodes.indexOf(statusCode) > -1);
+		return (statusCode >= 200 && statusCode <= 500) || (validStatusCodes.indexOf(statusCode) > -1);
 	}
 
 	load(path) {
 		return super.load(path)
-			.then((content) => {
-				Liferay.fire(
-					'screenLoad',
-					{
-						app: Liferay.SPA.app,
-						content: content,
-						screen: this
-					}
-				);
+			.then(
+				(content) => {
+					var redirectPath = this.beforeUpdateHistoryPath(path);
 
-				return content;
-			});
+					this.checkRedirectPath(redirectPath);
+
+					Liferay.fire(
+						'screenLoad',
+						{
+							app: Liferay.SPA.app,
+							content: content,
+							screen: this
+						}
+					);
+
+					return content;
+				}
+			);
+	}
+
+	runBodyOnLoad() {
+		var onLoad = document.body.onload;
+
+		if (onLoad) {
+			onLoad();
+		}
 	}
 }
 

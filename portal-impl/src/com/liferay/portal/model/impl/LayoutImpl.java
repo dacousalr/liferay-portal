@@ -34,8 +34,11 @@ import com.liferay.portal.kernel.model.LayoutTypePortlet;
 import com.liferay.portal.kernel.model.LayoutTypePortletConstants;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.PortletPreferences;
+import com.liferay.portal.kernel.model.PortletWrapper;
 import com.liferay.portal.kernel.model.Theme;
+import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
+import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
@@ -67,8 +70,8 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.LayoutClone;
 import com.liferay.portal.util.LayoutCloneFactory;
+import com.liferay.portal.util.LayoutTypeControllerTracker;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portlet.PortletURLImpl;
 
 import java.io.IOException;
 
@@ -270,7 +273,7 @@ public class LayoutImpl extends LayoutBaseImpl {
 	 */
 	@Override
 	public List<Layout> getAncestors() throws PortalException {
-		List<Layout> layouts = new ArrayList<>();
+		List<Layout> layouts = Collections.emptyList();
 
 		Layout layout = this;
 
@@ -278,6 +281,10 @@ public class LayoutImpl extends LayoutBaseImpl {
 			layout = LayoutLocalServiceUtil.getLayout(
 				layout.getGroupId(), layout.isPrivateLayout(),
 				layout.getParentLayoutId());
+
+			if (layouts.isEmpty()) {
+				layouts = new ArrayList<>();
+			}
 
 			layouts.add(layout);
 		}
@@ -442,7 +449,26 @@ public class LayoutImpl extends LayoutBaseImpl {
 
 			}
 			else {
-				embeddedPortlet = (Portlet)embeddedPortlet.clone();
+				portlet = new PortletWrapper(portlet) {
+
+					@Override
+					public boolean getStatic() {
+						return _staticPortlet;
+					}
+
+					@Override
+					public boolean isStatic() {
+						return _staticPortlet;
+					}
+
+					@Override
+					public void setStatic(boolean staticPortlet) {
+						_staticPortlet = staticPortlet;
+					}
+
+					private boolean _staticPortlet;
+
+				};
 			}
 
 			// We set embedded portlets as static on order to avoid adding the
@@ -556,8 +582,8 @@ public class LayoutImpl extends LayoutBaseImpl {
 	 * @return the current layout's group
 	 */
 	@Override
-	public Group getGroup() throws PortalException {
-		return GroupLocalServiceUtil.getGroup(getGroupId());
+	public Group getGroup() {
+		return GroupLocalServiceUtil.fetchGroup(getGroupId());
 	}
 
 	/**
@@ -618,9 +644,9 @@ public class LayoutImpl extends LayoutBaseImpl {
 	 * @return the current layout's layout set
 	 */
 	@Override
-	public LayoutSet getLayoutSet() throws PortalException {
+	public LayoutSet getLayoutSet() {
 		if (_layoutSet == null) {
-			_layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
+			_layoutSet = LayoutSetLocalServiceUtil.fetchLayoutSet(
 				getGroupId(), isPrivateLayout());
 		}
 
@@ -714,6 +740,12 @@ public class LayoutImpl extends LayoutBaseImpl {
 				getCompanyId(), getPlid());
 		}
 		catch (NoSuchGroupException nsge) {
+
+			// LPS-52675
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(nsge, nsge);
+			}
 		}
 
 		return group;
@@ -861,10 +893,8 @@ public class LayoutImpl extends LayoutBaseImpl {
 			HttpServletRequest request, HttpServletResponse response)
 		throws Exception {
 
-		LayoutType layoutType = getLayoutType();
-
 		LayoutTypeController layoutTypeController =
-			layoutType.getLayoutTypeController();
+			LayoutTypeControllerTracker.getLayoutTypeController(getType());
 
 		return layoutTypeController.includeLayoutContent(
 			request, response, this);
@@ -1296,10 +1326,8 @@ public class LayoutImpl extends LayoutBaseImpl {
 	}
 
 	private String _getLayoutTypeControllerType() {
-		LayoutType layoutType = getLayoutType();
-
 		LayoutTypeController layoutTypeController =
-			layoutType.getLayoutTypeController();
+			LayoutTypeControllerTracker.getLayoutTypeController(getType());
 
 		return layoutTypeController.getType();
 	}
@@ -1326,7 +1354,7 @@ public class LayoutImpl extends LayoutBaseImpl {
 				String stateMin = typeSettingsProperties.getProperty(
 					LayoutTypePortletConstants.STATE_MIN);
 
-				Layout layout = (Layout)this.clone();
+				Layout layout = (Layout)clone();
 
 				layoutTypePortlet = (LayoutTypePortlet)layout.getLayoutType();
 
@@ -1401,31 +1429,31 @@ public class LayoutImpl extends LayoutBaseImpl {
 				String portletId = StringUtil.split(
 					layoutTypePortlet.getStateMax())[0];
 
-				PortletURLImpl portletURLImpl = new PortletURLImpl(
-					request, portletId, getPlid(), PortletRequest.ACTION_PHASE);
+				LiferayPortletURL portletURL = PortletURLFactoryUtil.create(
+					request, portletId, this, PortletRequest.ACTION_PHASE);
 
 				try {
-					portletURLImpl.setWindowState(WindowState.NORMAL);
-					portletURLImpl.setPortletMode(PortletMode.VIEW);
+					portletURL.setWindowState(WindowState.NORMAL);
+					portletURL.setPortletMode(PortletMode.VIEW);
 				}
 				catch (PortletException pe) {
 					throw new SystemException(pe);
 				}
 
-				portletURLImpl.setAnchor(false);
+				portletURL.setAnchor(false);
 
 				if (PropsValues.LAYOUT_DEFAULT_P_L_RESET &&
 					!resetRenderParameters) {
 
-					portletURLImpl.setParameter("p_l_reset", "0");
+					portletURL.setParameter("p_l_reset", "0");
 				}
 				else if (!PropsValues.LAYOUT_DEFAULT_P_L_RESET &&
 						 resetRenderParameters) {
 
-					portletURLImpl.setParameter("p_l_reset", "1");
+					portletURL.setParameter("p_l_reset", "1");
 				}
 
-				return portletURLImpl.toString();
+				return portletURL.toString();
 			}
 		}
 

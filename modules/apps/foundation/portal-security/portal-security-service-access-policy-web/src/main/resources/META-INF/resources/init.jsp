@@ -23,8 +23,7 @@ taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
 taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %><%@
 taglib uri="http://liferay.com/tld/security" prefix="liferay-security" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
-taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
-taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
+taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@
@@ -48,7 +47,7 @@ page import="com.liferay.portal.security.service.access.policy.model.SAPEntryCon
 page import="com.liferay.portal.security.service.access.policy.service.SAPEntryServiceUtil" %><%@
 page import="com.liferay.portal.security.service.access.policy.service.permission.SAPEntryPermission" %><%@
 page import="com.liferay.portal.security.service.access.policy.util.comparator.SAPEntryNameComparator" %><%@
-page import="com.liferay.portal.security.service.access.policy.web.constants.SAPWebKeys" %><%@
+page import="com.liferay.portal.security.service.access.policy.web.internal.constants.SAPWebKeys" %><%@
 page import="com.liferay.taglib.search.ResultRow" %>
 
 <%@ page import="javax.portlet.ActionRequest" %><%@

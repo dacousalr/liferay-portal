@@ -23,7 +23,7 @@
 	<command name="_deleteCalendar">
 		<var name="key_menuListOption" value="Delete" />
 
-		<execute function="AssertClickNoError" locator1="PGCalendar#CALENDAR_MENULIST_OPTION" value1="Delete" />
+		<execute function="AssertClickNoError" locator1="Calendar#OTHER_CALENDARS_CALENDAR_MENULIST_OPTION" value1="Delete" />
 
 		<execute function="Confirm#waitForConfirmation" value1="Are you sure you want to delete this? It will be deleted immediately." />
 
@@ -37,7 +37,7 @@
 	<command name="_gotoMenulistOption">
 		<var name="key_menuListOption" value="${menuListOption}" />
 
-		<execute function="AssertClick" locator1="PGCalendar#CALENDAR_MENULIST_OPTION" value1="${menuListOption}" />
+		<execute function="AssertClick" locator1="Calendar#OTHER_CALENDARS_CALENDAR_MENULIST_OPTION" value1="${menuListOption}" />
 
 		<if>
 			<equals arg1="${menuListOption}" arg2="RSS" />
@@ -128,6 +128,7 @@
 					<var name="key_calendarName" value="${calendarName}" />
 
 					<execute function="AssertClick" locator1="Calendar#OTHER_CALENDARS_SEARCH_LIST_RESULT" value1="${calendarName}" />
+
 					<execute function="AssertTextEquals" locator1="Calendar#OTHER_CALENDARS_CALENDAR" value1="${calendarName}" />
 				</then>
 			</elseif>
@@ -180,6 +181,7 @@
 	<command name="chooseSiteCalendarMenulistOption">
 		<execute macro="Calendar#_gotoSiteCalendarMenulist">
 			<var name="siteCalendarName" value="${siteCalendarName}" />
+			<var name="siteName" value="${siteName}" />
 		</execute>
 
 		<execute macro="Calendar#_gotoMenulistOption">
@@ -198,7 +200,7 @@
 				<var name="key_calendarName" value="${calendarName}" />
 				<var name="key_user" value="${user}" />
 
-				<execute function="AssertTextEquals" locator1="Calendar#MY_CALENDARS_CALENDAR_ADDITIONAL" value1="${user} - ${calendarName}" />
+				<execute function="AssertTextEquals" locator1="Calendar#MY_CALENDARS_CALENDAR_ADDITIONAL" value1="${calendarName}" />
 				<execute function="Click" locator1="Calendar#MY_CALENDARS_CALENDAR_ADDITIONAL_MENULIST_ARROW" />
 
 				<execute macro="Calendar#_deleteCalendar" />
@@ -209,7 +211,7 @@
 					<var name="key_calendarName" value="${calendarName}" />
 					<var name="key_site" value="${site}" />
 
-					<execute function="AssertTextEquals" locator1="Calendar#CURRENT_SITE_CALENDARS_CALENDAR_ADDITIONAL" value1="${site} - ${calendarName}" />
+					<execute function="AssertTextEquals" locator1="Calendar#CURRENT_SITE_CALENDARS_CALENDAR_ADDITIONAL" value1="${calendarName}" />
 					<execute function="Click" locator1="Calendar#CURRENT_SITE_CALENDARS_CALENDAR_ADDITIONAL_MENULIST_ARROW" />
 
 					<execute macro="Calendar#_deleteCalendar" />
@@ -229,7 +231,7 @@
 				<var name="key_calendarName" value="${calendarName}" />
 				<var name="key_user" value="${user}" />
 
-				<execute function="AssertTextEquals" locator1="Calendar#MY_CALENDARS_CALENDAR_ADDITIONAL" value1="${user} - ${calendarName}" />
+				<execute function="AssertTextEquals" locator1="Calendar#MY_CALENDARS_CALENDAR_ADDITIONAL" value1="${calendarName}" />
 				<execute function="Click" locator1="Calendar#MY_CALENDARS_CALENDAR_ADDITIONAL_MENULIST_ARROW" />
 
 				<execute macro="Calendar#_gotoMenulistOption">
@@ -237,8 +239,11 @@
 				</execute>
 
 				<execute function="SelectFrame" locator1="CalendarEditCalendar#EDIT_CALENDAR_IFRAME" />
+
 				<execute function="Type" locator1="TextInput#NAME" value1="${calendarNameEdit}" />
+
 				<execute macro="Button#clickSave" />
+
 				<execute macro="Alert#viewSuccessMessage" />
 
 				<execute function="SelectFrame" value1="relative=top" />
@@ -256,8 +261,11 @@
 					</execute>
 
 					<execute function="SelectFrame" locator1="CalendarEditCalendar#EDIT_CALENDAR_IFRAME" />
+
 					<execute function="Type" locator1="TextInput#NAME" value1="${calendarNameEdit}" />
+
 					<execute macro="Button#clickSave" />
+
 					<execute macro="Alert#viewSuccessMessage" />
 
 					<execute function="SelectFrame" value1="relative=top" />
@@ -272,8 +280,11 @@
 					</execute>
 
 					<execute function="SelectFrame" locator1="CalendarEditCalendar#EDIT_CALENDAR_IFRAME" />
+
 					<execute function="Type" locator1="TextInput#NAME" value1="${calendarNameEdit}" />
+
 					<execute macro="Button#clickSave" />
+
 					<execute macro="Alert#viewSuccessMessage" />
 
 					<execute function="SelectFrame" value1="relative=top" />
@@ -293,7 +304,7 @@
 				<var name="key_calendarName" value="${calendarName}" />
 				<var name="key_user" value="${user}" />
 
-				<execute function="AssertTextEquals" locator1="Calendar#MY_CALENDARS_CALENDAR_ADDITIONAL" value1="${user} - ${calendarName}" />
+				<execute function="AssertTextEquals" locator1="Calendar#MY_CALENDARS_CALENDAR_ADDITIONAL" value1="${calendarName}" />
 				<execute function="Click" locator1="Calendar#MY_CALENDARS_CALENDAR_ADDITIONAL_MENULIST_ARROW" />
 
 				<execute macro="Calendar#_gotoMenulistOption">
@@ -310,7 +321,7 @@
 					<var name="key_calendarName" value="${calendarName}" />
 					<var name="key_site" value="${site}" />
 
-					<execute function="AssertTextEquals" locator1="Calendar#CURRENT_SITE_CALENDARS_CALENDAR_ADDITIONAL" value1="${site} - ${calendarName}" />
+					<execute function="AssertTextEquals" locator1="Calendar#CURRENT_SITE_CALENDARS_CALENDAR_ADDITIONAL" value1="${calendarName}" />
 					<execute function="Click" locator1="Calendar#CURRENT_SITE_CALENDARS_CALENDAR_ADDITIONAL_MENULIST_ARROW" />
 
 					<execute macro="Calendar#_gotoMenulistOption">
@@ -361,6 +372,7 @@
 			<equals arg1="${reminderEmail}" arg2="true" />
 			<then>
 				<execute function="AssertElementNotPresent" locator1="CalendarEditCalendar#NOTIFICATION_TEMPLATES_REMINDER_EMAIL_TAB_ACTIVE" />
+
 				<execute function="AssertClick" locator1="CalendarEditCalendar#NOTIFICATION_TEMPLATES_REMINDER_EMAIL_TAB_INACTIVE" value1="Reminder Email" />
 			</then>
 			<elseif>
@@ -467,6 +479,7 @@
 
 		<execute function="AssertTextEquals" locator1="CalendarEditCalendar#HEADER_TITLE" value1="${calendarName}" />
 		<execute function="Check" locator1="CalendarEditCalendar#ENABLE_COMMENTS_CHECKBOX" />
+
 		<execute macro="Button#clickSave" />
 
 		<if>
@@ -525,8 +538,10 @@
 		<var name="key_calendarName" value="${calendarName}" />
 
 		<execute function="SelectFrame" locator1="CalendarEditCalendar#EDIT_CALENDAR_IFRAME" />
+
 		<execute function="AssertTextEquals" locator1="CalendarEditCalendar#HEADER_TITLE" value1="${calendarName}" />
 		<execute function="Check" locator1="CalendarEditCalendar#ENABLE_RATINGS_CHECKBOX" />
+
 		<execute macro="Button#clickSave" />
 
 		<if>
@@ -582,12 +597,12 @@
 			</elseif>
 		</if>
 
-		<var method="StringUtil#replace('${roleName}', ' ', '-')" name="key_roleName" />
-		<var method="StringUtil#lowerCase('${key_roleName}')" name="key_roleName" />
+		<var method="StringUtil#replace('${roleTitle}', ' ', '-')" name="key_roleTitle" />
+		<var method="StringUtil#lowerCase('${key_roleTitle}')" name="key_roleTitle" />
 
 		<execute macro="IFrame#selectPermissionsFrame" />
 
-		<execute function="Check" locator1="Permissions#EVENT_PERMISSIONS_VIEW_EVENT_DETAILS_CHECKBOX" value1="${roleName}" />
+		<execute function="Check" locator1="Permissions#EVENT_PERMISSIONS_VIEW_EVENT_DETAILS_CHECKBOX" value1="${roleTitle}" />
 
 		<execute macro="Button#clickSave" />
 
@@ -609,6 +624,8 @@
 	</command>
 
 	<command name="hideCurrentSiteCalendar">
+		<execute function="ScrollWebElementIntoView" locator1="Calendar#CURRENT_SITE_CALENDARS_CALENDAR_PRIMARY_COLOR_DEFAULT" />
+
 		<execute function="Click" locator1="Calendar#CURRENT_SITE_CALENDARS_CALENDAR_PRIMARY_COLOR_DEFAULT" />
 
 		<execute function="AssertElementPresent" locator1="Calendar#CURRENT_SITE_CALENDARS_CALENDAR_PRIMARY_COLOR_HIDDEN" />
@@ -676,12 +693,12 @@
 			</elseif>
 		</if>
 
-		<var method="StringUtil#replace('${roleName}', ' ', '-')" name="key_roleName" />
-		<var method="StringUtil#lowerCase('${key_roleName}')" name="key_roleName" />
+		<var method="StringUtil#replace('${roleTitle}', ' ', '-')" name="key_roleTitle" />
+		<var method="StringUtil#lowerCase('${key_roleTitle}')" name="key_roleTitle" />
 
 		<execute macro="IFrame#selectPermissionsFrame" />
 
-		<execute function="Uncheck" locator1="Permissions#EVENT_PERMISSIONS_VIEW_CHECKBOX" value1="${roleName}" />
+		<execute function="Uncheck" locator1="Permissions#EVENT_PERMISSIONS_VIEW_CHECKBOX" value1="${roleTitle}" />
 
 		<execute macro="Button#clickSave" />
 
@@ -693,6 +710,8 @@
 	</command>
 
 	<command name="showCurrentSiteCalendar">
+		<execute function="ScrollWebElementIntoView" locator1="Calendar#CURRENT_SITE_CALENDARS_CALENDAR_PRIMARY_COLOR_HIDDEN" />
+
 		<execute function="Click" locator1="Calendar#CURRENT_SITE_CALENDARS_CALENDAR_PRIMARY_COLOR_HIDDEN" />
 
 		<execute function="AssertElementPresent" locator1="Calendar#CURRENT_SITE_CALENDARS_CALENDAR_PRIMARY_COLOR_DEFAULT" />
@@ -741,7 +760,6 @@
 		<execute function="AssertElementNotPresent" locator1="Calendar#MY_CALENDARS_CALENDAR_ADDITIONAL_GENERIC" />
 		<execute function="AssertElementNotPresent" locator1="Calendar#CURRENT_SITE_CALENDARS_CALENDAR_ADDITIONAL_GENERIC" />
 		<execute function="AssertElementNotPresent" locator1="Calendar#OTHER_CALENDARS_CALENDAR_GENERIC" />
-		<execute function="AssertTextEquals" locator1="Calendar#OTHER_CALENDARS_CALENDAR_EMPTY_MESSAGE" value1="No calendars selected." />
 	</command>
 
 	<command name="tearDownColor">
@@ -769,14 +787,14 @@
 			<then>
 				<var name="key_user" value="${user}" />
 
-				<execute function="AssertTextEquals" locator1="Calendar#MY_CALENDARS_CALENDAR_ADDITIONAL" value1="${user} - ${calendarName}" />
+				<execute function="AssertTextEquals" locator1="Calendar#MY_CALENDARS_CALENDAR_ADDITIONAL" value1="${calendarName}" />
 			</then>
 			<elseif>
-				<equals arg1="${calendarType}" arg2="Site Calendars" />
+				<equals arg1="${calendarType}" arg2="Current Site Calendars" />
 				<then>
 					<var name="key_site" value="${site}" />
 
-					<execute function="AssertTextEquals" locator1="Calendar#CURRENT_SITE_CALENDARS_CALENDAR_ADDITIONAL" value1="${site} - ${calendarName}" />
+					<execute function="AssertTextEquals" locator1="Calendar#CURRENT_SITE_CALENDARS_CALENDAR_ADDITIONAL" value1="${calendarName}" />
 				</then>
 			</elseif>
 			<elseif>
@@ -844,9 +862,13 @@
 	</command>
 
 	<command name="viewCurrentSiteCalendarName">
-		<var name="key_site" value="${site}" />
+		<var name="key_siteName" value="${siteName}" />
 
-		<execute function="AssertTextEquals" locator1="Calendar#CURRENT_SITE_CALENDARS_CALENDAR_PRIMARY" value1="${site}" />
+		<execute function="AssertTextEquals" locator1="Calendar#CURRENT_SITE_CALENDARS_HEADER" value1="${siteName}'s Calendars" />
+
+		<var name="key_calendarName" value="${calendarName}" />
+
+		<execute function="AssertTextEquals" locator1="Calendar#CURRENT_SITE_CALENDARS_CALENDAR_PRIMARY" value1="${calendarName}" />
 	</command>
 
 	<command name="viewDefault">
@@ -862,19 +884,19 @@
 
 		<!--
 		To ensure the desired month will always be reached, click "Previous"
-		until it reaches our baseline of February 2015. Then click "Next" until
+		until it reaches our baseline of February 2016. Then click "Next" until
 		it reaches ${dateMonth}.
 		-->
 
 		<while>
-			<condition function="IsTextNotEqual" locator1="PGCalendar#SCHEDULER_VIEW_MONTH_DATE" value1="February 2015" />
+			<condition function="IsTextNotEqual" locator1="Calendar#SCHEDULER_VIEW_MONTH_DATE" value1="February 2016" />
 			<then>
 				<execute function="Click" locator1="Calendar#VIEW_PREVIOUS_BUTTON" />
 			</then>
 		</while>
 
 		<while>
-			<condition function="IsTextNotEqual" locator1="PGCalendar#SCHEDULER_VIEW_MONTH_DATE" value1="${dateMonth}" />
+			<condition function="IsTextNotEqual" locator1="Calendar#SCHEDULER_VIEW_MONTH_DATE" value1="${dateMonth}" />
 			<then>
 				<execute function="Click" locator1="Calendar#VIEW_NEXT_BUTTON" />
 			</then>
@@ -885,21 +907,21 @@
 
 		<!--
 		To ensure the desired month will always be reached, click "Previous"
-		until it reaches our baseline of February 2015. Then click "Next" until
+		until it reaches our baseline of February 2016. Then click "Next" until
 		it reaches ${dateMonth}.
 		-->
 
 		<while>
-			<condition function="IsTextNotEqual" locator1="PGCalendar#SMALL_CALENDAR_DATE" value1="February 2015" />
+			<condition function="IsTextNotEqual" locator1="Calendar#SMALL_CALENDAR_DATE" value1="February 2016" />
 			<then>
-				<execute function="Click" locator1="PGCalendar#SMALL_CALENDAR_PREVIOUS" />
+				<execute function="Click" locator1="Calendar#SMALL_CALENDAR_PREVIOUS" />
 			</then>
 		</while>
 
 		<while>
-			<condition function="IsTextNotEqual" locator1="PGCalendar#SMALL_CALENDAR_DATE" value1="${dateMonth}" />
+			<condition function="IsTextNotEqual" locator1="Calendar#SMALL_CALENDAR_DATE" value1="${dateMonth}" />
 			<then>
-				<execute function="Click" locator1="PGCalendar#SMALL_CALENDAR_NEXT" />
+				<execute function="Click" locator1="Calendar#SMALL_CALENDAR_NEXT" />
 			</then>
 		</while>
 	</command>
@@ -1003,6 +1025,8 @@
 			<var name="siteName" value="${siteName}" />
 		</execute>
 
+		<execute function="SelectWindow" locator1="title=${siteName}" />
+
 		<execute function="AssertTextEquals" locator1="CalendarRSS#FEED_TITLE"  value1="${calendarName}" />
 
 		<var name="key_eventTitle" value="${eventTitle}" />
@@ -1018,6 +1042,8 @@
 			<var name="siteName" value="${siteName}" />
 		</execute>
 
+		<execute function="SelectWindow" locator1="title=${siteName}" />
+
 		<execute function="AssertTextEquals" locator1="CalendarRSS#FEED_TITLE"  value1="${calendarName}" />
 
 		<var name="key_eventTitle" value="${eventTitle}" />
@@ -1032,17 +1058,17 @@
 			<equals arg1="${timeZone}" arg2="(UTC -08:00) Pacific Standard Time" />
 			<then>
 				<if>
-					<condition function="IsTextNotEqual" locator1="PGCalendarAddcalendar#TIME_ZONE_LOS_ANGELES_SELECT_OPTION" value1="(UTC -07:00) Pacific Daylight Time" />
+					<condition function="IsTextNotEqual" locator1="CalendarConfiguration#USER_SETTINGS_TIME_ZONE_LOS_ANGELES_SELECT_OPTION" value1="(UTC -07:00) Pacific Daylight Time" />
 					<then>
-						<execute function="AssertSelectedLabel" locator1="PGCalendarAddcalendar#TIME_ZONE_SELECT" value1="${timeZone}" />
+						<execute function="AssertSelectedLabel" locator1="CalendarConfiguration#USER_SETTINGS_TIME_ZONE_SELECT" value1="${timeZone}" />
 					</then>
 					<else>
-						<execute function="AssertSelectedLabel" locator1="PGCalendarAddcalendar#TIME_ZONE_SELECT" value1="(UTC -07:00) Pacific Daylight Time" />
+						<execute function="AssertSelectedLabel" locator1="CalendarConfiguration#USER_SETTINGS_TIME_ZONE_SELECT" value1="(UTC -07:00) Pacific Daylight Time" />
 					</else>
 				</if>
 			</then>
 			<else>
-				<execute function="AssertSelectedLabel" locator1="PGCalendarAddcalendar#TIME_ZONE_SELECT" value1="${timeZone}" />
+				<execute function="AssertSelectedLabel" locator1="CalendarConfiguration#USER_SETTINGS_TIME_ZONE_SELECT" value1="${timeZone}" />
 			</else>
 		</if>
 	</command>
@@ -1050,33 +1076,38 @@
 	<command name="viewSiteCalendarNoMenulistOption">
 		<execute macro="Calendar#_gotoSiteCalendarMenulist">
 			<var name="siteCalendarName" value="${siteCalendarName}" />
+			<var name="siteName" value="${siteName}" />
 		</execute>
 
 		<var name="key_menuListOption" value="${menuListOption}" />
 
-		<execute function="AssertElementNotPresent" locator1="PGCalendar#CALENDAR_MENULIST_OPTION" />
+		<execute function="AssertElementNotPresent" locator1="Calendar#OTHER_CALENDARS_CALENDAR_MENULIST_OPTION" />
 	</command>
 
 	<command name="viewWeekCountViaMonthView">
 		<var name="key_weekNumber" value="${weekNumber}" />
 
-		<execute function="AssertElementPresent" locator1="PGCalendar#SCHEDULER_VIEW_MONTH_WEEK_NUMBER" />
+		<execute function="AssertElementPresent" locator1="Calendar#SCHEDULER_VIEW_MONTH_WEEK_NUMBER" />
 		<execute function="SelectFrame" value1="relative=top" />
 		<execute function="Pause" locator1="3000" />
 
 		<var method="MathUtil#sum('${weekNumber}', '1')" name="key_weekNumber" />
 
-		<execute function="AssertElementNotPresent" locator1="PGCalendar#SCHEDULER_VIEW_MONTH_WEEK_NUMBER" />
+		<execute function="AssertElementNotPresent" locator1="Calendar#SCHEDULER_VIEW_MONTH_WEEK_NUMBER" />
 	</command>
 
 	<command name="viewWeekStartDayViaAddEventMiniCalendar">
 		<execute function="Click" locator1="CalendarEditEvent#START_DATE" />
 
-		<execute function="AssertTextEquals" locator1="PGCalendarAddevent#MINI_CALENDAR_WEEK_START_DAY_START_DATE" value1="${weekStartDay}" />
+		<execute function="AssertTextEquals" locator1="CalendarEditEvent#MINI_CALENDAR_WEEK_START_DAY_START_DATE" value1="${weekStartDay}" />
+
+		<execute function="Click" locator1="CalendarEditEvent#DATE_CONTAINER" />
 
 		<execute function="Click" locator1="CalendarEditEvent#END_DATE" />
 
-		<execute function="AssertTextEquals" locator1="PGCalendarAddevent#MINI_CALENDAR_WEEK_START_DAY_END_DATE" value1="${weekStartDay}" />
+		<execute function="AssertTextEquals" locator1="CalendarEditEvent#MINI_CALENDAR_WEEK_START_DAY_END_DATE" value1="${weekStartDay}" />
+
+		<execute function="Click" locator1="CalendarEditEvent#FORM_CONTENT" />
 	</command>
 
 	<command name="viewWeekStartDayViaMonthView">
@@ -1084,10 +1115,10 @@
 			<var name="viewType" value="Month" />
 		</execute>
 
-		<execute function="AssertTextEquals" locator1="PGCalendar#SCHEDULER_VIEW_MONTH_WEEK_START_DAY" value1="${weekStartDay}" />
+		<execute function="AssertTextEquals" locator1="Calendar#SCHEDULER_VIEW_MONTH_WEEK_START_DAY" value1="${weekStartDay}" />
 	</command>
 
 	<command name="viewWeekStartDayViaSmallCalendar">
-		<execute function="AssertTextEquals" locator1="PGCalendar#SMALL_CALENDAR_WEEK_START_DAY" value1="${weekStartDay}" />
+		<execute function="AssertTextEquals" locator1="Calendar#SMALL_CALENDAR_WEEK_START_DAY" value1="${weekStartDay}" />
 	</command>
 </definition>

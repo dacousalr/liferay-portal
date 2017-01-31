@@ -78,7 +78,9 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 		// Category
 
 		User user = userPersistence.findByPrimaryKey(userId);
+
 		long groupId = serviceContext.getScopeGroupId();
+
 		parentCategoryId = getParentCategoryId(groupId, parentCategoryId);
 
 		validate(name);
@@ -245,12 +247,6 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 		if (mbMailingList != null) {
 			mbMailingListLocalService.deleteMailingList(mbMailingList);
 		}
-
-		// Subscriptions
-
-		subscriptionLocalService.deleteSubscriptions(
-			category.getCompanyId(), MBCategory.class.getName(),
-			category.getCategoryId());
 
 		// Expando
 
@@ -717,25 +713,11 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 	@Override
 	public void subscribeCategory(long userId, long groupId, long categoryId)
 		throws PortalException {
-
-		if (categoryId == MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) {
-			categoryId = groupId;
-		}
-
-		subscriptionLocalService.addSubscription(
-			userId, groupId, MBCategory.class.getName(), categoryId);
 	}
 
 	@Override
 	public void unsubscribeCategory(long userId, long groupId, long categoryId)
 		throws PortalException {
-
-		if (categoryId == MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) {
-			categoryId = groupId;
-		}
-
-		subscriptionLocalService.deleteSubscription(
-			userId, MBCategory.class.getName(), categoryId);
 	}
 
 	@Override

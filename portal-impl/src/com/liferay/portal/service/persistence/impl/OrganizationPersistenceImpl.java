@@ -30,8 +30,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.NoSuchOrganizationException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CacheModel;
-import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -44,7 +42,9 @@ import com.liferay.portal.kernel.service.persistence.UserPersistence;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.service.persistence.impl.TableMapper;
 import com.liferay.portal.kernel.service.persistence.impl.TableMapperFactory;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -6656,7 +6656,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((OrganizationModelImpl)organization);
+		clearUniqueFindersCache((OrganizationModelImpl)organization, true);
 	}
 
 	@Override
@@ -6668,52 +6668,38 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			entityCache.removeResult(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
 				OrganizationImpl.class, organization.getPrimaryKey());
 
-			clearUniqueFindersCache((OrganizationModelImpl)organization);
+			clearUniqueFindersCache((OrganizationModelImpl)organization, true);
 		}
 	}
 
 	protected void cacheUniqueFindersCache(
-		OrganizationModelImpl organizationModelImpl, boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					organizationModelImpl.getCompanyId(),
-					organizationModelImpl.getName()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_C_N, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_C_N, args,
-				organizationModelImpl);
-		}
-		else {
-			if ((organizationModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_C_N.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						organizationModelImpl.getCompanyId(),
-						organizationModelImpl.getName()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_C_N, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_C_N, args,
-					organizationModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(
 		OrganizationModelImpl organizationModelImpl) {
 		Object[] args = new Object[] {
 				organizationModelImpl.getCompanyId(),
 				organizationModelImpl.getName()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_C_N, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_C_N, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_C_N, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_C_N, args,
+			organizationModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		OrganizationModelImpl organizationModelImpl, boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					organizationModelImpl.getCompanyId(),
+					organizationModelImpl.getName()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_C_N, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_C_N, args);
+		}
 
 		if ((organizationModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_C_N.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					organizationModelImpl.getOriginalCompanyId(),
 					organizationModelImpl.getOriginalName()
 				};
@@ -6996,8 +6982,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			OrganizationImpl.class, organization.getPrimaryKey(), organization,
 			false);
 
-		clearUniqueFindersCache(organizationModelImpl);
-		cacheUniqueFindersCache(organizationModelImpl, isNew);
+		clearUniqueFindersCache(organizationModelImpl, false);
+		cacheUniqueFindersCache(organizationModelImpl);
 
 		organization.resetOriginalValues();
 
@@ -7081,12 +7067,14 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	 */
 	@Override
 	public Organization fetchByPrimaryKey(Serializable primaryKey) {
-		Organization organization = (Organization)entityCache.getResult(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
+		Serializable serializable = entityCache.getResult(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
 				OrganizationImpl.class, primaryKey);
 
-		if (organization == _nullOrganization) {
+		if (serializable == nullModel) {
 			return null;
 		}
+
+		Organization organization = (Organization)serializable;
 
 		if (organization == null) {
 			Session session = null;
@@ -7102,7 +7090,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 				}
 				else {
 					entityCache.putResult(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
-						OrganizationImpl.class, primaryKey, _nullOrganization);
+						OrganizationImpl.class, primaryKey, nullModel);
 				}
 			}
 			catch (Exception e) {
@@ -7156,18 +7144,20 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		Set<Serializable> uncachedPrimaryKeys = null;
 
 		for (Serializable primaryKey : primaryKeys) {
-			Organization organization = (Organization)entityCache.getResult(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
+			Serializable serializable = entityCache.getResult(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
 					OrganizationImpl.class, primaryKey);
 
-			if (organization == null) {
-				if (uncachedPrimaryKeys == null) {
-					uncachedPrimaryKeys = new HashSet<Serializable>();
-				}
+			if (serializable != nullModel) {
+				if (serializable == null) {
+					if (uncachedPrimaryKeys == null) {
+						uncachedPrimaryKeys = new HashSet<Serializable>();
+					}
 
-				uncachedPrimaryKeys.add(primaryKey);
-			}
-			else {
-				map.put(primaryKey, organization);
+					uncachedPrimaryKeys.add(primaryKey);
+				}
+				else {
+					map.put(primaryKey, (Organization)serializable);
+				}
 			}
 		}
 
@@ -7209,7 +7199,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
 				entityCache.putResult(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
-					OrganizationImpl.class, primaryKey, _nullOrganization);
+					OrganizationImpl.class, primaryKey, nullModel);
 			}
 		}
 		catch (Exception e) {
@@ -7576,10 +7566,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			companyId = organization.getCompanyId();
 		}
 
-		for (long groupPK : groupPKs) {
-			organizationToGroupTableMapper.addTableMapping(companyId, pk,
-				groupPK);
-		}
+		organizationToGroupTableMapper.addTableMappings(companyId, pk, groupPKs);
 	}
 
 	/**
@@ -7591,21 +7578,9 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	@Override
 	public void addGroups(long pk,
 		List<com.liferay.portal.kernel.model.Group> groups) {
-		long companyId = 0;
-
-		Organization organization = fetchByPrimaryKey(pk);
-
-		if (organization == null) {
-			companyId = companyProvider.getCompanyId();
-		}
-		else {
-			companyId = organization.getCompanyId();
-		}
-
-		for (com.liferay.portal.kernel.model.Group group : groups) {
-			organizationToGroupTableMapper.addTableMapping(companyId, pk,
-				group.getPrimaryKey());
-		}
+		addGroups(pk,
+			ListUtil.toLongArray(groups,
+				com.liferay.portal.kernel.model.Group.GROUP_ID_ACCESSOR));
 	}
 
 	/**
@@ -7649,9 +7624,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	 */
 	@Override
 	public void removeGroups(long pk, long[] groupPKs) {
-		for (long groupPK : groupPKs) {
-			organizationToGroupTableMapper.deleteTableMapping(pk, groupPK);
-		}
+		organizationToGroupTableMapper.deleteTableMappings(pk, groupPKs);
 	}
 
 	/**
@@ -7663,10 +7636,9 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	@Override
 	public void removeGroups(long pk,
 		List<com.liferay.portal.kernel.model.Group> groups) {
-		for (com.liferay.portal.kernel.model.Group group : groups) {
-			organizationToGroupTableMapper.deleteTableMapping(pk,
-				group.getPrimaryKey());
-		}
+		removeGroups(pk,
+			ListUtil.toLongArray(groups,
+				com.liferay.portal.kernel.model.Group.GROUP_ID_ACCESSOR));
 	}
 
 	/**
@@ -7685,9 +7657,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 		removeGroupPKsSet.removeAll(newGroupPKsSet);
 
-		for (long removeGroupPK : removeGroupPKsSet) {
-			organizationToGroupTableMapper.deleteTableMapping(pk, removeGroupPK);
-		}
+		organizationToGroupTableMapper.deleteTableMappings(pk,
+			ArrayUtil.toLongArray(removeGroupPKsSet));
 
 		newGroupPKsSet.removeAll(oldGroupPKsSet);
 
@@ -7702,10 +7673,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			companyId = organization.getCompanyId();
 		}
 
-		for (long newGroupPK : newGroupPKsSet) {
-			organizationToGroupTableMapper.addTableMapping(companyId, pk,
-				newGroupPK);
-		}
+		organizationToGroupTableMapper.addTableMappings(companyId, pk,
+			ArrayUtil.toLongArray(newGroupPKsSet));
 	}
 
 	/**
@@ -7896,9 +7865,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			companyId = organization.getCompanyId();
 		}
 
-		for (long userPK : userPKs) {
-			organizationToUserTableMapper.addTableMapping(companyId, pk, userPK);
-		}
+		organizationToUserTableMapper.addTableMappings(companyId, pk, userPKs);
 	}
 
 	/**
@@ -7910,21 +7877,9 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	@Override
 	public void addUsers(long pk,
 		List<com.liferay.portal.kernel.model.User> users) {
-		long companyId = 0;
-
-		Organization organization = fetchByPrimaryKey(pk);
-
-		if (organization == null) {
-			companyId = companyProvider.getCompanyId();
-		}
-		else {
-			companyId = organization.getCompanyId();
-		}
-
-		for (com.liferay.portal.kernel.model.User user : users) {
-			organizationToUserTableMapper.addTableMapping(companyId, pk,
-				user.getPrimaryKey());
-		}
+		addUsers(pk,
+			ListUtil.toLongArray(users,
+				com.liferay.portal.kernel.model.User.USER_ID_ACCESSOR));
 	}
 
 	/**
@@ -7968,9 +7923,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	 */
 	@Override
 	public void removeUsers(long pk, long[] userPKs) {
-		for (long userPK : userPKs) {
-			organizationToUserTableMapper.deleteTableMapping(pk, userPK);
-		}
+		organizationToUserTableMapper.deleteTableMappings(pk, userPKs);
 	}
 
 	/**
@@ -7982,10 +7935,9 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	@Override
 	public void removeUsers(long pk,
 		List<com.liferay.portal.kernel.model.User> users) {
-		for (com.liferay.portal.kernel.model.User user : users) {
-			organizationToUserTableMapper.deleteTableMapping(pk,
-				user.getPrimaryKey());
-		}
+		removeUsers(pk,
+			ListUtil.toLongArray(users,
+				com.liferay.portal.kernel.model.User.USER_ID_ACCESSOR));
 	}
 
 	/**
@@ -8004,9 +7956,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 		removeUserPKsSet.removeAll(newUserPKsSet);
 
-		for (long removeUserPK : removeUserPKsSet) {
-			organizationToUserTableMapper.deleteTableMapping(pk, removeUserPK);
-		}
+		organizationToUserTableMapper.deleteTableMappings(pk,
+			ArrayUtil.toLongArray(removeUserPKsSet));
 
 		newUserPKsSet.removeAll(oldUserPKsSet);
 
@@ -8021,10 +7972,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 			companyId = organization.getCompanyId();
 		}
 
-		for (long newUserPK : newUserPKsSet) {
-			organizationToUserTableMapper.addTableMapping(companyId, pk,
-				newUserPK);
-		}
+		organizationToUserTableMapper.addTableMappings(companyId, pk,
+			ArrayUtil.toLongArray(newUserPKsSet));
 	}
 
 	/**
@@ -8115,34 +8064,4 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"uuid", "type"
 			});
-	private static final Organization _nullOrganization = new OrganizationImpl() {
-			@Override
-			public Object clone() {
-				return this;
-			}
-
-			@Override
-			public CacheModel<Organization> toCacheModel() {
-				return _nullOrganizationCacheModel;
-			}
-		};
-
-	private static final CacheModel<Organization> _nullOrganizationCacheModel = new NullCacheModel();
-
-	private static class NullCacheModel implements CacheModel<Organization>,
-		MVCCModel {
-		@Override
-		public long getMvccVersion() {
-			return -1;
-		}
-
-		@Override
-		public void setMvccVersion(long mvccVersion) {
-		}
-
-		@Override
-		public Organization toEntityModel() {
-			return _nullOrganization;
-		}
-	}
 }

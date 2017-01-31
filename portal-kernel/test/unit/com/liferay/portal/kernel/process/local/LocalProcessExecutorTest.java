@@ -635,6 +635,7 @@ public class LocalProcessExecutorTest {
 		ExecutorService executorService = _invokeGetThreadPoolExecutor();
 
 		Assert.assertNotNull(executorService);
+
 		Assert.assertNotNull(_getThreadPoolExecutor());
 
 		_localProcessExecutor.destroy();
@@ -646,6 +647,7 @@ public class LocalProcessExecutorTest {
 		executorService = _invokeGetThreadPoolExecutor();
 
 		Assert.assertNotNull(executorService);
+
 		Assert.assertNotNull(_getThreadPoolExecutor());
 
 		DummyJob dummyJob = new DummyJob();
@@ -851,6 +853,7 @@ public class LocalProcessExecutorTest {
 
 		Assert.assertEquals(
 			DummyReturnProcessCallable.class.getName(), returnValue);
+
 		Assert.assertFalse(future.isCancelled());
 		Assert.assertTrue(future.isDone());
 
@@ -1483,6 +1486,9 @@ public class LocalProcessExecutorTest {
 			arguments.add("-Djvm.debug=true");
 		}
 
+		arguments.add("-Dliferay.mode=test");
+		arguments.add("-Dsun.zip.disableMemoryMapping=true");
+
 		String whipAgentLine = System.getProperty("whip.agent");
 
 		if (Validator.isNotNull(whipAgentLine)) {
@@ -1724,7 +1730,7 @@ public class LocalProcessExecutorTest {
 				Thread heartbeatThread = _getHeartbeatThread(false);
 
 				while (heartbeatThread.getState() !=
-					Thread.State.TIMED_WAITING);
+							Thread.State.TIMED_WAITING);
 
 				ProcessContext.detach();
 
@@ -1965,7 +1971,7 @@ public class LocalProcessExecutorTest {
 
 			byte[] serializedData = unsyncByteArrayOutputStream.toByteArray();
 
-			serializedData[5] = (byte) (serializedData[5] + 1);
+			serializedData[5] = (byte)(serializedData[5] + 1);
 
 			_brokenPipingData = serializedData;
 		}
