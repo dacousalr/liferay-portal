@@ -8466,7 +8466,7 @@ public class PortalImpl implements Portal {
 
 		if (themeDisplay.isI18n() &&
 			(!canonicalURL ||
-				PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE == 2)) {
+			 (PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE == 2))) {
 
 			sb.append(themeDisplay.getI18nPath());
 		}
