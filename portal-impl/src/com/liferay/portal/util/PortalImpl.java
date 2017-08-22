@@ -8265,7 +8265,7 @@ public class PortalImpl implements Portal {
 			}
 			else {
 				canonicalURLSuffix = canonicalURL.substring(
-					canonicalURLSuffixPos + 1);
+					canonicalURLSuffixPos);
 			}
 		}
 
