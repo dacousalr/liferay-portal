@@ -7732,13 +7732,18 @@ public class JournalArticleLocalServiceImpl
 			journalArticlePersistence.findByG_A(
 				article.getGroupId(), article.getArticleId());
 
-		final Date expirationDate = article.getExpirationDate();
+		final Long resourcePrimKey = article.getResourcePrimKey();
 
 		TransactionCommitCallbackUtil.registerCallback(
 			new Callable<Void>() {
 
 				@Override
 				public Void call() throws Exception {
+					JournalArticle latestArticle = journalArticleLocalService.getLatestArticle(
+							resourcePrimKey);
+
+					Date expirationDate = latestArticle.getExpirationDate();
+
 					for (JournalArticle curArticle : articles) {
 						curArticle.setExpirationDate(expirationDate);
 
