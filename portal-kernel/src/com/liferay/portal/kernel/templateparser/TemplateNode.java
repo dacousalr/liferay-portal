@@ -151,17 +151,6 @@ public class TemplateNode extends LinkedHashMap<String, Object> {
 
 			return StringPool.BLANK;
 		}
-		else if (type.equals("link_to_layout")) {
-			String data = (String)get("data");
-
-			int pos = data.indexOf(CharPool.AT);
-
-			if (pos != -1) {
-				data = data.substring(0, pos);
-			}
-
-			return data;
-		}
 		else {
 			return (String)get("data");
 		}
