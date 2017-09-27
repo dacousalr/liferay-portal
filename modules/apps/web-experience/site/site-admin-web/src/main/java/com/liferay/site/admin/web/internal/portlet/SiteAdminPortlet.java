@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.RemoteOptionsException;
 import com.liferay.portal.kernel.exception.RequiredGroupException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -79,6 +80,7 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
@@ -793,6 +795,9 @@ public class SiteAdminPortlet extends MVCPortlet {
 
 		typeSettingsProperties.putAll(formTypeSettingsProperties);
 
+		liveGroup = groupService.updateGroup(
+			liveGroup.getGroupId(), typeSettingsProperties.toString());
+
 		// Virtual hosts
 
 		LayoutSet publicLayoutSet = liveGroup.getPublicLayoutSet();
@@ -845,12 +850,27 @@ public class SiteAdminPortlet extends MVCPortlet {
 			layoutSetService.updateVirtualHost(
 				stagingGroup.getGroupId(), true, privateVirtualHost);
 
-			groupService.updateGroup(
-				stagingGroup.getGroupId(), typeSettingsProperties.toString());
-		}
+			if (!LanguageUtil.isInheritLocales(liveGroup.getGroupId())) {
+				UnicodeProperties stagingTypeSettingsProperties =
+					stagingGroup.getTypeSettingsProperties();
 
-		liveGroup = groupService.updateGroup(
-			liveGroup.getGroupId(), typeSettingsProperties.toString());
+				stagingTypeSettingsProperties.setProperty(
+					GroupConstants.TYPE_SETTINGS_KEY_INHERIT_LOCALES,
+					Boolean.FALSE.toString());
+				stagingTypeSettingsProperties.setProperty(
+					PropsKeys.LOCALES,
+					typeSettingsProperties.getProperty(PropsKeys.LOCALES));
+				stagingTypeSettingsProperties.setProperty(
+					"languageId",
+					typeSettingsProperties.getProperty(
+						"languageId",
+						LocaleUtil.toLanguageId(LocaleUtil.getDefault())));
+
+				groupService.updateGroup(
+					stagingGroup.getGroupId(),
+					stagingTypeSettingsProperties.toString());
+			}
+		}
 
 		// Layout set prototypes
 
