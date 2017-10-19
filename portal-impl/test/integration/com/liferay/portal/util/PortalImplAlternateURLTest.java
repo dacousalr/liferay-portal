@@ -21,8 +21,10 @@ import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
+import com.liferay.portal.kernel.test.util.TestPropsUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
@@ -56,10 +58,16 @@ public class PortalImplAlternateURLTest {
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		_defaultLocale = LocaleUtil.getDefault();
+		_defaultPrependStyle = PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE;
 
 		LocaleUtil.setDefault(
 			LocaleUtil.US.getLanguage(), LocaleUtil.US.getCountry(),
 			LocaleUtil.US.getVariant());
+
+		TestPropsUtil.set(
+			com.liferay.portal.kernel.util.PropsKeys.
+				LOCALE_PREPEND_FRIENDLY_URL_STYLE,
+			GetterUtil.getString(_defaultPrependStyle));
 	}
 
 	@AfterClass
@@ -75,9 +83,20 @@ public class PortalImplAlternateURLTest {
 	}
 
 	@Test
+	public void testCustomPortalLocaleAlternateURL2() throws Exception {
+		testAlternateURL("localhost", null, null, LocaleUtil.SPAIN, "/es", "2");
+	}
+
+	@Test
 	public void testDefaultPortalLocaleAlternateURL() throws Exception {
 		testAlternateURL(
 			"localhost", null, null, LocaleUtil.US, StringPool.BLANK);
+	}
+
+	@Test
+	public void testDefaultPortalLocaleAlternateURL2() throws Exception {
+		testAlternateURL(
+			"localhost", null, null, LocaleUtil.US, StringPool.BLANK, "2");
 	}
 
 	@Test
@@ -91,6 +110,16 @@ public class PortalImplAlternateURLTest {
 	}
 
 	@Test
+	public void testLocalizedSiteCustomSiteLocaleAlternateURL2()
+		throws Exception {
+
+		testAlternateURL(
+			"localhost",
+			Arrays.asList(LocaleUtil.US, LocaleUtil.SPAIN, LocaleUtil.GERMANY),
+			LocaleUtil.SPAIN, LocaleUtil.US, "/en", "2");
+	}
+
+	@Test
 	public void testLocalizedSiteDefaultSiteLocaleAlternateURL()
 		throws Exception {
 
@@ -101,10 +130,27 @@ public class PortalImplAlternateURLTest {
 	}
 
 	@Test
+	public void testLocalizedSiteDefaultSiteLocaleAlternateURL2()
+		throws Exception {
+
+		testAlternateURL(
+			"localhost",
+			Arrays.asList(LocaleUtil.US, LocaleUtil.SPAIN, LocaleUtil.GERMANY),
+			LocaleUtil.SPAIN, LocaleUtil.SPAIN, StringPool.BLANK, "2");
+	}
+
+	@Test
 	public void testNonlocalhostCustomPortalLocaleAlternateURL()
 		throws Exception {
 
 		testAlternateURL("liferay.com", null, null, LocaleUtil.SPAIN, "/es");
+	}
+
+	@Test
+	public void testNonlocalhostCustomPortalLocaleAlternateURL2()
+		throws Exception {
+
+		testAlternateURL("liferay.com", null, null, LocaleUtil.SPAIN, "/es", "2");
 	}
 
 	@Test
@@ -113,6 +159,14 @@ public class PortalImplAlternateURLTest {
 
 		testAlternateURL(
 			"liferay.com", null, null, LocaleUtil.US, StringPool.BLANK);
+	}
+
+	@Test
+	public void testNonlocalhostDefaultPortalLocaleAlternateURL2()
+		throws Exception {
+
+		testAlternateURL(
+			"liferay.com", null, null, LocaleUtil.US, StringPool.BLANK, "2");
 	}
 
 	@Test
@@ -126,6 +180,16 @@ public class PortalImplAlternateURLTest {
 	}
 
 	@Test
+	public void testNonlocalhostLocalizedSiteCustomSiteLocaleAlternateURL2()
+		throws Exception {
+
+		testAlternateURL(
+			"liferay.com",
+			Arrays.asList(LocaleUtil.US, LocaleUtil.SPAIN, LocaleUtil.GERMANY),
+			LocaleUtil.SPAIN, LocaleUtil.US, "/en", "2");
+	}
+
+	@Test
 	public void testNonlocalhostLocalizedSiteDefaultSiteLocaleAlternateURL()
 		throws Exception {
 
@@ -133,6 +197,16 @@ public class PortalImplAlternateURLTest {
 			"liferay.com",
 			Arrays.asList(LocaleUtil.US, LocaleUtil.SPAIN, LocaleUtil.GERMANY),
 			LocaleUtil.SPAIN, LocaleUtil.SPAIN, StringPool.BLANK);
+	}
+
+	@Test
+	public void testNonlocalhostLocalizedSiteDefaultSiteLocaleAlternateURL2()
+		throws Exception {
+
+		testAlternateURL(
+			"liferay.com",
+			Arrays.asList(LocaleUtil.US, LocaleUtil.SPAIN, LocaleUtil.GERMANY),
+			LocaleUtil.SPAIN, LocaleUtil.SPAIN, StringPool.BLANK, "2");
 	}
 
 	protected String generateAssetPublisherContentURL(
@@ -194,6 +268,23 @@ public class PortalImplAlternateURLTest {
 			String expectedI18nPath)
 		throws Exception {
 
+		testAlternateURL(
+			portalDomain, groupAvailableLocales, groupDefaultLocale,
+			alternateLocale, expectedI18nPath,
+			GetterUtil.getString(_defaultPrependStyle));
+	}
+
+	protected void testAlternateURL(
+			String portalDomain, Collection<Locale> groupAvailableLocales,
+			Locale groupDefaultLocale, Locale alternateLocale,
+			String expectedI18nPath, String prependStyle)
+		throws Exception {
+
+		TestPropsUtil.set(
+			com.liferay.portal.kernel.util.PropsKeys.
+				LOCALE_PREPEND_FRIENDLY_URL_STYLE,
+			prependStyle);
+
 		_group = GroupTestUtil.addGroup();
 
 		_group = GroupTestUtil.updateDisplaySettings(
@@ -236,6 +327,7 @@ public class PortalImplAlternateURLTest {
 	}
 
 	private static Locale _defaultLocale;
+	private static int _defaultPrependStyle;
 
 	@DeleteAfterTestRun
 	private Group _group;
