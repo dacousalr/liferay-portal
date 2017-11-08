@@ -67,6 +67,7 @@ import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.service.http.GroupServiceHttp;
+import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.exportimport.service.base.StagingLocalServiceBaseImpl;
 import com.liferay.portlet.exportimport.staging.StagingAdvicesThreadLocal;
 
@@ -452,6 +453,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 		throws PortalException {
 
 		File file = null;
+		MissingReferences missingReferences = null;
 
 		Locale siteDefaultLocale = LocaleThreadLocal.getSiteDefaultLocale();
 
@@ -482,16 +484,16 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			exportImportLocalService.importLayoutsDataDeletions(
 				exportImportConfiguration, file);
 
-			MissingReferences missingReferences =
+			missingReferences =
 				exportImportLocalService.validateImportLayoutsFile(
 					exportImportConfiguration, file);
 
 			exportImportLocalService.importLayouts(
 				exportImportConfiguration, file);
-
-			return missingReferences;
 		}
 		catch (IOException ioe) {
+			deleteTempLarOnFailure(file);
+
 			throw new SystemException(
 				"Unable to complete remote staging publication request " +
 					stagingRequestId + " due to a file system error",
@@ -503,6 +505,10 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 
 			LocaleThreadLocal.setSiteDefaultLocale(siteDefaultLocale);
 		}
+
+		deleteTempLarOnSuccess(file);
+
+		return missingReferences;
 	}
 
 	@Override
@@ -704,6 +710,24 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 
 		layoutSetBranchLocalService.deleteLayoutSetBranches(
 			groupId, privateLayout, true);
+	}
+
+	protected void deleteTempLarOnFailure(File file) {
+		if (PropsValues.STAGING_DELETE_TEMP_LAR_ON_FAILURE) {
+			FileUtil.delete(file);
+		}
+		else if (file != null) {
+			_log.error("Kept temporary LAR file " + file.getAbsolutePath());
+		}
+	}
+
+	protected void deleteTempLarOnSuccess(File file) {
+		if (PropsValues.STAGING_DELETE_TEMP_LAR_ON_SUCCESS) {
+			FileUtil.delete(file);
+		}
+		else if ((file != null) && _log.isDebugEnabled()) {
+			_log.debug("Kept temporary LAR file " + file.getAbsolutePath());
+		}
 	}
 
 	protected void disableRemoteStaging(
