@@ -15,6 +15,7 @@
 package com.liferay.portal.util;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
@@ -606,6 +607,11 @@ public class PortalImplCanonicalURLTest {
 			sb.append(PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING);
 			sb.append(groupFriendlyURL);
 		}
+		else if (Validator.isNotNull(i18nPath) &&
+			Validator.isNull(layoutFriendlyURL)) {
+
+			sb.append(StringPool.SLASH);
+		}
 
 		sb.append(layoutFriendlyURL);
 
@@ -671,10 +677,6 @@ public class PortalImplCanonicalURLTest {
 			serverPort = GetterUtil.getIntegerStrict(port);
 		}
 
-		String completeURL = generateURL(
-			portalDomain, port, i18nPath, group.getFriendlyURL(),
-			layout.getFriendlyURL(), secure);
-
 		setVirtualHost(layout.getCompanyId(), virtualHostname);
 
 		Company company = CompanyLocalServiceUtil.getCompany(
@@ -683,6 +685,59 @@ public class PortalImplCanonicalURLTest {
 		ThemeDisplay themeDisplay = new ThemeDisplay();
 
 		themeDisplay.setCompany(company);
+		String layoutFriendlyUrl = layout.getFriendlyURL();
+
+		if (Validator.isNotNull(i18nPath) &&
+			(i18nPath.indexOf(StringPool.SLASH) == 0)) {
+
+			String i18nLanguageId = i18nPath.substring(1);
+
+			Locale locale = LocaleUtil.fromLanguageId(
+				i18nLanguageId, true, false);
+
+			String i18nLanguageCode = i18nLanguageId;
+
+			if ((locale == null) || Validator.isNull(locale.getCountry())) {
+
+				// Locales must contain the country code
+
+				locale = LanguageUtil.getLocale(i18nLanguageCode);
+			}
+
+			if (locale != null) {
+				i18nLanguageId = LocaleUtil.toLanguageId(locale);
+
+				Locale defaultLocale = groupDefaultLocale;
+
+				if (Validator.isNull(defaultLocale)) {
+					Locale siteDefaultLocale = PortalUtil.getSiteDefaultLocale(
+						group.getGroupId());
+
+					if (PropsValues.LOCALE_USE_DEFAULT_IF_NOT_AVAILABLE ||
+						LanguageUtil.isAvailableLocale(siteDefaultLocale)) {
+
+						defaultLocale = siteDefaultLocale;
+					}
+				}
+
+				if ((defaultLocale != null) && (!defaultLocale.equals(locale) ||
+					 (PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE == 2))) {
+
+					layoutFriendlyUrl = layout.getFriendlyURL(locale);
+
+					themeDisplay.setI18nLanguageId(i18nLanguageId);
+					themeDisplay.setI18nPath(i18nPath);
+					themeDisplay.setLocale(locale);
+				}
+				else {
+					i18nPath = StringPool.BLANK;
+				}
+			}
+		}
+
+		String completeURL = generateURL(
+			portalDomain, port, i18nPath, group.getFriendlyURL(),
+			layoutFriendlyUrl, secure);
 		themeDisplay.setLayoutSet(group.getPublicLayoutSet());
 		themeDisplay.setPortalDomain(portalDomain);
 
