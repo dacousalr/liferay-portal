@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.util.test.LayoutTestUtil;
 
@@ -238,8 +239,17 @@ public class PortalImplAlternateURLTest {
 		sb.append("http://");
 		sb.append(portalDomain);
 		sb.append(languageId);
-		sb.append(PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING);
-		sb.append(groupFriendlyURL);
+
+		if (Validator.isNotNull(groupFriendlyURL)) {
+			sb.append(PropsValues.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING);
+			sb.append(groupFriendlyURL);
+		}
+		else if (Validator.isNotNull(languageId) &&
+			Validator.isNull(layoutFriendlyURL)) {
+
+			sb.append(StringPool.SLASH);
+		}
+
 		sb.append(layoutFriendlyURL);
 
 		return sb.toString();
