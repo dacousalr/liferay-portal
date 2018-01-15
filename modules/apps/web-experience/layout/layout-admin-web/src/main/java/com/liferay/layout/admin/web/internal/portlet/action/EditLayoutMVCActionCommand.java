@@ -184,7 +184,8 @@ public class EditLayoutMVCActionCommand extends BaseMVCActionCommand {
 				layout.getTypeSettingsProperties());
 
 			layout = _layoutService.updateLayout(
-				groupId, privateLayout, layoutId, layout.getTypeSettings());
+				groupId, privateLayout, layoutId,
+				layoutTypeSettingsProperties.toString());
 		}
 
 		HttpServletResponse response = _portal.getHttpServletResponse(
