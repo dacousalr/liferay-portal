@@ -49,7 +49,9 @@ boolean modePrint = layoutTypePortlet.hasModePrintPortletId(portletId);
 boolean columnDisabled = layoutTypePortlet.isColumnDisabled(columnId);
 boolean customizable = layoutTypePortlet.isCustomizable();
 
-PortletPreferencesIds portletPreferencesIds = PortletPreferencesFactoryUtil.getPortletPreferencesIds(request, portletId);
+String settingsScope = (String)request.getAttribute(WebKeys.SETTINGS_SCOPE);
+
+PortletPreferencesIds portletPreferencesIds = PortletPreferencesFactoryUtil.getPortletPreferencesIds(request, portletId, settingsScope);
 
 PortletPreferences portletPreferences = PortletPreferencesLocalServiceUtil.getStrictPreferences(portletPreferencesIds);
 
