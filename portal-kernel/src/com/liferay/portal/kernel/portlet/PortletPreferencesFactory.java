@@ -87,7 +87,16 @@ public interface PortletPreferencesFactory {
 		throws PortalException;
 
 	public PortletPreferencesIds getPortletPreferencesIds(
+			HttpServletRequest request, Layout selLayout, String portletId,
+			String settingsScope)
+		throws PortalException;
+
+	public PortletPreferencesIds getPortletPreferencesIds(
 			HttpServletRequest request, String portletId)
+		throws PortalException;
+
+	public PortletPreferencesIds getPortletPreferencesIds(
+		HttpServletRequest request, String portletId, String settingsScope)
 		throws PortalException;
 
 	public PortletPreferencesIds getPortletPreferencesIds(

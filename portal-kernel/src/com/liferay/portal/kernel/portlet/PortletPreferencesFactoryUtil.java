@@ -153,11 +153,28 @@ public class PortletPreferencesFactoryUtil {
 	}
 
 	public static PortletPreferencesIds getPortletPreferencesIds(
+			HttpServletRequest request, Layout selLayout, String portletId,
+			String settingsScope)
+		throws PortalException {
+
+		return getPortletPreferencesFactory().getPortletPreferencesIds(
+			request, selLayout, portletId, settingsScope);
+	}
+
+	public static PortletPreferencesIds getPortletPreferencesIds(
 			HttpServletRequest request, String portletId)
 		throws PortalException {
 
 		return getPortletPreferencesFactory().getPortletPreferencesIds(
 			request, portletId);
+	}
+
+	public static PortletPreferencesIds getPortletPreferencesIds(
+		HttpServletRequest request, String portletId, String settingsScope)
+		throws PortalException {
+
+		return getPortletPreferencesFactory().getPortletPreferencesIds(
+			request, portletId, settingsScope);
 	}
 
 	public static PortletPreferencesIds getPortletPreferencesIds(

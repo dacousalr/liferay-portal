@@ -420,12 +420,54 @@ public class PortletPreferencesFactoryImpl
 
 	@Override
 	public PortletPreferencesIds getPortletPreferencesIds(
+			HttpServletRequest request, Layout layout, String portletId,
+			String settingsScope)
+		throws PortalException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		long siteGroupId = themeDisplay.getSiteGroupId();
+
+		long userId = PortalUtil.getUserId(request);
+		LayoutTypePortlet layoutTypePortlet =
+			themeDisplay.getLayoutTypePortlet();
+
+		boolean modeEditGuest = false;
+
+		String portletMode = ParamUtil.getString(request, "p_p_mode");
+
+		if (portletMode.equals(LiferayPortletMode.EDIT_GUEST.toString()) ||
+			((layoutTypePortlet != null) &&
+			 layoutTypePortlet.hasModeEditGuestPortletId(portletId))) {
+
+			modeEditGuest = true;
+		}
+
+		return _getPortletPreferencesIds(
+			themeDisplay, siteGroupId, userId, layout, portletId,
+			modeEditGuest);
+	}
+
+	@Override
+	public PortletPreferencesIds getPortletPreferencesIds(
 			HttpServletRequest request, String portletId)
 		throws PortalException {
 
 		Layout layout = (Layout)request.getAttribute(WebKeys.LAYOUT);
 
 		return getPortletPreferencesIds(request, layout, portletId);
+	}
+
+	@Override
+	public PortletPreferencesIds getPortletPreferencesIds(
+		HttpServletRequest request, String portletId, String settingsScope)
+		throws PortalException {
+
+		Layout layout = (Layout)request.getAttribute(WebKeys.LAYOUT);
+
+		return getPortletPreferencesIds(
+			request, layout, portletId, settingsScope);
 	}
 
 	@Override
