@@ -426,6 +426,12 @@ public class PortletPreferencesFactoryImpl
 			modeEditGuest = true;
 		}
 
+		if (!modeEditGuest && Validator.isNotNull(settingsScope)) {
+			return getPortletPreferencesIds(
+				layout.getCompanyId(), siteGroupId, layout.getPlid(), portletId,
+				settingsScope);
+		}
+
 		return _getPortletPreferencesIds(
 			themeDisplay, siteGroupId, userId, layout, portletId,
 			modeEditGuest);
