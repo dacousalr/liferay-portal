@@ -165,11 +165,8 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		String settingsScope = ParamUtil.getString(
-			actionRequest, "settingsScope");
-
 		PortletPreferences portletPreferences = getPortletPreferences(
-			actionRequest, themeDisplay, portlet.getPortletId(), settingsScope);
+			actionRequest, portlet.getPortletId());
 
 		actionRequest = ActionUtil.getWrappedActionRequest(
 			actionRequest, portletPreferences);
@@ -201,14 +198,8 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 
 		Portlet portlet = ActionUtil.getPortlet(actionRequest);
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		String settingsScope = ParamUtil.getString(
-			actionRequest, "settingsScope");
-
 		PortletPreferences portletPreferences = getPortletPreferences(
-			actionRequest, themeDisplay, portlet.getPortletId(), settingsScope);
+			actionRequest, portlet.getPortletId());
 
 		if (portletPreferences == null) {
 			portletPreferences = ActionUtil.getLayoutPortletSetup(
@@ -628,16 +619,8 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 			if (mvcPath.endsWith("edit_configuration.jsp") ||
 				mvcPath.endsWith("edit_public_render_parameters.jsp")) {
 
-				ThemeDisplay themeDisplay =
-					(ThemeDisplay)renderRequest.getAttribute(
-						WebKeys.THEME_DISPLAY);
-
-				String settingsScope = renderRequest.getParameter(
-					"settingsScope");
-
-				PortletPreferences portletPreferences = getPortletPreferences(
-					renderRequest, themeDisplay, portlet.getPortletId(),
-					settingsScope);
+				PortletPreferences portletPreferences =
+					getPortletPreferences(renderRequest, portlet.getPortletId());
 
 				renderRequest = ActionUtil.getWrappedRenderRequest(
 					renderRequest, portletPreferences);
@@ -831,8 +814,10 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 	}
 
 	protected PortletPreferences getPortletPreferences(
-		PortletRequest portletRequest, ThemeDisplay themeDisplay,
-		String portletId, String settingsScope) {
+		PortletRequest portletRequest, String portletId) {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
 		Layout layout = themeDisplay.getLayout();
 
@@ -844,6 +829,9 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 
 		HttpServletRequest httpServletRequest =
 			PortalUtil.getHttpServletRequest(portletRequest);
+
+		String settingsScope = ParamUtil.getString(
+			portletRequest, "settingsScope");
 
 		PortletPreferencesIds portletPreferencesIds = null;
 
