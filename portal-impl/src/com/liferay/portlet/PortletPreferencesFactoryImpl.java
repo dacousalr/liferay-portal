@@ -393,29 +393,11 @@ public class PortletPreferencesFactoryImpl
 			HttpServletRequest request, Layout layout, String portletId)
 		throws PortalException {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-			WebKeys.THEME_DISPLAY);
+		String settingsScope = (String)request.getAttribute(
+			WebKeys.SETTINGS_SCOPE);
 
-		long siteGroupId = themeDisplay.getSiteGroupId();
-
-		long userId = PortalUtil.getUserId(request);
-		LayoutTypePortlet layoutTypePortlet =
-			themeDisplay.getLayoutTypePortlet();
-
-		boolean modeEditGuest = false;
-
-		String portletMode = ParamUtil.getString(request, "p_p_mode");
-
-		if (portletMode.equals(LiferayPortletMode.EDIT_GUEST.toString()) ||
-			((layoutTypePortlet != null) &&
-			 layoutTypePortlet.hasModeEditGuestPortletId(portletId))) {
-
-			modeEditGuest = true;
-		}
-
-		return _getPortletPreferencesIds(
-			themeDisplay, siteGroupId, userId, layout, portletId,
-			modeEditGuest);
+		return getPortletPreferencesIds(
+			request, layout, portletId, settingsScope);
 	}
 
 	@Override
@@ -456,7 +438,11 @@ public class PortletPreferencesFactoryImpl
 
 		Layout layout = (Layout)request.getAttribute(WebKeys.LAYOUT);
 
-		return getPortletPreferencesIds(request, layout, portletId);
+		String settingsScope = (String)request.getAttribute(
+			WebKeys.SETTINGS_SCOPE);
+
+		return getPortletPreferencesIds(
+			request, layout, portletId, settingsScope);
 	}
 
 	@Override
