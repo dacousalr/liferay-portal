@@ -51,6 +51,8 @@ boolean customizable = layoutTypePortlet.isCustomizable();
 
 String settingsScope = (String)request.getAttribute(WebKeys.SETTINGS_SCOPE);
 
+settingsScope = ParamUtil.get(request, "settingsScope", settingsScope);
+
 PortletPreferencesIds portletPreferencesIds = PortletPreferencesFactoryUtil.getPortletPreferencesIds(request, portletId, settingsScope);
 
 PortletPreferences portletPreferences = PortletPreferencesLocalServiceUtil.getStrictPreferences(portletPreferencesIds);
@@ -482,10 +484,6 @@ if (urlConfiguration != null) {
 
 	if (portlet.getConfigurationActionInstance() != null) {
 		urlConfiguration.setParameter("mvcPath", "/edit_configuration.jsp");
-
-		String settingsScope = (String)request.getAttribute(WebKeys.SETTINGS_SCOPE);
-
-		settingsScope = ParamUtil.get(request, "settingsScope", settingsScope);
 
 		if (Validator.isNotNull(settingsScope)) {
 			urlConfiguration.setParameter("settingsScope", settingsScope);
