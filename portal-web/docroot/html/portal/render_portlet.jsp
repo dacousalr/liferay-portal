@@ -380,6 +380,7 @@ portletDisplay.setPortletResource(portletResource);
 portletDisplay.setResourcePK(portletPrimaryKey);
 portletDisplay.setRestoreCurrentView(portlet.isRestoreCurrentView());
 portletDisplay.setRootPortletId(rootPortletId);
+portletDisplay.setSettingsScope(settingsScope);
 portletDisplay.setShowCloseIcon(showCloseIcon);
 portletDisplay.setShowConfigurationIcon(showConfigurationIcon);
 portletDisplay.setShowEditIcon(showEditIcon);

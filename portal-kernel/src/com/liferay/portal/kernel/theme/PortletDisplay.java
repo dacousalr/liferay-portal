@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProviderUtil;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryConstants;
 import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIconMenu;
 import com.liferay.portal.kernel.portlet.toolbar.PortletToolbar;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -93,6 +94,7 @@ public class PortletDisplay implements Cloneable, Serializable {
 		_resourcePK = master.getResourcePK();
 		_restoreCurrentView = master.isRestoreCurrentView();
 		_rootPortletId = master.getRootPortletId();
+		_settingsScope = master.getSettingsScope();
 		_showBackIcon = master.isShowBackIcon();
 		_showCloseIcon = master.isShowCloseIcon();
 		_showConfigurationIcon = master.isShowConfigurationIcon();
@@ -164,6 +166,7 @@ public class PortletDisplay implements Cloneable, Serializable {
 		slave.setResourcePK(_resourcePK);
 		slave.setRestoreCurrentView(_restoreCurrentView);
 		slave.setRootPortletId(_rootPortletId);
+		slave.setSettingsScope(_settingsScope);
 		slave.setShowBackIcon(_showBackIcon);
 		slave.setShowCloseIcon(_showCloseIcon);
 		slave.setShowConfigurationIcon(_showConfigurationIcon);
@@ -260,13 +263,38 @@ public class PortletDisplay implements Cloneable, Serializable {
 	public <T> T getPortletInstanceConfiguration(Class<T> clazz)
 		throws ConfigurationException {
 
-		if (Validator.isNull(_portletResource)) {
-			return ConfigurationProviderUtil.getPortletInstanceConfiguration(
-				clazz, _themeDisplay.getLayout(), _id);
+		String settingsScope = _settingsScope;
+
+		if (Validator.isNull(settingsScope)) {
+			settingsScope =
+				PortletPreferencesFactoryConstants
+					.SETTINGS_SCOPE_PORTLET_INSTANCE;
 		}
 
-		return ConfigurationProviderUtil.getPortletInstanceConfiguration(
-			clazz, _themeDisplay.getLayout(), _portletResource);
+		if (settingsScope.equals(
+				PortletPreferencesFactoryConstants
+					.SETTINGS_SCOPE_PORTLET_INSTANCE)) {
+
+			if (Validator.isNull(_portletResource)) {
+				return ConfigurationProviderUtil
+					.getPortletInstanceConfiguration(
+						clazz, _themeDisplay.getLayout(), _id);
+			}
+			else {
+				return ConfigurationProviderUtil.getPortletInstanceConfiguration(
+					clazz, _themeDisplay.getLayout(), _portletResource);
+			}
+		}
+
+		if (settingsScope.equals(
+				PortletPreferencesFactoryConstants.SETTINGS_SCOPE_GROUP)) {
+
+				return ConfigurationProviderUtil.getGroupConfiguration(
+					clazz, _themeDisplay.getLayout().getGroupId());
+		}
+
+		return ConfigurationProviderUtil.getCompanyConfiguration(
+			clazz, _themeDisplay.getLayout().getCompanyId());
 	}
 
 	public String getPortletName() {
@@ -291,6 +319,10 @@ public class PortletDisplay implements Cloneable, Serializable {
 
 	public String getRootPortletId() {
 		return _rootPortletId;
+	}
+
+	public String getSettingsScope() {
+		return _settingsScope;
 	}
 
 	public ThemeDisplay getThemeDisplay() {
@@ -708,6 +740,10 @@ public class PortletDisplay implements Cloneable, Serializable {
 		_rootPortletId = rootPortletId;
 	}
 
+	public void setSettingsScope(String settingsScope) {
+		_settingsScope = settingsScope;
+	}
+
 	public void setShowBackIcon(boolean showBackIcon) {
 		_showBackIcon = showBackIcon;
 	}
@@ -916,6 +952,7 @@ public class PortletDisplay implements Cloneable, Serializable {
 	private String _resourcePK = StringPool.BLANK;
 	private boolean _restoreCurrentView;
 	private String _rootPortletId = StringPool.BLANK;
+	private String _settingsScope;
 	private boolean _showBackIcon;
 	private boolean _showCloseIcon;
 	private boolean _showConfigurationIcon;
