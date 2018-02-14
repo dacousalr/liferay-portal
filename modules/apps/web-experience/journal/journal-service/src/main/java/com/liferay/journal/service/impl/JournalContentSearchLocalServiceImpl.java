@@ -18,21 +18,14 @@ import com.liferay.journal.model.JournalContentSearch;
 import com.liferay.journal.service.base.JournalContentSearchLocalServiceBaseImpl;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutTypePortlet;
-import com.liferay.portal.kernel.model.PortletConstants;
 import com.liferay.portal.kernel.portlet.DisplayInformationProvider;
-import com.liferay.portal.kernel.util.PortletKeys;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.portlet.PortletPreferences;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -61,66 +54,13 @@ public class JournalContentSearchLocalServiceImpl
 		_serviceTrackerMap.open();
 	}
 
+	/**
+	 * @deprecated As of 2.0.0, with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public void checkContentSearches(long companyId) throws PortalException {
-		if (_log.isInfoEnabled()) {
-			_log.info("Checking journal content search for " + companyId);
-		}
-
-		List<Layout> layouts = new ArrayList<>();
-
-		List<Group> groups = groupLocalService.search(
-			companyId, null, null, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
-
-		for (Group group : groups) {
-
-			// Private layouts
-
-			deleteOwnerContentSearches(group.getGroupId(), true);
-
-			layouts.addAll(
-				layoutLocalService.getLayouts(group.getGroupId(), true));
-
-			// Public layouts
-
-			deleteOwnerContentSearches(group.getGroupId(), false);
-
-			layouts.addAll(
-				layoutLocalService.getLayouts(group.getGroupId(), false));
-		}
-
-		for (Layout layout : layouts) {
-			LayoutTypePortlet layoutTypePortlet =
-				(LayoutTypePortlet)layout.getLayoutType();
-
-			List<String> portletIds = layoutTypePortlet.getPortletIds();
-
-			for (String portletId : portletIds) {
-				String rootPortletId = PortletConstants.getRootPortletId(
-					portletId);
-
-				DisplayInformationProvider displayInformationProvider =
-					_serviceTrackerMap.getService(rootPortletId);
-
-				if (displayInformationProvider == null) {
-					continue;
-				}
-
-				PortletPreferences portletPreferences =
-					portletPreferencesLocalService.getPreferences(
-						layout.getCompanyId(),
-						PortletKeys.PREFS_OWNER_ID_DEFAULT,
-						PortletKeys.PREFS_OWNER_TYPE_LAYOUT, layout.getPlid(),
-						portletId);
-
-				String classPK = displayInformationProvider.getClassPK(
-					portletPreferences);
-
-				updateContentSearch(
-					layout.getGroupId(), layout.isPrivateLayout(),
-					layout.getLayoutId(), portletId, classPK);
-			}
-		}
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
