@@ -53,6 +53,10 @@ public class JournalContentSearchLocalServiceUtil {
 		return getService().addJournalContentSearch(journalContentSearch);
 	}
 
+	/**
+	* @deprecated As of 2.0.0, with no direct replacement
+	*/
+	@Deprecated
 	public static void checkContentSearches(long companyId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService().checkContentSearches(companyId);

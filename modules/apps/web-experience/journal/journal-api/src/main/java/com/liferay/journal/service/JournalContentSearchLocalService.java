@@ -71,6 +71,10 @@ public interface JournalContentSearchLocalService extends BaseLocalService,
 	public JournalContentSearch addJournalContentSearch(
 		JournalContentSearch journalContentSearch);
 
+	/**
+	* @deprecated As of 2.0.0, with no direct replacement
+	*/
+	@java.lang.Deprecated
 	public void checkContentSearches(long companyId) throws PortalException;
 
 	/**

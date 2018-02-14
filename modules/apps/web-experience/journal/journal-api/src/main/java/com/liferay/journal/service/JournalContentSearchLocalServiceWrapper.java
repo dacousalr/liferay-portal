@@ -46,6 +46,10 @@ public class JournalContentSearchLocalServiceWrapper
 		return _journalContentSearchLocalService.addJournalContentSearch(journalContentSearch);
 	}
 
+	/**
+	* @deprecated As of 2.0.0, with no direct replacement
+	*/
+	@Deprecated
 	@Override
 	public void checkContentSearches(long companyId)
 		throws com.liferay.portal.kernel.exception.PortalException {
