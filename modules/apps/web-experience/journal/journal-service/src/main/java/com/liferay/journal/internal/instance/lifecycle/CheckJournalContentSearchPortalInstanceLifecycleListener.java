@@ -15,7 +15,6 @@
 package com.liferay.journal.internal.instance.lifecycle;
 
 import com.liferay.journal.configuration.JournalServiceConfiguration;
-import com.liferay.journal.service.JournalContentSearchLocalService;
 import com.liferay.portal.instance.lifecycle.BasePortalInstanceLifecycleListener;
 import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
 import com.liferay.portal.kernel.model.Company;
@@ -41,9 +40,6 @@ public class CheckJournalContentSearchPortalInstanceLifecycleListener
 		if (!journalServiceConfiguration.syncContentSearchOnStartup()) {
 			return;
 		}
-
-		_journalContentSearchLocalService.checkContentSearches(
-			company.getCompanyId());
 	}
 
 	@Reference(unbind = "-")
@@ -53,19 +49,11 @@ public class CheckJournalContentSearchPortalInstanceLifecycleListener
 		_configurationProvider = configurationProvider;
 	}
 
-	@Reference(unbind = "-")
-	protected void setJournalContentSearchLocalService(
-		JournalContentSearchLocalService journalContentSearchLocalService) {
-
-		_journalContentSearchLocalService = journalContentSearchLocalService;
-	}
-
 	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED, unbind = "-")
 	protected void setModuleServiceLifecycle(
 		ModuleServiceLifecycle moduleServiceLifecycle) {
 	}
 
 	private ConfigurationProvider _configurationProvider;
-	private JournalContentSearchLocalService _journalContentSearchLocalService;
 
 }
