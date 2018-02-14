@@ -130,6 +130,9 @@ public interface JournalServiceConfiguration {
 	)
 	public boolean versionHistoryByDefaultEnabled();
 
+	/**
+	 * @deprecated As of 2.0.0, with no direct replacement
+	 */
 	@Meta.AD(
 		deflt = "false", description = "sync-content-search-on-startup-help",
 		name = "sync-content-search-on-startup", required = false
