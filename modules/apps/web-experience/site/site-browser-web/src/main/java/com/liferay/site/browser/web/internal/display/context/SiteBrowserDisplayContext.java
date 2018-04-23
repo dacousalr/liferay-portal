@@ -38,9 +38,11 @@ import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.service.permission.GroupPermissionUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -211,9 +213,8 @@ public class SiteBrowserDisplayContext {
 		else {
 			groups = GroupLocalServiceUtil.search(
 				company.getCompanyId(), classNameIds,
-				groupSearchTerms.getKeywords(), _getGroupParams(),
-				QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-				groupSearch.getOrderByComparator());
+				groupSearchTerms.getKeywords(), null, QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS, groupSearch.getOrderByComparator());
 
 			groups = _filterGroups(groups, themeDisplay.getPermissionChecker());
 
@@ -388,12 +389,18 @@ public class SiteBrowserDisplayContext {
 	}
 
 	private List<Group> _filterGroups(
-		List<Group> groups, PermissionChecker permissionChecker) {
+		List<Group> groups,
+		PermissionChecker permissionChecker) throws PortalException {
 
 		List<Group> filteredGroups = new ArrayList<>();
 
 		for (Group group : groups) {
-			if (permissionChecker.isGroupAdmin(group.getGroupId())) {
+			if (GroupPermissionUtil.contains(
+				permissionChecker, group.getGroupId(),
+				ActionKeys.VIEW) && GroupPermissionUtil.contains(
+					permissionChecker, group.getGroupId(),
+					ActionKeys.ASSIGN_MEMBERS)) {
+
 				filteredGroups.add(group);
 			}
 		}
