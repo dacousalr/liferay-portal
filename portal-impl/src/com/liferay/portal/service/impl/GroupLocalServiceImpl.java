@@ -4039,7 +4039,11 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			parentGroupIdEquals = false;
 		}
 
-		params = new LinkedHashMap<>(params);
+		if (params == null) {
+			params = new LinkedHashMap<>(0);
+		} else {
+			params = new LinkedHashMap<>(params);
+		}
 
 		Boolean active = (Boolean)params.remove("active");
 		List<Long> excludedGroupIds = (List<Long>)params.remove(
