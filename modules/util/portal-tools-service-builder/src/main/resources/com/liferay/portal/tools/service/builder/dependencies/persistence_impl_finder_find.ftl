@@ -1868,6 +1868,11 @@ that may or may not be enforced with a unique index at the database level. Case
 
 				<@finderQPos />
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<${entity.name}> list = q.list();
 
 				if (list.isEmpty()) {
