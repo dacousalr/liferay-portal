@@ -730,6 +730,11 @@ public class PowwowParticipantPersistenceImpl extends BasePersistenceImpl<Powwow
 
 				qPos.add(participantUserId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<PowwowParticipant> list = q.list();
 
 				if (list.isEmpty()) {
@@ -976,6 +981,11 @@ public class PowwowParticipantPersistenceImpl extends BasePersistenceImpl<Powwow
 
 				if (bindEmailAddress) {
 					qPos.add(emailAddress);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<PowwowParticipant> list = q.list();

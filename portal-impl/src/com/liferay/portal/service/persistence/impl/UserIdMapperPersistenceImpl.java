@@ -716,6 +716,11 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 					qPos.add(type);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<UserIdMapper> list = q.list();
 
 				if (list.isEmpty()) {
@@ -976,6 +981,11 @@ public class UserIdMapperPersistenceImpl extends BasePersistenceImpl<UserIdMappe
 
 				if (bindExternalUserId) {
 					qPos.add(externalUserId);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<UserIdMapper> list = q.list();

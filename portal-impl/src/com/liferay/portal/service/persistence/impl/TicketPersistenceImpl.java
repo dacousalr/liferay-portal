@@ -202,6 +202,11 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 					qPos.add(key);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Ticket> list = q.list();
 
 				if (list.isEmpty()) {

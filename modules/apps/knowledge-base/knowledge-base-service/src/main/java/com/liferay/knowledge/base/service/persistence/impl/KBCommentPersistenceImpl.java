@@ -766,6 +766,11 @@ public class KBCommentPersistenceImpl extends BasePersistenceImpl<KBComment>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<KBComment> list = q.list();
 
 				if (list.isEmpty()) {

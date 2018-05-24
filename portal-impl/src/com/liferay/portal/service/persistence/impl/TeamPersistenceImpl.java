@@ -766,6 +766,11 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Team> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2442,6 +2447,11 @@ public class TeamPersistenceImpl extends BasePersistenceImpl<Team>
 
 				if (bindName) {
 					qPos.add(name);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<Team> list = q.list();

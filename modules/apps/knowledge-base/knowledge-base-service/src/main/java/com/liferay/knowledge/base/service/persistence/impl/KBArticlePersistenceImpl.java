@@ -1288,6 +1288,11 @@ public class KBArticlePersistenceImpl extends BasePersistenceImpl<KBArticle>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<KBArticle> list = q.list();
 
 				if (list.isEmpty()) {
@@ -3026,6 +3031,11 @@ public class KBArticlePersistenceImpl extends BasePersistenceImpl<KBArticle>
 				qPos.add(resourcePrimKey);
 
 				qPos.add(version);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<KBArticle> list = q.list();
 
@@ -12641,6 +12651,11 @@ public class KBArticlePersistenceImpl extends BasePersistenceImpl<KBArticle>
 				qPos.add(groupId);
 
 				qPos.add(version);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<KBArticle> list = q.list();
 

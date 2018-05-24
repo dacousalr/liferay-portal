@@ -1087,6 +1087,11 @@ public class OAuth2ApplicationPersistenceImpl extends BasePersistenceImpl<OAuth2
 					qPos.add(clientId);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<OAuth2Application> list = q.list();
 
 				if (list.isEmpty()) {

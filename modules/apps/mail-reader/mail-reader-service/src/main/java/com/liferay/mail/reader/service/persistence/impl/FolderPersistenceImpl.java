@@ -718,6 +718,11 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 					qPos.add(fullName);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Folder> list = q.list();
 
 				if (list.isEmpty()) {

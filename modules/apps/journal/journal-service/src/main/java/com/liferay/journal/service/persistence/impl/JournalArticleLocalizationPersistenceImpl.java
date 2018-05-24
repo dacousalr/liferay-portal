@@ -736,6 +736,11 @@ public class JournalArticleLocalizationPersistenceImpl
 					qPos.add(languageId);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<JournalArticleLocalization> list = q.list();
 
 				if (list.isEmpty()) {

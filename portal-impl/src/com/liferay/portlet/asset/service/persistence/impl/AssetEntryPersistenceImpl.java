@@ -3374,6 +3374,11 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 					qPos.add(classUuid);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<AssetEntry> list = q.list();
 
 				if (list.isEmpty()) {
@@ -3617,6 +3622,11 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 				qPos.add(classNameId);
 
 				qPos.add(classPK);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<AssetEntry> list = q.list();
 

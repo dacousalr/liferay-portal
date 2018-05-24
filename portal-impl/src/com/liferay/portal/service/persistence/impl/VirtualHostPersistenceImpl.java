@@ -201,6 +201,11 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 					qPos.add(hostname);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<VirtualHost> list = q.list();
 
 				if (list.isEmpty()) {
@@ -427,6 +432,11 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 				qPos.add(companyId);
 
 				qPos.add(layoutSetId);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<VirtualHost> list = q.list();
 

@@ -2841,6 +2841,11 @@ public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 
 				qPos.add(type);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<AssetLink> list = q.list();
 
 				if (list.isEmpty()) {

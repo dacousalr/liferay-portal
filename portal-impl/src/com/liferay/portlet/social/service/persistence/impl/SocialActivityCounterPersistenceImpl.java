@@ -1974,6 +1974,11 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 
 				qPos.add(startPeriod);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<SocialActivityCounter> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2319,6 +2324,11 @@ public class SocialActivityCounterPersistenceImpl extends BasePersistenceImpl<So
 				qPos.add(ownerType);
 
 				qPos.add(endPeriod);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<SocialActivityCounter> list = q.list();
 

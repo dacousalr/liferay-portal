@@ -777,6 +777,11 @@ public class MBThreadPersistenceImpl extends BasePersistenceImpl<MBThread>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<MBThread> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2442,6 +2447,11 @@ public class MBThreadPersistenceImpl extends BasePersistenceImpl<MBThread>
 				QueryPos qPos = QueryPos.getInstance(q);
 
 				qPos.add(rootMessageId);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<MBThread> list = q.list();
 

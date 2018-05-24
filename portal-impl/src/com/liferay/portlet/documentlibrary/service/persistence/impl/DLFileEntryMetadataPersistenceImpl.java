@@ -2383,6 +2383,11 @@ public class DLFileEntryMetadataPersistenceImpl extends BasePersistenceImpl<DLFi
 
 				qPos.add(fileVersionId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DLFileEntryMetadata> list = q.list();
 
 				if (list.isEmpty()) {

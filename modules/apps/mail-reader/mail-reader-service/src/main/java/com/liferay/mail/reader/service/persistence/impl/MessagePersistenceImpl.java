@@ -1206,6 +1206,11 @@ public class MessagePersistenceImpl extends BasePersistenceImpl<Message>
 
 				qPos.add(remoteMessageId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Message> list = q.list();
 
 				if (list.isEmpty()) {

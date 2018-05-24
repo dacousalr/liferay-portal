@@ -3953,6 +3953,11 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 					qPos.add(StringUtil.toLowerCase(name));
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<UserGroup> list = q.list();
 
 				if (list.isEmpty()) {

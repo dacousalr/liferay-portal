@@ -1788,6 +1788,11 @@ public class DDMStructureLinkPersistenceImpl extends BasePersistenceImpl<DDMStru
 
 				qPos.add(structureId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DDMStructureLink> list = q.list();
 
 				if (list.isEmpty()) {

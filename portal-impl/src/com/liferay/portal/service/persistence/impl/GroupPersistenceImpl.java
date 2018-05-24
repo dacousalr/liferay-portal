@@ -765,6 +765,11 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Group> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2064,6 +2069,11 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 				QueryPos qPos = QueryPos.getInstance(q);
 
 				qPos.add(liveGroupId);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<Group> list = q.list();
 
@@ -3379,6 +3389,11 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 					qPos.add(groupKey);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Group> list = q.list();
 
 				if (list.isEmpty()) {
@@ -3624,6 +3639,11 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 				if (bindFriendlyURL) {
 					qPos.add(friendlyURL);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<Group> list = q.list();
@@ -6425,6 +6445,11 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 				qPos.add(classPK);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Group> list = q.list();
 
 				if (list.isEmpty()) {
@@ -7846,6 +7871,11 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 					qPos.add(groupKey);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Group> list = q.list();
 
 				if (list.isEmpty()) {
@@ -9183,6 +9213,11 @@ public class GroupPersistenceImpl extends BasePersistenceImpl<Group>
 
 				if (bindGroupKey) {
 					qPos.add(groupKey);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<Group> list = q.list();

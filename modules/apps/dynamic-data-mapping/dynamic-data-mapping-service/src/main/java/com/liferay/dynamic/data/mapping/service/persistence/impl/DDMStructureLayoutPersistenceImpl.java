@@ -770,6 +770,11 @@ public class DDMStructureLayoutPersistenceImpl extends BasePersistenceImpl<DDMSt
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DDMStructureLayout> list = q.list();
 
 				if (list.isEmpty()) {
@@ -1581,6 +1586,11 @@ public class DDMStructureLayoutPersistenceImpl extends BasePersistenceImpl<DDMSt
 				QueryPos qPos = QueryPos.getInstance(q);
 
 				qPos.add(structureVersionId);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<DDMStructureLayout> list = q.list();
 

@@ -1277,6 +1277,11 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 
 				qPos.add(privateLayout);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<LayoutSet> list = q.list();
 
 				if (list.isEmpty()) {
@@ -1493,6 +1498,11 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 				qPos.add(privateLayout);
 
 				qPos.add(logoId);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<LayoutSet> list = q.list();
 

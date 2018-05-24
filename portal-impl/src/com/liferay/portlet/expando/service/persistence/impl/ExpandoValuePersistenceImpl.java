@@ -3338,6 +3338,11 @@ public class ExpandoValuePersistenceImpl extends BasePersistenceImpl<ExpandoValu
 
 				qPos.add(rowId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<ExpandoValue> list = q.list();
 
 				if (list.isEmpty()) {
@@ -4114,6 +4119,11 @@ public class ExpandoValuePersistenceImpl extends BasePersistenceImpl<ExpandoValu
 				qPos.add(columnId);
 
 				qPos.add(classPK);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<ExpandoValue> list = q.list();
 

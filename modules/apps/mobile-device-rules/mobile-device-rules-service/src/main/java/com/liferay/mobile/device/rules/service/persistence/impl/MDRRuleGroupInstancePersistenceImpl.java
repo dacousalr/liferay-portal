@@ -774,6 +774,11 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<MDRRuleGroupInstance> list = q.list();
 
 				if (list.isEmpty()) {
@@ -4540,6 +4545,11 @@ public class MDRRuleGroupInstancePersistenceImpl extends BasePersistenceImpl<MDR
 				qPos.add(classPK);
 
 				qPos.add(ruleGroupId);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<MDRRuleGroupInstance> list = q.list();
 

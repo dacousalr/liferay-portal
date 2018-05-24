@@ -1285,6 +1285,11 @@ public class SyncDLFileVersionDiffPersistenceImpl extends BasePersistenceImpl<Sy
 
 				qPos.add(targetFileVersionId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<SyncDLFileVersionDiff> list = q.list();
 
 				if (list.isEmpty()) {

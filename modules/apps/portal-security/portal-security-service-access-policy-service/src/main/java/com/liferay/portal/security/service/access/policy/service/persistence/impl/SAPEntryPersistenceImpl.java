@@ -3936,6 +3936,11 @@ public class SAPEntryPersistenceImpl extends BasePersistenceImpl<SAPEntry>
 					qPos.add(StringUtil.toLowerCase(name));
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<SAPEntry> list = q.list();
 
 				if (list.isEmpty()) {

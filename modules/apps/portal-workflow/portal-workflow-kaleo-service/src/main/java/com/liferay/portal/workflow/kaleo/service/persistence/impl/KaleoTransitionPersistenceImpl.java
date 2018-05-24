@@ -1767,6 +1767,11 @@ public class KaleoTransitionPersistenceImpl extends BasePersistenceImpl<KaleoTra
 					qPos.add(name);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<KaleoTransition> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2013,6 +2018,11 @@ public class KaleoTransitionPersistenceImpl extends BasePersistenceImpl<KaleoTra
 				qPos.add(kaleoNodeId);
 
 				qPos.add(defaultTransition);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<KaleoTransition> list = q.list();
 

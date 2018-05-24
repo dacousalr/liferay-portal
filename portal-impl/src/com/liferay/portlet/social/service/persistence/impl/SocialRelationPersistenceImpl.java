@@ -5554,6 +5554,11 @@ public class SocialRelationPersistenceImpl extends BasePersistenceImpl<SocialRel
 
 				qPos.add(type);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<SocialRelation> list = q.list();
 
 				if (list.isEmpty()) {

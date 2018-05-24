@@ -4458,6 +4458,11 @@ public class JournalContentSearchPersistenceImpl extends BasePersistenceImpl<Jou
 					qPos.add(articleId);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<JournalContentSearch> list = q.list();
 
 				if (list.isEmpty()) {

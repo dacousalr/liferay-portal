@@ -743,6 +743,11 @@ public class DDMFormInstanceVersionPersistenceImpl extends BasePersistenceImpl<D
 					qPos.add(version);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DDMFormInstanceVersion> list = q.list();
 
 				if (list.isEmpty()) {

@@ -196,6 +196,11 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 					qPos.add(value);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<ClassName> list = q.list();
 
 				if (list.isEmpty()) {

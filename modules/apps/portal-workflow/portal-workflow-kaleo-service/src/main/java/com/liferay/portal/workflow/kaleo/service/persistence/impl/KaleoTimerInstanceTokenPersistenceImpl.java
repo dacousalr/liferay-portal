@@ -731,6 +731,11 @@ public class KaleoTimerInstanceTokenPersistenceImpl extends BasePersistenceImpl<
 
 				qPos.add(kaleoTimerId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<KaleoTimerInstanceToken> list = q.list();
 
 				if (list.isEmpty()) {

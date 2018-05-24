@@ -770,6 +770,11 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<RepositoryEntry> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2119,6 +2124,11 @@ public class RepositoryEntryPersistenceImpl extends BasePersistenceImpl<Reposito
 
 				if (bindMappedId) {
 					qPos.add(mappedId);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<RepositoryEntry> list = q.list();
