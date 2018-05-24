@@ -781,6 +781,11 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 				qPos.add(buildNumber);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<ServiceComponent> list = q.list();
 
 				if (list.isEmpty()) {

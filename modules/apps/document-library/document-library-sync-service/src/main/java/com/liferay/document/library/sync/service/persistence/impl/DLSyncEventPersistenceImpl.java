@@ -679,6 +679,11 @@ public class DLSyncEventPersistenceImpl extends BasePersistenceImpl<DLSyncEvent>
 
 				qPos.add(typePK);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DLSyncEvent> list = q.list();
 
 				if (list.isEmpty()) {

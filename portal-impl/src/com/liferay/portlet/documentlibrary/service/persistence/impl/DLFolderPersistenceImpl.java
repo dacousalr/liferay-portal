@@ -774,6 +774,11 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DLFolder> list = q.list();
 
 				if (list.isEmpty()) {
@@ -4920,6 +4925,11 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 
 				qPos.add(mountPoint);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DLFolder> list = q.list();
 
 				if (list.isEmpty()) {
@@ -7297,6 +7307,11 @@ public class DLFolderPersistenceImpl extends BasePersistenceImpl<DLFolder>
 
 				if (bindName) {
 					qPos.add(name);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<DLFolder> list = q.list();

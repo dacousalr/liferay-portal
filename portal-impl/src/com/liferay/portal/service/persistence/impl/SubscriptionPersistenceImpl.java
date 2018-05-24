@@ -2672,6 +2672,11 @@ public class SubscriptionPersistenceImpl extends BasePersistenceImpl<Subscriptio
 
 				qPos.add(classPK);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Subscription> list = q.list();
 
 				if (list.isEmpty()) {

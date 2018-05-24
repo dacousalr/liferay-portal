@@ -1762,6 +1762,11 @@ public class RecentLayoutRevisionPersistenceImpl extends BasePersistenceImpl<Rec
 
 				qPos.add(plid);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<RecentLayoutRevision> list = q.list();
 
 				if (list.isEmpty()) {

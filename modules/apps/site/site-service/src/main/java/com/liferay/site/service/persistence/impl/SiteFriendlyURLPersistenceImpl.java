@@ -769,6 +769,11 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<SiteFriendlyURL> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2157,6 +2162,11 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 					qPos.add(friendlyURL);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<SiteFriendlyURL> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2430,6 +2440,11 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 
 				if (bindLanguageId) {
 					qPos.add(languageId);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<SiteFriendlyURL> list = q.list();
@@ -2729,6 +2744,11 @@ public class SiteFriendlyURLPersistenceImpl extends BasePersistenceImpl<SiteFrie
 
 				if (bindLanguageId) {
 					qPos.add(languageId);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<SiteFriendlyURL> list = q.list();

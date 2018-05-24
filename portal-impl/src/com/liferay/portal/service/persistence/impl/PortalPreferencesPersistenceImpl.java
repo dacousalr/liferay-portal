@@ -199,6 +199,11 @@ public class PortalPreferencesPersistenceImpl extends BasePersistenceImpl<Portal
 
 				qPos.add(ownerType);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<PortalPreferences> list = q.list();
 
 				if (list.isEmpty()) {

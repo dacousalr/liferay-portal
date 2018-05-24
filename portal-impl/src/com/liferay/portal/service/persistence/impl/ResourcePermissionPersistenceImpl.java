@@ -4976,6 +4976,11 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 				qPos.add(roleId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<ResourcePermission> list = q.list();
 
 				if (list.isEmpty()) {

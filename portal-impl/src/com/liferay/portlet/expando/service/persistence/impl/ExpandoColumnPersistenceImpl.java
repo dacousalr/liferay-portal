@@ -1337,6 +1337,11 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 					qPos.add(name);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<ExpandoColumn> list = q.list();
 
 				if (list.isEmpty()) {

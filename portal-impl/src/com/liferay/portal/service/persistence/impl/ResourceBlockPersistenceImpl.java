@@ -1485,6 +1485,11 @@ public class ResourceBlockPersistenceImpl extends BasePersistenceImpl<ResourceBl
 					qPos.add(permissionsHash);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<ResourceBlock> list = q.list();
 
 				if (list.isEmpty()) {

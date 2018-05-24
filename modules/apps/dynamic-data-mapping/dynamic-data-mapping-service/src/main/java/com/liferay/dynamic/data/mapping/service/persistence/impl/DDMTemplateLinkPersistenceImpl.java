@@ -1217,6 +1217,11 @@ public class DDMTemplateLinkPersistenceImpl extends BasePersistenceImpl<DDMTempl
 
 				qPos.add(classPK);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DDMTemplateLink> list = q.list();
 
 				if (list.isEmpty()) {

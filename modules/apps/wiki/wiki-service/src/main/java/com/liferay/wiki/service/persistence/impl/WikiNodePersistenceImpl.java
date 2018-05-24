@@ -764,6 +764,11 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<WikiNode> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2960,6 +2965,11 @@ public class WikiNodePersistenceImpl extends BasePersistenceImpl<WikiNode>
 
 				if (bindName) {
 					qPos.add(name);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<WikiNode> list = q.list();

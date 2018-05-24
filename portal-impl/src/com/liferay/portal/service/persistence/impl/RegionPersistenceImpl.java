@@ -1214,6 +1214,11 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 					qPos.add(regionCode);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Region> list = q.list();
 
 				if (list.isEmpty()) {

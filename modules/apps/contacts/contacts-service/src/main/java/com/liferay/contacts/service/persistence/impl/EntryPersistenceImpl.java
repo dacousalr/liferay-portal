@@ -713,6 +713,11 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 					qPos.add(emailAddress);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Entry> list = q.list();
 
 				if (list.isEmpty()) {

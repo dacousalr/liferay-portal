@@ -1219,6 +1219,11 @@ public class KaleoTaskPersistenceImpl extends BasePersistenceImpl<KaleoTask>
 
 				qPos.add(kaleoNodeId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<KaleoTask> list = q.list();
 
 				if (list.isEmpty()) {

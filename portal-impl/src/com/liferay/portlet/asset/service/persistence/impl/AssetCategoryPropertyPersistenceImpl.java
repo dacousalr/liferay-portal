@@ -1844,6 +1844,11 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 					qPos.add(key);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<AssetCategoryProperty> list = q.list();
 
 				if (list.isEmpty()) {

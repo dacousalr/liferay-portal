@@ -1777,6 +1777,11 @@ public class KaleoTaskInstanceTokenPersistenceImpl extends BasePersistenceImpl<K
 
 				qPos.add(kaleoTaskId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<KaleoTaskInstanceToken> list = q.list();
 
 				if (list.isEmpty()) {

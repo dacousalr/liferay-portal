@@ -767,6 +767,11 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DDMStructure> list = q.list();
 
 				if (list.isEmpty()) {
@@ -7417,6 +7422,11 @@ public class DDMStructurePersistenceImpl extends BasePersistenceImpl<DDMStructur
 
 				if (bindStructureKey) {
 					qPos.add(structureKey);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<DDMStructure> list = q.list();

@@ -232,6 +232,11 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 					qPos.add(clientId);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<WeDeployAuthApp> list = q.list();
 
 				if (list.isEmpty()) {
@@ -528,6 +533,11 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 
 				if (bindClientSecret) {
 					qPos.add(clientSecret);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<WeDeployAuthApp> list = q.list();

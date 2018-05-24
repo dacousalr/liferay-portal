@@ -841,6 +841,11 @@ public class OAuth2ScopeGrantPersistenceImpl extends BasePersistenceImpl<OAuth2S
 					qPos.add(scope);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<OAuth2ScopeGrant> list = q.list();
 
 				if (list.isEmpty()) {

@@ -773,6 +773,11 @@ public class FragmentEntryLinkPersistenceImpl extends BasePersistenceImpl<Fragme
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<FragmentEntryLink> list = q.list();
 
 				if (list.isEmpty()) {

@@ -1095,6 +1095,11 @@ public class FragmentCollectionPersistenceImpl extends BasePersistenceImpl<Fragm
 					qPos.add(fragmentCollectionKey);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<FragmentCollection> list = q.list();
 
 				if (list.isEmpty()) {

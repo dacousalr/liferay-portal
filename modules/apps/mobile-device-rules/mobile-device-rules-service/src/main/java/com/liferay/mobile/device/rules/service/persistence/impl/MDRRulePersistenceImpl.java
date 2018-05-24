@@ -762,6 +762,11 @@ public class MDRRulePersistenceImpl extends BasePersistenceImpl<MDRRule>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<MDRRule> list = q.list();
 
 				if (list.isEmpty()) {

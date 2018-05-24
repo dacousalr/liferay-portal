@@ -1819,6 +1819,11 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				qPos.add(contactId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<User> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2570,6 +2575,11 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				qPos.add(portraitId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<User> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2795,6 +2805,11 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				qPos.add(companyId);
 
 				qPos.add(userId);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<User> list = q.list();
 
@@ -4161,6 +4176,11 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				qPos.add(defaultUser);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<User> list = q.list();
 
 				if (list.isEmpty()) {
@@ -4407,6 +4427,11 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				if (bindScreenName) {
 					qPos.add(screenName);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<User> list = q.list();
@@ -4663,6 +4688,11 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 					qPos.add(emailAddress);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<User> list = q.list();
 
 				if (list.isEmpty()) {
@@ -4902,6 +4932,11 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 				qPos.add(companyId);
 
 				qPos.add(facebookId);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<User> list = q.list();
 
@@ -5149,6 +5184,11 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				if (bindGoogleUserId) {
 					qPos.add(googleUserId);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<User> list = q.list();
@@ -5414,6 +5454,11 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 				if (bindOpenId) {
 					qPos.add(openId);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<User> list = q.list();

@@ -4227,6 +4227,11 @@ public class SyncDLObjectPersistenceImpl extends BasePersistenceImpl<SyncDLObjec
 
 				qPos.add(typePK);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<SyncDLObject> list = q.list();
 
 				if (list.isEmpty()) {

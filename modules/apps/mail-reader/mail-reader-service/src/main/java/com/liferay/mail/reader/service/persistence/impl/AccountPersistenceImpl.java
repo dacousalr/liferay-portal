@@ -718,6 +718,11 @@ public class AccountPersistenceImpl extends BasePersistenceImpl<Account>
 					qPos.add(address);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Account> list = q.list();
 
 				if (list.isEmpty()) {

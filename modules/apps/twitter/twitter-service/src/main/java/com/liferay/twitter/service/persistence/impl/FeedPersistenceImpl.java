@@ -217,6 +217,11 @@ public class FeedPersistenceImpl extends BasePersistenceImpl<Feed>
 					qPos.add(twitterScreenName);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Feed> list = q.list();
 
 				if (list.isEmpty()) {

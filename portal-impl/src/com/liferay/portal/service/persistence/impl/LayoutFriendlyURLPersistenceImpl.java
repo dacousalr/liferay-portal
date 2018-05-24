@@ -775,6 +775,11 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<LayoutFriendlyURL> list = q.list();
 
 				if (list.isEmpty()) {
@@ -3981,6 +3986,11 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 					qPos.add(languageId);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<LayoutFriendlyURL> list = q.list();
 
 				if (list.isEmpty()) {
@@ -5022,6 +5032,11 @@ public class LayoutFriendlyURLPersistenceImpl extends BasePersistenceImpl<Layout
 
 				if (bindLanguageId) {
 					qPos.add(languageId);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<LayoutFriendlyURL> list = q.list();

@@ -765,6 +765,11 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<MBMailingList> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2095,6 +2100,11 @@ public class MBMailingListPersistenceImpl extends BasePersistenceImpl<MBMailingL
 				qPos.add(groupId);
 
 				qPos.add(categoryId);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<MBMailingList> list = q.list();
 

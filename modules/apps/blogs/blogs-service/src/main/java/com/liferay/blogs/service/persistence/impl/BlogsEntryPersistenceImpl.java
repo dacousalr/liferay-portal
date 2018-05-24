@@ -778,6 +778,11 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<BlogsEntry> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2982,6 +2987,11 @@ public class BlogsEntryPersistenceImpl extends BasePersistenceImpl<BlogsEntry>
 
 				if (bindUrlTitle) {
 					qPos.add(urlTitle);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<BlogsEntry> list = q.list();

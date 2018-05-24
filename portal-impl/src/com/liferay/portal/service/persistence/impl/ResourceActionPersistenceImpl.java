@@ -773,6 +773,11 @@ public class ResourceActionPersistenceImpl extends BasePersistenceImpl<ResourceA
 					qPos.add(actionId);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<ResourceAction> list = q.list();
 
 				if (list.isEmpty()) {

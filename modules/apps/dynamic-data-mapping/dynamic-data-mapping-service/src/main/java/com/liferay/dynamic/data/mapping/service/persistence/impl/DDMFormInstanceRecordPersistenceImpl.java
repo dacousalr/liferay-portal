@@ -774,6 +774,11 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DDMFormInstanceRecord> list = q.list();
 
 				if (list.isEmpty()) {

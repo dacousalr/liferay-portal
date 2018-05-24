@@ -183,6 +183,11 @@ public class StatusPersistenceImpl extends BasePersistenceImpl<Status>
 
 				qPos.add(userId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Status> list = q.list();
 
 				if (list.isEmpty()) {

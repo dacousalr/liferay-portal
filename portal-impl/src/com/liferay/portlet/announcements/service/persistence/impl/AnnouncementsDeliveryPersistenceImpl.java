@@ -727,6 +727,11 @@ public class AnnouncementsDeliveryPersistenceImpl extends BasePersistenceImpl<An
 					qPos.add(type);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<AnnouncementsDelivery> list = q.list();
 
 				if (list.isEmpty()) {

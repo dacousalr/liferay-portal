@@ -1882,6 +1882,11 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 					qPos.add(key);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Lock> list = q.list();
 
 				if (list.isEmpty()) {

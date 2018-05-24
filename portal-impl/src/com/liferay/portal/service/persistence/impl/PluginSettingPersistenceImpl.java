@@ -758,6 +758,11 @@ public class PluginSettingPersistenceImpl extends BasePersistenceImpl<PluginSett
 					qPos.add(pluginType);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<PluginSetting> list = q.list();
 
 				if (list.isEmpty()) {

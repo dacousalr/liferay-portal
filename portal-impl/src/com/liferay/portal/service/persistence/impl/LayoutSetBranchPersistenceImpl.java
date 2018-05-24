@@ -2036,6 +2036,11 @@ public class LayoutSetBranchPersistenceImpl extends BasePersistenceImpl<LayoutSe
 					qPos.add(name);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<LayoutSetBranch> list = q.list();
 
 				if (list.isEmpty()) {

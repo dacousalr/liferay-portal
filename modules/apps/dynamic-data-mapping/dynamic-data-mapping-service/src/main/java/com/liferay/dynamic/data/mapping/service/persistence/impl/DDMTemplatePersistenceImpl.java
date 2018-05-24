@@ -767,6 +767,11 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DDMTemplate> list = q.list();
 
 				if (list.isEmpty()) {
@@ -4582,6 +4587,11 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 				QueryPos qPos = QueryPos.getInstance(q);
 
 				qPos.add(smallImageId);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<DDMTemplate> list = q.list();
 
@@ -8703,6 +8713,11 @@ public class DDMTemplatePersistenceImpl extends BasePersistenceImpl<DDMTemplate>
 
 				if (bindTemplateKey) {
 					qPos.add(templateKey);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<DDMTemplate> list = q.list();

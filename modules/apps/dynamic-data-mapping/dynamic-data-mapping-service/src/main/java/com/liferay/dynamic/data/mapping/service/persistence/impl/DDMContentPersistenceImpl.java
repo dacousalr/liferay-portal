@@ -762,6 +762,11 @@ public class DDMContentPersistenceImpl extends BasePersistenceImpl<DDMContent>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DDMContent> list = q.list();
 
 				if (list.isEmpty()) {

@@ -1744,6 +1744,11 @@ public class RecentLayoutSetBranchPersistenceImpl extends BasePersistenceImpl<Re
 
 				qPos.add(layoutSetId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<RecentLayoutSetBranch> list = q.list();
 
 				if (list.isEmpty()) {

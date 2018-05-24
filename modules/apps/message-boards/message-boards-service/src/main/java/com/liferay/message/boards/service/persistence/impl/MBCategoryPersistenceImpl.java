@@ -769,6 +769,11 @@ public class MBCategoryPersistenceImpl extends BasePersistenceImpl<MBCategory>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<MBCategory> list = q.list();
 
 				if (list.isEmpty()) {

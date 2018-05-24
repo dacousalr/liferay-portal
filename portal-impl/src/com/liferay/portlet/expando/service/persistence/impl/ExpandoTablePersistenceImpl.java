@@ -775,6 +775,11 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 					qPos.add(name);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<ExpandoTable> list = q.list();
 
 				if (list.isEmpty()) {

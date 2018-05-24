@@ -2019,6 +2019,11 @@ public class WorkflowDefinitionLinkPersistenceImpl extends BasePersistenceImpl<W
 
 				qPos.add(typePK);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<WorkflowDefinitionLink> list = q.list();
 
 				if (list.isEmpty()) {

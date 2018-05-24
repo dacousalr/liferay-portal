@@ -772,6 +772,11 @@ public class KBTemplatePersistenceImpl extends BasePersistenceImpl<KBTemplate>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<KBTemplate> list = q.list();
 
 				if (list.isEmpty()) {

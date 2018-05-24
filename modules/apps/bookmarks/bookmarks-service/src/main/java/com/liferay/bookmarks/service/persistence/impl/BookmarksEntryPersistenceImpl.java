@@ -775,6 +775,11 @@ public class BookmarksEntryPersistenceImpl extends BasePersistenceImpl<Bookmarks
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<BookmarksEntry> list = q.list();
 
 				if (list.isEmpty()) {

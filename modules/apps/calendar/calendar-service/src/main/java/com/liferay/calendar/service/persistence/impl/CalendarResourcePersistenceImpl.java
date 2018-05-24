@@ -775,6 +775,11 @@ public class CalendarResourcePersistenceImpl extends BasePersistenceImpl<Calenda
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<CalendarResource> list = q.list();
 
 				if (list.isEmpty()) {
@@ -5482,6 +5487,11 @@ public class CalendarResourcePersistenceImpl extends BasePersistenceImpl<Calenda
 				qPos.add(classNameId);
 
 				qPos.add(classPK);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<CalendarResource> list = q.list();
 

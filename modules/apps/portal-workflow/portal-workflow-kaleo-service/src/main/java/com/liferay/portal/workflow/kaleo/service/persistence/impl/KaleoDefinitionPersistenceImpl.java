@@ -729,6 +729,11 @@ public class KaleoDefinitionPersistenceImpl extends BasePersistenceImpl<KaleoDef
 					qPos.add(name);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<KaleoDefinition> list = q.list();
 
 				if (list.isEmpty()) {
@@ -1558,6 +1563,11 @@ public class KaleoDefinitionPersistenceImpl extends BasePersistenceImpl<KaleoDef
 
 				qPos.add(version);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<KaleoDefinition> list = q.list();
 
 				if (list.isEmpty()) {
@@ -1850,6 +1860,11 @@ public class KaleoDefinitionPersistenceImpl extends BasePersistenceImpl<KaleoDef
 				}
 
 				qPos.add(active);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<KaleoDefinition> list = q.list();
 

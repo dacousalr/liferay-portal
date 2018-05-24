@@ -1110,6 +1110,11 @@ public class LayoutPageTemplateCollectionPersistenceImpl
 					qPos.add(name);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<LayoutPageTemplateCollection> list = q.list();
 
 				if (list.isEmpty()) {

@@ -1258,6 +1258,11 @@ public class DDMDataProviderInstanceLinkPersistenceImpl
 
 				qPos.add(structureId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DDMDataProviderInstanceLink> list = q.list();
 
 				if (list.isEmpty()) {

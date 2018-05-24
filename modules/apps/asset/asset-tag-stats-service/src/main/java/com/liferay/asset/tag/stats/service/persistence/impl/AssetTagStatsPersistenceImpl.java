@@ -1210,6 +1210,11 @@ public class AssetTagStatsPersistenceImpl extends BasePersistenceImpl<AssetTagSt
 
 				qPos.add(classNameId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<AssetTagStats> list = q.list();
 
 				if (list.isEmpty()) {

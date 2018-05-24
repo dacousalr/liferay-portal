@@ -187,6 +187,11 @@ public class BrowserTrackerPersistenceImpl extends BasePersistenceImpl<BrowserTr
 
 				qPos.add(userId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<BrowserTracker> list = q.list();
 
 				if (list.isEmpty()) {

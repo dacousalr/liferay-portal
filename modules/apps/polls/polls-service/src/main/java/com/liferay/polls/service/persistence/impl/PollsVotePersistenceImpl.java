@@ -762,6 +762,11 @@ public class PollsVotePersistenceImpl extends BasePersistenceImpl<PollsVote>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<PollsVote> list = q.list();
 
 				if (list.isEmpty()) {

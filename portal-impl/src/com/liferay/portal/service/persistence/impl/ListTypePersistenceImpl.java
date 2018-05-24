@@ -770,6 +770,11 @@ public class ListTypePersistenceImpl extends BasePersistenceImpl<ListType>
 					qPos.add(type);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<ListType> list = q.list();
 
 				if (list.isEmpty()) {

@@ -1801,6 +1801,11 @@ public class AppPersistenceImpl extends BasePersistenceImpl<App>
 
 				qPos.add(remoteAppId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<App> list = q.list();
 
 				if (list.isEmpty()) {

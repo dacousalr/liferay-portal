@@ -207,6 +207,11 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 					qPos.add(key);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<MemberRequest> list = q.list();
 
 				if (list.isEmpty()) {
@@ -1528,6 +1533,11 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 				qPos.add(receiverUserId);
 
 				qPos.add(status);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<MemberRequest> list = q.list();
 

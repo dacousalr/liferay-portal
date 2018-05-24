@@ -782,6 +782,11 @@ public class CalendarNotificationTemplatePersistenceImpl
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<CalendarNotificationTemplate> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2199,6 +2204,11 @@ public class CalendarNotificationTemplatePersistenceImpl
 
 				if (bindNotificationTemplateType) {
 					qPos.add(notificationTemplateType);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<CalendarNotificationTemplate> list = q.list();

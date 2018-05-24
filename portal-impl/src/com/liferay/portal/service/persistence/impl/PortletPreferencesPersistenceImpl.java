@@ -5018,6 +5018,11 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 					qPos.add(portletId);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<PortletPreferences> list = q.list();
 
 				if (list.isEmpty()) {

@@ -726,6 +726,11 @@ public class MeetupsRegistrationPersistenceImpl extends BasePersistenceImpl<Meet
 
 				qPos.add(meetupsEntryId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<MeetupsRegistration> list = q.list();
 
 				if (list.isEmpty()) {

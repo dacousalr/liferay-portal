@@ -3019,6 +3019,11 @@ public class GadgetPersistenceImpl extends BasePersistenceImpl<Gadget>
 					qPos.add(url);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Gadget> list = q.list();
 
 				if (list.isEmpty()) {

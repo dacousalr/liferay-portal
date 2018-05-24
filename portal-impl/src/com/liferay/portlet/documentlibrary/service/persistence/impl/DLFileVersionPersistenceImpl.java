@@ -770,6 +770,11 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DLFileVersion> list = q.list();
 
 				if (list.isEmpty()) {
@@ -3711,6 +3716,11 @@ public class DLFileVersionPersistenceImpl extends BasePersistenceImpl<DLFileVers
 
 				if (bindVersion) {
 					qPos.add(version);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<DLFileVersion> list = q.list();

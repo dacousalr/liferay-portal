@@ -752,6 +752,11 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 					qPos.add(languageId);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<FriendlyURLEntryLocalization> list = q.list();
 
 				if (list.isEmpty()) {
@@ -1037,6 +1042,11 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 
 				if (bindUrlTitle) {
 					qPos.add(urlTitle);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<FriendlyURLEntryLocalization> list = q.list();

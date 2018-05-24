@@ -2274,6 +2274,11 @@ public class KaleoTaskFormPersistenceImpl extends BasePersistenceImpl<KaleoTaskF
 					qPos.add(formUuid);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<KaleoTaskForm> list = q.list();
 
 				if (list.isEmpty()) {

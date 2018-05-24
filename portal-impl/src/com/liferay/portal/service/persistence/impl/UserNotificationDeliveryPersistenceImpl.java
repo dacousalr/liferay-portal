@@ -778,6 +778,11 @@ public class UserNotificationDeliveryPersistenceImpl extends BasePersistenceImpl
 
 				qPos.add(deliveryType);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<UserNotificationDelivery> list = q.list();
 
 				if (list.isEmpty()) {

@@ -730,6 +730,11 @@ public class AnnouncementsFlagPersistenceImpl extends BasePersistenceImpl<Announ
 
 				qPos.add(value);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<AnnouncementsFlag> list = q.list();
 
 				if (list.isEmpty()) {

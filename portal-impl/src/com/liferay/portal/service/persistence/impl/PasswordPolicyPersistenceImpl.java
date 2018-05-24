@@ -3039,6 +3039,11 @@ public class PasswordPolicyPersistenceImpl extends BasePersistenceImpl<PasswordP
 
 				qPos.add(defaultPolicy);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<PasswordPolicy> list = q.list();
 
 				if (list.isEmpty()) {
@@ -3285,6 +3290,11 @@ public class PasswordPolicyPersistenceImpl extends BasePersistenceImpl<PasswordP
 
 				if (bindName) {
 					qPos.add(name);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<PasswordPolicy> list = q.list();

@@ -764,6 +764,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<KBFolder> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2540,6 +2545,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 					qPos.add(name);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<KBFolder> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2830,6 +2840,11 @@ public class KBFolderPersistenceImpl extends BasePersistenceImpl<KBFolder>
 
 				if (bindUrlTitle) {
 					qPos.add(urlTitle);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<KBFolder> list = q.list();

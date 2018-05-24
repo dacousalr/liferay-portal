@@ -768,6 +768,11 @@ public class PollsQuestionPersistenceImpl extends BasePersistenceImpl<PollsQuest
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<PollsQuestion> list = q.list();
 
 				if (list.isEmpty()) {

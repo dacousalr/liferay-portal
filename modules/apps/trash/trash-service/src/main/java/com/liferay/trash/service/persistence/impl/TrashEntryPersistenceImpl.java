@@ -2311,6 +2311,11 @@ public class TrashEntryPersistenceImpl extends BasePersistenceImpl<TrashEntry>
 
 				qPos.add(classPK);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<TrashEntry> list = q.list();
 
 				if (list.isEmpty()) {

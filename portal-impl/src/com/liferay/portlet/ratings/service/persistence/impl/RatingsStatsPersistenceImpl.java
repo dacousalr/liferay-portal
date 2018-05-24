@@ -434,6 +434,11 @@ public class RatingsStatsPersistenceImpl extends BasePersistenceImpl<RatingsStat
 
 				qPos.add(classPK);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<RatingsStats> list = q.list();
 
 				if (list.isEmpty()) {

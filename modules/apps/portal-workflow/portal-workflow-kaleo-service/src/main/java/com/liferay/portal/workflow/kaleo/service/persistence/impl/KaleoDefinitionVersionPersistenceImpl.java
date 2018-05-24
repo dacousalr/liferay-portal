@@ -1356,6 +1356,11 @@ public class KaleoDefinitionVersionPersistenceImpl extends BasePersistenceImpl<K
 					qPos.add(version);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<KaleoDefinitionVersion> list = q.list();
 
 				if (list.isEmpty()) {
