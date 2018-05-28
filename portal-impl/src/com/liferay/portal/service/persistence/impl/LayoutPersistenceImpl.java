@@ -787,6 +787,11 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 
 				qPos.add(privateLayout);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Layout> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2959,6 +2964,11 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 				QueryPos qPos = QueryPos.getInstance(q);
 
 				qPos.add(iconImageId);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<Layout> list = q.list();
 
@@ -6830,6 +6840,11 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 
 				qPos.add(iconImageId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Layout> list = q.list();
 
 				if (list.isEmpty()) {
@@ -7076,6 +7091,11 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 				qPos.add(privateLayout);
 
 				qPos.add(layoutId);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<Layout> list = q.list();
 
@@ -9934,6 +9954,11 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 					qPos.add(friendlyURL);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Layout> list = q.list();
 
 				if (list.isEmpty()) {
@@ -10211,6 +10236,11 @@ public class LayoutPersistenceImpl extends BasePersistenceImpl<Layout>
 
 				if (bindSourcePrototypeLayoutUuid) {
 					qPos.add(sourcePrototypeLayoutUuid);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<Layout> list = q.list();

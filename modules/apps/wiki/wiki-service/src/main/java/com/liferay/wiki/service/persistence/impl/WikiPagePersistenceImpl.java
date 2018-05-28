@@ -1289,6 +1289,11 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<WikiPage> list = q.list();
 
 				if (list.isEmpty()) {
@@ -7098,6 +7103,11 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 
 				qPos.add(version);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<WikiPage> list = q.list();
 
 				if (list.isEmpty()) {
@@ -11059,6 +11069,11 @@ public class WikiPagePersistenceImpl extends BasePersistenceImpl<WikiPage>
 				}
 
 				qPos.add(version);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<WikiPage> list = q.list();
 

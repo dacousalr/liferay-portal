@@ -199,6 +199,11 @@ public class FriendlyURLEntryMappingPersistenceImpl extends BasePersistenceImpl<
 
 				qPos.add(classPK);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<FriendlyURLEntryMapping> list = q.list();
 
 				if (list.isEmpty()) {

@@ -1266,6 +1266,11 @@ public class OAuth2ApplicationScopeAliasesPersistenceImpl
 					qPos.add(scopeAliases);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<OAuth2ApplicationScopeAliases> list = q.list();
 
 				if (list.isEmpty()) {

@@ -2047,6 +2047,11 @@ public class DLContentPersistenceImpl extends BasePersistenceImpl<DLContent>
 					qPos.add(version);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DLContent> list = q.list();
 
 				if (list.isEmpty()) {

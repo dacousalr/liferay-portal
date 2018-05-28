@@ -770,6 +770,11 @@ public class ReadingTimeEntryPersistenceImpl extends BasePersistenceImpl<Reading
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<ReadingTimeEntry> list = q.list();
 
 				if (list.isEmpty()) {
@@ -1612,6 +1617,11 @@ public class ReadingTimeEntryPersistenceImpl extends BasePersistenceImpl<Reading
 				qPos.add(classNameId);
 
 				qPos.add(classPK);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<ReadingTimeEntry> list = q.list();
 

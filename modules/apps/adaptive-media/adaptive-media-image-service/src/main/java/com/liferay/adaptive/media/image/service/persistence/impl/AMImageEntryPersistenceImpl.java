@@ -759,6 +759,11 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<AMImageEntry> list = q.list();
 
 				if (list.isEmpty()) {
@@ -4268,6 +4273,11 @@ public class AMImageEntryPersistenceImpl extends BasePersistenceImpl<AMImageEntr
 				}
 
 				qPos.add(fileVersionId);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<AMImageEntry> list = q.list();
 

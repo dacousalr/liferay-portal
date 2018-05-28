@@ -762,6 +762,11 @@ public class MDRActionPersistenceImpl extends BasePersistenceImpl<MDRAction>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<MDRAction> list = q.list();
 
 				if (list.isEmpty()) {

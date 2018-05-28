@@ -5145,6 +5145,11 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 
 				qPos.add(plid);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<LayoutRevision> list = q.list();
 
 				if (list.isEmpty()) {
@@ -6608,6 +6613,11 @@ public class LayoutRevisionPersistenceImpl extends BasePersistenceImpl<LayoutRev
 				qPos.add(head);
 
 				qPos.add(plid);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<LayoutRevision> list = q.list();
 

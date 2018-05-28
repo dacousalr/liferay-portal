@@ -762,6 +762,11 @@ public class DDLRecordPersistenceImpl extends BasePersistenceImpl<DDLRecord>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DDLRecord> list = q.list();
 
 				if (list.isEmpty()) {

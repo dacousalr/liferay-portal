@@ -1295,6 +1295,11 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<JournalArticle> list = q.list();
 
 				if (list.isEmpty()) {
@@ -24501,6 +24506,11 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 					qPos.add(DDMStructureKey);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<JournalArticle> list = q.list();
 
 				if (list.isEmpty()) {
@@ -26953,6 +26963,11 @@ public class JournalArticlePersistenceImpl extends BasePersistenceImpl<JournalAr
 				}
 
 				qPos.add(version);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<JournalArticle> list = q.list();
 

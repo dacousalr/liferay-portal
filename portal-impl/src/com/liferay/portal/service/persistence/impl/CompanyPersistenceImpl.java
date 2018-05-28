@@ -199,6 +199,11 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 					qPos.add(webId);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Company> list = q.list();
 
 				if (list.isEmpty()) {
@@ -424,6 +429,11 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 					qPos.add(mx);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Company> list = q.list();
 
 				if (list.isEmpty()) {
@@ -645,6 +655,11 @@ public class CompanyPersistenceImpl extends BasePersistenceImpl<Company>
 				QueryPos qPos = QueryPos.getInstance(q);
 
 				qPos.add(logoId);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<Company> list = q.list();
 

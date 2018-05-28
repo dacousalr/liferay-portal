@@ -185,6 +185,11 @@ public class AssetDisplayPageEntryPersistenceImpl extends BasePersistenceImpl<As
 
 				qPos.add(assetEntryId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<AssetDisplayPageEntry> list = q.list();
 
 				if (list.isEmpty()) {

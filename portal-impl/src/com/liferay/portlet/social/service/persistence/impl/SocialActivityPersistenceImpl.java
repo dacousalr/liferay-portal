@@ -2228,6 +2228,11 @@ public class SocialActivityPersistenceImpl extends BasePersistenceImpl<SocialAct
 
 				qPos.add(mirrorActivityId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<SocialActivity> list = q.list();
 
 				if (list.isEmpty()) {
@@ -5993,6 +5998,11 @@ public class SocialActivityPersistenceImpl extends BasePersistenceImpl<SocialAct
 				qPos.add(type);
 
 				qPos.add(receiverUserId);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<SocialActivity> list = q.list();
 

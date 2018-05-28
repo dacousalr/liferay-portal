@@ -198,6 +198,11 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 					qPos.add(name);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Country> list = q.list();
 
 				if (list.isEmpty()) {
@@ -423,6 +428,11 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 					qPos.add(a2);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Country> list = q.list();
 
 				if (list.isEmpty()) {
@@ -646,6 +656,11 @@ public class CountryPersistenceImpl extends BasePersistenceImpl<Country>
 
 				if (bindA3) {
 					qPos.add(a3);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<Country> list = q.list();

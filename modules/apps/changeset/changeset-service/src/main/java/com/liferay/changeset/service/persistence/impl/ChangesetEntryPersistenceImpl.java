@@ -2857,6 +2857,11 @@ public class ChangesetEntryPersistenceImpl extends BasePersistenceImpl<Changeset
 
 				qPos.add(classPK);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<ChangesetEntry> list = q.list();
 
 				if (list.isEmpty()) {

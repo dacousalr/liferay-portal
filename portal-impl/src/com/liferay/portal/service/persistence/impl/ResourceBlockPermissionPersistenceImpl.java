@@ -1238,6 +1238,11 @@ public class ResourceBlockPermissionPersistenceImpl extends BasePersistenceImpl<
 
 				qPos.add(roleId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<ResourceBlockPermission> list = q.list();
 
 				if (list.isEmpty()) {

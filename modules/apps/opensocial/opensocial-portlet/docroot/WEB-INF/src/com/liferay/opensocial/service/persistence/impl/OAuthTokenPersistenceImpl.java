@@ -928,6 +928,11 @@ public class OAuthTokenPersistenceImpl extends BasePersistenceImpl<OAuthToken>
 					qPos.add(tokenName);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<OAuthToken> list = q.list();
 
 				if (list.isEmpty()) {

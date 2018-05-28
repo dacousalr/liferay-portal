@@ -732,6 +732,11 @@ public class DDLRecordSetVersionPersistenceImpl extends BasePersistenceImpl<DDLR
 					qPos.add(version);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DDLRecordSetVersion> list = q.list();
 
 				if (list.isEmpty()) {

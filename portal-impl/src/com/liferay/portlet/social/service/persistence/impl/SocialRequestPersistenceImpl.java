@@ -765,6 +765,11 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<SocialRequest> list = q.list();
 
 				if (list.isEmpty()) {
@@ -4786,6 +4791,11 @@ public class SocialRequestPersistenceImpl extends BasePersistenceImpl<SocialRequ
 				qPos.add(type);
 
 				qPos.add(receiverUserId);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<SocialRequest> list = q.list();
 

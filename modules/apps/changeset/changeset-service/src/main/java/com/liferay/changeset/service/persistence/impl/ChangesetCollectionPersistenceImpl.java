@@ -1782,6 +1782,11 @@ public class ChangesetCollectionPersistenceImpl extends BasePersistenceImpl<Chan
 					qPos.add(name);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<ChangesetCollection> list = q.list();
 
 				if (list.isEmpty()) {

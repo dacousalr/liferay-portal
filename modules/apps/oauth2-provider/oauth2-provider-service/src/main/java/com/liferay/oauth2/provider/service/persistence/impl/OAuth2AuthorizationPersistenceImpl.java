@@ -1249,6 +1249,11 @@ public class OAuth2AuthorizationPersistenceImpl extends BasePersistenceImpl<OAut
 					qPos.add(accessTokenContent);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<OAuth2Authorization> list = q.list();
 
 				if (list.isEmpty()) {
@@ -1494,6 +1499,11 @@ public class OAuth2AuthorizationPersistenceImpl extends BasePersistenceImpl<OAut
 
 				if (bindRefreshTokenContent) {
 					qPos.add(refreshTokenContent);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<OAuth2Authorization> list = q.list();

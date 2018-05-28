@@ -774,6 +774,11 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<AssetTag> list = q.list();
 
 				if (list.isEmpty()) {
@@ -3761,6 +3766,11 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 				if (bindName) {
 					qPos.add(name);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<AssetTag> list = q.list();

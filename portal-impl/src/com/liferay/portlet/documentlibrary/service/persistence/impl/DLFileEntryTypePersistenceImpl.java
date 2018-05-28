@@ -781,6 +781,11 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<DLFileEntryType> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2945,6 +2950,11 @@ public class DLFileEntryTypePersistenceImpl extends BasePersistenceImpl<DLFileEn
 
 				if (bindFileEntryTypeKey) {
 					qPos.add(fileEntryTypeKey);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<DLFileEntryType> list = q.list();

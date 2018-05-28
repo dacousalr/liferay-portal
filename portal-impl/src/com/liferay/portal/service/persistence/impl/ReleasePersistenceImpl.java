@@ -205,6 +205,11 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 					qPos.add(StringUtil.toLowerCase(servletContextName));
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Release> list = q.list();
 
 				if (list.isEmpty()) {

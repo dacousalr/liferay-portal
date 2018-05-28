@@ -1228,6 +1228,11 @@ public class KaleoConditionPersistenceImpl extends BasePersistenceImpl<KaleoCond
 
 				qPos.add(kaleoNodeId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<KaleoCondition> list = q.list();
 
 				if (list.isEmpty()) {

@@ -1240,6 +1240,11 @@ public class TrashVersionPersistenceImpl extends BasePersistenceImpl<TrashVersio
 
 				qPos.add(classPK);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<TrashVersion> list = q.list();
 
 				if (list.isEmpty()) {

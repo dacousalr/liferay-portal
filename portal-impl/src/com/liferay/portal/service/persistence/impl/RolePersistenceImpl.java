@@ -5724,6 +5724,11 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 					qPos.add(StringUtil.toLowerCase(name));
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Role> list = q.list();
 
 				if (list.isEmpty()) {
@@ -8612,6 +8617,11 @@ public class RolePersistenceImpl extends BasePersistenceImpl<Role>
 				qPos.add(classNameId);
 
 				qPos.add(classPK);
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
 
 				List<Role> list = q.list();
 

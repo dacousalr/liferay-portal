@@ -2450,6 +2450,11 @@ public class SocialActivityAchievementPersistenceImpl
 					qPos.add(name);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<SocialActivityAchievement> list = q.list();
 
 				if (list.isEmpty()) {

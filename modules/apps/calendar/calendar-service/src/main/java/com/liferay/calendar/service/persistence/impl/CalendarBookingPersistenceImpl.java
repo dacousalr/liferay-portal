@@ -774,6 +774,11 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<CalendarBooking> list = q.list();
 
 				if (list.isEmpty()) {
@@ -3702,6 +3707,11 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 
 				qPos.add(parentCalendarBookingId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<CalendarBooking> list = q.list();
 
 				if (list.isEmpty()) {
@@ -3932,6 +3942,11 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 
 				if (bindVEventUid) {
 					qPos.add(vEventUid);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<CalendarBooking> list = q.list();

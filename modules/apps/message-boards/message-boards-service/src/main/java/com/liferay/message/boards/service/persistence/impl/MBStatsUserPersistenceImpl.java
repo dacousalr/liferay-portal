@@ -1200,6 +1200,11 @@ public class MBStatsUserPersistenceImpl extends BasePersistenceImpl<MBStatsUser>
 
 				qPos.add(userId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<MBStatsUser> list = q.list();
 
 				if (list.isEmpty()) {

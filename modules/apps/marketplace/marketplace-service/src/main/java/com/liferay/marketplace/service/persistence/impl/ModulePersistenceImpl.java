@@ -2947,6 +2947,11 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 					qPos.add(contextName);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<Module> list = q.list();
 
 				if (list.isEmpty()) {
@@ -3239,6 +3244,11 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 
 				if (bindBundleVersion) {
 					qPos.add(bundleVersion);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<Module> list = q.list();

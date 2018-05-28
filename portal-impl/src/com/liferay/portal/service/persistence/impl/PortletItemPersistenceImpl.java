@@ -1435,6 +1435,11 @@ public class PortletItemPersistenceImpl extends BasePersistenceImpl<PortletItem>
 
 				qPos.add(classNameId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<PortletItem> list = q.list();
 
 				if (list.isEmpty()) {

@@ -771,6 +771,11 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 				qPos.add(groupId);
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<JournalArticleResource> list = q.list();
 
 				if (list.isEmpty()) {
@@ -2124,6 +2129,11 @@ public class JournalArticleResourcePersistenceImpl extends BasePersistenceImpl<J
 
 				if (bindArticleId) {
 					qPos.add(articleId);
+				}
+
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
 				}
 
 				List<JournalArticleResource> list = q.list();

@@ -2543,6 +2543,11 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 					qPos.add(fragmentEntryKey);
 				}
 
+				if (!getDB().isSupportsScrollableResults()) {
+					q.setFirstResult(0);
+					q.setMaxResults(2);
+				}
+
 				List<FragmentEntry> list = q.list();
 
 				if (list.isEmpty()) {
