@@ -19,6 +19,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portletdisplaytemplate.PortletDisplayTemplateManagerUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
@@ -79,7 +80,7 @@ public class NavigationMenuTag extends IncludeTag {
 		List<NavItem> navItems = null;
 
 		try {
-			if (_siteNavigationMenuId > 0) {
+			if ((_siteNavigationMenuId > 0) && !_preview) {
 				branchNavItems = Collections.emptyList();
 
 				navItems = getMenuItems();
@@ -183,12 +184,23 @@ public class NavigationMenuTag extends IncludeTag {
 
 		Layout layout = themeDisplay.getLayout();
 
-		if (layout.isRootLayout()) {
-			return Collections.singletonList(
-				new NavItem(request, themeDisplay, layout, null));
-		}
+		List<Layout> ancestorLayouts = new ArrayList<>();
 
-		List<Layout> ancestorLayouts = layout.getAncestors();
+		if (layout.isRootLayout()) {
+			Group currentGroup = themeDisplay.getScopeGroup();
+
+			List<Layout> privateLayouts = LayoutLocalServiceUtil.getLayouts(
+				currentGroup.getGroupId(), true, 0);
+
+			List<Layout> publicLayouts = LayoutLocalServiceUtil.getLayouts(
+				currentGroup.getGroupId(), false, 0);
+
+			ancestorLayouts.addAll(privateLayouts);
+			ancestorLayouts.addAll(publicLayouts);
+		}
+		else {
+			ancestorLayouts = layout.getAncestors();
+		}
 
 		List<NavItem> navItems = new ArrayList<>(ancestorLayouts.size() + 1);
 
