@@ -16,6 +16,7 @@ package com.liferay.portal.kernel.theme;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutType;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
@@ -94,9 +95,20 @@ public class NavItem implements Serializable {
 			Map<String, Object> contextObjects)
 		throws PortalException {
 
-		List<Layout> parentLayouts = themeDisplay.getLayouts();
+		List<Layout> parentLayouts = new ArrayList<>();
 
-		if (parentLayouts == null) {
+		Group currentGroup = themeDisplay.getScopeGroup();
+
+		List<Layout> privateLayouts = LayoutLocalServiceUtil.getLayouts(
+			currentGroup.getGroupId(), true, 0);
+
+		List<Layout> publicLayouts = LayoutLocalServiceUtil.getLayouts(
+			currentGroup.getGroupId(), false, 0);
+
+		parentLayouts.addAll(privateLayouts);
+		parentLayouts.addAll(publicLayouts);
+
+		if (parentLayouts.isEmpty()) {
 			return Collections.emptyList();
 		}
 
@@ -125,7 +137,6 @@ public class NavItem implements Serializable {
 		for (Layout parentLayout : parentLayouts) {
 			List<Layout> childLayouts = layoutChildLayouts.get(
 				parentLayout.getLayoutId());
-
 			navItems.add(
 				new NavItem(
 					request, themeDisplay, parentLayout, childLayouts,
