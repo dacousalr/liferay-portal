@@ -19,6 +19,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portletdisplaytemplate.PortletDisplayTemplateManagerUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
@@ -39,7 +40,6 @@ import com.liferay.site.navigation.type.SiteNavigationMenuItemType;
 import com.liferay.taglib.util.IncludeTag;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -79,16 +79,9 @@ public class NavigationMenuTag extends IncludeTag {
 		List<NavItem> navItems = null;
 
 		try {
-			if (_siteNavigationMenuId > 0) {
-				branchNavItems = Collections.emptyList();
+			branchNavItems = getBranchNavItems(request);
 
-				navItems = getMenuItems();
-			}
-			else {
-				branchNavItems = getBranchNavItems(request);
-
-				navItems = getNavItems(branchNavItems);
-			}
+			navItems = getNavItems(branchNavItems);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -183,12 +176,23 @@ public class NavigationMenuTag extends IncludeTag {
 
 		Layout layout = themeDisplay.getLayout();
 
-		if (layout.isRootLayout()) {
-			return Collections.singletonList(
-				new NavItem(request, themeDisplay, layout, null));
-		}
+		List<Layout> ancestorLayouts = new ArrayList<>();
 
-		List<Layout> ancestorLayouts = layout.getAncestors();
+		if (layout.isRootLayout()) {
+			Group currentGroup = themeDisplay.getScopeGroup();
+
+			List<Layout> privateLayouts = LayoutLocalServiceUtil.getLayouts(
+				currentGroup.getGroupId(), true, 0);
+
+			List<Layout> publicLayouts = LayoutLocalServiceUtil.getLayouts(
+				currentGroup.getGroupId(), false, 0);
+
+			ancestorLayouts.addAll(privateLayouts);
+			ancestorLayouts.addAll(publicLayouts);
+		}
+		else {
+			ancestorLayouts = layout.getAncestors();
+		}
 
 		List<NavItem> navItems = new ArrayList<>(ancestorLayouts.size() + 1);
 
@@ -201,8 +205,6 @@ public class NavigationMenuTag extends IncludeTag {
 			navItems.add(
 				new NavItem(request, themeDisplay, ancestorLayout, null));
 		}
-
-		navItems.add(new NavItem(request, themeDisplay, layout, null));
 
 		return navItems;
 	}
