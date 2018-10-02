@@ -17,17 +17,24 @@ package com.liferay.asset.publisher.web.util;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.asset.publisher.constants.AssetPublisherPortletKeys;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutTypePortletConstants;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Objects;
 
+import javax.portlet.PortletPreferences;
 import javax.portlet.PortletURL;
 
 /**
@@ -138,7 +145,58 @@ public class AssetPublisherHelper {
 			viewURL = viewFullContentURL.toString();
 		}
 
+		viewURL = _replacePortletIdIfLinkedToAnotherLayout(
+			liferayPortletRequest, viewURL);
+
 		return viewURL;
+	}
+
+	private static String _replacePortletIdIfLinkedToAnotherLayout(
+		LiferayPortletRequest liferayPortletRequest, String viewUrl) {
+
+		Layout layout = LayoutLocalServiceUtil.fetchLayout(
+			liferayPortletRequest.getPlid());
+
+		PortletPreferences portletPreferences =
+			liferayPortletRequest.getPreferences();
+
+		String portletSetupLinkToLayoutUuid = portletPreferences.getValue(
+			"portletSetupLinkToLayoutUuid", StringPool.BLANK);
+
+		if ((layout != null) &&
+			Validator.isNotNull(portletSetupLinkToLayoutUuid)) {
+
+			Layout linkedLayout =
+				LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
+					portletSetupLinkToLayoutUuid, layout.getGroupId(),
+					layout.isPrivateLayout());
+
+			String newPortletId = linkedLayout.getTypeSettingsProperty(
+				LayoutTypePortletConstants.DEFAULT_ASSET_PUBLISHER_PORTLET_ID,
+				StringPool.BLANK);
+
+			if (Validator.isNotNull(newPortletId)) {
+				String prefix =
+					AssetPublisherPortletKeys.ASSET_PUBLISHER + "_INSTANCE_";
+
+				String newId = StringUtil.replace(
+					newPortletId, prefix, StringPool.BLANK);
+
+				String oldPortletName = liferayPortletRequest.getPortletName();
+
+				String oldId = StringUtil.replace(
+					oldPortletName, prefix, StringPool.BLANK);
+
+				viewUrl = StringUtil.replace(
+					viewUrl, oldPortletName, prefix + newId);
+
+				viewUrl = StringUtil.replace(
+					viewUrl, StringPool.SLASH + oldId + StringPool.SLASH,
+					StringPool.SLASH + newId + StringPool.SLASH);
+			}
+		}
+
+		return viewUrl;
 	}
 
 }
