@@ -18,6 +18,7 @@ import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.publisher.constants.AssetPublisherWebKeys;
+import com.liferay.asset.publisher.util.AssetPublisherHelper;
 import com.liferay.asset.publisher.web.display.context.AssetEntryResult;
 import com.liferay.asset.publisher.web.display.context.AssetPublisherDisplayContext;
 import com.liferay.petra.string.StringBundler;
@@ -49,10 +50,14 @@ import javax.portlet.PortletResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Brian Wing Shun Chan
  * @author Julio Camarero
  */
+@Component(service = {})
 public class AssetRSSUtil {
 
 	public static byte[] getRSS(
@@ -291,7 +296,7 @@ public class AssetRSSUtil {
 			AssetEntry assetEntry)
 		throws Exception {
 
-		String assetViewURL = AssetPublisherHelper.getAssetViewURL(
+		String assetViewURL = _assetPublisherHelper.getAssetViewURL(
 			PortalUtil.getLiferayPortletRequest(portletRequest),
 			PortalUtil.getLiferayPortletResponse(portletResponse), assetEntry,
 			true);
@@ -317,5 +322,8 @@ public class AssetRSSUtil {
 
 		return feedURL.concat("rss");
 	}
+
+	@Reference
+	private static AssetPublisherHelper _assetPublisherHelper;
 
 }
