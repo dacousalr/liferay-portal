@@ -50,7 +50,7 @@ else {
 %>
 
 <c:choose>
-	<c:when test="<%= assetEntry.isVisible() || assetRenderer.hasViewPermission(permissionChecker) %>">
+	<c:when test="<%= assetEntry.isVisible() && assetRenderer.hasViewPermission(permissionChecker) %>">
 
 		<%
 		String title = assetRenderer.getTitle(locale);

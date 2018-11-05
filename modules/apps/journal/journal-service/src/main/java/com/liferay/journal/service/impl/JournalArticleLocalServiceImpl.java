@@ -6412,6 +6412,10 @@ public class JournalArticleLocalServiceImpl
 
 		if (status == WorkflowConstants.STATUS_EXPIRED) {
 			article.setExpirationDate(now);
+
+			assetEntryLocalService.updateVisible(
+				JournalArticle.class.getName(), article.getResourcePrimKey(),
+				false);
 		}
 
 		article.setStatus(status);
