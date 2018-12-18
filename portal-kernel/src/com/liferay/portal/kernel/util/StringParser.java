@@ -96,7 +96,10 @@ public class StringParser {
 				return null;
 			}
 
-			if ((_stringEncoder != null) && !stringParserFragment.isRaw()) {
+			if ((_stringEncoder != null) && !stringParserFragment.isRaw() &&
+				!_URLTITLE_PARAMETER_NAME.equals(
+					stringParserFragment.getName())) {
+
 				value = _stringEncoder.encode(value);
 			}
 
@@ -295,6 +298,8 @@ public class StringParser {
 
 		_pattern = Pattern.compile(regex);
 	}
+
+	private static final String _URLTITLE_PARAMETER_NAME = "urlTitle";
 
 	private static final Pattern _escapeRegexPattern = Pattern.compile(
 		"[\\{\\}\\(\\)\\[\\]\\*\\+\\?\\$\\^\\.\\#\\\\]");
