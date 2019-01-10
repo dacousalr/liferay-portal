@@ -8325,6 +8325,8 @@ public class JournalArticleLocalServiceImpl
 				public Void call() throws Exception {
 					for (JournalArticle curArticle : articles) {
 						curArticle.setExpirationDate(expirationDate);
+						curArticle.setModifiedDate(
+								curArticle.getModifiedDate());
 
 						journalArticleLocalService.updateJournalArticle(
 							curArticle);
