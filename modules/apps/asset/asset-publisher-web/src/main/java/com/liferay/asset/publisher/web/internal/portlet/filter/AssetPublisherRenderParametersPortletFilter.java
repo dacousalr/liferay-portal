@@ -16,8 +16,10 @@ package com.liferay.asset.publisher.web.internal.portlet.filter;
 
 import com.liferay.asset.publisher.constants.AssetPublisherPortletKeys;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.RenderParametersPool;
@@ -60,6 +62,17 @@ public class AssetPublisherRenderParametersPortletFilter
 
 		HttpServletRequest httpServletRequest = _portal.getHttpServletRequest(
 			renderRequest);
+
+		HttpServletRequest originalRequest = _portal.getOriginalServletRequest(httpServletRequest);
+
+		String[] ppids = ParamUtil.getStringValues(originalRequest, "p_p_id");
+
+		if (ArrayUtil.contains(ppids, PortletKeys.MY_WORKFLOW_TASK)) {
+			renderRequest.setAttribute(WebKeys.WORKFLOW_ASSET_PREVIEW, Boolean.TRUE);
+		}
+		else {
+			renderRequest.setAttribute(WebKeys.WORKFLOW_ASSET_PREVIEW, Boolean.FALSE);
+		}
 
 		long categoryId = ParamUtil.getLong(renderRequest, "categoryId");
 		String tag = ParamUtil.getString(renderRequest, "tag");
