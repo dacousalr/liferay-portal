@@ -41,7 +41,9 @@ import com.liferay.staging.StagingGroupHelper;
 import com.liferay.staging.StagingGroupHelperUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
@@ -172,6 +174,24 @@ public class AssetTagsDisplayContext {
 		_tag = tag;
 
 		return _tag;
+	}
+
+	public Map<Long, Long> getTagCountMap() throws PortalException {
+		if (_tagsSearchContainer == null) {
+			getTagsSearchContainer();
+		}
+
+		Map<Long, Long> result = new HashMap<>();
+
+		List<AssetTag> tags = _tagsSearchContainer.getResults();
+
+		for (AssetTag tag : tags) {
+			long count = getFullTagsCount(tag);
+
+			result.put(tag.getTagId(), count);
+		}
+
+		return result;
 	}
 
 	public Long getTagId() {
