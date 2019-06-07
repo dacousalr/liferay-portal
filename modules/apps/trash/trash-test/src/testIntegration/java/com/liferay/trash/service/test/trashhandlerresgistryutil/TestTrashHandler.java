@@ -249,8 +249,17 @@ public class TestTrashHandler implements TrashHandler {
 		return false;
 	}
 
+	/**
+	 * @deprecated As of Mueller (7.2.x)
+	 */
+	@Deprecated
 	@Override
 	public boolean isDeletable() {
+		return false;
+	}
+
+	@Override
+	public boolean isDeletable(long classPK) {
 		return false;
 	}
 

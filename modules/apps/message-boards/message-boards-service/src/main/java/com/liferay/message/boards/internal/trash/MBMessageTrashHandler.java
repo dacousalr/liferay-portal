@@ -79,8 +79,18 @@ public class MBMessageTrashHandler extends BaseTrashHandler {
 		return _mbMessageLocalService.fetchMBMessage(classPK);
 	}
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 *             #isDeletable(long)}
+	 */
+	@Deprecated
 	@Override
 	public boolean isDeletable() {
+		return false;
+	}
+
+	@Override
+	public boolean isDeletable(long classPK) throws PortalException {
 		return false;
 	}
 
