@@ -364,6 +364,10 @@ public interface LayoutService extends BaseService {
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Layout> getLayouts(
+		long groupId, boolean privateLayout, String type);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Layout> getLayouts(long groupId, String type);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
