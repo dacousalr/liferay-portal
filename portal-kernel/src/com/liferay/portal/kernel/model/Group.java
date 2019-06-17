@@ -61,6 +61,9 @@ public interface Group extends GroupModel, PersistedModel, TreeModel {
 
 	public java.util.List<Group> getChildren(boolean site);
 
+	public java.util.List<Group> getFilteredChildren(boolean site)
+		throws com.liferay.portal.kernel.exception.PortalException;
+
 	public java.util.List<Group> getChildrenWithLayouts(
 		boolean site, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<Group> obc);
