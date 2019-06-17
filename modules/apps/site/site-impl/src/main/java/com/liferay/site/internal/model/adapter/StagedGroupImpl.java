@@ -88,6 +88,12 @@ public class StagedGroupImpl implements StagedGroup {
 	}
 
 	@Override
+	public List<Group> getFilteredChildren(boolean site) 
+		throws PortalException {
+		return _group.getFilteredChildren(site);
+	}
+
+	@Override
 	public List<Group> getChildren(boolean site) {
 		return _group.getChildren(site);
 	}
