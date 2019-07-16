@@ -146,6 +146,7 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.MathUtil;
+import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -185,6 +186,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -433,6 +435,20 @@ public class JournalArticleLocalServiceImpl
 		article.setArticleId(articleId);
 		article.setVersion(version);
 		article.setUrlTitle(urlTitle);
+
+		String currentURL = serviceContext.getCurrentURL();
+		String jsonwsAddArticleURL =
+			"/api/jsonws/journal.journalarticle/add-article";
+		String jsonwsInvokeAddArticleURL =
+			"{\"/journal.journalarticle/add-article\":{}}";
+
+		if ((currentURL != null) &&
+			(StringUtil.equalsIgnoreCase(jsonwsAddArticleURL, currentURL) ||
+			 StringUtil.equalsIgnoreCase(
+				 serviceContext.getCommand(), jsonwsInvokeAddArticleURL))) {
+
+			content = _addJsonwsImages(user, groupId, article, content, images);
+		}
 
 		content = format(user, groupId, article, content);
 		content = _replaceTempImages(article, content);
@@ -9047,6 +9063,110 @@ public class JournalArticleLocalServiceImpl
 
 		return journalArticleLocalizationPersistence.update(
 			journalArticleLocalization);
+	}
+
+	private String _addJsonwsImages(
+		User user, long groupId, JournalArticle article, String content,
+		Map<String, byte[]> images) {
+
+		long userId = user.getUserId();
+		String className = "com.liferay.journal.model.JournalArticle";
+		long classPK = article.getResourcePrimKey();
+		String portletId = "com.liferay.journal";
+		long folderId = 0;
+
+		Set<Map.Entry<String, byte[]>> imagesMapEntrySet = images.entrySet();
+
+		Iterator<Map.Entry<String, byte[]>> imagesMapEntrySetIterator =
+			imagesMapEntrySet.iterator();
+
+		Map.Entry<String, byte[]> imagesMapEntrySetIteratorFirstEntry =
+			imagesMapEntrySetIterator.next();
+
+		String fileName = imagesMapEntrySetIteratorFirstEntry.getKey();
+		byte[] bytes = imagesMapEntrySetIteratorFirstEntry.getValue();
+
+		String mimeType = MimeTypesUtil.getExtensionContentType(fileName);
+		boolean indexingEnabled = false;
+		FileEntry fileEntry = null;
+		Document document = null;
+
+		try {
+			fileEntry = PortletFileRepositoryUtil.addPortletFileEntry(
+				groupId, userId, className, classPK, portletId, folderId, bytes,
+				fileName, mimeType, indexingEnabled);
+
+			document = SAXReaderUtil.read(content);
+
+			Element rootElement = document.getRootElement();
+
+			List<Element> rootElementElements = rootElement.elements();
+			List<Element> dynamicContentEls = rootElement.elements(
+				"dynamic-element");
+
+			if (!rootElement.hasContent() || dynamicContentEls.isEmpty()) {
+				rootElement.addAttribute("available-locales", "en_US");
+				rootElement.addAttribute("default-locale", "en_US");
+
+				Element dcMainElement = rootElement.addElement(
+					"dynamic-element");
+
+				dcMainElement.addAttribute("name", "image");
+				dcMainElement.addAttribute("type", "image");
+				dcMainElement.addAttribute("index-type", "text");
+
+				Element dcSubElement = dcMainElement.addElement(
+					"dynamic-content");
+
+				dcSubElement.addAttribute("language-id", "en_US");
+
+				rootElementElements = rootElement.elements();
+			}
+
+			for (Element element : rootElementElements) {
+				List<Element> dynamicContentElements = element.elements(
+					"dynamic-content");
+
+				for (Element dynamicContentElement : dynamicContentElements) {
+					String dynamicCEText = dynamicContentElement.getText();
+
+					JSONObject cdataJSONObject =
+						JSONFactoryUtil.createJSONObject(dynamicCEText);
+
+					cdataJSONObject.put(
+						"alt", ""
+					).put(
+						"classPK", article.getClassPK()
+					).put(
+						"fileEntryId", fileEntry.getFileEntryId()
+					).put(
+						"groupId", fileEntry.getGroupId()
+					).put(
+						"name", fileEntry.getFileName()
+					).put(
+						"resourcePrimKey", article.getResourcePrimKey()
+					).put(
+						"title", fileEntry.getFileName()
+					).put(
+						"type", "journal"
+					).put(
+						"uuid", fileEntry.getUuid()
+					);
+
+					dynamicContentElement.addCDATA(cdataJSONObject.toString());
+				}
+			}
+
+			content = XMLUtil.formatXML(document);
+		}
+		catch (PortalException pe) {
+			_log.error(pe, pe);
+		}
+		catch (DocumentException de) {
+			_log.error(de, de);
+		}
+
+		return content;
 	}
 
 	private Map<Locale, String> _checkFriendlyURLMap(
