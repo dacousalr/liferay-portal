@@ -19,8 +19,16 @@
 <%
 CommentsContentMetadataAssetAddonEntry commentsContentMetadataAssetAddonEntry = (CommentsContentMetadataAssetAddonEntry)request.getAttribute(WebKeys.ASSET_ADDON_ENTRY);
 JournalArticleDisplay articleDisplay = (JournalArticleDisplay)request.getAttribute(WebKeys.JOURNAL_ARTICLE_DISPLAY);
+ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
 
 String viewMode = ParamUtil.getString(request, "viewMode");
+long userId;
+
+if (themeDisplay.isSignedIn()) {
+	userId = themeDisplay.getUserId();
+} else {
+	userId = articleDisplay.getUserId();
+}
 %>
 
 <div class="content-metadata-asset-addon-entry content-metadata-comments">
@@ -30,6 +38,6 @@ String viewMode = ParamUtil.getString(request, "viewMode");
 		hideControls="<%= viewMode.equals(Constants.PRINT) %>"
 		ratingsEnabled="<%= commentsContentMetadataAssetAddonEntry.isCommentsRatingsSelected(request) && !viewMode.equals(Constants.PRINT) %>"
 		redirect="<%= currentURLObj.toString() %>"
-		userId="<%= articleDisplay.getUserId() %>"
+		userId="<%= userId %>"
 	/>
 </div>

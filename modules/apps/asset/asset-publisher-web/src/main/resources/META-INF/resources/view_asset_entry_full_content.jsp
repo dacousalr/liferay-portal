@@ -415,6 +415,17 @@ String viewInContextURL = assetRenderer.getURLViewInContext(liferayPortletReques
 	</c:if>
 
 	<c:if test="<%= assetPublisherDisplayContext.isEnableComments() && assetRenderer.isCommentable() %>">
+			<%
+			ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+			long userId;
+
+			if (themeDisplay.isSignedIn()) {
+				userId = themeDisplay.getUserId();
+			}
+			else {
+				userId = articleDisplay.getUserId();
+			}
+			%>
 		<div class="col-md-12 mt-4">
 			<liferay-comment:discussion
 				className="<%= assetEntry.getClassName() %>"
@@ -422,7 +433,7 @@ String viewInContextURL = assetRenderer.getURLViewInContext(liferayPortletReques
 				formName='<%= "fm" + assetEntry.getClassPK() %>'
 				ratingsEnabled="<%= assetPublisherDisplayContext.isEnableCommentRatings() %>"
 				redirect="<%= currentURL %>"
-				userId="<%= assetRenderer.getUserId() %>"
+				userId="<%= userId %>"
 			/>
 		</div>
 	</c:if>
