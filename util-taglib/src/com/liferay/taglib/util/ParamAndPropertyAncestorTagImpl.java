@@ -114,14 +114,14 @@ public class ParamAndPropertyAncestorTagImpl
 
 			params.clear();
 
-			request = (HttpServletRequest)_dynamicServletRequest.getRequest();
-
 			_dynamicServletRequest = null;
 		}
 
 		if (_removedParameterNames != null) {
 			_removedParameterNames.clear();
 		}
+
+		request = null;
 	}
 
 	public void clearProperties() {
