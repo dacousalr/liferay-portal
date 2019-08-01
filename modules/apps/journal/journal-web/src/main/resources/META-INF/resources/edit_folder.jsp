@@ -144,7 +144,7 @@ renderResponse.setTitle(title);
 					}
 					%>
 
-					<div class="form-group">
+					<div class="form-group another-class">
 						<aui:input name="parentFolderName" type="resource" value="<%= parentFolderName %>" />
 
 						<aui:button name="selectFolderButton" value="select" />
