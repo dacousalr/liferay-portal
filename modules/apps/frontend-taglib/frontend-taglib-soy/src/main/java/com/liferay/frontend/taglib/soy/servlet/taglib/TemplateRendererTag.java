@@ -194,6 +194,9 @@ public class TemplateRendererTag extends ParamAndPropertyAncestorTagImpl {
 	}
 
 	protected void cleanUp() {
+		clearParams();
+		clearProperties();
+
 		_componentId = null;
 		_context = null;
 		_dependencies = null;

@@ -50,6 +50,8 @@ public class SuccessTag extends IncludeTag implements BodyTag {
 			return super.doEndTag();
 		}
 
+		doClearTag();
+
 		return EVAL_PAGE;
 	}
 

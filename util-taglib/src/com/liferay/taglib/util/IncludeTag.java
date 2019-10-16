@@ -182,6 +182,15 @@ public class IncludeTag extends AttributesTagSupport {
 	}
 
 	protected void cleanUp() {
+		HttpServletRequest httpServletRequest = getOriginalServletRequest();
+
+		if (_trackedRequest != null) {
+			httpServletRequest = _trackedRequest;
+		}
+
+		Class<? extends IncludeTag> clazz = getClass();
+
+		httpServletRequest.removeAttribute(clazz.getName());
 	}
 
 	protected void cleanUpSetAttributes() {
