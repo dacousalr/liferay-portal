@@ -587,6 +587,8 @@ public class AssetPublisherHelperImpl implements AssetPublisherHelper {
 					"groupId", String.valueOf(assetRenderer.getGroupId()));
 			}
 
+			urlTitle = urlTitle.replaceAll(StringPool.SLASH, StringPool.BLANK);
+
 			viewFullContentURL.setParameter("urlTitle", urlTitle);
 		}
 
