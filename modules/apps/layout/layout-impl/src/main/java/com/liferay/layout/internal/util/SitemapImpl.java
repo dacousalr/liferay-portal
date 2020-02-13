@@ -21,6 +21,7 @@ import com.liferay.layout.admin.kernel.util.SitemapURLProviderRegistryUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
@@ -50,6 +51,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -267,7 +269,21 @@ public class SitemapImpl implements Sitemap {
 
 		byte[] bytes = string.getBytes();
 
-		return bytes.length;
+		int offset = 0;
+
+		String name = element.getName();
+
+		if (name.equals("url")) {
+			Set<Locale> availableLocales = LanguageUtil.getAvailableLocales();
+
+			int availableLocalesSize = availableLocales.size();
+
+			offset = availableLocalesSize * _XHTML_ATTRIBUTE.length;
+
+			offset += _XMLNS_ATTRIBUTE.length;
+		}
+
+		return bytes.length - offset;
 	}
 
 	private String _getSitemap(
@@ -421,6 +437,12 @@ public class SitemapImpl implements Sitemap {
 	private static final int _MAXIMUM_SIZE_IN_BYTES = 50 * 1024 * 1024;
 
 	private static final String _SIZE = "size";
+
+	private static final byte[] _XHTML_ATTRIBUTE =
+		" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\"".getBytes();
+
+	private static final byte[] _XMLNS_ATTRIBUTE =
+		" xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"".getBytes();
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		SitemapImpl.class.getName());
