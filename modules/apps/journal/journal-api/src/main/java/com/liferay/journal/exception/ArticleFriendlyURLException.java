@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 
 /**
  * @author Brian Wing Shun Chan
+ * @author Roberto Díaz
  */
 public class ArticleFriendlyURLException extends PortalException {
 
@@ -34,6 +35,26 @@ public class ArticleFriendlyURLException extends PortalException {
 
 	public ArticleFriendlyURLException(Throwable cause) {
 		super(cause);
+	}
+
+	public static class MustNotModifyToNull
+		extends ArticleFriendlyURLException {
+
+		public MustNotModifyToNull() {
+		}
+
+		public MustNotModifyToNull(String msg) {
+			super(msg);
+		}
+
+		public MustNotModifyToNull(String msg, Throwable cause) {
+			super(msg, cause);
+		}
+
+		public MustNotModifyToNull(Throwable cause) {
+			super(cause);
+		}
+
 	}
 
 }
