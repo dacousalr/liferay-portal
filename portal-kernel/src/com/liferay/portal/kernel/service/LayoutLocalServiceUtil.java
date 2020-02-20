@@ -1144,6 +1144,28 @@ public class LayoutLocalServiceUtil {
 	}
 
 	/**
+	 * Returns all the layouts that match the type and belong to the group.
+	 *
+	 * @param groupId the primary key of the group
+	 * @param privateLayout whether the layout is private to the group
+	 * @param type the type of the layouts (optionally {@link
+	 LayoutConstants#TYPE_PORTLET})
+	 * @param start the lower bound of the range of layouts
+	 * @param end the upper bound of the range of layouts (not inclusive)
+	 * @return the matching layouts, or <code>null</code> if no matches were
+	 found
+	 */
+	public static java.util.List<com.liferay.portal.kernel.model.Layout>
+			getLayouts(
+				long groupId, boolean privateLayout, String type, int start,
+				int end)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return getService().getLayouts(
+			groupId, privateLayout, type, start, end);
+	}
+
+	/**
 	 * Returns a range of all the layouts belonging to the group.
 	 *
 	 * @param groupId the primary key of the group
@@ -1333,6 +1355,10 @@ public class LayoutLocalServiceUtil {
 
 	public static int getLayoutsCount(long groupId) {
 		return getService().getLayoutsCount(groupId);
+	}
+
+	public static int getLayoutsCount(long groupId, boolean privateLayout) {
+		return getService().getLayoutsCount(groupId, privateLayout);
 	}
 
 	public static int getLayoutsCount(long groupId, long masterLayoutPlid) {
