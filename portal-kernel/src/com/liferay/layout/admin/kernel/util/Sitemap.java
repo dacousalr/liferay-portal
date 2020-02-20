@@ -52,4 +52,6 @@ public interface Sitemap {
 			ThemeDisplay themeDisplay)
 		throws PortalException;
 
+	public static final int MAXIMUM_NUMBER_OF_ENTRIES = 50000;
+
 }

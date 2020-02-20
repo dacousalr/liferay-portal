@@ -20,6 +20,7 @@ import com.liferay.journal.service.JournalArticleService;
 import com.liferay.layout.admin.kernel.util.Sitemap;
 import com.liferay.layout.admin.kernel.util.SitemapURLProvider;
 import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutSet;
@@ -56,9 +57,20 @@ public class JournalArticleSitemapURLProvider implements SitemapURLProvider {
 			ThemeDisplay themeDisplay)
 		throws PortalException {
 
+		int end = QueryUtil.ALL_POS;
+		int start = QueryUtil.ALL_POS;
+
+		int layoutsCount = _layoutLocalService.getLayoutsCount(
+			layoutSet.getGroupId(), layoutSet.isPrivateLayout());
+
+		if (layoutsCount > Sitemap.MAXIMUM_NUMBER_OF_ENTRIES) {
+			end = layoutsCount;
+			start = layoutsCount - Sitemap.MAXIMUM_NUMBER_OF_ENTRIES;
+		}
+
 		List<JournalArticle> journalArticles =
 			_journalArticleService.getArticlesByLayoutUuid(
-				layoutSet.getGroupId(), layoutUuid);
+				layoutSet.getGroupId(), layoutUuid, start, end);
 
 		visitArticles(element, layoutSet, themeDisplay, journalArticles);
 	}
@@ -68,8 +80,20 @@ public class JournalArticleSitemapURLProvider implements SitemapURLProvider {
 			Element element, LayoutSet layoutSet, ThemeDisplay themeDisplay)
 		throws PortalException {
 
+		int end = QueryUtil.ALL_POS;
+		int start = QueryUtil.ALL_POS;
+
+		int layoutsCount = _layoutLocalService.getLayoutsCount(
+			layoutSet.getGroupId(), layoutSet.isPrivateLayout());
+
+		if (layoutsCount > Sitemap.MAXIMUM_NUMBER_OF_ENTRIES) {
+			end = layoutsCount;
+			start = layoutsCount - Sitemap.MAXIMUM_NUMBER_OF_ENTRIES;
+		}
+
 		List<JournalArticle> journalArticles =
-			_journalArticleService.getLayoutArticles(layoutSet.getGroupId());
+			_journalArticleService.getLayoutArticles(
+				layoutSet.getGroupId(), start, end);
 
 		visitArticles(element, layoutSet, themeDisplay, journalArticles);
 	}

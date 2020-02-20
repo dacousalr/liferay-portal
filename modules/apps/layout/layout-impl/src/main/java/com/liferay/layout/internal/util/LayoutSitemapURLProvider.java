@@ -17,12 +17,12 @@ package com.liferay.layout.internal.util;
 import com.liferay.layout.admin.kernel.model.LayoutTypePortletConstants;
 import com.liferay.layout.admin.kernel.util.Sitemap;
 import com.liferay.layout.admin.kernel.util.SitemapURLProvider;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.service.LayoutLocalService;
-import com.liferay.portal.kernel.service.LayoutService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Portal;
@@ -81,9 +81,20 @@ public class LayoutSitemapURLProvider implements SitemapURLProvider {
 				continue;
 			}
 
-			List<Layout> layouts = _layoutService.getLayouts(
+			int end = QueryUtil.ALL_POS;
+			int start = QueryUtil.ALL_POS;
+
+			int layoutsCount = _layoutLocalService.getLayoutsCount(
+				layoutSet.getGroupId(), layoutSet.isPrivateLayout());
+
+			if (layoutsCount > Sitemap.MAXIMUM_NUMBER_OF_ENTRIES) {
+				end = layoutsCount;
+				start = layoutsCount - Sitemap.MAXIMUM_NUMBER_OF_ENTRIES;
+			}
+
+			List<Layout> layouts = _layoutLocalService.getLayouts(
 				layoutSet.getGroupId(), layoutSet.isPrivateLayout(),
-				entry.getKey());
+				entry.getKey(), start, end);
 
 			for (Layout layout : layouts) {
 				visitLayout(element, layout, themeDisplay);
@@ -123,9 +134,6 @@ public class LayoutSitemapURLProvider implements SitemapURLProvider {
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;
-
-	@Reference
-	private LayoutService _layoutService;
 
 	@Reference
 	private Portal _portal;
