@@ -207,7 +207,7 @@ public class DisplayPageLayoutTypeController
 
 	@Override
 	public boolean isSitemapable() {
-		return false;
+		return true;
 	}
 
 	@Override
