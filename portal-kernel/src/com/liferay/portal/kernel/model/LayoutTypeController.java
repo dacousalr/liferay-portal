@@ -19,6 +19,8 @@ import java.io.Serializable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.liferay.portal.kernel.exception.PortalException;
+
 /**
  * @author Raymond Augé
  */
@@ -27,6 +29,13 @@ public interface LayoutTypeController extends Serializable {
 	public String[] getConfigurationActionDelete();
 
 	public String[] getConfigurationActionUpdate();
+
+	public default String getFriendlyURL(
+			HttpServletRequest httpServletRequest, Layout layout)
+		throws PortalException {
+
+		return null;
+	}
 
 	public String getType();
 

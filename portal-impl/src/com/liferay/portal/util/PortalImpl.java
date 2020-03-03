@@ -2760,6 +2760,13 @@ public class PortalImpl implements Portal {
 			return null;
 		}
 
+		String friendlyURL = layoutTypeController.getFriendlyURL(
+			themeDisplay.getRequest(), layout);
+
+		if (friendlyURL != null) {
+			return friendlyURL;
+		}
+
 		LayoutSet layoutSet = themeDisplay.getLayoutSet();
 
 		if ((layoutSet == null) ||
@@ -2813,6 +2820,13 @@ public class PortalImpl implements Portal {
 
 		if (!layoutTypeController.isURLFriendliable()) {
 			return null;
+		}
+
+		String friendlyURL = layoutTypeController.getFriendlyURL(
+			themeDisplay.getRequest(), layout);
+
+		if (friendlyURL != null) {
+			return friendlyURL;
 		}
 
 		Group group = themeDisplay.getSiteGroup();

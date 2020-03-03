@@ -14,6 +14,8 @@
 
 package com.liferay.layout.type.controller.display.page.internal.layout.type.controller;
 
+import com.liferay.asset.display.page.portlet.AssetDisplayPageFriendlyURLProvider;
+import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.fragment.constants.FragmentActionKeys;
 import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.fragment.renderer.FragmentRendererTracker;
@@ -43,6 +45,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.servlet.PipingServletResponse;
 
@@ -67,6 +70,35 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class DisplayPageLayoutTypeController
 	extends BaseLayoutTypeControllerImpl {
+
+	@Override
+	public String getFriendlyURL(
+			HttpServletRequest httpServletRequest, Layout layout)
+		throws PortalException {
+
+		if (layout.getClassNameId() ==
+				PortalUtil.getClassNameId(Layout.class)) {
+
+			return null;
+		}
+
+		Object object =
+			httpServletRequest.getAttribute(WebKeys.LAYOUT_ASSET_ENTRY);
+
+		if (object != null && object instanceof AssetEntry) {
+			AssetEntry assetEntry = (AssetEntry) object;
+
+			ThemeDisplay themeDisplay =
+				(ThemeDisplay)httpServletRequest.getAttribute(
+					WebKeys.THEME_DISPLAY);
+
+			return _assetDisplayPageFriendlyURLProvider.getFriendlyURL(
+				assetEntry.getClassName(), assetEntry.getClassPK(),
+				themeDisplay);
+		}
+
+		return null;
+	}
 
 	@Override
 	public String getType() {
@@ -307,6 +339,9 @@ public class DisplayPageLayoutTypeController
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		DisplayPageLayoutTypeController.class);
+
+	@Reference
+	AssetDisplayPageFriendlyURLProvider _assetDisplayPageFriendlyURLProvider;
 
 	@Reference
 	private FragmentRendererController _fragmentRendererController;
