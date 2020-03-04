@@ -4,3 +4,4 @@ Bundle-Version: 6.0.7
 Liferay-Require-SchemaVersion: 3.2.1
 Liferay-Service: true
 -dsannotations-options: inherit
+Import-Package: com.liferay.portal.kernel.*;version="0",*
