@@ -79,6 +79,11 @@ public class RobotsAction implements Action {
 			String robots = RobotsUtil.getRobots(
 				layoutSet, httpServletRequest.isSecure());
 
+			if (robots.contains(RobotsUtil.ROBOTS_TXT_WILDCARD)) {
+				robots = robots.replace(
+					RobotsUtil.ROBOTS_TXT_WILDCARD, virtualHost.getHostname());
+			}
+
 			ServletResponseUtil.sendFile(
 				httpServletRequest, httpServletResponse, null,
 				robots.getBytes(StringPool.UTF8), ContentTypes.TEXT_PLAIN_UTF8);

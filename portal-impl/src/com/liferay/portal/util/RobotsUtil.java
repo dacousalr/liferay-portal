@@ -31,6 +31,8 @@ import java.util.TreeMap;
  */
 public class RobotsUtil {
 
+	public static final String ROBOTS_TXT_WILDCARD = "[$VIRTUALHOST]";
+
 	public static String getDefaultRobots() {
 		int portalServerPort = PortalUtil.getPortalServerPort(false);
 
