@@ -162,7 +162,7 @@ public class UpdateLanguageAction implements Action {
 		}
 
 		if (Validator.isNotNull(queryString)) {
-			redirect = redirect + queryString;
+			redirect = redirect + friendlyURLSeparatorPart + queryString;
 		}
 
 		httpServletResponse.sendRedirect(redirect);
