@@ -13,6 +13,7 @@
  */
 
 import {debounce} from 'frontend-js-web';
+import {ItemSelectorDialog} from 'frontend-js-web';
 
 import {config} from '../config/index';
 
@@ -67,6 +68,31 @@ export default function getAlloyEditorProcessor(
 			const editorName = `${config.portletNamespace}FragmentEntryLinkEditable_${element.id}`;
 			_editor = AlloyEditor.editable(getEditorWrapper(element), {
 				...editorConfig,
+
+				documentBrowseLinkCallback: (editor, url, changeLinkCallback) => {
+				
+					const itemSelectorDialog = new ItemSelectorDialog({
+						eventName: editor.name + 'selectDocument',
+						singleSelect: true,
+						title: Liferay.Language.get('select-item'),
+						url: url,
+					}); 
+
+					itemSelectorDialog.open();
+
+					itemSelectorDialog.on('selectedItemChange', event => {
+						const selectedItem = event.selectedItem;
+
+						if (selectedItem) {
+							changeLinkCallback(selectedItem);
+						}
+					});
+				},
+
+				documentBrowseLinkUrl: editorConfig.documentBrowseLinkUrl.replace(
+					'_EDITOR_NAME_',
+					editorName
+				),
 
 				filebrowserImageBrowseLinkUrl: editorConfig.filebrowserImageBrowseLinkUrl.replace(
 					'_EDITOR_NAME_',
