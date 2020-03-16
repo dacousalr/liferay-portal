@@ -27,6 +27,8 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface InactiveRequestHandler {
 
+	public boolean IsShowInactiveRequestMessageEnabled();
+
 	public void processInactiveRequest(
 			HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse, String messageKey)
