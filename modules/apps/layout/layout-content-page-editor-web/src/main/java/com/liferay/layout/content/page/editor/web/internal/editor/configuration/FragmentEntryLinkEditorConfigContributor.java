@@ -53,7 +53,7 @@ public class FragmentEntryLinkEditorConfigContributor
 		).put(
 			"disallowedContent", "br"
 		).put(
-			"documentBrowseLinkUrl", itemSelectorURL.toString()	
+			"documentBrowseLinkUrl", itemSelectorURL.toString()
 		).put(
 			"enterMode", 2
 		).put(
@@ -75,4 +75,5 @@ public class FragmentEntryLinkEditorConfigContributor
 		return "contextmenu,elementspath,floatingspace,image,link,liststyle," +
 			"magicline,resize,tabletools,toolbar,ae_embed";
 	}
+
 }
