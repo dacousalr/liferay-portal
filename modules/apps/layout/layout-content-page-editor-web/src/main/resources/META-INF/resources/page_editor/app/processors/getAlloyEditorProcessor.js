@@ -70,9 +70,8 @@ export default function getAlloyEditorProcessor(
 				...editorConfig,
 
 				documentBrowseLinkCallback: (editor, url, changeLinkCallback) => {
-				
 					const itemSelectorDialog = new ItemSelectorDialog({
-						eventName: editor.name + 'selectDocument',
+						eventName: editor.title + 'selectItem',
 						singleSelect: true,
 						title: Liferay.Language.get('select-item'),
 						url: url,
@@ -103,6 +102,8 @@ export default function getAlloyEditorProcessor(
 					'_EDITOR_NAME_',
 					editorName
 				),
+
+				title: editorName,
 			});
 
 			const nativeEditor = _editor.get('nativeEditor');
