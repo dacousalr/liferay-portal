@@ -58,7 +58,9 @@ import com.liferay.segments.util.SegmentsExperiencePortletUtil;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.OptionalLong;
 import java.util.ResourceBundle;
@@ -162,7 +164,8 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 
 		if (Validator.isNotNull(jsonObject.getString("portletId"))) {
 			return _renderWidgetHTML(
-				editableValues, fragmentEntryProcessorContext);
+				fragmentEntryLink.getFragmentEntryLinkId(), editableValues,
+				fragmentEntryProcessorContext);
 		}
 
 		FragmentEntryLink originalFragmentEntryLink = null;
@@ -230,6 +233,11 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 				defaultPreferences = portlet.getDefaultPreferences();
 			}
 
+			_addRenderedPortlet(
+				fragmentEntryProcessorContext.getHttpServletRequest(),
+				fragmentEntryLink.getFragmentEntryLinkId(), portletName,
+				instanceId);
+
 			String portletHTML = _fragmentPortletRenderer.renderPortlet(
 				fragmentEntryProcessorContext.getHttpServletRequest(),
 				fragmentEntryProcessorContext.getHttpServletResponse(),
@@ -259,6 +267,35 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 		Document document = _getDocument(html);
 
 		_validateFragmentEntryHTMLDocument(document);
+	}
+
+	private void _addRenderedPortlet(
+		HttpServletRequest httpServletRequest, long fragmentEntryLinkId,
+		String portletName, String instanceId) {
+
+		String portletId = PortletIdCodec.encode(portletName, instanceId);
+
+		Map<Long, Map<String, String>> fragmentEntryLinkIdPortletIds =
+			(Map<Long, Map<String, String>>)httpServletRequest.getAttribute(
+				"fragmentEntryLinkIdPortletIds");
+
+		if (fragmentEntryLinkIdPortletIds == null) {
+			fragmentEntryLinkIdPortletIds = new HashMap<>();
+
+			httpServletRequest.setAttribute(
+				"fragmentEntryLinkIdPortletIds", fragmentEntryLinkIdPortletIds);
+		}
+
+		Map<String, String> portletIds = fragmentEntryLinkIdPortletIds.get(
+			fragmentEntryLinkId);
+
+		if (portletIds == null) {
+			portletIds = new HashMap<>();
+
+			fragmentEntryLinkIdPortletIds.put(fragmentEntryLinkId, portletIds);
+		}
+
+		portletIds.put(portletName, portletId);
 	}
 
 	private long _getDefaultPlid(ThemeDisplay themeDisplay) {
@@ -412,7 +449,7 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 	}
 
 	private String _renderWidgetHTML(
-			String editableValues,
+			long fragmentEntryLinkId, String editableValues,
 			FragmentEntryProcessorContext fragmentEntryProcessorContext)
 		throws PortalException {
 
@@ -485,6 +522,10 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 					fragmentEntryProcessorContext.getHttpServletRequest(),
 					PortletIdCodec.encode(portletId, instanceId));
 		}
+
+		_addRenderedPortlet(
+			fragmentEntryProcessorContext.getHttpServletRequest(),
+			fragmentEntryLinkId, portletId, instanceId);
 
 		return _fragmentPortletRenderer.renderPortlet(
 			fragmentEntryProcessorContext.getHttpServletRequest(),
