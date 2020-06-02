@@ -88,6 +88,14 @@ public class PortalImplLayoutFriendlyURLTest {
 	}
 
 	@Test
+	public void testCompanyDefaultSiteVirtualHostWithoutLayoutSetVirtualHost()
+		throws Exception {
+
+		_testLayoutFriendlyURL(
+			_company.getVirtualHostname(), _layout.getFriendlyURL());
+	}
+
+	@Test
 	public void testLayoutSetVirtualHost() throws Exception {
 		_testLayoutFriendlyURL(
 			_setLayoutSetVirtualHost(), _layout.getFriendlyURL());
