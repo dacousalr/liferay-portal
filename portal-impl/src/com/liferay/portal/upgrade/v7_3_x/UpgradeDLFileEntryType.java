@@ -32,7 +32,7 @@ public class UpgradeDLFileEntryType extends UpgradeProcess {
 	protected void doUpgrade() throws Exception {
 		_upgradeSchema();
 
-		_populateFields();
+		//_populateFields();
 	}
 
 	private void _populateFields() throws Exception {
