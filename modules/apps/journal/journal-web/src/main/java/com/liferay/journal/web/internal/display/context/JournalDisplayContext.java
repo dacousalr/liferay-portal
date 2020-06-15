@@ -1222,12 +1222,8 @@ public class JournalDisplayContext {
 			articleSearchContainer.setRowMover(entriesMover);
 		}
 
-		if (isNavigationMine() || isNavigationRecent()) {
+		if (isNavigationRecent()) {
 			boolean includeOwner = true;
-
-			if (isNavigationMine()) {
-				includeOwner = false;
-			}
 
 			if (isNavigationRecent()) {
 				articleSearchContainer.setOrderByCol("modified-date");
@@ -1293,12 +1289,17 @@ public class JournalDisplayContext {
 			articleAndFolderSearchContainer.setRowMover(entriesMover);
 		}
 
-		if (isSearch()) {
+		if (isSearch() || isNavigationMine()) {
 			Indexer<?> indexer = JournalSearcher.getInstance();
 
 			SearchContext searchContext = buildSearchContext(
 				articleAndFolderSearchContainer.getStart(),
 				articleAndFolderSearchContainer.getEnd(), false);
+
+			if (isNavigationMine()) {
+				searchContext.setAttribute(
+					Field.USER_ID, _themeDisplay.getUserId());
+			}
 
 			Hits hits = indexer.search(searchContext);
 
@@ -1549,6 +1550,11 @@ public class JournalDisplayContext {
 		SearchContext searchContext = buildSearchContext(
 			articleVersionsSearchContainer.getStart(),
 			articleVersionsSearchContainer.getEnd(), true);
+
+		if (isNavigationMine()) {
+			searchContext.setAttribute(
+				Field.USER_ID, _themeDisplay.getUserId());
+		}
 
 		Hits hits = indexer.search(searchContext);
 

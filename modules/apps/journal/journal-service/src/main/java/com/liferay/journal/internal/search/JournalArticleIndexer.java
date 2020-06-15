@@ -176,6 +176,14 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 				Field.CLASS_NAME_ID, classNameId.toString());
 		}
 
+		long userId = GetterUtil.getLong(
+			searchContext.getAttribute(Field.USER_ID));
+
+		if (userId > 0) {
+			contextBooleanFilter.addRequiredTerm(
+				Field.USER_ID, String.valueOf(userId));
+		}
+
 		addStatus(contextBooleanFilter, searchContext);
 
 		addSearchClassTypeIds(contextBooleanFilter, searchContext);
@@ -485,6 +493,7 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 		document.addKeyword(
 			Field.TREE_PATH,
 			StringUtil.split(journalArticle.getTreePath(), CharPool.SLASH));
+		document.addKeyword(Field.USER_ID, journalArticle.getUserId());
 		document.addKeyword(Field.VERSION, journalArticle.getVersion());
 
 		document.addKeyword(
