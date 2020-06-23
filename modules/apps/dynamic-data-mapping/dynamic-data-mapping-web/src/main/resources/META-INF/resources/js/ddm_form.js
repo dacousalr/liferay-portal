@@ -1633,7 +1633,7 @@ AUI.add(
 					clearButtonNode.attr('disabled', readOnly);
 
 					var altNode = container.one(
-						'#' + instance.getInputName() + 'Alt'
+						'input[name=' + instance.getInputName() + 'Alt]'
 					);
 
 					if (altNode) {
@@ -1649,7 +1649,7 @@ AUI.add(
 					);
 
 					var titleNode = A.one(
-						'#' + instance.getInputName() + 'Title'
+						'input[name=' + instance.getInputName() + 'Title]'
 					);
 
 					titleNode.val(parsedValue.title || '');
@@ -1910,7 +1910,7 @@ AUI.add(
 					);
 
 					var titleNode = A.one(
-						'#' + instance.getInputName() + 'Title'
+						'input[name=' + instance.getInputName() + 'Title]'
 					);
 
 					var parsedTitleMap = instance.getParsedValue(
@@ -3131,7 +3131,7 @@ AUI.add(
 					var inputName = instance.getInputName();
 
 					var layoutNameNode = container.one(
-						'#' + inputName + 'LayoutName'
+						'input[name=' + inputName + 'LayoutName]'
 					);
 
 					var parsedValue = instance.getParsedValue(value);
@@ -3416,7 +3416,7 @@ AUI.add(
 
 					if (instance.isNotEmpty(parsedValue)) {
 						var altNode = A.one(
-							'#' + instance.getInputName() + 'Alt'
+							'input[name=' + instance.getInputName() + 'Alt]'
 						);
 
 						parsedValue.alt = altNode.val();
@@ -3459,7 +3459,7 @@ AUI.add(
 						}
 
 						var altNode = A.one(
-							'#' + instance.getInputName() + 'Alt'
+							'input[name=' + instance.getInputName() + 'Alt]'
 						);
 
 						altNode.val(parsedValue.alt);
@@ -3487,12 +3487,14 @@ AUI.add(
 
 					var notEmpty = instance.isNotEmpty(parsedValue);
 
-					var altNode = A.one('#' + instance.getInputName() + 'Alt');
+					var altNode = A.one(
+						'input[name=' + instance.getInputName() + 'Alt]'
+					);
 
 					altNode.attr('disabled', !notEmpty);
 
 					var titleNode = A.one(
-						'#' + instance.getInputName() + 'Title'
+						'input[name=' + instance.getInputName() + 'Title]'
 					);
 
 					if (notEmpty) {
@@ -3556,7 +3558,9 @@ AUI.add(
 						})
 					);
 
-					var locationNode = A.one('#' + inputName + 'Location');
+					var locationNode = A.one(
+						'input[name=' + inputName + 'Location]'
+					);
 
 					locationNode.html(event.newVal.address);
 				},
