@@ -58,6 +58,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.permission.WorkflowPermissionUtil;
 
@@ -69,6 +70,7 @@ import java.util.Optional;
 import javax.portlet.WindowState;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -124,6 +126,22 @@ public class DefaultAssetDisplayPageFriendlyURLResolver
 
 		JournalArticle journalArticle = _getJournalArticle(
 			groupId, friendlyURL);
+
+		HttpServletRequest httpServletRequest =
+			(HttpServletRequest)requestContext.get("request");
+
+		HttpSession session = httpServletRequest.getSession();
+
+		Locale locale = (Locale)session.getAttribute(WebKeys.LOCALE);
+
+		if (locale != null) {
+			Map<Locale, String> friendlyURLMap =
+				journalArticle.getFriendlyURLMap();
+
+			if (Validator.isNotNull(friendlyURLMap.get(locale))) {
+				friendlyURL = getURLSeparator() + friendlyURLMap.get(locale);
+			}
+		}
 
 		InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
 			_getInfoDisplayObjectProvider(journalArticle);
