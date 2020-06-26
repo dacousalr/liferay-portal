@@ -19,11 +19,15 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItemList;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.portlet.PortalPreferences;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -170,8 +174,35 @@ public class BaseManagementToolbarDisplayContext
 	}
 
 	protected String getDisplayStyle() {
-		return ParamUtil.getString(
-			request, "displayStyle", getDefaultDisplayStyle());
+		String displayStyle = ParamUtil.getString(request, "displayStyle");
+
+		PortalPreferences portalPreferences =
+			PortletPreferencesFactoryUtil.getPortalPreferences(request);
+
+		if (Validator.isNull(displayStyle)) {
+			displayStyle = portalPreferences.getValue(
+				getDisplayStylePortletName(), getDisplayStyleKey(),
+				getDefaultDisplayStyle());
+		}
+
+		portalPreferences.setValue(
+			getDisplayStylePortletName(), getDisplayStyleKey(), displayStyle);
+
+		return displayStyle;
+	}
+
+	protected String getDisplayStylePortletName() {
+		Portlet portlet = liferayPortletResponse.getPortlet();
+
+		if (portlet != null) {
+			return portlet.getPortletName();
+		}
+
+		return StringPool.BLANK;
+	}
+
+	protected String getDisplayStyleKey() {
+		return "display-style";
 	}
 
 	protected String[] getDisplayViews() {
