@@ -102,8 +102,6 @@ if (Validator.isNotNull(keywords)) {
 
 	<%
 	String redirectURL = PortalUtil.getLayoutFullURL(layout, themeDisplay);
-
-	redirectURL = HttpUtil.addParameter(redirectURL, "portletResource", portletDisplay.getId());
 	%>
 
 	<liferay-asset:asset-add-button
