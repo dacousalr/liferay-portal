@@ -139,6 +139,10 @@ public class PortletKeys {
 	public static final String PORTAL_SETTINGS =
 		"com_liferay_portal_settings_web_portlet_PortalSettingsPortlet";
 
+	public static final String PORTLET_CONFIGURATION =
+		"com_liferay_portlet_configuration_web_portlet_" +
+			"PortletConfigurationPortlet";
+
 	public static final String PORTLET_DISPLAY_TEMPLATE =
 		"com_liferay_dynamic_data_mapping_web_portlet_" +
 			"PortletDisplayTemplatePortlet";
