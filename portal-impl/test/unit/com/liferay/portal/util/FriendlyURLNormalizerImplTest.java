@@ -61,6 +61,10 @@ public class FriendlyURLNormalizerImplTest {
 			"company-grew-100-last-year",
 			_friendlyURLNormalizerImpl.normalizeWithEncoding(
 				"Company grew 100% last year"));
+		Assert.assertEquals(
+			"sample-web-content-title",
+			_friendlyURLNormalizerImpl.normalizeWithEncoding(
+				"Sample Web % Content Title"));
 	}
 
 	@Test
@@ -132,13 +136,13 @@ public class FriendlyURLNormalizerImplTest {
 	@Test
 	public void testNormalizeWithEncodingUnicode() throws Exception {
 		_testNormalizeWithEncodingUnicode("\u5F15");
-		_testNormalizeWithEncodingUnicode("テスト");
-		_testNormalizeWithEncodingUnicode("اختبار");
+		_testNormalizeWithEncodingUnicode("ă�†ă‚ąă��");
+		_testNormalizeWithEncodingUnicode("Ř§Ř®ŘŞŘ¨Ř§Ř±");
 		_testNormalizeWithEncodingUnicode("\uD801\uDC37");
 		_testNormalizeWithEncodingUnicode(
 			String.valueOf(Character.MAX_HIGH_SURROGATE));
 
-		String value = "テスト";
+		String value = "ă�†ă‚ąă��";
 
 		String encodedValue = URLEncoder.encode(value, StringPool.UTF8);
 
@@ -167,7 +171,7 @@ public class FriendlyURLNormalizerImplTest {
 			encodedReplacement + StringPool.DASH + encodedReplacement,
 			_friendlyURLNormalizerImpl.normalizeWithEncoding("\uDBFF-\uDFFF"));
 
-		String value = "テスト";
+		String value = "ă�†ă‚ąă��";
 
 		String encodedValue = URLEncoder.encode(value, StringPool.UTF8);
 
