@@ -44,8 +44,8 @@ public class UserGroupModelListener extends BaseModelListener<UserGroup> {
 
 	@Override
 	public void onBeforeRemoveAssociation(
-		Object userGroupId, String associationClassName,
-		Object associationClassPK)
+			Object userGroupId, String associationClassName,
+			Object associationClassPK)
 		throws ModelListenerException {
 
 		try {
@@ -112,13 +112,13 @@ public class UserGroupModelListener extends BaseModelListener<UserGroup> {
 				boolean siteContainsGroup = false;
 
 				for (Map.Entry<Long, long[]> entry :
-					userGroupGroupIds.entrySet()) {
+						userGroupGroupIds.entrySet()) {
 
 					if (LongStream.of(
-						entry.getValue()
-					).anyMatch(
-						x -> x == groupId
-					)) {
+							entry.getValue()
+						).anyMatch(
+							x -> x == groupId
+						)) {
 
 						siteContainsGroup = true;
 					}
