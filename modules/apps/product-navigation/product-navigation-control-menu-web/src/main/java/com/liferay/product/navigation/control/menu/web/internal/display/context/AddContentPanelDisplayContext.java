@@ -588,13 +588,8 @@ public class AddContentPanelDisplayContext {
 	}
 
 	private String _getRedirectURL() throws Exception {
-		String redirectURL = PortalUtil.getLayoutFullURL(
+		return PortalUtil.getLayoutFullURL(
 			_themeDisplay.getLayout(), _themeDisplay);
-
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
-
-		return HttpUtil.addParameter(
-			redirectURL, "portletResource", portletDisplay.getId());
 	}
 
 	private List<Map<String, Object>> _getWidgetCategories(
