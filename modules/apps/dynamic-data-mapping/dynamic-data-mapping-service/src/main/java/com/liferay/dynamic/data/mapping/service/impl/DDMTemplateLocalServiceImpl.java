@@ -1476,10 +1476,6 @@ public class DDMTemplateLocalServiceImpl
 					_log.debug(ioException, ioException);
 				}
 			}
-
-			if ((smallImageBytes == null) && !Validator.isUrl(smallImageURL)) {
-				smallImage = false;
-			}
 		}
 
 		DDMTemplate template = ddmTemplateLocalService.getDDMTemplate(
