@@ -7283,7 +7283,18 @@ public class PortalImpl implements Portal {
 			List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
 				groupId, privateLayout, LayoutConstants.TYPE_PORTLET);
 
-			long plid = getPlidFromPortletId(layouts, portletId, scopeGroupId);
+			long plid = getPlidFromPortletId(layouts, portletId, scopeGroupId,
+				groupId);
+
+			if (plid != LayoutConstants.DEFAULT_PLID) {
+				return plid;
+			}
+
+			layouts = LayoutLocalServiceUtil.getLayouts(
+				groupId, privateLayout, LayoutConstants.TYPE_CONTENT);
+
+			plid = getPlidFromPortletId(layouts, portletId, scopeGroupId,
+				groupId);
 
 			if (plid != LayoutConstants.DEFAULT_PLID) {
 				return plid;
@@ -7293,7 +7304,8 @@ public class PortalImpl implements Portal {
 				groupId, privateLayout,
 				LayoutConstants.TYPE_FULL_PAGE_APPLICATION);
 
-			plid = getPlidFromPortletId(layouts, portletId, scopeGroupId);
+			plid = getPlidFromPortletId(layouts, portletId, scopeGroupId,
+				groupId);
 
 			if (plid != LayoutConstants.DEFAULT_PLID) {
 				return plid;
@@ -7302,7 +7314,8 @@ public class PortalImpl implements Portal {
 			layouts = LayoutLocalServiceUtil.getLayouts(
 				groupId, privateLayout, LayoutConstants.TYPE_PANEL);
 
-			return getPlidFromPortletId(layouts, portletId, scopeGroupId);
+			return getPlidFromPortletId(layouts, portletId, scopeGroupId,
+				groupId);
 		}
 		catch (Exception exception) {
 			if (_log.isWarnEnabled()) {
@@ -7703,7 +7716,8 @@ public class PortalImpl implements Portal {
 	}
 
 	protected long getPlidFromPortletId(
-		List<Layout> layouts, String portletId, long scopeGroupId) {
+		List<Layout> layouts, String portletId, long scopeGroupId,
+		long groupId) {
 
 		for (Layout layout : layouts) {
 			LayoutTypePortlet layoutTypePortlet =
@@ -7715,7 +7729,9 @@ public class PortalImpl implements Portal {
 
 			for (Portlet portlet : layoutTypePortlet.getAllPortlets()) {
 				if (portletId.equals(portlet.getPortletId()) ||
-					portletId.equals(portlet.getRootPortletId())) {
+					portletId.equals(portlet.getRootPortletId()) &&
+					!layoutTypePortlet.hasDefaultScopePortletId(
+						groupId, portletId)) {
 
 					return layout.getPlid();
 				}
