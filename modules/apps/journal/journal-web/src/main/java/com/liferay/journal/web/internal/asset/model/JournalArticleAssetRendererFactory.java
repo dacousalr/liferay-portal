@@ -117,6 +117,13 @@ public class JournalArticleAssetRendererFactory
 					WorkflowConstants.STATUS_ANY);
 			}
 
+			if (article == null) {
+				article = _journalArticleLocalService.fetchLatestArticle(
+					articleResource.getGroupId(),
+					articleResource.getArticleId(),
+					WorkflowConstants.STATUS_IN_TRASH);
+			}
+
 			if ((article == null) && (type == TYPE_LATEST)) {
 				article = _journalArticleLocalService.getLatestArticle(
 					classPK, WorkflowConstants.STATUS_ANY);
