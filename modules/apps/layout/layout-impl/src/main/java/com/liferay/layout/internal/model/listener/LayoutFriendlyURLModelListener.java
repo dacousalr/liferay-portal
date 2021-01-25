@@ -46,8 +46,21 @@ public class LayoutFriendlyURLModelListener
 	@Override
 	public void onAfterUpdate(LayoutFriendlyURL layoutFriendlyURL)
 		throws ModelListenerException {
-
+		
+		_removePreviousFriendlyURLEntry(layoutFriendlyURL);
 		_addFriendlyURLEntry(layoutFriendlyURL);
+	}
+
+	private void _removePreviousFriendlyURLEntry(LayoutFriendlyURL layoutFriendlyURL) {
+			if (!_stagingGroupHelper.isLiveGroup(
+					layoutFriendlyURL.getGroupId())) {
+
+				_friendlyURLEntryLocalService.deleteFriendlyURLEntry(
+					layoutFriendlyURL.getGroupId(),
+					_layoutFriendlyURLEntryHelper.getClassNameId(
+						layoutFriendlyURL.isPrivateLayout()),
+						layoutFriendlyURL.getPlid());
+			}
 	}
 
 	private void _addFriendlyURLEntry(LayoutFriendlyURL layoutFriendlyURL) {
