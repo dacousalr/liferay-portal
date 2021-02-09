@@ -1154,6 +1154,16 @@ public class JournalArticleLocalServiceImpl
 			newTitleMap.put(locale, sb.toString());
 		}
 
+		Locale locale = getArticleDefaultLocale(oldArticle.getContent());
+
+		Map<Locale, String> friendlyURLMap = _checkFriendlyURLMap(
+			locale, new HashMap(), newTitleMap);
+
+		Map<String, String> newUrlTitleMap = _getURLTitleMap(
+			groupId, resourcePrimKey, friendlyURLMap, newTitleMap);
+
+		updateFriendlyURLs(newArticle, newUrlTitleMap, serviceContext);
+
 		_addArticleLocalizedFields(
 			newArticle.getCompanyId(), newArticle.getId(), newTitleMap,
 			oldArticle.getDescriptionMap());
