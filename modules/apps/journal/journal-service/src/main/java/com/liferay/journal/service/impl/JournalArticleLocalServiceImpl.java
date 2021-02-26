@@ -1072,9 +1072,6 @@ public class JournalArticleLocalServiceImpl
 		newArticle.setTreePath(oldArticle.getTreePath());
 		newArticle.setArticleId(newArticleId);
 		newArticle.setVersion(JournalArticleConstants.VERSION_DEFAULT);
-		newArticle.setUrlTitle(
-			getUniqueUrlTitle(
-				id, groupId, newArticleId, oldArticle.getTitleCurrentValue()));
 
 		try {
 			copyArticleImages(oldArticle, newArticle);
@@ -1153,6 +1150,15 @@ public class JournalArticleLocalServiceImpl
 		}
 
 		Locale locale = getArticleDefaultLocale(oldArticle.getContent());
+
+		String newURLTitle = newUniqueURLTitleMap.get(locale);
+
+		while (fetchArticleByUrlTitle(groupId, newURLTitle) != null) {
+			newURLTitle = getUniqueUrlTitle(
+				id, groupId, newArticleId, newURLTitle);
+		}
+
+		newArticle.setUrlTitle(newURLTitle);
 
 		Map<Locale, String> friendlyURLMap = _checkFriendlyURLMap(
 			locale, new HashMap(), newTitleMap);
