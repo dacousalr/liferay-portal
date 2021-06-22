@@ -142,6 +142,9 @@ public class JournalArticleLocalServiceTest {
 
 		Assert.assertNotEquals(oldArticle, newArticle);
 
+		Assert.assertNotEquals(oldArticle.getUrlTitle(),
+			newArticle.getUrlTitle());
+
 		List<ResourcePermission> oldResourcePermissions =
 			_resourcePermissionLocalService.getResourcePermissions(
 				oldArticle.getCompanyId(), JournalArticle.class.getName(),
