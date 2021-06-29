@@ -572,7 +572,7 @@ AUI.add(
 					var currentLocale = instance.get('displayLocale');
 					var displayLocale = event.item.getAttribute('data-value');
 
-					instance.updateLocalizationMap(currentLocale);
+					instance.updateLocalizationMap(currentLocale, false);
 
 					instance.set('displayLocale', displayLocale);
 
@@ -1262,7 +1262,7 @@ AUI.add(
 					return fieldJSON;
 				},
 
-				updateLocalizationMap(locale) {
+				updateLocalizationMap(locale, refill) {
 					var instance = this;
 
 					var localizationMap = instance.get('localizationMap');
@@ -1284,6 +1284,29 @@ AUI.add(
 						for (var key in localizationMap) {
 							if (!localizationMap[key]) {
 								localizationMap[key] = '';
+							}
+						}
+
+						var form = instance.getForm();
+
+						var availableLanguages =
+							form.get('availableLanguageIds');
+
+						if (refill) {
+							availableLanguages.forEach((availableLanguage) => {
+								if (localizationMap[availableLanguage] === undefined) {
+									localizationMap[availableLanguage] = '';
+								}
+							});
+
+							if (!availableLanguages.includes(locale) && locale !== defaultLocale) {
+								localizationMap[locale] = value;
+							}
+						}
+						else {
+							if (!availableLanguages.includes(locale) && locale !== defaultLocale && value !== localizationMap[defaultLocale]) {
+								
+								localizationMap[locale] = value;
 							}
 						}
 					}
@@ -3912,7 +3935,7 @@ AUI.add(
 					fields.forEach((field) => {
 						var nestedFields = field.get('fields');
 
-						field.updateLocalizationMap(field.get('displayLocale'));
+						field.updateLocalizationMap(field.get('displayLocale'), true);
 
 						if (nestedFields.length) {
 							instance._updateNestedLocalizationMaps(
@@ -4023,31 +4046,6 @@ AUI.add(
 					instance.repeatableInstances = null;
 				},
 
-				fillEmptyLocales(instance, fields, availableLanguageIds) {
-					fields.forEach((field) => {
-						if (field.get('localizable')) {
-							var localizationMap = field.get('localizationMap');
-
-							var defaultLocale = field.getDefaultLocale();
-
-							availableLanguageIds.forEach((locale) => {
-								if (!localizationMap[locale]) {
-									localizationMap[locale] =
-										localizationMap[defaultLocale];
-								}
-							});
-
-							field.set('localizationMap', localizationMap);
-						}
-
-						instance.fillEmptyLocales(
-							instance,
-							field.get('fields'),
-							availableLanguageIds
-						);
-					});
-				},
-
 				finalizeRepeatableFieldLocalizations() {
 					var instance = this;
 
@@ -4122,7 +4120,7 @@ AUI.add(
 					localizations.push(currentLocale);
 
 					localizations.forEach((localization) => {
-						if (!newFieldLocalizations[localization]) {
+						if (newFieldLocalizations[localization] === undefined) {
 							var localizationValue = '';
 
 							if (newFieldLocalizations[defaultLocale]) {
@@ -4371,12 +4369,6 @@ AUI.add(
 					var fields = instance.get('fields');
 
 					instance._updateNestedLocalizationMaps(fields);
-
-					instance.fillEmptyLocales(
-						instance,
-						instance.get('fields'),
-						instance.get('availableLanguageIds')
-					);
 
 					instance.finalizeRepeatableFieldLocalizations();
 
