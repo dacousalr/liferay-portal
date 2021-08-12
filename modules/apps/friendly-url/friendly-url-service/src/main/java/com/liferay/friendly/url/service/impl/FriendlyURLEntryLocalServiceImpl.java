@@ -666,7 +666,7 @@ public class FriendlyURLEntryLocalServiceImpl
 			String normalizedUrlTitle =
 				FriendlyURLNormalizerUtil.normalizeWithEncoding(oldURLTitle);
 
-			if (Validator.isNull(normalizedUrlTitle)) {
+			if (normalizedUrlTitle == null) {
 				continue;
 			}
 
