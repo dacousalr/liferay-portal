@@ -14,6 +14,7 @@
 
 package com.liferay.friendly.url.internal.servlet;
 
+import com.liferay.friendly.url.kernel.util.URLPathProcessor;
 import com.liferay.petra.encryptor.Encryptor;
 import com.liferay.petra.encryptor.EncryptorException;
 import com.liferay.petra.lang.HashUtil;
@@ -28,21 +29,15 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutFriendlyURL;
-import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.model.VirtualLayoutConstants;
 import com.liferay.portal.kernel.portlet.LayoutFriendlyURLSeparatorComposite;
-import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.LayoutFriendlyURLLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
-import com.liferay.portal.kernel.service.UserLocalService;
-import com.liferay.portal.kernel.servlet.InactiveRequestHandler;
 import com.liferay.portal.kernel.servlet.PortalMessages;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
 import com.liferay.portal.kernel.servlet.SessionMessages;
@@ -103,17 +98,14 @@ public class FriendlyURLServlet extends HttpServlet {
 			return new Redirect();
 		}
 
-		String groupFriendlyURL = path;
-
 		int pos = path.indexOf(CharPool.SLASH, 1);
 
-		if (pos != -1) {
-			groupFriendlyURL = path.substring(0, pos);
-		}
+		String groupFriendlyURL = urlPathProcessor.getGroupFriendlyURL(path);
 
 		long companyId = PortalInstances.getCompanyId(httpServletRequest);
 
-		Group group = _getGroup(path, groupFriendlyURL, companyId);
+		Group group = urlPathProcessor.getGroup(
+			path, groupFriendlyURL, companyId);
 
 		Locale locale = portal.getLocale(httpServletRequest, null, false);
 
@@ -641,12 +633,6 @@ public class FriendlyURLServlet extends HttpServlet {
 	}
 
 	@Reference
-	protected GroupLocalService groupLocalService;
-
-	@Reference
-	protected InactiveRequestHandler inactiveRequestHandler;
-
-	@Reference
 	protected LayoutFriendlyURLLocalService layoutFriendlyURLLocalService;
 
 	@Reference
@@ -672,7 +658,7 @@ public class FriendlyURLServlet extends HttpServlet {
 	protected SiteFriendlyURLLocalService siteFriendlyURLLocalService;
 
 	@Reference
-	protected UserLocalService userLocalService;
+	protected URLPathProcessor urlPathProcessor;
 
 	private boolean _equalsLayoutFriendlyURL(
 		String layoutFriendlyURLSeparatorCompositeFriendlyURL, Layout layout,
@@ -719,43 +705,6 @@ public class FriendlyURLServlet extends HttpServlet {
 		}
 
 		return alternativeSiteFriendlyURL;
-	}
-
-	private Group _getGroup(String path, String friendlyURL, long companyId)
-		throws NoSuchGroupException {
-
-		Group group = groupLocalService.fetchFriendlyURLGroup(
-			companyId, friendlyURL);
-
-		if (group == null) {
-			String screenName = friendlyURL.substring(1);
-
-			User user = userLocalService.fetchUserByScreenName(
-				companyId, screenName);
-
-			if (user != null) {
-				group = user.getGroup();
-			}
-			else if (_log.isWarnEnabled()) {
-				_log.warn("No user exists with friendly URL " + screenName);
-			}
-		}
-
-		if ((group == null) ||
-			(!group.isActive() &&
-			 !inactiveRequestHandler.isShowInactiveRequestMessage() &&
-			 !path.startsWith(GroupConstants.CONTROL_PANEL_FRIENDLY_URL) &&
-			 !path.startsWith(
-				 friendlyURL +
-					 VirtualLayoutConstants.CANONICAL_URL_SEPARATOR))) {
-
-			throw new NoSuchGroupException(
-				StringBundler.concat(
-					"{companyId=", companyId, ", friendlyURL=", friendlyURL,
-					"}"));
-		}
-
-		return group;
 	}
 
 	private boolean _isImpersonated(
