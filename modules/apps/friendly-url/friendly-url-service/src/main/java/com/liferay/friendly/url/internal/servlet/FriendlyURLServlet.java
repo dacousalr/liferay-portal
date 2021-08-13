@@ -577,15 +577,8 @@ public class FriendlyURLServlet extends HttpServlet {
 	}
 
 	protected String getPathInfo(HttpServletRequest httpServletRequest) {
-		String requestURI = httpServletRequest.getRequestURI();
-
-		int pos = requestURI.indexOf(Portal.JSESSIONID);
-
-		if (pos == -1) {
-			return requestURI.substring(_pathInfoOffset);
-		}
-
-		return requestURI.substring(_pathInfoOffset, pos);
+		return urlPathProcessor.getPathInfo(
+			httpServletRequest, _pathInfoOffset);
 	}
 
 	protected Locale setAlternativeLayoutFriendlyURL(

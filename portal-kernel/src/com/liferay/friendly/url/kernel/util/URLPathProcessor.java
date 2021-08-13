@@ -15,16 +15,30 @@
 package com.liferay.friendly.url.kernel.util;
 
 import com.liferay.portal.kernel.exception.NoSuchGroupException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Daniel Sanz
  */
 public interface URLPathProcessor {
 
+	public Group getGroup(HttpServletRequest httpServletRequest)
+		throws PortalException;
+
+	public Group getGroup(HttpServletRequest httpServletRequest, String path)
+		throws PortalException;
+
 	public Group getGroup(String path, String groupFriendlyURL, long companyId)
 		throws NoSuchGroupException;
 
 	public String getGroupFriendlyURL(String path);
+
+	public String getPathInfo(HttpServletRequest httpServletRequest);
+
+	public String getPathInfo(
+		HttpServletRequest httpServletRequest, int pathInfoOffset);
 
 }

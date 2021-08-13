@@ -18,6 +18,7 @@ import com.liferay.friendly.url.kernel.util.URLPathProcessor;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.exception.NoSuchGroupException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -27,6 +28,11 @@ import com.liferay.portal.kernel.model.VirtualLayoutConstants;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.servlet.InactiveRequestHandler;
+import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.util.PortalInstances;
+import com.liferay.portal.util.PropsValues;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -36,6 +42,22 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(immediate = true, service = URLPathProcessor.class)
 public class URLPathProcessorImpl implements URLPathProcessor {
+
+	@Override
+	public Group getGroup(HttpServletRequest httpServletRequest)
+		throws PortalException {
+
+		return getGroup(httpServletRequest, getPathInfo(httpServletRequest));
+	}
+
+	@Override
+	public Group getGroup(HttpServletRequest httpServletRequest, String path)
+		throws PortalException {
+
+		return getGroup(
+			path, getGroupFriendlyURL(path),
+			PortalInstances.getCompanyId(httpServletRequest));
+	}
 
 	@Override
 	public Group getGroup(String path, String friendlyURL, long companyId)
@@ -88,11 +110,59 @@ public class URLPathProcessorImpl implements URLPathProcessor {
 		return friendlyURL;
 	}
 
+	@Override
+	public String getPathInfo(HttpServletRequest httpServletRequest) {
+		String servletPath = httpServletRequest.getServletPath();
+
+		String friendlyURLPathPrefix = portal.getPathFriendlyURLPublic();
+
+		if (servletPath.equals(
+				PropsValues.
+					LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING) ||
+			servletPath.startsWith(portal.getPathFriendlyURLPrivateGroup())) {
+
+			friendlyURLPathPrefix = portal.getPathFriendlyURLPrivateGroup();
+		}
+		else if (servletPath.equals(
+					PropsValues.
+						LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING) ||
+				 servletPath.startsWith(
+					 portal.getPathFriendlyURLPrivateUser())) {
+
+			friendlyURLPathPrefix = portal.getPathFriendlyURLPrivateUser();
+		}
+
+		String proxyPath = portal.getPathProxy();
+
+		int pathInfoOffset =
+			friendlyURLPathPrefix.length() - proxyPath.length();
+
+		return getPathInfo(httpServletRequest, pathInfoOffset);
+	}
+
+	@Override
+	public String getPathInfo(
+		HttpServletRequest httpServletRequest, int pathInfoOffset) {
+
+		String requestURI = httpServletRequest.getRequestURI();
+
+		int pos = requestURI.indexOf(Portal.JSESSIONID);
+
+		if (pos == -1) {
+			return requestURI.substring(pathInfoOffset);
+		}
+
+		return requestURI.substring(pathInfoOffset, pos);
+	}
+
 	@Reference
 	protected GroupLocalService groupLocalService;
 
 	@Reference
 	protected InactiveRequestHandler inactiveRequestHandler;
+
+	@Reference
+	protected Portal portal;
 
 	@Reference
 	protected UserLocalService userLocalService;
