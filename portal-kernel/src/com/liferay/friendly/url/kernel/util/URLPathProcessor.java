@@ -43,6 +43,15 @@ public interface URLPathProcessor {
 
 	public String getGroupFriendlyURL(String path);
 
+	public Layout getLayout(HttpServletRequest httpServletRequest)
+		throws PortalException;
+
+	public Layout getLayout(HttpServletRequest httpServletRequest, Group group)
+		throws PortalException;
+
+	public Locale getLocaleFromLayoutURL(HttpServletRequest httpServletRequest)
+		throws PortalException;
+
 	public String getPathInfo(HttpServletRequest httpServletRequest);
 
 	public String getPathInfo(
