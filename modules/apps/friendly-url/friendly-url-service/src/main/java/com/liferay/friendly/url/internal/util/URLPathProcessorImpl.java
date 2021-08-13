@@ -19,18 +19,28 @@ import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.exception.NoSuchGroupException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.GroupConstants;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutFriendlyURL;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.VirtualLayoutConstants;
 import com.liferay.portal.kernel.service.GroupLocalService;
+import com.liferay.portal.kernel.service.LayoutFriendlyURLLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.servlet.InactiveRequestHandler;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.util.PortalInstances;
 import com.liferay.portal.util.PropsValues;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -42,6 +52,61 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(immediate = true, service = URLPathProcessor.class)
 public class URLPathProcessorImpl implements URLPathProcessor {
+
+	@Override
+	public List<Locale> getCompatibleLayoutLocales(Layout layout, String path)
+		throws PortalException {
+
+		List<LayoutFriendlyURL> layoutFriendlyURLs =
+			layoutFriendlyURLLocalService.getLayoutFriendlyURLs(
+				layout.getPlid());
+
+		List<Locale> compatibleLayoutLocales = new ArrayList<>();
+
+		List<Locale> incompatibleLayoutLocales = new ArrayList<>();
+
+		Locale siteDefaultLocale = portal.getSiteDefaultLocale(
+			layout.getGroup());
+
+		String defaultFriendlyURL = layout.getFriendlyURL(siteDefaultLocale);
+
+		boolean isDefaultFriendlyURL = false;
+
+		for (LayoutFriendlyURL layoutFriendlyURL : layoutFriendlyURLs) {
+			if (path.contains(layoutFriendlyURL.getFriendlyURL())) {
+				compatibleLayoutLocales.add(
+					LocaleUtil.fromLanguageId(
+						layoutFriendlyURL.getLanguageId()));
+
+				String currentLayoutFriendlyURL =
+					layoutFriendlyURL.getFriendlyURL();
+
+				if (currentLayoutFriendlyURL.equals(defaultFriendlyURL)) {
+					isDefaultFriendlyURL = true;
+				}
+			}
+			else {
+				incompatibleLayoutLocales.add(
+					LocaleUtil.fromLanguageId(
+						layoutFriendlyURL.getLanguageId()));
+			}
+		}
+
+		if (isDefaultFriendlyURL) {
+			Set<Locale> availableLocales = LanguageUtil.getAvailableLocales(
+				layout.getGroupId());
+
+			for (Locale siteLocale : availableLocales) {
+				if (!siteLocale.equals(siteDefaultLocale) &&
+					!incompatibleLayoutLocales.contains(siteLocale)) {
+
+					compatibleLayoutLocales.add(siteLocale);
+				}
+			}
+		}
+
+		return compatibleLayoutLocales;
+	}
 
 	@Override
 	public Group getGroup(HttpServletRequest httpServletRequest)
@@ -160,6 +225,9 @@ public class URLPathProcessorImpl implements URLPathProcessor {
 
 	@Reference
 	protected InactiveRequestHandler inactiveRequestHandler;
+
+	@Reference
+	protected LayoutFriendlyURLLocalService layoutFriendlyURLLocalService;
 
 	@Reference
 	protected Portal portal;

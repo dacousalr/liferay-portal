@@ -17,6 +17,10 @@ package com.liferay.friendly.url.kernel.util;
 import com.liferay.portal.kernel.exception.NoSuchGroupException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Layout;
+
+import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,6 +28,9 @@ import javax.servlet.http.HttpServletRequest;
  * @author Daniel Sanz
  */
 public interface URLPathProcessor {
+
+	public List<Locale> getCompatibleLayoutLocales(Layout layout, String path)
+		throws PortalException;
 
 	public Group getGroup(HttpServletRequest httpServletRequest)
 		throws PortalException;
