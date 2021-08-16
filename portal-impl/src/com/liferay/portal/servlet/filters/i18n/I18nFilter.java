@@ -14,6 +14,8 @@
 
 package com.liferay.portal.servlet.filters.i18n;
 
+import com.liferay.friendly.url.kernel.util.URLPathProcessor;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -33,6 +35,10 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.servlet.filters.BasePortalFilter;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.registry.Filter;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceTracker;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -40,6 +46,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -66,6 +73,28 @@ public class I18nFilter extends BasePortalFilter {
 		}
 
 		_languageIds = Collections.unmodifiableSet(_languageIds);
+	}
+
+	@Override
+	public void destroy() {
+		_serviceTracker.close();
+
+		super.destroy();
+	}
+
+	@Override
+	public void init(FilterConfig filterConfig) {
+		super.init(filterConfig);
+
+		Registry registry = RegistryUtil.getRegistry();
+
+		Filter filter = registry.getFilter(
+			StringBundler.concat(
+				"(objectClass=", URLPathProcessor.class.getName(), ")"));
+
+		_serviceTracker = registry.trackServices(filter);
+
+		_serviceTracker.open();
 	}
 
 	@Override
@@ -382,5 +411,7 @@ public class I18nFilter extends BasePortalFilter {
 	private static final Log _log = LogFactoryUtil.getLog(I18nFilter.class);
 
 	private static Set<String> _languageIds;
+
+	private ServiceTracker<URLPathProcessor, URLPathProcessor> _serviceTracker;
 
 }
