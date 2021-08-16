@@ -143,7 +143,9 @@ public class I18nFilter extends BasePortalFilter {
 		return friendlyURL;
 	}
 
-	protected String getRedirect(HttpServletRequest httpServletRequest)
+	protected String getRedirect(
+			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse)
 		throws Exception {
 
 		if (PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE == 0) {
@@ -157,7 +159,8 @@ public class I18nFilter extends BasePortalFilter {
 		}
 
 		String i18nLanguageId = prependI18nLanguageId(
-			httpServletRequest, PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE);
+			httpServletRequest, httpServletResponse,
+			PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE);
 
 		if (i18nLanguageId == null) {
 			return null;
@@ -241,7 +244,8 @@ public class I18nFilter extends BasePortalFilter {
 	}
 
 	protected String getRequestedLanguageId(
-		HttpServletRequest httpServletRequest, String userLanguageId) {
+		HttpServletRequest httpServletRequest,
+		HttpServletResponse httpServletResponse, String userLanguageId) {
 
 		HttpSession session = httpServletRequest.getSession();
 
@@ -263,6 +267,9 @@ public class I18nFilter extends BasePortalFilter {
 				// redirect to the target locale
 
 				session.setAttribute(WebKeys.LOCALE, locale);
+
+				LanguageUtil.updateCookie(
+					httpServletRequest, httpServletResponse, locale);
 			}
 		}
 
@@ -364,7 +371,8 @@ public class I18nFilter extends BasePortalFilter {
 	}
 
 	protected String prependI18nLanguageId(
-		HttpServletRequest httpServletRequest, int prependFriendlyUrlStyle) {
+		HttpServletRequest httpServletRequest,
+		HttpServletResponse httpServletResponse, int prependFriendlyUrlStyle) {
 
 		User user = (User)httpServletRequest.getAttribute(WebKeys.USER);
 
@@ -375,7 +383,7 @@ public class I18nFilter extends BasePortalFilter {
 		}
 
 		String requestedLanguageId = getRequestedLanguageId(
-			httpServletRequest, userLanguageId);
+			httpServletRequest, httpServletResponse, userLanguageId);
 
 		String defaultLanguageId = getDefaultLanguageId(httpServletRequest);
 
@@ -429,7 +437,7 @@ public class I18nFilter extends BasePortalFilter {
 
 		httpServletRequest.setAttribute(SKIP_FILTER, Boolean.TRUE);
 
-		String redirect = getRedirect(httpServletRequest);
+		String redirect = getRedirect(httpServletRequest, httpServletResponse);
 
 		if (redirect == null) {
 			processFilter(

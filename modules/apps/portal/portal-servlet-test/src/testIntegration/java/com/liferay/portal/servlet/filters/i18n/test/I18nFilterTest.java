@@ -208,8 +208,11 @@ public class I18nFilterTest {
 
 		return ReflectionTestUtil.invoke(
 			_i18nFilter, "prependI18nLanguageId",
-			new Class<?>[] {HttpServletRequest.class, int.class},
-			_mockHttpServletRequest, localePrependFriendlyURLStyle);
+			new Class<?>[] {
+				HttpServletRequest.class, HttpServletResponse.class, int.class
+			},
+			_mockHttpServletRequest, _mockHttpServletResponse,
+			localePrependFriendlyURLStyle);
 	}
 
 	@DeleteAfterTestRun
