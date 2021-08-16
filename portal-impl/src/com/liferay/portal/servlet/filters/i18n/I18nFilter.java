@@ -27,9 +27,11 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.servlet.HttpMethods;
 import com.liferay.portal.kernel.util.CookieKeys;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -154,16 +156,6 @@ public class I18nFilter extends BasePortalFilter {
 			return null;
 		}
 
-		String contextPath = PortalUtil.getPathContext();
-
-		String requestURI = httpServletRequest.getRequestURI();
-
-		if (Validator.isNotNull(contextPath) &&
-			requestURI.startsWith(contextPath)) {
-
-			requestURI = requestURI.substring(contextPath.length());
-		}
-
 		String i18nLanguageId = prependI18nLanguageId(
 			httpServletRequest, PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE);
 
@@ -177,8 +169,8 @@ public class I18nFilter extends BasePortalFilter {
 			return null;
 		}
 
-		requestURI = StringUtil.replace(
-			requestURI, StringPool.DOUBLE_SLASH, StringPool.SLASH);
+		String requestURI = _stripContextPath(
+			httpServletRequest.getRequestURI());
 
 		String i18nPathLanguageId = PortalUtil.getI18nPathLanguageId(
 			locale, i18nLanguageId);
@@ -188,6 +180,8 @@ public class I18nFilter extends BasePortalFilter {
 		if (requestURI.contains(i18nPath.concat(StringPool.SLASH))) {
 			return null;
 		}
+
+		String contextPath = PortalUtil.getPathContext();
 
 		String redirect = contextPath + i18nPath + requestURI;
 
@@ -255,6 +249,23 @@ public class I18nFilter extends BasePortalFilter {
 
 		String requestedLanguageId = null;
 
+		if (_LOCALE_FRIENDLY_URL_LAYOUT_TARGET_LOCALE) {
+			Locale requestedLocaleFromLayoutFriendlyURL =
+				getRequestedLocaleFromLayoutURL(httpServletRequest);
+
+			if ((requestedLocaleFromLayoutFriendlyURL != null) &&
+				((locale == null) ||
+				 !locale.equals(requestedLocaleFromLayoutFriendlyURL))) {
+
+				locale = requestedLocaleFromLayoutFriendlyURL;
+
+				// this is needed for the cases where I18nFilter does not
+				// redirect to the target locale
+
+				session.setAttribute(WebKeys.LOCALE, locale);
+			}
+		}
+
 		if (locale != null) {
 			requestedLanguageId = LocaleUtil.toLanguageId(locale);
 		}
@@ -269,6 +280,29 @@ public class I18nFilter extends BasePortalFilter {
 		}
 
 		return requestedLanguageId;
+	}
+
+	protected Locale getRequestedLocaleFromLayoutURL(
+		HttpServletRequest httpServletRequest) {
+
+		URLPathProcessor urlPathProcessor = getURLPathProcessor();
+
+		if (urlPathProcessor != null) {
+			try {
+				return urlPathProcessor.getLocaleFromLayoutURL(
+					httpServletRequest);
+			}
+			catch (PortalException portalException) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(portalException, portalException);
+				}
+				else if (_log.isWarnEnabled()) {
+					_log.warn(portalException, portalException);
+				}
+			}
+		}
+
+		return null;
 	}
 
 	protected String getSiteDefaultLanguageId(
@@ -294,6 +328,10 @@ public class I18nFilter extends BasePortalFilter {
 
 			return StringPool.BLANK;
 		}
+	}
+
+	protected URLPathProcessor getURLPathProcessor() {
+		return _serviceTracker.getService();
 	}
 
 	protected boolean isAlreadyFiltered(HttpServletRequest httpServletRequest) {
@@ -407,6 +445,23 @@ public class I18nFilter extends BasePortalFilter {
 
 		httpServletResponse.sendRedirect(redirect);
 	}
+
+	private String _stripContextPath(String requestURI) {
+		String contextPath = PortalUtil.getPathContext();
+
+		if (Validator.isNotNull(contextPath) &&
+			requestURI.startsWith(contextPath)) {
+
+			requestURI = requestURI.substring(contextPath.length());
+		}
+
+		return StringUtil.replace(
+			requestURI, StringPool.DOUBLE_SLASH, StringPool.SLASH);
+	}
+
+	private static final boolean _LOCALE_FRIENDLY_URL_LAYOUT_TARGET_LOCALE =
+		GetterUtil.getBoolean(
+			PropsUtil.get("locale.friendly.url.layout.target.locale"));
 
 	private static final Log _log = LogFactoryUtil.getLog(I18nFilter.class);
 
