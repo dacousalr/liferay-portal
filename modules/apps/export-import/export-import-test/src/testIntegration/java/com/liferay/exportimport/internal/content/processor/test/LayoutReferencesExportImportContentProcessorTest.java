@@ -23,7 +23,6 @@ import com.liferay.exportimport.test.util.TestUserIdStrategy;
 import com.liferay.journal.test.util.JournalTestUtil;
 import com.liferay.layout.test.util.LayoutFriendlyURLRandomizerBumper;
 import com.liferay.layout.test.util.LayoutTestUtil;
-import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
@@ -31,6 +30,9 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.StagedModel;
 import com.liferay.portal.kernel.service.CompanyLocalService;
+import com.liferay.portal.kernel.service.GroupLocalService;
+import com.liferay.portal.kernel.test.randomizerbumpers.NumericStringRandomizerBumper;
+import com.liferay.portal.kernel.test.randomizerbumpers.UniqueStringRandomizerBumper;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
@@ -46,9 +48,6 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.ServiceTracker;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -593,87 +592,150 @@ public class LayoutReferencesExportImportContentProcessorTest {
 			boolean exportFromDefaultGroup, boolean importToDefaultGroup)
 		throws Exception {
 
-		String oldVirtualHostsDefaultSiteName = null;
-
-		if (exportFromDefaultGroup || importToDefaultGroup) {
-			oldVirtualHostsDefaultSiteName =
-				PropsValues.VIRTUAL_HOSTS_DEFAULT_SITE_NAME;
-		}
-
 		TestReaderWriter testReaderWriter = new TestReaderWriter();
 
-		if (exportFromDefaultGroup) {
-			_setPortalProperty(
-				"VIRTUAL_HOSTS_DEFAULT_SITE_NAME", exportGroup.getGroupKey());
+		Group defaultGroup = _groupLocalService.fetchGroup(
+			exportGroup.getCompanyId(),
+			PropsValues.VIRTUAL_HOSTS_DEFAULT_SITE_NAME);
+
+		if (defaultGroup != null) {
+			defaultGroup = _groupLocalService.getGroup(
+				defaultGroup.getGroupId());
 		}
 
-		PortletDataContext exportPortletDataContext =
-			PortletDataContextFactoryUtil.createExportPortletDataContext(
-				exportGroup.getCompanyId(), exportGroup.getGroupId(),
-				new HashMap<>(),
-				new Date(System.currentTimeMillis() - Time.HOUR), new Date(),
-				testReaderWriter);
+		String exportGroupKey = exportGroup.getGroupKey();
 
-		Document document = SAXReaderUtil.createDocument();
+		String importGroupKey = importGroup.getGroupKey();
 
-		Element manifestRootElement = document.addElement("root");
+		try {
+			if (exportFromDefaultGroup) {
+				if (defaultGroup != null) {
+					defaultGroup.setGroupKey(_GROUP_KEY);
 
-		manifestRootElement.addElement("header");
+					defaultGroup = _groupLocalService.updateGroup(defaultGroup);
+				}
 
-		testReaderWriter.addEntry("/manifest.xml", document.asXML());
+				exportGroup.setGroupKey(
+					PropsValues.VIRTUAL_HOSTS_DEFAULT_SITE_NAME);
 
-		Element rootElement = SAXReaderUtil.createElement("root");
+				exportGroup = _groupLocalService.updateGroup(exportGroup);
+			}
 
-		exportPortletDataContext.setExportDataRootElement(rootElement);
+			PortletDataContext exportPortletDataContext =
+				PortletDataContextFactoryUtil.createExportPortletDataContext(
+					exportGroup.getCompanyId(), exportGroup.getGroupId(),
+					new HashMap<>(),
+					new Date(System.currentTimeMillis() - Time.HOUR),
+					new Date(), testReaderWriter);
 
-		Element missingReferencesElement = rootElement.addElement(
-			"missing-references");
+			Document document = SAXReaderUtil.createDocument();
 
-		exportPortletDataContext.setMissingReferencesElement(
-			missingReferencesElement);
+			Element manifestRootElement = document.addElement("root");
 
-		StagedModel referrerStagedModel = JournalTestUtil.addArticle(
-			exportGroup.getGroupId(), RandomTestUtil.randomString(),
-			RandomTestUtil.randomString());
+			manifestRootElement.addElement("header");
 
-		String contentToExport = _CONTENT_PREFIX + url + _CONTENT_POSTFIX;
+			testReaderWriter.addEntry("/manifest.xml", document.asXML());
 
-		String exportedContent =
-			_layoutReferencesExportImportContentProcessor.
-				replaceExportContentReferences(
-					exportPortletDataContext, referrerStagedModel,
-					contentToExport, true, false);
+			Element rootElement = SAXReaderUtil.createElement("root");
 
-		if (importToDefaultGroup) {
-			_setPortalProperty(
-				"VIRTUAL_HOSTS_DEFAULT_SITE_NAME", importGroup.getGroupKey());
+			exportPortletDataContext.setExportDataRootElement(rootElement);
+
+			Element missingReferencesElement = rootElement.addElement(
+				"missing-references");
+
+			exportPortletDataContext.setMissingReferencesElement(
+				missingReferencesElement);
+
+			StagedModel referrerStagedModel = JournalTestUtil.addArticle(
+				exportGroup.getGroupId(), RandomTestUtil.randomString(),
+				RandomTestUtil.randomString());
+
+			String contentToExport = _CONTENT_PREFIX + url + _CONTENT_POSTFIX;
+
+			String exportedContent =
+				_layoutReferencesExportImportContentProcessor.
+					replaceExportContentReferences(
+						exportPortletDataContext, referrerStagedModel,
+						contentToExport, true, false);
+
+			if (exportFromDefaultGroup) {
+				exportGroup.setGroupKey(exportGroupKey);
+
+				exportGroup = _groupLocalService.updateGroup(exportGroup);
+
+				if (defaultGroup != null) {
+					defaultGroup.setGroupKey(
+						PropsValues.VIRTUAL_HOSTS_DEFAULT_SITE_NAME);
+
+					defaultGroup = _groupLocalService.updateGroup(defaultGroup);
+				}
+			}
+
+			if (importToDefaultGroup) {
+				if (defaultGroup != null) {
+					defaultGroup.setGroupKey(_GROUP_KEY);
+
+					defaultGroup = _groupLocalService.updateGroup(defaultGroup);
+				}
+
+				importGroup.setGroupKey(
+					PropsValues.VIRTUAL_HOSTS_DEFAULT_SITE_NAME);
+
+				importGroup = _groupLocalService.updateGroup(importGroup);
+			}
+
+			PortletDataContext importPortletDataContext =
+				PortletDataContextFactoryUtil.createImportPortletDataContext(
+					importGroup.getCompanyId(), importGroup.getGroupId(),
+					new HashMap<>(), new TestUserIdStrategy(),
+					testReaderWriter);
+
+			importPortletDataContext.setImportDataRootElement(rootElement);
+
+			importPortletDataContext.setMissingReferencesElement(
+				missingReferencesElement);
+
+			String importedContent =
+				_layoutReferencesExportImportContentProcessor.
+					replaceImportContentReferences(
+						importPortletDataContext, referrerStagedModel,
+						exportedContent);
+
+			if (importToDefaultGroup) {
+				importGroup.setGroupKey(importGroupKey);
+
+				importGroup = _groupLocalService.updateGroup(importGroup);
+
+				if (defaultGroup != null) {
+					defaultGroup.setGroupKey(
+						PropsValues.VIRTUAL_HOSTS_DEFAULT_SITE_NAME);
+
+					defaultGroup = _groupLocalService.updateGroup(defaultGroup);
+				}
+			}
+
+			return importedContent.substring(
+				_CONTENT_PREFIX.length(),
+				importedContent.length() - _CONTENT_POSTFIX.length());
 		}
+		catch (Exception exception) {
+			exportGroup.setGroupKey(exportGroupKey);
 
-		PortletDataContext importPortletDataContext =
-			PortletDataContextFactoryUtil.createImportPortletDataContext(
-				importGroup.getCompanyId(), importGroup.getGroupId(),
-				new HashMap<>(), new TestUserIdStrategy(), testReaderWriter);
+			_groupLocalService.updateGroup(exportGroup);
 
-		importPortletDataContext.setImportDataRootElement(rootElement);
+			importGroup.setGroupKey(importGroupKey);
 
-		importPortletDataContext.setMissingReferencesElement(
-			missingReferencesElement);
+			_groupLocalService.updateGroup(importGroup);
 
-		String importedContent =
-			_layoutReferencesExportImportContentProcessor.
-				replaceImportContentReferences(
-					importPortletDataContext, referrerStagedModel,
-					exportedContent);
+			if (defaultGroup != null) {
+				defaultGroup.setGroupKey(
+					PropsValues.VIRTUAL_HOSTS_DEFAULT_SITE_NAME);
 
-		if (exportFromDefaultGroup || importToDefaultGroup) {
-			_setPortalProperty(
-				"VIRTUAL_HOSTS_DEFAULT_SITE_NAME",
-				oldVirtualHostsDefaultSiteName);
+				_groupLocalService.updateGroup(defaultGroup);
+			}
+
+			throw exception;
 		}
-
-		return importedContent.substring(
-			_CONTENT_PREFIX.length(),
-			importedContent.length() - _CONTENT_POSTFIX.length());
 	}
 
 	private String _getCompanyHostPortalURL(Group group) throws Exception {
@@ -704,25 +766,13 @@ public class LayoutReferencesExportImportContentProcessorTest {
 			false);
 	}
 
-	private void _setPortalProperty(String propertyName, Object value)
-		throws Exception {
-
-		Field field = ReflectionUtil.getDeclaredField(
-			PropsValues.class, propertyName);
-
-		field.setAccessible(true);
-
-		Field modifiersField = Field.class.getDeclaredField("modifiers");
-
-		modifiersField.setAccessible(true);
-		modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-
-		field.set(null, value);
-	}
-
 	private static final String _CONTENT_POSTFIX = "\">link</a>";
 
 	private static final String _CONTENT_PREFIX = "<a href=\"";
+
+	private static final String _GROUP_KEY = RandomTestUtil.randomString(
+		NumericStringRandomizerBumper.INSTANCE,
+		UniqueStringRandomizerBumper.INSTANCE);
 
 	private static ServiceTracker
 		<ExportImportContentProcessor<String>,
@@ -730,6 +780,9 @@ public class LayoutReferencesExportImportContentProcessorTest {
 
 	@Inject
 	private CompanyLocalService _companyLocalService;
+
+	@Inject
+	private GroupLocalService _groupLocalService;
 
 	private ExportImportContentProcessor<String>
 		_layoutReferencesExportImportContentProcessor;
