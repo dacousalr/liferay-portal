@@ -148,7 +148,9 @@ public class I18nFilter extends BasePortalFilter {
 			HttpServletResponse httpServletResponse)
 		throws Exception {
 
-		if (PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE == 0) {
+		if ((PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE == 0) &&
+			!_LOCALE_FRIENDLY_URL_LAYOUT_TARGET_LOCALE) {
+
 			return null;
 		}
 
