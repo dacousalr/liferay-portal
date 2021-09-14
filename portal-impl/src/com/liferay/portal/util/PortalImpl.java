@@ -8372,6 +8372,9 @@ public class PortalImpl implements Portal {
 			}
 		}
 
+		Map<String, List<String>> duplicateFriendlyURLs = new HashMap<>();
+		Set<String> duplicateLanguageIds = null;
+
 		for (Locale locale : availableLocales) {
 			String alternateURL = canonicalURL;
 			String alternateURLSuffix = canonicalURLSuffix;
@@ -8404,8 +8407,46 @@ public class PortalImpl implements Portal {
 				alternateURL = canonicalURLPrefix.concat(alternateURLSuffix);
 			}
 
-			if (siteDefaultLocale.equals(locale) &&
-				(PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE != 2)) {
+			if (_LOCALE_FRIENDLY_URL_LAYOUT_TARGET_LOCALE) {
+				if (duplicateLanguageIds == null) {
+					duplicateLanguageIds = new HashSet<>();
+
+					for (LayoutFriendlyURL layoutFriendlyURL : layoutFriendlyURLs) {
+						List<String> languageIds =
+							duplicateFriendlyURLs.get(layoutFriendlyURL.getFriendlyURL());
+
+						if (languageIds == null) {
+							languageIds = new ArrayList<>();
+
+							duplicateFriendlyURLs.put(
+								layoutFriendlyURL.getFriendlyURL(),
+								languageIds);
+						}
+
+						languageIds.add(layoutFriendlyURL.getLanguageId());
+
+						if (languageIds.size() > 1) {
+							duplicateLanguageIds.addAll(languageIds);
+						}
+					}
+				}
+
+				if (PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE == 0 &&
+						!canonicalURL.equals(alternateURL) &&
+						!duplicateLanguageIds.contains(languageId)) {
+
+					alternateURLs.put(locale, alternateURL);
+
+					continue;
+				}
+			}
+
+			if ((siteDefaultLocale.equals(locale) &&
+				(PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE != 2)) ||
+					(_LOCALE_FRIENDLY_URL_LAYOUT_TARGET_LOCALE && 
+						(PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE == 0) &&
+						!canonicalURL.equals(alternateURL) &&
+						!duplicateLanguageIds.contains(languageId))) {
 
 				alternateURLs.put(locale, alternateURL);
 			}
@@ -8785,6 +8826,10 @@ public class PortalImpl implements Portal {
 	}
 
 	private static final String _J_SECURITY_CHECK = "j_security_check";
+
+	private static final boolean _LOCALE_FRIENDLY_URL_LAYOUT_TARGET_LOCALE =
+		GetterUtil.getBoolean(
+			PropsUtil.get("locale.friendly.url.layout.target.locale"));
 
 	private static final String _LOCALHOST = "localhost";
 
