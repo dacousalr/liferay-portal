@@ -79,6 +79,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.portlet.PortletPreferences;
 
@@ -339,6 +340,12 @@ public class LayoutTypePortletImpl
 			portlets.addAll(getAllPortlets(columnId));
 		}
 
+		for (Portlet portlet : getPortlets()) {
+			if (!portlets.contains(portlet)) {
+				portlets.add(portlet);
+			}
+		}
+
 		return portlets;
 	}
 
@@ -471,6 +478,31 @@ public class LayoutTypePortletImpl
 		for (String column : getColumns()) {
 			Collections.addAll(
 				portletIds, StringUtil.split(getColumnValue(column)));
+		}
+
+		Layout layout = getLayout();
+
+		if (Objects.equals(
+				layout.getType(), LayoutConstants.TYPE_ASSET_DISPLAY) ||
+			Objects.equals(layout.getType(), LayoutConstants.TYPE_CONTENT)) {
+
+			List<com.liferay.portal.kernel.model.PortletPreferences>
+				portletPreferencesList =
+					PortletPreferencesLocalServiceUtil.getPortletPreferences(
+						PortletKeys.PREFS_OWNER_ID_DEFAULT,
+						PortletKeys.PREFS_OWNER_TYPE_LAYOUT, layout.getPlid());
+
+			Stream<com.liferay.portal.kernel.model.PortletPreferences> stream =
+				portletPreferencesList.parallelStream();
+
+			stream.forEach(
+				portletPreferences -> {
+					if (!portletIds.contains(
+							portletPreferences.getPortletId())) {
+
+						portletIds.add(portletPreferences.getPortletId());
+					}
+				});
 		}
 
 		return portletIds;
