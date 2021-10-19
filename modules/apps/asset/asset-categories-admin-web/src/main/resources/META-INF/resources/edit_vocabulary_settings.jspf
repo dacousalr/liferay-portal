@@ -38,10 +38,15 @@ if (vocabulary != null) {
 >
 
 	<%
-	List<String> indexes = new ArrayList<String>();
+	StringBuilder indexes = new StringBuilder();
+	int length = selectedClassNameIds.length;
 
-	for (int index = 0; index < selectedClassNameIds.length; index++) {
-		indexes.add(String.valueOf(index));
+	for (int index = 0; index < length; index++) {
+		indexes.append(String.valueOf(index));
+
+		if (index < (length - 1)) {
+			indexes.append(",");
+		}
 
 		long classNameId = selectedClassNameIds[index];
 		final long classTypePK = selectedClassTypePKs[index];
