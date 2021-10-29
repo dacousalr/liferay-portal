@@ -124,23 +124,6 @@ public class AssetVocabularySettingsHelper {
 			String classNameIdAndClassTypePK = getClassNameIdAndClassTypePK(
 				classNameId, classTypePK);
 
-			if (classNameIdAndClassTypePK.equals(
-					AssetCategoryConstants.
-						ALL_CLASS_NAME_IDS_AND_CLASS_TYPE_PKS)) {
-
-				if (required) {
-					requiredClassNameIds.clear();
-
-					requiredClassNameIds.add(classNameIdAndClassTypePK);
-				}
-
-				selectedClassNameIds.clear();
-
-				selectedClassNameIds.add(classNameIdAndClassTypePK);
-
-				break;
-			}
-
 			if (required) {
 				requiredClassNameIds.add(classNameIdAndClassTypePK);
 			}
@@ -246,12 +229,6 @@ public class AssetVocabularySettingsHelper {
 
 		if (classNameIdsAndClassTypePKs.length == 0) {
 			return false;
-		}
-
-		if (classNameIdsAndClassTypePKs[0].equals(
-				AssetCategoryConstants.ALL_CLASS_NAME_IDS_AND_CLASS_TYPE_PKS)) {
-
-			return true;
 		}
 
 		String classNameIdAndClassTypePK = getClassNameIdAndClassTypePK(
