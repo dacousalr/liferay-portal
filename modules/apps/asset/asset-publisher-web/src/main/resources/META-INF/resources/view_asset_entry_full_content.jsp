@@ -390,6 +390,7 @@ Map<String, Object> fragmentsEditorData = HashMapBuilder.<String, Object>put(
 						target="_blank"
 						title="<%= title %>"
 						types="<%= assetPublisherDisplayContext.getSocialBookmarksTypes() %>"
+						url="<%= assetRenderer.hasFriendlyURLToShare(liferayPortletRequest) ? assetPublisherHelper.getAssetViewURL(liferayPortletRequest, liferayPortletResponse, assetRenderer, assetEntry, true, false) : null %>"
 						urlImpl="<%= viewFullContentURL %>"
 					/>
 				</clay:content-col>

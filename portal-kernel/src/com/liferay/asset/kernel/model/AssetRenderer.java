@@ -182,6 +182,13 @@ public interface AssetRenderer<T> extends Renderer {
 	public boolean hasEditPermission(PermissionChecker permissionChecker)
 		throws PortalException;
 
+	public default boolean hasFriendlyURLToShare(
+			LiferayPortletRequest liferayPortletRequest)
+		throws Exception {
+
+		return false;
+	}
+
 	public boolean hasViewPermission(PermissionChecker permissionChecker)
 		throws PortalException;
 

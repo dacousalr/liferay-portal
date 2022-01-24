@@ -438,6 +438,18 @@ public class JournalArticleAssetRenderer
 	}
 
 	@Override
+	public boolean hasFriendlyURLToShare(
+			LiferayPortletRequest liferayPortletRequest)
+		throws Exception {
+
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)liferayPortletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		return _isShowDisplayPage(themeDisplay.getScopeGroupId(), _article);
+	}
+
+	@Override
 	public boolean hasViewPermission(PermissionChecker permissionChecker)
 		throws PortalException {
 
