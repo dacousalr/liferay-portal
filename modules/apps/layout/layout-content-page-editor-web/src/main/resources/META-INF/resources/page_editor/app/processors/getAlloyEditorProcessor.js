@@ -21,6 +21,8 @@ const KEY_ENTER = 13;
 const KEY_SPACE = 32;
 const KEY_SHIFT_ENTER = (window.CKEDITOR?.SHIFT ?? 0) + KEY_ENTER;
 
+var counter = 0;
+
 const defaultGetEditorWrapper = (element) => {
 	const wrapper = document.createElement('div');
 
@@ -79,7 +81,7 @@ export default function getAlloyEditorProcessor(
 
 			_element = element;
 
-			const editorName = `${config.portletNamespace}FragmentEntryLinkEditable_${element.id}`;
+			const editorName = `${config.portletNamespace}FragmentEntryLinkEditable_${element.id}_editorInstance_${counter++}`;
 
 			const editorWrapper = getEditorWrapper(element);
 
