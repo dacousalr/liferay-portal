@@ -16,6 +16,8 @@ package com.liferay.message.boards.internal.util;
 
 import com.liferay.comment.configuration.CommentGroupServiceConfiguration;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.SubscriptionSender;
 
 /**
@@ -46,6 +48,31 @@ public class MBDiscussionSubscriptionSender extends SubscriptionSender {
 		if (_discussionEmailCommentsAddedEnabled) {
 			super.sendEmailNotification(user);
 		}
+	}
+
+	@Override
+	protected void sendNotification(User user, boolean notifyImmediately)
+		throws Exception {
+
+		ServiceContext serviceContext = getServiceContext();
+
+		boolean skipNotification = GetterUtil.getBoolean(
+			serviceContext.getAttribute("skipNotification"));
+
+		if (skipNotification) {
+			return;
+		}
+
+		super.sendNotification(user, notifyImmediately);
+	}
+
+	/**
+	 * @deprecated As of Mueller (7.2.x)
+	 */
+	@Deprecated
+	@Override
+	protected void sendUserNotification(User user) throws Exception {
+		sendNotification(user, true);
 	}
 
 	private boolean _discussionEmailCommentsAddedEnabled;

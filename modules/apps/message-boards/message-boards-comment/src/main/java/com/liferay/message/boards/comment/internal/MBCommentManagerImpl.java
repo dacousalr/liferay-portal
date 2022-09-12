@@ -175,7 +175,13 @@ public class MBCommentManagerImpl implements CommentManager {
 
 		MBMessage newRootMBMessage = _copyRootMessage(
 			userId, groupId, className, classPK, newClassPK,
-			serviceContextFunction);
+			serviceContextFunction.andThen(
+				serviceContext -> {
+					serviceContext.setAttribute(
+						"skipNotification", Boolean.TRUE);
+
+					return serviceContext;
+				}));
 
 		List<Comment> rootComments = getRootComments(
 			className, classPK, WorkflowConstants.STATUS_ANY, 0,
@@ -185,7 +191,13 @@ public class MBCommentManagerImpl implements CommentManager {
 		for (Comment rootComment : rootComments) {
 			_duplicateComment(
 				rootComment, newRootMBMessage.getMessageId(), newClassPK,
-				serviceContextFunction);
+				serviceContextFunction.andThen(
+					serviceContext -> {
+						serviceContext.setAttribute(
+							"skipNotification", Boolean.TRUE);
+
+						return serviceContext;
+					}));
 		}
 
 		List<Subscription> subscriptions =
