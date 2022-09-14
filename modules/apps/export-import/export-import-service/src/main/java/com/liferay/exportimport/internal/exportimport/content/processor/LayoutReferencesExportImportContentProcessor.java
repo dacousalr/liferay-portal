@@ -1091,10 +1091,22 @@ public class LayoutReferencesExportImportContentProcessor
 					TreeMap<String, String> publicVirtualHostnames =
 						publicLayoutSet.getVirtualHostnames();
 
-					if (!publicVirtualHostnames.isEmpty() ||
-						_isDefaultGroup(group)) {
-
+					if (!publicVirtualHostnames.isEmpty()) {
 						layoutSet = group.getPublicLayoutSet();
+					}
+					else {
+						LayoutSet privateLayoutSet =
+							group.getPrivateLayoutSet();
+
+						TreeMap<String, String> privateVirtualHostnames =
+							privateLayoutSet.getVirtualHostnames();
+
+						if (!privateVirtualHostnames.isEmpty()) {
+							layoutSet = group.getPrivateLayoutSet();
+						}
+						else if (_isDefaultGroup(group)) {
+							layoutSet = group.getPublicLayoutSet();
+						}
 					}
 				}
 
