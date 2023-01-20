@@ -18,6 +18,7 @@
 	<c:when test='<%= displayStyle.equals("icon") %>'>
 		<liferay-ui:search-container-column-text>
 			<clay:vertical-card
+				propsTransformer="js/RoleVerticalCardPropsTransformer"
 				verticalCard="<%= new RoleVerticalCard(role, renderRequest, searchContainer.getRowChecker()) %>"
 			/>
 		</liferay-ui:search-container-column-text>
