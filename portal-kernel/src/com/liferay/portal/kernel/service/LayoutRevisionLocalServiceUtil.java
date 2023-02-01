@@ -438,6 +438,13 @@ public class LayoutRevisionLocalServiceUtil {
 			layoutSetBranchId, layoutBranchId, plid);
 	}
 
+	public static int getLayoutRevisionsCountByPlidAndIconImageId(
+		long plid, long iconImageId) {
+
+		return getService().getLayoutRevisionsCountByPlidAndIconImageId(
+			plid, iconImageId);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

@@ -344,6 +344,10 @@ public interface LayoutRevisionLocalService
 	public int getLayoutRevisionsCount(
 		long layoutSetBranchId, long layoutBranchId, long plid);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getLayoutRevisionsCountByPlidAndIconImageId(
+		long plid, long iconImageId);
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *

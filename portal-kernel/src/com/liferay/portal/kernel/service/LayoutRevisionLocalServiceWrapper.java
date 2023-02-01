@@ -520,6 +520,14 @@ public class LayoutRevisionLocalServiceWrapper
 			layoutSetBranchId, layoutBranchId, plid);
 	}
 
+	@Override
+	public int getLayoutRevisionsCountByPlidAndIconImageId(
+		long plid, long iconImageId) {
+
+		return _layoutRevisionLocalService.
+			getLayoutRevisionsCountByPlidAndIconImageId(plid, iconImageId);
+	}
+
 	/**
 	 * Returns the OSGi service identifier.
 	 *
