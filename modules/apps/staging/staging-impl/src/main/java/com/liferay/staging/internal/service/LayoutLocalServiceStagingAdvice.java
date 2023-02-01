@@ -202,14 +202,20 @@ public class LayoutLocalServiceStagingAdvice {
 		layout.setFriendlyURL(
 			layoutFriendlyURLMap.get(LocaleUtil.getSiteDefault()));
 
-		if (!hasIconImage) {
-			layout.setIconImageId(0);
-			layoutRevision.setIconImageId(0);
+		boolean deletePreviousImage = false;
+
+		if (layoutRevision.getIconImageId() > 0 &&
+			_layoutRevisionLocalService.
+				getLayoutRevisionsCountByPlidAndIconImageId(
+					layoutRevision.getPlid(),
+					layoutRevision.getIconImageId()) == 1) {
+
+			deletePreviousImage = true;
 		}
-		else {
-			_portal.updateImageId(
-				layout, hasIconImage, iconBytes, "iconImageId", 0, 0, 0);
-		}
+
+		_portal.updateImageId(
+			layoutRevision, hasIconImage, iconBytes, "iconImageId", 0, 0, 0,
+			deletePreviousImage);
 
 		layout.setLayoutPrototypeLinkEnabled(
 			ParamUtil.getBoolean(serviceContext, "layoutPrototypeLinkEnabled"));
