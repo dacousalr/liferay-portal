@@ -6873,8 +6873,9 @@ public class PortalImpl implements Portal {
 			String fieldName, long maxSize, int maxHeight, int maxWidth)
 		throws PortalException {
 
-		updateImageId(baseModel, hasImage, bytes, fieldName, maxSize, maxHeight,
-			maxWidth, true);
+		updateImageId(
+			baseModel, hasImage, bytes, fieldName, maxSize, maxHeight, maxWidth,
+			true);
 	}
 
 	@Override
@@ -6935,8 +6936,8 @@ public class PortalImpl implements Portal {
 			}
 			else {
 				image = ImageLocalServiceUtil.updateImage(
-					BeanPropertiesUtil.getLong(baseModel, "companyId"),
-					imageId, bytes);
+					BeanPropertiesUtil.getLong(baseModel, "companyId"), imageId,
+					bytes);
 			}
 		}
 		else {
