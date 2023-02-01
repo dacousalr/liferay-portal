@@ -437,6 +437,13 @@ public class LayoutRevisionLocalServiceImpl
 	}
 
 	@Override
+	public int getLayoutRevisionsCountByPlidAndIconImageId(
+		long plid, long iconImageId) {
+
+		return layoutRevisionPersistence.countByP_I(plid, iconImageId);
+	}
+
+	@Override
 	public LayoutRevision updateLayoutRevision(
 			long userId, long layoutRevisionId, long layoutBranchId,
 			String name, String title, String description, String keywords,
