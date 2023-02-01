@@ -6873,11 +6873,24 @@ public class PortalImpl implements Portal {
 			String fieldName, long maxSize, int maxHeight, int maxWidth)
 		throws PortalException {
 
+		updateImageId(baseModel, hasImage, bytes, fieldName, maxSize, maxHeight,
+			maxWidth, true);
+	}
+
+	@Override
+	public void updateImageId(
+			BaseModel<?> baseModel, boolean hasImage, byte[] bytes,
+			String fieldName, long maxSize, int maxHeight, int maxWidth,
+			boolean deletePreviousImage)
+		throws PortalException {
+
 		long imageId = BeanPropertiesUtil.getLong(baseModel, fieldName);
 
 		if (!hasImage) {
 			if (imageId > 0) {
-				ImageLocalServiceUtil.deleteImage(imageId);
+				if (deletePreviousImage) {
+					ImageLocalServiceUtil.deleteImage(imageId);
+				}
 
 				BeanPropertiesUtil.setProperty(baseModel, fieldName, 0);
 			}
@@ -6917,7 +6930,14 @@ public class PortalImpl implements Portal {
 		Image image = null;
 
 		if (imageId > 0) {
-			image = ImageLocalServiceUtil.moveImage(imageId, bytes);
+			if (deletePreviousImage) {
+				image = ImageLocalServiceUtil.moveImage(imageId, bytes);
+			}
+			else {
+				image = ImageLocalServiceUtil.updateImage(
+					BeanPropertiesUtil.getLong(baseModel, "companyId"),
+					imageId, bytes);
+			}
 		}
 		else {
 			image = ImageLocalServiceUtil.updateImage(

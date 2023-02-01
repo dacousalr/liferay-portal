@@ -1269,6 +1269,12 @@ public interface Portal {
 			String fieldName, long maxSize, int maxHeight, int maxWidth)
 		throws PortalException;
 
+	public void updateImageId(
+			BaseModel<?> baseModel, boolean hasImage, byte[] bytes,
+			String fieldName, long maxSize, int maxHeight, int maxWidth,
+			boolean deletePreviousImage)
+		throws PortalException;
+
 	public PortletMode updatePortletMode(
 			String portletId, User user, Layout layout, PortletMode portletMode,
 			HttpServletRequest httpServletRequest)
