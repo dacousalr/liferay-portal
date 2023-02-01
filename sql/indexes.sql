@@ -302,6 +302,7 @@ create index IX_13984800 on LayoutRevision (layoutSetBranchId, layoutBranchId, p
 create index IX_4A84AF43 on LayoutRevision (layoutSetBranchId, parentLayoutRevisionId, plid);
 create index IX_70DA9ECB on LayoutRevision (layoutSetBranchId, plid, status);
 create index IX_7FFAE700 on LayoutRevision (layoutSetBranchId, status);
+create index IX_5C9767F7 on LayoutRevision (plid, iconImageId);
 create index IX_8EC3D2BC on LayoutRevision (plid, status);
 create index IX_421223B1 on LayoutRevision (status);
 

@@ -1388,6 +1388,193 @@ public class LayoutRevisionUtil {
 	}
 
 	/**
+	 * Returns all the layout revisions where plid = &#63; and iconImageId = &#63;.
+	 *
+	 * @param plid the plid
+	 * @param iconImageId the icon image ID
+	 * @return the matching layout revisions
+	 */
+	public static List<LayoutRevision> findByP_I(long plid, long iconImageId) {
+		return getPersistence().findByP_I(plid, iconImageId);
+	}
+
+	/**
+	 * Returns a range of all the layout revisions where plid = &#63; and iconImageId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutRevisionModelImpl</code>.
+	 * </p>
+	 *
+	 * @param plid the plid
+	 * @param iconImageId the icon image ID
+	 * @param start the lower bound of the range of layout revisions
+	 * @param end the upper bound of the range of layout revisions (not inclusive)
+	 * @return the range of matching layout revisions
+	 */
+	public static List<LayoutRevision> findByP_I(
+		long plid, long iconImageId, int start, int end) {
+
+		return getPersistence().findByP_I(plid, iconImageId, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the layout revisions where plid = &#63; and iconImageId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutRevisionModelImpl</code>.
+	 * </p>
+	 *
+	 * @param plid the plid
+	 * @param iconImageId the icon image ID
+	 * @param start the lower bound of the range of layout revisions
+	 * @param end the upper bound of the range of layout revisions (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching layout revisions
+	 */
+	public static List<LayoutRevision> findByP_I(
+		long plid, long iconImageId, int start, int end,
+		OrderByComparator<LayoutRevision> orderByComparator) {
+
+		return getPersistence().findByP_I(
+			plid, iconImageId, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns an ordered range of all the layout revisions where plid = &#63; and iconImageId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutRevisionModelImpl</code>.
+	 * </p>
+	 *
+	 * @param plid the plid
+	 * @param iconImageId the icon image ID
+	 * @param start the lower bound of the range of layout revisions
+	 * @param end the upper bound of the range of layout revisions (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching layout revisions
+	 */
+	public static List<LayoutRevision> findByP_I(
+		long plid, long iconImageId, int start, int end,
+		OrderByComparator<LayoutRevision> orderByComparator,
+		boolean useFinderCache) {
+
+		return getPersistence().findByP_I(
+			plid, iconImageId, start, end, orderByComparator, useFinderCache);
+	}
+
+	/**
+	 * Returns the first layout revision in the ordered set where plid = &#63; and iconImageId = &#63;.
+	 *
+	 * @param plid the plid
+	 * @param iconImageId the icon image ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching layout revision
+	 * @throws NoSuchLayoutRevisionException if a matching layout revision could not be found
+	 */
+	public static LayoutRevision findByP_I_First(
+			long plid, long iconImageId,
+			OrderByComparator<LayoutRevision> orderByComparator)
+		throws com.liferay.portal.kernel.exception.
+			NoSuchLayoutRevisionException {
+
+		return getPersistence().findByP_I_First(
+			plid, iconImageId, orderByComparator);
+	}
+
+	/**
+	 * Returns the first layout revision in the ordered set where plid = &#63; and iconImageId = &#63;.
+	 *
+	 * @param plid the plid
+	 * @param iconImageId the icon image ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching layout revision, or <code>null</code> if a matching layout revision could not be found
+	 */
+	public static LayoutRevision fetchByP_I_First(
+		long plid, long iconImageId,
+		OrderByComparator<LayoutRevision> orderByComparator) {
+
+		return getPersistence().fetchByP_I_First(
+			plid, iconImageId, orderByComparator);
+	}
+
+	/**
+	 * Returns the last layout revision in the ordered set where plid = &#63; and iconImageId = &#63;.
+	 *
+	 * @param plid the plid
+	 * @param iconImageId the icon image ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching layout revision
+	 * @throws NoSuchLayoutRevisionException if a matching layout revision could not be found
+	 */
+	public static LayoutRevision findByP_I_Last(
+			long plid, long iconImageId,
+			OrderByComparator<LayoutRevision> orderByComparator)
+		throws com.liferay.portal.kernel.exception.
+			NoSuchLayoutRevisionException {
+
+		return getPersistence().findByP_I_Last(
+			plid, iconImageId, orderByComparator);
+	}
+
+	/**
+	 * Returns the last layout revision in the ordered set where plid = &#63; and iconImageId = &#63;.
+	 *
+	 * @param plid the plid
+	 * @param iconImageId the icon image ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching layout revision, or <code>null</code> if a matching layout revision could not be found
+	 */
+	public static LayoutRevision fetchByP_I_Last(
+		long plid, long iconImageId,
+		OrderByComparator<LayoutRevision> orderByComparator) {
+
+		return getPersistence().fetchByP_I_Last(
+			plid, iconImageId, orderByComparator);
+	}
+
+	/**
+	 * Returns the layout revisions before and after the current layout revision in the ordered set where plid = &#63; and iconImageId = &#63;.
+	 *
+	 * @param layoutRevisionId the primary key of the current layout revision
+	 * @param plid the plid
+	 * @param iconImageId the icon image ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next layout revision
+	 * @throws NoSuchLayoutRevisionException if a layout revision with the primary key could not be found
+	 */
+	public static LayoutRevision[] findByP_I_PrevAndNext(
+			long layoutRevisionId, long plid, long iconImageId,
+			OrderByComparator<LayoutRevision> orderByComparator)
+		throws com.liferay.portal.kernel.exception.
+			NoSuchLayoutRevisionException {
+
+		return getPersistence().findByP_I_PrevAndNext(
+			layoutRevisionId, plid, iconImageId, orderByComparator);
+	}
+
+	/**
+	 * Removes all the layout revisions where plid = &#63; and iconImageId = &#63; from the database.
+	 *
+	 * @param plid the plid
+	 * @param iconImageId the icon image ID
+	 */
+	public static void removeByP_I(long plid, long iconImageId) {
+		getPersistence().removeByP_I(plid, iconImageId);
+	}
+
+	/**
+	 * Returns the number of layout revisions where plid = &#63; and iconImageId = &#63;.
+	 *
+	 * @param plid the plid
+	 * @param iconImageId the icon image ID
+	 * @return the number of matching layout revisions
+	 */
+	public static int countByP_I(long plid, long iconImageId) {
+		return getPersistence().countByP_I(plid, iconImageId);
+	}
+
+	/**
 	 * Returns all the layout revisions where plid = &#63; and status &ne; &#63;.
 	 *
 	 * @param plid the plid
