@@ -202,14 +202,9 @@ public class LayoutLocalServiceStagingAdvice {
 		layout.setFriendlyURL(
 			layoutFriendlyURLMap.get(LocaleUtil.getSiteDefault()));
 
-		if (!hasIconImage) {
-			layout.setIconImageId(0);
-			layoutRevision.setIconImageId(0);
-		}
-		else {
-			_portal.updateImageId(
-				layout, hasIconImage, iconBytes, "iconImageId", 0, 0, 0);
-		}
+		_portal.updateImageId(
+			layoutRevision, hasIconImage, iconBytes, "iconImageId", 0, 0, 0,
+			false);
 
 		layout.setLayoutPrototypeLinkEnabled(
 			ParamUtil.getBoolean(serviceContext, "layoutPrototypeLinkEnabled"));
