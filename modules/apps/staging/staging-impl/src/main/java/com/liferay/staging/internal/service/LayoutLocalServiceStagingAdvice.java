@@ -204,13 +204,16 @@ public class LayoutLocalServiceStagingAdvice {
 
 		boolean deletePreviousImage = false;
 
-		if (layoutRevision.getIconImageId() > 0 &&
-			_layoutRevisionLocalService.
-				getLayoutRevisionsCountByPlidAndIconImageId(
-					layoutRevision.getPlid(),
-					layoutRevision.getIconImageId()) == 1) {
+		if (layoutRevision.getIconImageId() > 0) {
+			int layoutRevisionsCount =
+				_layoutRevisionLocalService.
+					getLayoutRevisionsCountByPlidAndIconImageId(
+						layoutRevision.getPlid(),
+						layoutRevision.getIconImageId());
 
-			deletePreviousImage = true;
+			if (layoutRevisionsCount == 1) {
+				deletePreviousImage = true;
+			}
 		}
 
 		_portal.updateImageId(

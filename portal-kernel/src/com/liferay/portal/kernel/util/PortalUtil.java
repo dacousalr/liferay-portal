@@ -2095,15 +2095,15 @@ public class PortalUtil {
 			maxWidth);
 	}
 
-	public void updateImageId(
+	public static void updateImageId(
 			BaseModel<?> baseModel, boolean hasImage, byte[] bytes,
 			String fieldName, long maxSize, int maxHeight, int maxWidth,
 			boolean deletePreviousImage)
 		throws PortalException {
 
 		_portal.updateImageId(
-			baseModel, hasImage, bytes, fieldName, maxSize, maxHeight,
-			maxWidth, deletePreviousImage);
+			baseModel, hasImage, bytes, fieldName, maxSize, maxHeight, maxWidth,
+			deletePreviousImage);
 	}
 
 	public static PortletMode updatePortletMode(
