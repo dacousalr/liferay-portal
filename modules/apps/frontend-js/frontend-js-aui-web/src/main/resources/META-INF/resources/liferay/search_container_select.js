@@ -406,6 +406,12 @@ AUI.add(
 									.ancestor(params.rowSelector)
 									.addClass(params.rowClassNameActive);
 							}
+							else {
+								input.attr(STR_CHECKED, false);
+								input
+									.ancestor(params.rowSelector)
+									.removeClass(params.rowClassNameActive);
+							}
 						}
 						else if (item.checked) {
 							offScreenElementsHtml += Lang.sub(
