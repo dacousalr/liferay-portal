@@ -1655,13 +1655,12 @@ public class JournalArticleFinderImpl
 			QueryPos queryPos = QueryPos.getInstance(sqlQuery);
 
 			if (_isOrderByTitle(orderByComparator)) {
-				queryPos.add(1);
+				queryPos.add(LocaleUtil.toLanguageId(locale));
 			}
 			else {
-				queryPos.add(0);
+				queryPos.add(StringPool.UNDERLINE);
 			}
 
-			queryPos.add(LocaleUtil.toLanguageId(locale));
 			queryPos.add(groupId);
 			queryPos.add(classNameId);
 

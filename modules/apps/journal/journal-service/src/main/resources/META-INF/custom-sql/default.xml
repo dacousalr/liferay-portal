@@ -336,7 +336,6 @@
 					(JournalArticle.version < tempJournalArticle.version)
 			LEFT JOIN
 				JournalArticleLocalization ON
-					(1 = ?) AND
 					(JournalArticle.companyId = JournalArticleLocalization.companyId) AND
 					(JournalArticle.id_ = JournalArticleLocalization.articlePK) AND
 					(JournalArticleLocalization.languageId = ?)
