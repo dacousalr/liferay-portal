@@ -544,7 +544,7 @@ public abstract class BaseDB implements DB {
 				}
 
 				try {
-					s.executeUpdate(sql);
+					s.addBatch(sql);
 				}
 				catch (SQLException sqlException) {
 					if (_log.isDebugEnabled()) {
@@ -560,6 +560,23 @@ public abstract class BaseDB implements DB {
 
 					throw sqlException;
 				}
+			}
+			try {
+				s.executeBatch();
+			}
+			catch (SQLException sqlException) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(
+						StringBundler.concat(
+							"SQL state: ",
+							sqlException.getSQLState(), "\nVendor: ",
+							getDBType(), "\nVendor error code: ",
+							sqlException.getErrorCode(),
+							"\nVendor error message: ",
+							sqlException.getMessage()));
+				}
+
+				throw sqlException;
 			}
 		}
 	}
