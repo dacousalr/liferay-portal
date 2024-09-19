@@ -8,13 +8,17 @@ package com.liferay.depot.web.internal.util;
 import com.liferay.depot.model.DepotEntry;
 import com.liferay.depot.service.DepotEntryService;
 import com.liferay.item.selector.criteria.group.criterion.GroupItemSelectorCriterion;
+import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
+import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.LayoutPrototype;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupService;
+import com.liferay.portal.kernel.service.LayoutPrototypeService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LinkedHashMapBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -80,8 +84,8 @@ public class DepotAdminGroupSearchProvider {
 			() -> {
 				List<DepotEntry> depotEntries =
 					_depotEntryService.getGroupConnectedDepotEntries(
-						themeDisplay.getScopeGroupId(), groupSearch.getStart(),
-						groupSearch.getEnd());
+						_getGroupId(themeDisplay.getScopeGroupId()),
+						groupSearch.getStart(), groupSearch.getEnd());
 
 				List<Group> groups = new ArrayList<>();
 
@@ -95,6 +99,29 @@ public class DepotAdminGroupSearchProvider {
 				themeDisplay.getScopeGroupId()));
 
 		return groupSearch;
+	}
+
+	private long _getGroupId(long groupId) throws PortalException {
+		Group group = _groupService.getGroup(groupId);
+
+		if (group.isLayoutPrototype()) {
+			LayoutPrototype layoutPrototype =
+				_layoutPrototypeService.getLayoutPrototype(group.getClassPK());
+
+			LayoutPageTemplateEntry layoutPageTemplateEntry =
+				_layoutPageTemplateEntryLocalService.
+					fetchFirstLayoutPageTemplateEntry(
+						layoutPrototype.getLayoutPrototypeId());
+
+			if ((layoutPageTemplateEntry != null) &&
+				(layoutPageTemplateEntry.getGroupId() > 0)) {
+
+				group = _groupService.getGroup(
+					layoutPageTemplateEntry.getGroupId());
+			}
+		}
+
+		return group.getGroupId();
 	}
 
 	private GroupSearch _getGroupSearch(
@@ -168,6 +195,13 @@ public class DepotAdminGroupSearchProvider {
 
 	@Reference
 	private Language _language;
+
+	@Reference
+	private LayoutPageTemplateEntryLocalService
+		_layoutPageTemplateEntryLocalService;
+
+	@Reference
+	private LayoutPrototypeService _layoutPrototypeService;
 
 	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED)
 	private ModuleServiceLifecycle _moduleServiceLifecycle;
