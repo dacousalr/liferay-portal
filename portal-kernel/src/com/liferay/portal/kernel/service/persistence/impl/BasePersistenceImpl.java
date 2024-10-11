@@ -77,7 +77,7 @@ import com.liferay.portal.kernel.util.ProxyFactory;
 import java.io.Serializable;
 
 import java.math.BigDecimal;
-
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -1208,6 +1208,8 @@ public class BasePersistenceImpl<T extends BaseModel<T>>
 			BigDecimal.class, Type.BIG_DECIMAL
 		).put(
 			Boolean.class, Type.BOOLEAN
+		).put(
+			Clob.class, Type.STRING
 		).put(
 			Date.class, Type.DATE
 		).put(
