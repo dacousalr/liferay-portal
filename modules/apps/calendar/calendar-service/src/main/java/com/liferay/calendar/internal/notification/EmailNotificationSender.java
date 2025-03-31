@@ -77,7 +77,8 @@ public class EmailNotificationSender implements NotificationSender {
 			SubscriptionSender subscriptionSender = new SubscriptionSender();
 
 			subscriptionSender.addFileAttachment(
-				(File)notificationTemplateContext.getAttribute("icsFile"));
+				(File)notificationTemplateContext.getAttribute("icsFile"),
+				"invite.ics");
 			subscriptionSender.addRuntimeSubscribers(
 				notificationRecipient.getEmailAddress(),
 				notificationRecipient.getName());
